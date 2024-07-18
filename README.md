@@ -1,7 +1,7 @@
 # 📎 IT Clips
 SSAFY 11기 공통 PJT / 구미 2반 5조 웹디자인
 
-2024.07.02 ~ 2024.08.16 (6주)
+2024.07.08 ~ 2024.08.16 (6주)
 
 ## 프로젝트 소개
 ### 북마크 기반의 큐레이션 플랫폼
@@ -12,7 +12,7 @@ SSAFY 11기 공통 PJT / 구미 2반 5조 웹디자인
 ## 팀 구성
 <table>
   <tr>
-    <td align="center" width="500px">정진규 (팀장, BE Leader)<br />(Backend & Server)</td>
+    <td align="center" width="500px">정진규 (팀장, BE Leader, CI/CD)<br />(Backend & Server)</td>
     <td align="center" width="500px">김수정 (BE)<br />(Backend & Server)</td>
     <td align="center" width="500px">김민솔 (BE)<br />(Backend & Server)</td>
   </tr>

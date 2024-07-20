@@ -5,23 +5,22 @@ import com.ssafy.itclips.tag.entity.Tag;
 import com.ssafy.itclips.tag.service.TagService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/tags")
 @RequiredArgsConstructor
+@Slf4j
 public class TagController {
 
     private final TagService tagService;
@@ -33,10 +32,8 @@ public class TagController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
     })
     public ResponseEntity<String> addTags(
-            @RequestBody @Parameter(description = "추가할 태그 목록", required = true) List<TagDTO> tagDTOs) {
-        List<Tag> tags = tagDTOs.stream()
-                .map(dto -> new Tag(dto.getTitle(), dto.getIsOrigin()))
-                .collect(Collectors.toList());
+            @RequestBody @Parameter(description = "추가할 태그 목록", required = true) List<TagDTO> tags) {
+
 
         HttpStatus httpStatus = HttpStatus.CREATED;
         if (!tagService.saveTags(tags)) {
@@ -77,4 +74,6 @@ public class TagController {
         }
         return new ResponseEntity<>(tags, HttpStatus.OK);
     }
+
+
 }

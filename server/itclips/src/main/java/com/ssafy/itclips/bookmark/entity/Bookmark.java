@@ -1,30 +1,23 @@
-package com.ssafy.itclips.tmp;
+package com.ssafy.itclips.bookmark.entity;
 
+import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.Instant;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "bookmark_list", schema = "itclips")
-public class BookmarkList {
+@Table(name = "bookmark", schema = "itclips")
+public class Bookmark {
     @Id
     @Column(name = "id", nullable = false)
     private Long id;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
 
     @Size(max = 255)
     @NotNull
@@ -35,6 +28,11 @@ public class BookmarkList {
     @Column(name = "description")
     private String description;
 
+    @Size(max = 255)
+    @NotNull
+    @Column(name = "url", nullable = false)
+    private String url;
+
     @NotNull
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at", nullable = false)
@@ -44,13 +42,18 @@ public class BookmarkList {
     @Column(name = "updated_at")
     private Instant updatedAt;
 
-    @Size(max = 255)
-    @Column(name = "image")
-    private String image;
-
     @NotNull
     @ColumnDefault("0")
-    @Column(name = "is_public", nullable = false)
-    private Boolean isPublic = false;
+    @Column(name = "is_reported", nullable = false)
+    private Boolean isReported = false;
+
+    @NotNull
+    @Column(name = "`order`", nullable = false)
+    private Integer order;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "bookmarklist_id", nullable = false)
+    private BookmarkList bookmarklist;
 
 }

@@ -1,5 +1,7 @@
-package com.ssafy.itclips.tmp;
+package com.ssafy.itclips.group.entity;
 
+import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
+import com.ssafy.itclips.tmp.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -8,10 +10,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "groups", schema = "itclips")
-public class Group {
+@Table(name = "user_group", schema = "itclips")
+public class UserGroup {
     @Id
     @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동 생성 전략 설정
     private Long id;
 
     @NotNull

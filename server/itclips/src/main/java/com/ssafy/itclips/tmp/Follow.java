@@ -1,5 +1,6 @@
 package com.ssafy.itclips.tmp;
 
+import com.ssafy.itclips.tmp.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

@@ -1,13 +1,21 @@
 package com.ssafy.itclips.chat.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import com.ssafy.itclips.tmp.Chat;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 
+@Getter
+@Setter
 @Entity
+@Table(name = "message", schema = "itclips")
 public class Message {
 
     @Id
@@ -15,16 +23,26 @@ public class Message {
     @Column(name="id")
     private Long id;
 
-    @Column(name="message")
+    @NotNull
+    @Lob
+    @Column(name = "message", nullable = false)
     private String message;
 
-    @Column(name="read")
-    private boolean read;
+    @NotNull
+    @ColumnDefault("0")
+    @Column(name = "`read`", nullable = false)
+    private Boolean read = false;
 
-    @Column(name="create_at")
-    private Timestamp createAt;
+    @NotNull
+    @ColumnDefault("CURRENT_TIMESTAMP")
+    @Column(name = "created_at", nullable = false)
+    private Instant createdAt;
 
-    @Column(name="chat_id")
-    private Long chatId;
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "chat_id", nullable = false)
+    private Chat chat;
+
 
 }

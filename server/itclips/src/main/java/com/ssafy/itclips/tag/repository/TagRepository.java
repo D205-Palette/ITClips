@@ -12,5 +12,6 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
 
 
     List<Tag> findByIsOrigin(Boolean isOrigin);
+    List<Tag> findByTitleIn(List<String> titles);
 
 }

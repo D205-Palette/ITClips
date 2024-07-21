@@ -1,5 +1,7 @@
 package com.ssafy.itclips.tmp;
 
+import com.ssafy.itclips.chat.entity.Chat;
+import com.ssafy.itclips.tmp.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -8,6 +10,8 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -66,5 +70,11 @@ public class User {
     @ColumnDefault("0")
     @Column(name = "dark_mode")
     private Boolean darkMode;
+
+
+    //chat
+    //역방향 user가 속한 chatroom을 알기 위함
+    @OneToMany(mappedBy = "user")
+    private List<Chat> chatList = new ArrayList<Chat>();
 
 }

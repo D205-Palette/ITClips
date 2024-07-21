@@ -1,6 +1,5 @@
 package com.ssafy.itclips.chat.entity;
 
-import com.ssafy.itclips.tmp.Chat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

@@ -31,3 +31,12 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+# Redis Config
+
+#  profiles:
+#    active: local
+#  data:
+#    redis:
+#      host: localhost
+#      port: 6739

@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 @Getter
 @Entity
 @Table(name = "tag", schema = "itclips")
@@ -20,6 +23,9 @@ public class Tag {
     @ColumnDefault("0")
     @Column(name = "is_origin")
     private Boolean isOrigin;
+
+    @OneToMany(mappedBy = "tag")
+    private Set<BookmarkListTag> bookmarkListTags = new LinkedHashSet<>();
 
 
     @Builder

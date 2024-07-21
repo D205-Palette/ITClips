@@ -87,13 +87,16 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<UserTag> userTags = new LinkedHashSet<>();
 
-    public void addBookmarkList(BookmarkList bookmarkList, UserGroup group) {
+    public void addBookmarkList(BookmarkList bookmarkList) {
         bookmarkLists.add(bookmarkList);
-        groups.add(group);
-        bookmarkList.getGroups().add(group);
         bookmarkList.setUser(this);
+    }
+
+    public void setGroups(BookmarkList bookmarkList, UserGroup group) {
         group.setUser(this);
         group.setBookmarkList(bookmarkList);
+        bookmarkList.getGroups().add(group);
+        groups.add(group);
     }
 
     @Builder

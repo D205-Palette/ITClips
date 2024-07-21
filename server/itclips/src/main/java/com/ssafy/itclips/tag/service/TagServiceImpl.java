@@ -25,7 +25,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     @Transactional
-    public boolean saveTags(List<TagDTO> tags) throws RuntimeException {
+    public List<Tag> saveTags(List<TagDTO> tags) throws RuntimeException {
         // 태그 제목을 리스트로 추출하고 첫 글자는 대문자, 나머지는 소문자로 변환
         List<String> titles = tags.stream()
                 .map(dto -> capitalizeFirstLetter(dto.getTitle()))
@@ -33,31 +33,37 @@ public class TagServiceImpl implements TagService {
 
         // 기존 DB에서 제목이 존재하는 태그를 조회
         Set<String> existingTitles = getExistingTitles(titles);
-
         // 새로운 태그만 추가
-        List<Tag> newTags = createTags(titles, existingTitles);
-
+        List<Tag> newTags = createNewTags(titles, existingTitles);
         // 새로운 태그를 DB에 저장
-        return tagRepository.saveAll(newTags).size() == newTags.size();
+        tagRepository.saveAll(newTags);
+        return tagRepository.findByTitleIn(titles);
     }
 
-    private static List<Tag> createTags(List<String> titles, Set<String> existingTitles) {
-        List<Tag> newTags = titles.stream()
+    private List<Tag> createTags(List<String> titles) {
+        return titles.stream()
+                .map(title -> Tag.builder()
+                        .title(title)
+                        .isOrigin(false)
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    private static List<Tag> createNewTags(List<String> titles, Set<String> existingTitles) {
+        return titles.stream()
                 .filter(title -> !existingTitles.contains(title))
                 .map(title -> Tag.builder()
                         .title(title)
                         .isOrigin(false)
                         .build())
                 .collect(Collectors.toList());
-        return newTags;
     }
 
     private Set<String> getExistingTitles(List<String> titles) {
         List<Tag> existingTags = tagRepository.findByTitleIn(titles);
-        Set<String> existingTitles = existingTags.stream()
+        return existingTags.stream()
                 .map(Tag::getTitle)
                 .collect(Collectors.toSet());
-        return existingTitles;
     }
 
     // 첫 글자를 대문자로, 나머지는 소문자로 변환하는 메소드

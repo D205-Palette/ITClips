@@ -10,7 +10,7 @@ public interface TagService {
 
     List<Tag> getOriginTags() throws RuntimeException;
 
-    boolean saveTags(List<TagDTO> tags) throws RuntimeException;
+    List<Tag> saveTags(List<TagDTO> tags) throws RuntimeException;
 
     List<Tag> getAllTags() throws RuntimeException;
 }

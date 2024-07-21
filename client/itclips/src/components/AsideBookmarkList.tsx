@@ -8,12 +8,18 @@ interface Comment {
   text: string;
 }
 
+interface Tag {
+  id: number;
+  text: string;
+}
+
 interface ProfileCardProps {
   listName: string;
   username: string;
   description: string;
   likeCount: number;
   starCount: number;
+  tags: Tag[];
   comments: Comment[];
 }
 
@@ -23,13 +29,16 @@ const ProfileCard = ({
   description,
   likeCount,
   starCount,
+  tags,
   comments
 }: ProfileCardProps) => {
   return (
     <div className="bg-aside-layout rounded-3xl w-80 p-8 flex flex-col items-center">
+      {/* 더보기 버튼 */}
       <div className="self-end">
         <button className="text-center">...</button>
       </div>
+      {/* 북마크리스트 썸네일 */}
       <div className="mb-4">
         <img src={profileImage} className="w-16 h-16 bg-gray-200 rounded-full mb-4" />
       </div>
@@ -57,7 +66,9 @@ const ProfileCard = ({
       </div>
       {/* 태그 창 */}
       <div className="m-6">
-        {"#고양이 #냠냠 #태그"}
+        {tags.map((tag) => (
+          <p>{tag.text} </p>
+        ))}
       </div>
       <div className="flex flex-col">
         {/* 댓글 창 */}

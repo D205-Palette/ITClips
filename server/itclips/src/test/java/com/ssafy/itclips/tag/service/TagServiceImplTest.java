@@ -41,6 +41,11 @@ class TagServiceImplTest {
     @DisplayName("기본 태그 확인")
     @Test
     void getOriginTags() {
+        Tag tag = Tag.builder()
+                .title("java")
+                .isOrigin(true)
+                .build();
+        tagRepository.save(tag);
         List<Tag> tags = tagService.getOriginTags();
         assertThat(tags).isNotEmpty(); // 태그가 비어있지 않은지 확인
         assertThat(tags).allMatch(Tag::getIsOrigin); // 모든 태그의 isOrigin이 true인지 확인

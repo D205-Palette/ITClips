@@ -3,7 +3,7 @@ package com.ssafy.itclips.category.service;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListDTO;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
 import com.ssafy.itclips.bookmarklist.service.BookmarkListService;
-import com.ssafy.itclips.category.dto.CategoryDTO;
+import com.ssafy.itclips.category.dto.CategoryRequestDTO;
 import com.ssafy.itclips.category.entity.Category;
 import com.ssafy.itclips.category.repository.CategoryRepository;
 import com.ssafy.itclips.bookmarklist.repository.BookmarkListRepository;
@@ -82,11 +82,11 @@ class CategoryServiceImplTest {
         assertThat(savedBookmarkList.get().getTitle()).isEqualTo("Test Bookmark List"); // 제목 확인
 
         // 카테고리 DTO 생성
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setCategoryName("Test Category");
+        CategoryRequestDTO categoryRequestDTO = new CategoryRequestDTO();
+        categoryRequestDTO.setCategoryName("Test Category");
 
         // 카테고리 추가
-        Category savedCategory = categoryService.addCategory(savedBookmarkList.get().getId(), categoryDTO);
+        Category savedCategory = categoryService.addCategory(savedBookmarkList.get().getId(), categoryRequestDTO);
 
         // 저장된 카테고리 확인
         assertThat(savedCategory.getName()).isEqualTo("Test Category");
@@ -96,14 +96,14 @@ class CategoryServiceImplTest {
     @Test
     void addCategory_BookmarkListNotFound() {
         // 카테고리 DTO 생성
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setCategoryName("Test Category");
+        CategoryRequestDTO categoryRequestDTO = new CategoryRequestDTO();
+        categoryRequestDTO.setCategoryName("Test Category");
 
         // 존재하지 않는 ID로 카테고리 추가 시도 및 예외 발생 확인
         Long nonExistentListId = 999L;
 
         assertThatThrownBy(() -> {
-            categoryService.addCategory(nonExistentListId, categoryDTO);
+            categoryService.addCategory(nonExistentListId, categoryRequestDTO);
         }).isInstanceOf(CustomException.class)
                 .hasMessageContaining(ErrorCode.BOOKMARK_LIST_NOT_FOUND.getMessage());
     }
@@ -118,11 +118,11 @@ class CategoryServiceImplTest {
         bookmarkListService.createBookmarkList(user.getId(), bookmarkListDTO);
 
         // 카테고리 DTO 생성
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setCategoryName("Test Category");
+        CategoryRequestDTO categoryRequestDTO = new CategoryRequestDTO();
+        categoryRequestDTO.setCategoryName("Test Category");
 
         // 카테고리 추가
-        Category savedCategory = categoryService.addCategory(bookmarkListRepository.findByTitle("Test Bookmark List").get().getId(), categoryDTO);
+        Category savedCategory = categoryService.addCategory(bookmarkListRepository.findByTitle("Test Bookmark List").get().getId(), categoryRequestDTO);
 
         // When: 카테고리 삭제
         categoryService.deleteCategory(savedCategory.getId());

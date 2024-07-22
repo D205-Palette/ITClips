@@ -1,6 +1,6 @@
 package com.ssafy.itclips.category.controller;
 
-import com.ssafy.itclips.category.dto.CategoryDTO;
+import com.ssafy.itclips.category.dto.CategoryRequestDTO;
 import com.ssafy.itclips.category.entity.Category;
 import com.ssafy.itclips.category.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,9 +31,9 @@ public class CategoryController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
     })
     public ResponseEntity<?> addCategory(@PathVariable @Parameter(description = "리스트 ID", required = true) Long listId,
-                                         @RequestBody @Parameter(description = "카테고리 정보", required = true)CategoryDTO categoryDTO) {
+                                         @RequestBody @Parameter(description = "카테고리 정보", required = true) CategoryRequestDTO categoryRequestDTO) {
 
-        Category category = categoryService.addCategory(listId,categoryDTO);
+        Category category = categoryService.addCategory(listId, categoryRequestDTO);
 
         return new ResponseEntity<Category>(category,HttpStatus.CREATED);
     }

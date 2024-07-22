@@ -19,7 +19,7 @@ public class ChatController {
 
     private final SimpMessageSendingOperations messagingTemplate;
 
-    @MessageMapping("/chat/message")
+    @MessageMapping("/chat/message")// websocket 메시지 처리 요청 : /pub/chat/message
     public void message(ChatMessage message) {
         if (message.getMessageType().equals(ChatMessage.MessageType.ENTER)) {
             message.setMessage(message.getSender() + "님이 입장하셨습니다. 👋🏼");

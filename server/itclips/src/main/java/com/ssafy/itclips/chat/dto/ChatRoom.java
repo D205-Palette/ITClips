@@ -3,9 +3,7 @@ package com.ssafy.itclips.chat.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.socket.WebSocketSession;
 
-import java.util.HashSet;
 import java.util.UUID;
 
 @Getter
@@ -14,7 +12,6 @@ public class ChatRoom {
 
     private String roomId;
     private String name;
-    private HashSet<WebSocketSession> sessions = new HashSet<>();
 
 //    @Builder
 //    public ChatRoom(String roomId, String name) {

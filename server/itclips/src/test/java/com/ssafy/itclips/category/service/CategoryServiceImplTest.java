@@ -133,4 +133,39 @@ class CategoryServiceImplTest {
         assertThat(deletedCategory).isNotPresent(); // 카테고리가 존재하지 않아야 함
     }
 
+    @DisplayName("카테고리 업데이트 확인")
+    @Test
+    void updateCategory() {
+        // 사용자 저장 (테스트를 위해 필요시)
+        userRepository.save(user);
+
+        // 북마크 리스트 생성
+        bookmarkListService.createBookmarkList(user.getId(), bookmarkListDTO);
+
+        // 카테고리 DTO 생성
+        CategoryRequestDTO categoryDTO = new CategoryRequestDTO();
+        categoryDTO.setCategoryName("Test Category");
+
+        // 카테고리 추가
+        CategoryParamDTO savedCategory = categoryService.addCategory(bookmarkListRepository.findByTitle("Test Bookmark List").get().getId(), categoryDTO);
+
+        // 카테고리 업데이트 요청 DTO 생성
+        CategoryRequestDTO categoryRequestDTO = new CategoryRequestDTO();
+        categoryRequestDTO.setCategoryName("Updated Category Name");
+
+        // When: 카테고리 업데이트
+        CategoryParamDTO updatedCategory = categoryService.updateCategory(savedCategory.getCategoryId(), categoryRequestDTO);
+
+        // Then: 카테고리 정보가 업데이트되었는지 확인
+        assertThat(updatedCategory).isNotNull();
+        assertThat(updatedCategory.getCategoryId()).isEqualTo(savedCategory.getCategoryId());
+        assertThat(updatedCategory.getCategoryName()).isEqualTo("Updated Category Name");
+
+        // 추가로 카테고리가 실제로 업데이트 되었는지 확인
+        Category updatedEntity = categoryRepository.findById(savedCategory.getCategoryId()).orElse(null);
+        assertThat(updatedEntity).isNotNull();
+        assertThat(updatedEntity.getName()).isEqualTo("Updated Category Name");
+    }
+
+
 }

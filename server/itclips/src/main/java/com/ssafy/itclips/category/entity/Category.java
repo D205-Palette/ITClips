@@ -1,6 +1,7 @@
 package com.ssafy.itclips.category.entity;
 
 import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
+import com.ssafy.itclips.category.dto.CategoryRequestDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -43,5 +44,9 @@ public class Category {
     public void addBookmarkList(BookmarkList bookmarklist) {
         this.bookmarklist = bookmarklist;
         bookmarklist.getCategories().add(this);
+    }
+
+    public void updateCategory(CategoryRequestDTO categoryRequestDTO) {
+        this.name = categoryRequestDTO.getCategoryName();
     }
 }

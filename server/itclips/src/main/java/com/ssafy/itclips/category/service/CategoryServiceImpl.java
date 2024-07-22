@@ -41,4 +41,14 @@ public class CategoryServiceImpl implements CategoryService {
 
         categoryRepository.delete(category);
     }
+
+    @Override
+    public CategoryParamDTO updateCategory(Long categoryId, CategoryRequestDTO categoryRequestDTO) throws RuntimeException {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CustomException(ErrorCode.CATEGORY_NOT_FOUND));
+
+        category.updateCategory(categoryRequestDTO);
+        category = categoryRepository.save(category);
+        return new CategoryParamDTO(category.getId(),category.getName());
+    }
 }

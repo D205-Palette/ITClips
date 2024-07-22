@@ -11,7 +11,7 @@ spring:
       driver-class-name: com.mysql.cj.jdbc.Driver
       jdbc-url: jdbc:mysql://localhost:3306/itclips?serverTimezone=UTC&useUnicode=yes&characterEncoding=UTF-8
       username: root
-      password: rootroot
+      password: 1234
       pool-name: Hikari Connection Pool
 
       # hikariCP property setting

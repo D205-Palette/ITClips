@@ -1,36 +1,31 @@
 package com.ssafy.itclips.chat.controller;
 
 import com.ssafy.itclips.chat.dto.ChatMessage;
-import com.ssafy.itclips.chat.dto.ChatRoom;
 import com.ssafy.itclips.chat.repository.ChatRoomRepository;
-import com.ssafy.itclips.chat.service.RedisPublisher;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 
 @RequiredArgsConstructor
 @Controller
 public class ChatController {
 
-    private final RedisPublisher redisPublisher;
-    private final ChatRoomRepository chatRoomRepository;
-
+    private final ChannelTopic channelTopic;
+    private final RedisTemplate<String, Object> redisTemplate;
     /**
      * websocket "/pub/chat/message"로 들어오는 메시징을 처리한다.
      */
     @MessageMapping("/chat/message")
     public void message(ChatMessage message) {
+
         if (ChatMessage.MessageType.ENTER.equals(message.getMessageType())) {
-            chatRoomRepository.enterChatRoom(message.getRoomId());
+            message.setSender("[알림]");
             message.setMessage(message.getSender() + "님이 입장하셨습니다.");
         }
         // Websocket에 발행된 메시지를 redis로 발행한다(publish)
-        redisPublisher.publish(chatRoomRepository.getTopic(message.getRoomId()), message);
+        redisTemplate.convertAndSend(channelTopic.getTopic(),message);
     }
 }

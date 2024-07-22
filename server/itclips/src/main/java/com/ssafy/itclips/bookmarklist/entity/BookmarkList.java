@@ -5,7 +5,7 @@ import com.ssafy.itclips.bookmarklist.dto.BookmarkListDTO;
 import com.ssafy.itclips.category.entity.Category;
 import com.ssafy.itclips.group.entity.UserGroup;
 import com.ssafy.itclips.tag.entity.BookmarkListTag;
-import com.ssafy.itclips.tmp.user.User;
+import com.ssafy.itclips.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;

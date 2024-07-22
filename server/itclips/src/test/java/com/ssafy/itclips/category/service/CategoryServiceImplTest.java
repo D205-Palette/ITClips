@@ -4,8 +4,8 @@ import com.ssafy.itclips.bookmarklist.dto.BookmarkListDTO;
 import com.ssafy.itclips.category.repository.CategoryRepository;
 import com.ssafy.itclips.bookmarklist.repository.BookmarkListRepository;
 import com.ssafy.itclips.tag.dto.TagDTO;
-import com.ssafy.itclips.tmp.Role;
-import com.ssafy.itclips.tmp.user.User;
+import com.ssafy.itclips.user.entity.Role;
+import com.ssafy.itclips.user.entity.User;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -39,7 +39,7 @@ class CategoryServiceImplTest {
                 .nickname("aaysdfa")
                 .build();
         user.setId(125125L);
-        user.setRole(Role.NORMAL);
+        user.setRole(Role.USER);
 
         bookmarkListDTO = new BookmarkListDTO();
         bookmarkListDTO.setTitle("Test Bookmark List");

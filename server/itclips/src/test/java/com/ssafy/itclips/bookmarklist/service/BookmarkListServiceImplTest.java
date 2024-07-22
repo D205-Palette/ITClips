@@ -14,9 +14,9 @@ import com.ssafy.itclips.tag.entity.BookmarkListTag;
 import com.ssafy.itclips.tag.entity.Tag;
 import com.ssafy.itclips.tag.repository.BookmarkListTagRepository;
 import com.ssafy.itclips.tag.repository.TagRepository;
-import com.ssafy.itclips.tmp.Role;
-import com.ssafy.itclips.tmp.user.User;
-import com.ssafy.itclips.tmp.user.repository.UserRepository;
+import com.ssafy.itclips.user.entity.Role;
+import com.ssafy.itclips.user.entity.User;
+import com.ssafy.itclips.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -24,7 +24,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -69,7 +68,7 @@ class BookmarkListServiceImplTest {
                 .nickname("aaysdfa")
                 .build();
         user.setId(125125L);
-        user.setRole(Role.NORMAL);
+        user.setRole(Role.USER);
 
         bookmarkListDTO = new BookmarkListDTO();
         bookmarkListDTO.setTitle("Test Bookmark List");

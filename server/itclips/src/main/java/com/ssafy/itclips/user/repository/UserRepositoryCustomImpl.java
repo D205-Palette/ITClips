@@ -1,8 +1,8 @@
-package com.ssafy.itclips.tmp.user.repository;
+package com.ssafy.itclips.user.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.itclips.tmp.user.QUser;
-import com.ssafy.itclips.tmp.user.User;
+import com.ssafy.itclips.user.entity.QUser;
+import com.ssafy.itclips.user.entity.User;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;

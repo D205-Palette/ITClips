@@ -34,7 +34,7 @@ CREATE TABLE `bookmark` (
   `bookmarklist_id` bigint NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_bookmark_bookmarklist1_idx` (`bookmarklist_id`),
-  CONSTRAINT `fk_bookmark_bookmarklist1` FOREIGN KEY (`bookmarklist_id`) REFERENCES `tmp`.`bookmark_list` (`id`)
+  CONSTRAINT `fk_bookmark_bookmarklist1` FOREIGN KEY (`bookmarklist_id`) REFERENCES `bookmark_list` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -61,8 +61,8 @@ CREATE TABLE `bookmark_category` (
   PRIMARY KEY (`id`),
   KEY `fk_bookmark_category_bookmark1_idx` (`bookmark_id`),
   KEY `fk_bookmark_category_category1_idx` (`category_id`),
-  CONSTRAINT `fk_bookmark_category_bookmark1` FOREIGN KEY (`bookmark_id`) REFERENCES `tmp`.`bookmark` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_bookmark_category_category1` FOREIGN KEY (`category_id`) REFERENCES `mydb`.`category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `fk_bookmark_category_bookmark1` FOREIGN KEY (`bookmark_id`) REFERENCES `bookmark` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_bookmark_category_category1` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -90,8 +90,8 @@ CREATE TABLE `bookmark_like` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`,`bookmark_id`),
   KEY `FK_Bookmark_TO_BookmarkLike_1` (`bookmark_id`),
-  CONSTRAINT `FK_Bookmark_TO_BookmarkLike_1` FOREIGN KEY (`bookmark_id`) REFERENCES `tmp`.`bookmark` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_User_TO_BookmarkLike_1` FOREIGN KEY (`user_id`) REFERENCES `tmp`.`user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `FK_Bookmark_TO_BookmarkLike_1` FOREIGN KEY (`bookmark_id`) REFERENCES `bookmark` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_User_TO_BookmarkLike_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -122,7 +122,7 @@ CREATE TABLE `bookmark_list` (
   `is_public` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `FK_User_TO_BookmarkList_1` (`user_id`),
-  CONSTRAINT `FK_User_TO_BookmarkList_1` FOREIGN KEY (`user_id`) REFERENCES `tmp`.`user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `FK_User_TO_BookmarkList_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -152,8 +152,8 @@ CREATE TABLE `bookmark_list_comment` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `bookmark_id` (`bookmark_id`),
-  CONSTRAINT `bookmarklistcomment_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `tmp`.`user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `bookmarklistcomment_ibfk_2` FOREIGN KEY (`bookmark_id`) REFERENCES `tmp`.`bookmark_list` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `bookmarklistcomment_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `bookmarklistcomment_ibfk_2` FOREIGN KEY (`bookmark_id`) REFERENCES `bookmark_list` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -181,8 +181,8 @@ CREATE TABLE `bookmark_list_like` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `bookmark_list_id` (`bookmark_list_id`,`user_id`),
   KEY `user_id` (`user_id`),
-  CONSTRAINT `bookmarklistlike_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `tmp`.`user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `bookmarklistlike_ibfk_2` FOREIGN KEY (`bookmark_list_id`) REFERENCES `tmp`.`bookmark_list` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `bookmarklistlike_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `bookmarklistlike_ibfk_2` FOREIGN KEY (`bookmark_list_id`) REFERENCES `bookmark_list` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -213,8 +213,8 @@ CREATE TABLE `bookmark_list_report` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `bookmark_list_id` (`bookmark_list_id`,`user_id`),
   KEY `user_id` (`user_id`),
-  CONSTRAINT `bookmarklistreport_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `tmp`.`user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `bookmarklistreport_ibfk_2` FOREIGN KEY (`bookmark_list_id`) REFERENCES `tmp`.`bookmark_list` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `bookmarklistreport_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `bookmarklistreport_ibfk_2` FOREIGN KEY (`bookmark_list_id`) REFERENCES `bookmark_list` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -242,8 +242,8 @@ CREATE TABLE `bookmark_list_scrap` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `bookmark_list_id` (`bookmark_list_id`,`user_id`),
   KEY `user_id` (`user_id`),
-  CONSTRAINT `bookmarkfavoritelist_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `tmp`.`user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `bookmarkfavoritelist_ibfk_2` FOREIGN KEY (`bookmark_list_id`) REFERENCES `tmp`.`bookmark_list` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `bookmarkfavoritelist_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `bookmarkfavoritelist_ibfk_2` FOREIGN KEY (`bookmark_list_id`) REFERENCES `bookmark_list` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -270,8 +270,8 @@ CREATE TABLE `bookmark_list_tag` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `bookmark_list_id` (`bookmark_list_id`,`tag_id`),
   KEY `FK_Tag_TO_BookmarkListTag_1` (`tag_id`),
-  CONSTRAINT `FK_BookmarkList_TO_BookmarkListTag_1` FOREIGN KEY (`bookmark_list_id`) REFERENCES `tmp`.`bookmark_list` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_Tag_TO_BookmarkListTag_1` FOREIGN KEY (`tag_id`) REFERENCES `tmp`.`tag` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `FK_BookmarkList_TO_BookmarkListTag_1` FOREIGN KEY (`bookmark_list_id`) REFERENCES `bookmark_list` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_Tag_TO_BookmarkListTag_1` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -302,8 +302,8 @@ CREATE TABLE `bookmark_report` (
   PRIMARY KEY (`id`),
   KEY `FK_User_TO_BookmarkReport_1` (`user_id`),
   KEY `FK_Bookmark_TO_BookmarkReport_1` (`bookmark_id`),
-  CONSTRAINT `FK_Bookmark_TO_BookmarkReport_1` FOREIGN KEY (`bookmark_id`) REFERENCES `tmp`.`bookmark` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_User_TO_BookmarkReport_1` FOREIGN KEY (`user_id`) REFERENCES `tmp`.`user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `FK_Bookmark_TO_BookmarkReport_1` FOREIGN KEY (`bookmark_id`) REFERENCES `bookmark` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_User_TO_BookmarkReport_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -330,8 +330,8 @@ CREATE TABLE `bookmark_tag` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `tag_id` (`tag_id`,`bookmark_id`),
   KEY `FK_Bookmark_TO_BookmarkTag_1` (`bookmark_id`),
-  CONSTRAINT `FK_Bookmark_TO_BookmarkTag_1` FOREIGN KEY (`bookmark_id`) REFERENCES `tmp`.`bookmark` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_Tag_TO_BookmarkTag_1` FOREIGN KEY (`tag_id`) REFERENCES `tmp`.`tag` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `FK_Bookmark_TO_BookmarkTag_1` FOREIGN KEY (`bookmark_id`) REFERENCES `bookmark` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_Tag_TO_BookmarkTag_1` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -357,7 +357,7 @@ CREATE TABLE `category` (
   `bookmarklist_id` bigint NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_category_bookmarklist_idx` (`bookmarklist_id`),
-  CONSTRAINT `fk_category_bookmarklist` FOREIGN KEY (`bookmarklist_id`) REFERENCES `tmp`.`bookmark_list` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `fk_category_bookmarklist` FOREIGN KEY (`bookmarklist_id`) REFERENCES `bookmark_list` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -384,8 +384,8 @@ CREATE TABLE `chat` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `room_id` (`room_id`),
-  CONSTRAINT `chat_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `tmp`.`user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `chat_ibfk_2` FOREIGN KEY (`room_id`) REFERENCES `tmp`.`chat_room` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `chat_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `chat_ibfk_2` FOREIGN KEY (`room_id`) REFERENCES `chat_room` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -436,8 +436,8 @@ CREATE TABLE `follow` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `to_id` (`to_id`,`from_id`),
   KEY `from_id` (`from_id`),
-  CONSTRAINT `follow_ibfk_1` FOREIGN KEY (`to_id`) REFERENCES `tmp`.`user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `follow_ibfk_2` FOREIGN KEY (`from_id`) REFERENCES `tmp`.`user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `follow_ibfk_1` FOREIGN KEY (`to_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `follow_ibfk_2` FOREIGN KEY (`from_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -451,29 +451,29 @@ LOCK TABLES `follow` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `groups`
+-- Table structure for table `user_group`
 --
 
-DROP TABLE IF EXISTS `groups`;
+DROP TABLE IF EXISTS `user_group`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `groups` (
+CREATE TABLE `user_group` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `user_id` bigint NOT NULL,
   `bookmark_list_id` bigint NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `bookmark_list_id` (`bookmark_list_id`,`user_id`),
   KEY `user_id` (`user_id`),
-  CONSTRAINT `groups_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `tmp`.`user` (`id`),
-  CONSTRAINT `groups_ibfk_2` FOREIGN KEY (`bookmark_list_id`) REFERENCES `tmp`.`bookmark_list` (`id`)
+  CONSTRAINT `user_group_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `user_group_ibfk_2` FOREIGN KEY (`bookmark_list_id`) REFERENCES `bookmark_list` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `groups`
+-- Dumping data for table `user_group`
 --
 
-LOCK TABLES `groups` WRITE;
+LOCK TABLES `user_group` WRITE;
 /*!40000 ALTER TABLE `groups` DISABLE KEYS */;
 /*!40000 ALTER TABLE `groups` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -493,7 +493,7 @@ CREATE TABLE `message` (
   `chat_id` bigint NOT NULL,
   PRIMARY KEY (`id`),
   KEY `chat_id` (`chat_id`),
-  CONSTRAINT `message_ibfk_1` FOREIGN KEY (`chat_id`) REFERENCES `tmp`.`chat` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `message_ibfk_1` FOREIGN KEY (`chat_id`) REFERENCES `chat` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -523,7 +523,7 @@ CREATE TABLE `notification` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `fk_notification_user1_idx` (`user_id`),
-  CONSTRAINT `fk_notification_user1` FOREIGN KEY (`user_id`) REFERENCES `tmp`.`user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `fk_notification_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -554,7 +554,7 @@ CREATE TABLE `roadmap` (
   `is_public` tinyint NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
-  CONSTRAINT `roadmap_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `tmp`.`user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `roadmap_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -584,8 +584,8 @@ CREATE TABLE `roadmap_comment` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `roadmap_id` (`roadmap_id`),
-  CONSTRAINT `roadmapcomment_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `tmp`.`user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `roadmapcomment_ibfk_2` FOREIGN KEY (`roadmap_id`) REFERENCES `tmp`.`roadmap` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `roadmapcomment_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `roadmapcomment_ibfk_2` FOREIGN KEY (`roadmap_id`) REFERENCES `roadmap` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -613,8 +613,8 @@ CREATE TABLE `roadmap_like` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `roadmap_id` (`roadmap_id`,`user_id`),
   KEY `user_id` (`user_id`),
-  CONSTRAINT `roadmaplike_ibfk_1` FOREIGN KEY (`roadmap_id`) REFERENCES `tmp`.`roadmap` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `roadmaplike_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `tmp`.`user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `roadmaplike_ibfk_1` FOREIGN KEY (`roadmap_id`) REFERENCES `roadmap` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `roadmaplike_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -643,8 +643,8 @@ CREATE TABLE `roadmap_step` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `bookmark_list_id` (`bookmark_list_id`,`roadmap_id`),
   KEY `roadmap_id` (`roadmap_id`),
-  CONSTRAINT `roadmapstep_ibfk_1` FOREIGN KEY (`roadmap_id`) REFERENCES `tmp`.`roadmap` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `roadmapstep_ibfk_2` FOREIGN KEY (`bookmark_list_id`) REFERENCES `tmp`.`bookmark_list` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `roadmapstep_ibfk_1` FOREIGN KEY (`roadmap_id`) REFERENCES `roadmap` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `roadmapstep_ibfk_2` FOREIGN KEY (`bookmark_list_id`) REFERENCES `bookmark_list` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -732,8 +732,8 @@ CREATE TABLE `user_tag` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`,`tag_id`),
   KEY `FK_Tag_TO_UserTags_1` (`tag_id`),
-  CONSTRAINT `FK_Tag_TO_UserTags_1` FOREIGN KEY (`tag_id`) REFERENCES `tmp`.`tag` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_User_TO_UserTags_1` FOREIGN KEY (`user_id`) REFERENCES `tmp`.`user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `FK_Tag_TO_UserTags_1` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_User_TO_UserTags_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

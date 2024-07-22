@@ -1,7 +1,7 @@
 package com.ssafy.itclips.category.controller;
 
 import com.ssafy.itclips.category.dto.CategoryRequestDTO;
-import com.ssafy.itclips.category.entity.Category;
+import com.ssafy.itclips.category.dto.CategoryResponseDTO;
 import com.ssafy.itclips.category.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -33,9 +33,9 @@ public class CategoryController {
     public ResponseEntity<?> addCategory(@PathVariable @Parameter(description = "리스트 ID", required = true) Long listId,
                                          @RequestBody @Parameter(description = "카테고리 정보", required = true) CategoryRequestDTO categoryRequestDTO) {
 
-        Category category = categoryService.addCategory(listId, categoryRequestDTO);
+        CategoryResponseDTO category = categoryService.addCategory(listId, categoryRequestDTO);
 
-        return new ResponseEntity<Category>(category,HttpStatus.CREATED);
+        return new ResponseEntity<CategoryResponseDTO>(category,HttpStatus.CREATED);
     }
 
 

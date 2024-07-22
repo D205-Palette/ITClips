@@ -4,6 +4,7 @@ import com.ssafy.itclips.bookmarklist.dto.BookmarkListDTO;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
 import com.ssafy.itclips.bookmarklist.service.BookmarkListService;
 import com.ssafy.itclips.category.dto.CategoryRequestDTO;
+import com.ssafy.itclips.category.dto.CategoryResponseDTO;
 import com.ssafy.itclips.category.entity.Category;
 import com.ssafy.itclips.category.repository.CategoryRepository;
 import com.ssafy.itclips.bookmarklist.repository.BookmarkListRepository;
@@ -86,10 +87,10 @@ class CategoryServiceImplTest {
         categoryRequestDTO.setCategoryName("Test Category");
 
         // 카테고리 추가
-        Category savedCategory = categoryService.addCategory(savedBookmarkList.get().getId(), categoryRequestDTO);
+        CategoryResponseDTO savedCategory = categoryService.addCategory(savedBookmarkList.get().getId(), categoryRequestDTO);
 
         // 저장된 카테고리 확인
-        assertThat(savedCategory.getName()).isEqualTo("Test Category");
+        assertThat(savedCategory.getCategoryName()).isEqualTo("Test Category");
     }
 
     @DisplayName("존재하지 않는 북마크 리스트에 대한 예외 확인")
@@ -122,13 +123,13 @@ class CategoryServiceImplTest {
         categoryRequestDTO.setCategoryName("Test Category");
 
         // 카테고리 추가
-        Category savedCategory = categoryService.addCategory(bookmarkListRepository.findByTitle("Test Bookmark List").get().getId(), categoryRequestDTO);
+        CategoryResponseDTO savedCategory = categoryService.addCategory(bookmarkListRepository.findByTitle("Test Bookmark List").get().getId(), categoryRequestDTO);
 
         // When: 카테고리 삭제
-        categoryService.deleteCategory(savedCategory.getId());
+        categoryService.deleteCategory(savedCategory.getCategoryId());
 
         // Then: 카테고리가 삭제되었는지 확인
-        Optional<Category> deletedCategory = categoryRepository.findById(savedCategory.getId());
+        Optional<Category> deletedCategory = categoryRepository.findById(savedCategory.getCategoryId());
         assertThat(deletedCategory).isNotPresent(); // 카테고리가 존재하지 않아야 함
     }
 

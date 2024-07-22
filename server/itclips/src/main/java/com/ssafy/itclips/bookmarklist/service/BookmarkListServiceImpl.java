@@ -84,6 +84,28 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         bookmarkListTagRepository.saveAll(bookmarkListTags);
     }
 
+    @Override
+    @Transactional
+    public void deleteBookmarkList(Long userId, Long listId) {
+        BookmarkList bookmarkList = bookmarkListRepository.findById(listId)
+                .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND));
+
+        List<BookmarkListTag> bookmarkListTags = bookmarkListTagRepository.findByBookmarkListId(bookmarkList.getId());
+        bookmarkListTagRepository.deleteAll(bookmarkListTags);
+
+        // 기존 카테고리 삭제
+        List<Category> categories = categoryRepository.findAllByBookmarklist(bookmarkList);
+        categoryRepository.deleteAll(categories);
+
+        // 기존 사용자 그룹 삭제
+        List<UserGroup> userGroups = groupRepository.findByBookmarkListId(bookmarkList.getId());
+        groupRepository.deleteAll(userGroups);
+
+        // 3. 북마크 리스트 삭제
+        bookmarkListRepository.delete(bookmarkList);
+    }
+
+
     @Transactional
     public void deleteRelations(Long userId, BookmarkList existingBookmarkList) {
         bookmarkListTagRepository.deleteAllByBookmarklList(existingBookmarkList);

@@ -36,12 +36,30 @@ public class BookmarkListController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PostMapping("/update/{userId}/{listId}")
-    public ResponseEntity<?> updateBookmarkList(@PathVariable @Parameter(description = "유저 정보", required = true) Long userId,
-                                                @PathVariable Long listId,
-                                                @RequestBody BookmarkListDTO bookmarkListDTO) {
-
-        bookmarkListService.updateBookmarkList(userId,listId,bookmarkListDTO);
+    @PutMapping("/update/{userId}/{listId}")
+    @Operation(summary = "북마크 리스트 업데이트", description = "주어진 유저 ID와 리스트 ID로 북마크 리스트를 업데이트합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "북마크 리스트가 성공적으로 업데이트되었습니다."),
+            @ApiResponse(responseCode = "404", description = "리스트를 찾을 수 없습니다."),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
+    })
+    public ResponseEntity<?> updateBookmarkList(@PathVariable @Parameter(description = "유저 ID", required = true) Long userId,
+                                                @PathVariable @Parameter(description = "리스트 ID", required = true) Long listId,
+                                                @RequestBody @Parameter(description = "업데이트할 리스트 정보", required = true) BookmarkListDTO bookmarkListDTO) {
+        bookmarkListService.updateBookmarkList(userId, listId, bookmarkListDTO);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{userId}/{listId}")
+    @Operation(summary = "북마크 리스트 삭제", description = "주어진 유저 ID와 리스트 ID로 북마크 리스트를 삭제합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "202", description = "북마크 리스트가 성공적으로 삭제되었습니다."),
+            @ApiResponse(responseCode = "404", description = "리스트를 찾을 수 없습니다."),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
+    })
+    public ResponseEntity<?> deleteBookmarkList(@PathVariable @Parameter(description = "유저 ID", required = true) Long userId,
+                                                @PathVariable @Parameter(description = "리스트 ID", required = true) Long listId) {
+        bookmarkListService.deleteBookmarkList(userId, listId);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 }

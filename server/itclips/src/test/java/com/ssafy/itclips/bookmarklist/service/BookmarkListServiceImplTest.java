@@ -193,4 +193,36 @@ class BookmarkListServiceImplTest {
 
         assertThat(userEmails).contains("bbb@naver.com"); // 새로운 사용자 이메일 확인
     }
+
+    @DisplayName("리스트 삭제 테스트")
+    @Test
+    void deleteBookmarkList() {
+        // 사용자 저장 (테스트를 위해 필요시)
+        userRepository.save(user);
+
+        // When
+        bookmarkListService.createBookmarkList(user.getId(), bookmarkListDTO);
+        // Then
+        Optional<BookmarkList> savedBookmarkList = bookmarkListRepository.findByTitle("Test Bookmark List");
+        assertThat(savedBookmarkList).isPresent(); // 북마크 목록이 존재하는지 확인
+        assertThat(savedBookmarkList.get().getTitle()).isEqualTo("Test Bookmark List"); // 제목 확인
+
+        // When: 북마크 리스트 삭제
+        bookmarkListService.deleteBookmarkList(user.getId(), savedBookmarkList.get().getId());
+
+        // Then: 북마크 리스트가 삭제되었는지 확인
+        assertThat(bookmarkListRepository.findById(savedBookmarkList.get().getId())).isEmpty(); // 북마크 리스트가 존재하지 않아야 함
+
+        // Then: 관련 태그가 삭제되었는지 확인
+        List<BookmarkListTag> remainingTags = bookmarkListTagRepository.findByBookmarkListId(savedBookmarkList.get().getId());
+        assertThat(remainingTags).isEmpty(); // 태그가 존재하지 않아야 함
+
+        // Then: 관련 카테고리가 삭제되었는지 확인
+        List<Category> remainingCategories = categoryRepository.findAllByBookmarklist(savedBookmarkList.get());
+        assertThat(remainingCategories).isEmpty(); // 카테고리가 존재하지 않아야 함
+
+        // Then: 관련 사용자 그룹이 삭제되었는지 확인
+        List<UserGroup> remainingUserGroups = groupRepository.findByBookmarkListId(savedBookmarkList.get().getId());
+        assertThat(remainingUserGroups).isEmpty(); // 사용자 그룹이 존재하지 않아야 함
+    }
 }

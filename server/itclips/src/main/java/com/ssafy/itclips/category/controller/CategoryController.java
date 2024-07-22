@@ -1,7 +1,7 @@
 package com.ssafy.itclips.category.controller;
 
 import com.ssafy.itclips.category.dto.CategoryRequestDTO;
-import com.ssafy.itclips.category.dto.CategoryResponseDTO;
+import com.ssafy.itclips.category.dto.CategoryParamDTO;
 import com.ssafy.itclips.category.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -21,8 +21,6 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-
-
     @PostMapping("/add/{listId}")
     @Operation(summary = "카테고리 추가", description = "주어진 리스트 ID로 카테고리를 추가합니다.")
     @ApiResponses(value = {
@@ -33,9 +31,9 @@ public class CategoryController {
     public ResponseEntity<?> addCategory(@PathVariable @Parameter(description = "리스트 ID", required = true) Long listId,
                                          @RequestBody @Parameter(description = "카테고리 정보", required = true) CategoryRequestDTO categoryRequestDTO) {
 
-        CategoryResponseDTO category = categoryService.addCategory(listId, categoryRequestDTO);
+        CategoryParamDTO category = categoryService.addCategory(listId, categoryRequestDTO);
 
-        return new ResponseEntity<CategoryResponseDTO>(category,HttpStatus.CREATED);
+        return new ResponseEntity<CategoryParamDTO>(category,HttpStatus.CREATED);
     }
 
 
@@ -49,4 +47,6 @@ public class CategoryController {
         categoryService.deleteCategory(categoryId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+
 }

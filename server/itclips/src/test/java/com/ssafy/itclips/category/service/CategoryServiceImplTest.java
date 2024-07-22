@@ -4,7 +4,7 @@ import com.ssafy.itclips.bookmarklist.dto.BookmarkListDTO;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
 import com.ssafy.itclips.bookmarklist.service.BookmarkListService;
 import com.ssafy.itclips.category.dto.CategoryRequestDTO;
-import com.ssafy.itclips.category.dto.CategoryResponseDTO;
+import com.ssafy.itclips.category.dto.CategoryParamDTO;
 import com.ssafy.itclips.category.entity.Category;
 import com.ssafy.itclips.category.repository.CategoryRepository;
 import com.ssafy.itclips.bookmarklist.repository.BookmarkListRepository;
@@ -87,7 +87,7 @@ class CategoryServiceImplTest {
         categoryRequestDTO.setCategoryName("Test Category");
 
         // 카테고리 추가
-        CategoryResponseDTO savedCategory = categoryService.addCategory(savedBookmarkList.get().getId(), categoryRequestDTO);
+        CategoryParamDTO savedCategory = categoryService.addCategory(savedBookmarkList.get().getId(), categoryRequestDTO);
 
         // 저장된 카테고리 확인
         assertThat(savedCategory.getCategoryName()).isEqualTo("Test Category");
@@ -123,7 +123,7 @@ class CategoryServiceImplTest {
         categoryRequestDTO.setCategoryName("Test Category");
 
         // 카테고리 추가
-        CategoryResponseDTO savedCategory = categoryService.addCategory(bookmarkListRepository.findByTitle("Test Bookmark List").get().getId(), categoryRequestDTO);
+        CategoryParamDTO savedCategory = categoryService.addCategory(bookmarkListRepository.findByTitle("Test Bookmark List").get().getId(), categoryRequestDTO);
 
         // When: 카테고리 삭제
         categoryService.deleteCategory(savedCategory.getCategoryId());

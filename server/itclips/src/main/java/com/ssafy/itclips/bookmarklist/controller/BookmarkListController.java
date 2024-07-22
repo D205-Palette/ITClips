@@ -35,4 +35,13 @@ public class BookmarkListController {
         bookmarkListService.createBookmarkList(userId,bookmarkListDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+    @PostMapping("/update/{userId}/{listId}")
+    public ResponseEntity<?> updateBookmarkList(@PathVariable @Parameter(description = "유저 정보", required = true) Long userId,
+                                                @PathVariable Long listId,
+                                                @RequestBody BookmarkListDTO bookmarkListDTO) {
+
+        bookmarkListService.updateBookmarkList(userId,listId,bookmarkListDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

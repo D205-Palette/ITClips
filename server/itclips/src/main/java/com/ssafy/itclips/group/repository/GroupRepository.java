@@ -7,7 +7,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface GroupRepository extends JpaRepository<UserGroup, Long> {
+public interface GroupRepository extends JpaRepository<UserGroup, Long>, GroupRepositoryCustom {
 
     List<UserGroup> findByBookmarkListId(Long bookmarkListId);
+
 }

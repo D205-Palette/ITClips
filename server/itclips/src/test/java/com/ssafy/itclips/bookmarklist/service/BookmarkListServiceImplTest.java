@@ -18,6 +18,7 @@ import com.ssafy.itclips.tmp.Role;
 import com.ssafy.itclips.tmp.user.User;
 import com.ssafy.itclips.tmp.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,7 @@ class BookmarkListServiceImplTest {
 
     @Autowired
     private BookmarkListRepository bookmarkListRepository;
+
     @Autowired
     private UserRepository userRepository; // UserRepository 추가
 
@@ -56,13 +58,11 @@ class BookmarkListServiceImplTest {
     private BookmarkListTagRepository bookmarkListTagRepository;
 
 
-
-
-    @DisplayName("북마크 목록 추가 확인")
-    @Test
-    void createBookmarkList() {
-        // Given
-        User user = User.builder()
+    private static User user;
+    private static BookmarkListDTO bookmarkListDTO;
+    @BeforeAll
+    static void set() {
+        user = User.builder()
                 .email("aaa@example.com")
                 .password("!23")
                 .profileImage("Aaa")
@@ -70,10 +70,8 @@ class BookmarkListServiceImplTest {
                 .build();
         user.setId(125125L);
         user.setRole(Role.NORMAL);
-        // 사용자 저장 (테스트를 위해 필요시)
-        userRepository.save(user);
 
-        BookmarkListDTO bookmarkListDTO = new BookmarkListDTO();
+        bookmarkListDTO = new BookmarkListDTO();
         bookmarkListDTO.setTitle("Test Bookmark List");
         bookmarkListDTO.setDescription("Description for Test Bookmark List");
         bookmarkListDTO.setImage("image_url");
@@ -81,6 +79,14 @@ class BookmarkListServiceImplTest {
         bookmarkListDTO.setUsers(List.of("wlsrb6905@naver.com")); // 사용자 추가
         bookmarkListDTO.setTags(List.of(new TagDTO("aaa"), new TagDTO("bbb"))); // 태그 추가
         bookmarkListDTO.setCategories(List.of("Category1","Category2")); // 카테고리 추가
+    }
+
+
+    @DisplayName("북마크 목록 추가 확인")
+    @Test
+    void createBookmarkList() {
+        // 사용자 저장 (테스트를 위해 필요시)
+        userRepository.save(user);
 
         // When
         bookmarkListService.createBookmarkList(user.getId(), bookmarkListDTO);
@@ -133,5 +139,58 @@ class BookmarkListServiceImplTest {
             bookmarkListService.createBookmarkList(999L, bookmarkListDTO); // 존재하지 않는 사용자 ID
         });
         assertThat(exception.getErrorCode()).isEqualTo(ErrorCode.USER_NOT_FOUND);
+    }
+
+    @DisplayName("북마크 목록 업데이트 확인")
+    @Test
+    void updateBookmarkList() {
+        // 사용자 저장 (테스트를 위해 필요시)
+        userRepository.save(user);
+
+        // When
+        bookmarkListService.createBookmarkList(user.getId(), bookmarkListDTO);
+        // Then
+        Optional<BookmarkList> savedBookmarkList = bookmarkListRepository.findByTitle("Test Bookmark List");
+        assertThat(savedBookmarkList).isPresent(); // 북마크 목록이 존재하는지 확인
+        assertThat(savedBookmarkList.get().getTitle()).isEqualTo("Test Bookmark List"); // 제목 확인
+
+        // 업데이트할 내용
+        BookmarkListDTO updatedBookmarkListDTO = new BookmarkListDTO();
+        updatedBookmarkListDTO.setTitle("Updated Bookmark List");
+        updatedBookmarkListDTO.setDescription("Updated Description");
+        updatedBookmarkListDTO.setImage("updated_image_url");
+        updatedBookmarkListDTO.setIsPublic(false);
+        updatedBookmarkListDTO.setUsers(List.of("bbb@naver.com"));
+        updatedBookmarkListDTO.setTags(List.of(new TagDTO("ccc"), new TagDTO("ddd")));
+        updatedBookmarkListDTO.setCategories(List.of("Category3", "Category4"));
+
+        // When
+        bookmarkListService.updateBookmarkList(user.getId(), savedBookmarkList.get().getId(), updatedBookmarkListDTO);
+
+        // Then
+        BookmarkList updatedBookmarkList = bookmarkListRepository.findById(savedBookmarkList.get().getId())
+                .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND));
+
+        assertThat(updatedBookmarkList.getTitle()).isEqualTo("Updated Bookmark List"); // 제목 확인
+        assertThat(updatedBookmarkList.getDescription()).isEqualTo("Updated Description"); // 설명 확인
+        assertThat(updatedBookmarkList.getImage()).isEqualTo("updated_image_url"); // 이미지 URL 확인
+        assertThat(updatedBookmarkList.getIsPublic()).isFalse(); // 공개 여부 확인
+
+        // 기존 카테고리 삭제 확인
+        List<Category> remainingCategories = categoryRepository.findAllByBookmarklist(updatedBookmarkList);
+        assertThat(remainingCategories).extracting(Category::getName)
+                .containsExactlyInAnyOrder("Category3", "Category4"); // 새로운 카테고리 확인
+
+        // 기존 태그 삭제 확인
+        List<BookmarkListTag> remainingTags = bookmarkListTagRepository.findByBookmarkListId(updatedBookmarkList.getId());
+        assertThat(remainingTags.stream().map(tag -> tag.getTag().getTitle())).containsExactlyInAnyOrder("Ccc", "Ddd");
+
+        // 그룹 업데이트 확인
+        List<UserGroup> savedUserGroupsByBookmarkList = groupRepository.findByBookmarkListId(updatedBookmarkList.getId());
+        List<String> userEmails = savedUserGroupsByBookmarkList.stream()
+                .map(userGroup -> userGroup.getUser().getEmail())
+                .collect(Collectors.toList());
+
+        assertThat(userEmails).contains("bbb@naver.com"); // 새로운 사용자 이메일 확인
     }
 }

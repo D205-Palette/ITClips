@@ -51,15 +51,47 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         BookmarkList bookmarkList = createNewBookmarkList(bookmarkListDTO, user);
         List<UserGroup> groups = new ArrayList<>();
         List<BookmarkListTag> bookmarkListTags = new ArrayList<>();
-        setRelations(groupUsers, bookmarkList, groups, tags, bookmarkListTags, user, categories);
-
+        setRelations(groupUsers, bookmarkList, groups, tags, bookmarkListTags, categories);
+        user.addBookmarkList(bookmarkList);
         bookmarkListRepository.save(bookmarkList);
         categoryRepository.saveAll(categories);
         groupRepository.saveAll(groups);
         bookmarkListTagRepository.saveAll(bookmarkListTags);
     }
 
-    private static void setRelations(List<User> groupUsers, BookmarkList bookmarkList, List<UserGroup> groups, List<Tag> tags, List<BookmarkListTag> bookmarkListTags, User user, List<Category> categories) {
+    @Override
+    @Transactional
+    public void updateBookmarkList(Long userId, Long listId, BookmarkListDTO bookmarkListDTO) {
+        // 기존 북마크 목록을 조회
+        BookmarkList existingBookmarkList = bookmarkListRepository.findById(listId)
+                .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND));
+        // 업데이트할 내용 설정
+        existingBookmarkList.updateBookmarkList(bookmarkListDTO);
+        // 기존 태그, 카테고리, 그룹 삭제
+        deleteRelations(userId, existingBookmarkList);
+        // 새로운 태그 및 카테고리 생성
+        List<Tag> tags = createNewTags(bookmarkListDTO.getTags());
+        List<Category> categories = createNewCategories(bookmarkListDTO.getCategories());
+        List<User> groupUsers = getGroupUsers(bookmarkListDTO.getUsers());
+        // 사용자 그룹 업데이트
+        List<UserGroup> groups = new ArrayList<>();
+        List<BookmarkListTag> bookmarkListTags = new ArrayList<>();
+        setRelations(groupUsers,existingBookmarkList,groups,tags,bookmarkListTags,categories);
+        // 저장
+        bookmarkListRepository.save(existingBookmarkList);
+        categoryRepository.saveAll(categories);
+        groupRepository.saveAll(groups);
+        bookmarkListTagRepository.saveAll(bookmarkListTags);
+    }
+
+    @Transactional
+    public void deleteRelations(Long userId, BookmarkList existingBookmarkList) {
+        bookmarkListTagRepository.deleteAllByBookmarklList(existingBookmarkList);
+        categoryRepository.deleteAllByBookmarklList(existingBookmarkList);
+        groupRepository.deleteByBookmarkListAndUserIdNot(existingBookmarkList, userId);
+    }
+
+    private static void setRelations(List<User> groupUsers, BookmarkList bookmarkList, List<UserGroup> groups, List<Tag> tags, List<BookmarkListTag> bookmarkListTags, List<Category> categories) {
         groupUsers.forEach(groupUser -> {
             UserGroup group = new UserGroup();
             groupUser.setGroups(bookmarkList, group);
@@ -71,8 +103,6 @@ public class BookmarkListServiceImpl implements BookmarkListService {
             log.info(listTag.getTag().getTitle());
             bookmarkListTags.add(listTag);
         });
-
-        user.addBookmarkList(bookmarkList);
         categories.forEach(bookmarkList::addCategory);
     }
 
@@ -99,7 +129,6 @@ public class BookmarkListServiceImpl implements BookmarkListService {
                 .collect(Collectors.toList())
                 : Collections.singletonList(Category.builder().name("Undefined").build());
     }
-
 
     public BookmarkList createNewBookmarkList(BookmarkListDTO bookmarkListDTO, User user) {
         return BookmarkList.builder()

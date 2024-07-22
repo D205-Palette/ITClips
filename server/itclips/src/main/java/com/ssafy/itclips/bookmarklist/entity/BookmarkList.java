@@ -1,6 +1,7 @@
 package com.ssafy.itclips.bookmarklist.entity;
 
 import com.ssafy.itclips.bookmark.entity.Bookmark;
+import com.ssafy.itclips.bookmarklist.dto.BookmarkListDTO;
 import com.ssafy.itclips.category.entity.Category;
 import com.ssafy.itclips.group.entity.UserGroup;
 import com.ssafy.itclips.tag.entity.BookmarkListTag;
@@ -92,5 +93,12 @@ public class BookmarkList {
     public void addCategory(Category category) {
         categories.add(category);
         category.setBookmarklist(this);
+    }
+
+    public void updateBookmarkList(BookmarkListDTO bookmarkListDto) {
+        this.title = bookmarkListDto.getTitle();
+        this.description = bookmarkListDto.getDescription();
+        this.image = bookmarkListDto.getImage();
+        this.isPublic = bookmarkListDto.getIsPublic();
     }
 }

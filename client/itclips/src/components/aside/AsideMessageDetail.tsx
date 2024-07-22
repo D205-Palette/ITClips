@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+// AsideMessage에서 id값을가지고 데이터를 꺼내서 라우터로 AsideMessageDetail 컴포넌트로 넘겨줌
+
 const ChatScreen = () => {
   
   // 더미 데이터

@@ -12,7 +12,6 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
-
     @Override
     public List<User> findByEmails(List<String> emails) {
         QUser user = QUser.user;

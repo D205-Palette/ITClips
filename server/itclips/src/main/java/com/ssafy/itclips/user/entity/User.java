@@ -69,7 +69,7 @@ public class User {
     private String refreshToken;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false, columnDefinition = "ENUM('USER', 'ADMIN') DEFAULT 'USER'")
+    @Column(nullable = false)
     private Role role;
 
     @ColumnDefault("0")
@@ -101,10 +101,22 @@ public class User {
     }
 
     @Builder
-    public User(String email, String password, String nickname, String profileImage) {
+    public User(Long id, String email, String password, String nickname, String profileImage,
+                Instant createdAt, Instant updatedAt, Instant birth, String job, Boolean gender,
+                String refreshToken, Role role, Boolean darkMode, String provider) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.profileImage = profileImage;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.birth = birth;
+        this.job = job;
+        this.gender = gender;
+        this.refreshToken = refreshToken;
+        this.role = role;
+        this.darkMode = darkMode;
+        this.provider = provider;
     }
 }

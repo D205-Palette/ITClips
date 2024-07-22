@@ -1,9 +1,7 @@
-package com.ssafy.itclips.tmp.user;
+package com.ssafy.itclips.user.entity;
 
 import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
 import com.ssafy.itclips.group.entity.UserGroup;
-import com.ssafy.itclips.tmp.Role;
-import com.ssafy.itclips.tmp.UserTag;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -71,12 +69,15 @@ public class User {
     private String refreshToken;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false, columnDefinition = "ENUM('ADMIN', 'NORMAL') DEFAULT 'NORMAL'")
+    @Column(name = "role", nullable = false, columnDefinition = "ENUM('USER', 'ADMIN') DEFAULT 'USER'")
     private Role role;
 
     @ColumnDefault("0")
     @Column(name = "dark_mode")
     private Boolean darkMode;
+
+    @Column(name = "provider")
+    private String provider;
 
     @OneToMany(mappedBy = "user")
     private List<BookmarkList> bookmarkLists = new ArrayList<>();

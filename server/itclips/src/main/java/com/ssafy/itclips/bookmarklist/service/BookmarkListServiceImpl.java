@@ -14,8 +14,8 @@ import com.ssafy.itclips.tag.entity.BookmarkListTag;
 import com.ssafy.itclips.tag.entity.Tag;
 import com.ssafy.itclips.tag.repository.BookmarkListTagRepository;
 import com.ssafy.itclips.tag.service.TagService;
-import com.ssafy.itclips.tmp.user.User;
-import com.ssafy.itclips.tmp.user.repository.UserRepository;
+import com.ssafy.itclips.user.entity.User;
+import com.ssafy.itclips.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,14 +44,14 @@ public class BookmarkListServiceImpl implements BookmarkListService {
     public void createBookmarkList(Long userId, BookmarkListDTO bookmarkListDTO) throws RuntimeException {
         User user = userRepository.findById(userId)
                 .orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
-        List<User> groupUsers = getGroupUsers(bookmarkListDTO.getUsers());
-        groupUsers.add(user);
+//        List<User> groupUsers = getGroupUsers(bookmarkListDTO.getUsers());
+//        groupUsers.add(user);
         List<Tag> tags = createNewTags(bookmarkListDTO.getTags());
         List<Category> categories =createNewCategories(bookmarkListDTO.getCategories());
         BookmarkList bookmarkList = createNewBookmarkList(bookmarkListDTO, user);
         List<UserGroup> groups = new ArrayList<>();
         List<BookmarkListTag> bookmarkListTags = new ArrayList<>();
-        setRelations(groupUsers, bookmarkList, groups, tags, bookmarkListTags, categories);
+//        setRelations(groupUsers, bookmarkList, groups, tags, bookmarkListTags, categories);
         user.addBookmarkList(bookmarkList);
         bookmarkListRepository.save(bookmarkList);
         categoryRepository.saveAll(categories);
@@ -72,11 +72,11 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         // 새로운 태그 및 카테고리 생성
         List<Tag> tags = createNewTags(bookmarkListDTO.getTags());
         List<Category> categories = createNewCategories(bookmarkListDTO.getCategories());
-        List<User> groupUsers = getGroupUsers(bookmarkListDTO.getUsers());
+//        List<User> groupUsers = getGroupUsers(bookmarkListDTO.getUsers());
         // 사용자 그룹 업데이트
         List<UserGroup> groups = new ArrayList<>();
         List<BookmarkListTag> bookmarkListTags = new ArrayList<>();
-        setRelations(groupUsers,existingBookmarkList,groups,tags,bookmarkListTags,categories);
+//        setRelations(groupUsers,existingBookmarkList,groups,tags,bookmarkListTags,categories);
         // 저장
         bookmarkListRepository.save(existingBookmarkList);
         categoryRepository.saveAll(categories);
@@ -137,12 +137,12 @@ public class BookmarkListServiceImpl implements BookmarkListService {
     }
 
 
-    private List<User> getGroupUsers(List<String> emails) {
-        return Optional.ofNullable(emails)
-                .filter(e -> !e.isEmpty())
-                .map(userRepository::findByEmails)
-                .orElseGet(ArrayList::new);
-    }
+//    private List<User> getGroupUsers(List<String> emails) {
+//        return Optional.ofNullable(emails)
+//                .filter(e -> !e.isEmpty())
+//                .map(userRepository::findByEmails)
+//                .orElseGet(ArrayList::new);
+//    }
 
     private List<Category> createNewCategories(List<String> categoryNames) {
         return (categoryNames != null && !categoryNames.isEmpty())

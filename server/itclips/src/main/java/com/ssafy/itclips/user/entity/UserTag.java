@@ -1,22 +1,18 @@
-package com.ssafy.itclips.tmp;
+package com.ssafy.itclips.user.entity;
 
-import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
-import com.ssafy.itclips.tmp.user.User;
+import com.ssafy.itclips.tag.entity.Tag;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
-import java.time.Instant;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "bookmark_list_scrap", schema = "itclips")
-public class BookmarkListScrap {
+@Table(name = "user_tag", schema = "itclips")
+public class UserTag {
     @Id
     @Column(name = "id", nullable = false)
     private Long id;
@@ -30,11 +26,7 @@ public class BookmarkListScrap {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "bookmark_list_id", nullable = false)
-    private BookmarkList bookmarkList;
-
-    @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "created_at")
-    private Instant createdAt;
+    @JoinColumn(name = "tag_id", nullable = false)
+    private Tag tag;
 
 }

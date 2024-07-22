@@ -1,7 +1,8 @@
 package com.ssafy.itclips.group.entity;
 
 import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
-import com.ssafy.itclips.tmp.user.User;
+
+import com.ssafy.itclips.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

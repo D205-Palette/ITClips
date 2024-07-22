@@ -1,24 +1,30 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import ListItem from './components/ListsItem(List)';
+import MainTab from './components/MainTab';
+import AlbumItem from './components/ListsItem(Album)';
+import { Route, Routes } from 'react-router-dom';
+import MyView from './pages/MyView';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='App'>
+
+      <nav id="NAV" > 
+      <h1>Navbar</h1>
+      </nav>
+      
+      <div className='grid grid-cols-8 gap-4'>
+
+        <div id="aside"> 
+        </div>
+        
+        <div id="Main" className='col-start-4 col-span-4'>
+        <MainTab />
+        <MyView />
+        </div>
+
+      </div>
+
     </div>
   );
 }

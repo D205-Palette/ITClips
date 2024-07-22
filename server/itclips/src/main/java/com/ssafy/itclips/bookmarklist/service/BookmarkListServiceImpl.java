@@ -50,7 +50,9 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         BookmarkList bookmarkList = createNewBookmarkList(bookmarkListDTO, user);
         List<UserGroup> groups = new ArrayList<>();
         List<BookmarkListTag> bookmarkListTags = new ArrayList<>();
-//        setRelations(groupUsers, bookmarkList, groups, tags, bookmarkListTags, categories);
+        List<User> groupUsers = getGroupUsers(bookmarkListDTO.getUsers());
+        groupUsers.add(user);
+        setRelations(groupUsers, bookmarkList, groups, tags, bookmarkListTags, categories);
         user.addBookmarkList(bookmarkList);
         bookmarkListRepository.save(bookmarkList);
         categoryRepository.saveAll(categories);

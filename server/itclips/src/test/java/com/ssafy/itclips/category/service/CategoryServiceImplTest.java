@@ -1,11 +1,18 @@
 package com.ssafy.itclips.category.service;
 
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListDTO;
+import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
+import com.ssafy.itclips.bookmarklist.service.BookmarkListService;
+import com.ssafy.itclips.category.dto.CategoryDTO;
+import com.ssafy.itclips.category.entity.Category;
 import com.ssafy.itclips.category.repository.CategoryRepository;
 import com.ssafy.itclips.bookmarklist.repository.BookmarkListRepository;
+import com.ssafy.itclips.error.CustomException;
+import com.ssafy.itclips.error.ErrorCode;
 import com.ssafy.itclips.tag.dto.TagDTO;
 import com.ssafy.itclips.user.entity.Role;
 import com.ssafy.itclips.user.entity.User;
+import com.ssafy.itclips.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -14,6 +21,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
 @SpringBootTest
@@ -25,6 +36,12 @@ class CategoryServiceImplTest {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private BookmarkListService bookmarkListService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private BookmarkListRepository bookmarkListRepository;
@@ -53,12 +70,43 @@ class CategoryServiceImplTest {
     @DisplayName("카테고리 추가 확인")
     @Test
     void addCategory() {
+// 사용자 저장 (테스트를 위해 필요시)
+        userRepository.save(user);
 
+        // When
+        bookmarkListService.createBookmarkList(user.getId(), bookmarkListDTO);
+
+        // Then
+        Optional<BookmarkList> savedBookmarkList = bookmarkListRepository.findByTitle("Test Bookmark List");
+        assertThat(savedBookmarkList).isPresent(); // 북마크 목록이 존재하는지 확인
+        assertThat(savedBookmarkList.get().getTitle()).isEqualTo("Test Bookmark List"); // 제목 확인
+
+        // 카테고리 DTO 생성
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setCategoryName("Test Category");
+
+        // 카테고리 추가
+        categoryService.addCategory(savedBookmarkList.get().getId(), categoryDTO);
+
+        // 저장된 카테고리 확인
+        Optional<Category> savedCategory = Optional.ofNullable(categoryRepository.findByName(categoryDTO.getCategoryName()));
+        assertThat(savedCategory).isPresent();
+        assertThat(savedCategory.get().getName()).isEqualTo("Test Category");
     }
 
     @DisplayName("존재하지 않는 북마크 리스트에 대한 예외 확인")
     @Test
     void addCategory_BookmarkListNotFound() {
+        // 카테고리 DTO 생성
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setCategoryName("Test Category");
 
+        // 존재하지 않는 ID로 카테고리 추가 시도 및 예외 발생 확인
+        Long nonExistentListId = 999L;
+
+        assertThatThrownBy(() -> {
+            categoryService.addCategory(nonExistentListId, categoryDTO);
+        }).isInstanceOf(CustomException.class)
+                .hasMessageContaining(ErrorCode.BOOKMARK_LIST_NOT_FOUND.getMessage());
     }
 }

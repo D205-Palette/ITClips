@@ -13,4 +13,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long>, Categ
 
     List<Category> findAllByBookmarklist(BookmarkList bookmarklist);
 
+    Category findByName(String name);
+
 }

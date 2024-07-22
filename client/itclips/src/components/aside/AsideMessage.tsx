@@ -1,16 +1,13 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
 import MessageHeader from "./items/MessageHeader";
 import MessageContainer from "./items/MessageContainer";
 
-interface Message {
-  id: number;
-  title: string;
-  subtitle: string;
-  hasNotification?: boolean;
+interface MessageListProps {
+  onSelectChat: (id: number) => void;
 }
 
-const MessageList = () => {
+const MessageList: React.FC<MessageListProps> = ({ onSelectChat }) => {
 
   // 더미 데이터
   const [ data ] = useState([
@@ -29,7 +26,7 @@ const MessageList = () => {
 
   const onClickMessage = (id: number) => {
     // 해당 메세지 대화창으로 이동하게 구현하기 (라우터 이용해서 구현)
-    console.log(id);
+    onSelectChat(id);
   }
 
   return (

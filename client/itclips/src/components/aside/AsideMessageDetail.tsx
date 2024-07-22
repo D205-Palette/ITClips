@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 
 // AsideMessage에서 id값을가지고 데이터를 꺼내서 라우터로 AsideMessageDetail 컴포넌트로 넘겨줌
 
-const ChatScreen = () => {
+const AsideMessageDetail = ({ chatId, onBack }: any) => {
+  // chatId는 넘겨받아서 axios로 데이터 다시 호출
   
   // 더미 데이터
   const [messages, setMessages] = useState([
@@ -25,7 +26,7 @@ const ChatScreen = () => {
     <div className="bg-aside-layout p-4 max-w-sm mx-auto h-[32rem] flex flex-col">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center">
-          <button className="btn btn-ghost btn-circle">
+          <button className="btn btn-ghost btn-circle" onClick={onBack}>
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
@@ -65,4 +66,4 @@ const ChatScreen = () => {
   );
 };
 
-export default ChatScreen;
+export default AsideMessageDetail;

@@ -135,11 +135,14 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         return tags;
     }
 
-
     private List<User> getGroupUsers(List<String> emails) {
         return Optional.ofNullable(emails)
                 .filter(e -> !e.isEmpty())
-                .map(userRepository::findByEmails)
+                .map(e -> e.stream()
+                        .map(userRepository::findByEmail)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .collect(Collectors.toList()))
                 .orElseGet(ArrayList::new);
     }
 

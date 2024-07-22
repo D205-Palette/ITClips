@@ -1,12 +1,13 @@
 package com.ssafy.itclips.category.controller;
 
 import com.ssafy.itclips.category.dto.CategoryDTO;
+import com.ssafy.itclips.category.entity.Category;
 import com.ssafy.itclips.category.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jdk.jfr.Category;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,11 +30,23 @@ public class CategoryController {
             @ApiResponse(responseCode = "404", description = "리스트를 찾을 수 없습니다."),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
     })
-    public ResponseEntity<?> addCategory(@PathVariable Long listId,
-                                         @RequestBody CategoryDTO categoryDTO) {
+    public ResponseEntity<?> addCategory(@PathVariable @Parameter(description = "리스트 ID", required = true) Long listId,
+                                         @RequestBody @Parameter(description = "카테고리 정보", required = true)CategoryDTO categoryDTO) {
 
-        categoryService.addCategory(listId,categoryDTO);
+        Category category = categoryService.addCategory(listId,categoryDTO);
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<Category>(category,HttpStatus.CREATED);
+    }
+
+
+    @DeleteMapping("/delete/{categoryId}")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "카테고리가 성공적으로 삭제되었습니다."),
+            @ApiResponse(responseCode = "404", description = "카테고리를 찾을 수 없습니다."),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
+    })
+    public ResponseEntity<?> removeCategory(@PathVariable @Parameter(description = "카테고리 ID", required = true) Long categoryId) {
+        categoryService.deleteCategory(categoryId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

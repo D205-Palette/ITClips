@@ -86,12 +86,10 @@ class CategoryServiceImplTest {
         categoryDTO.setCategoryName("Test Category");
 
         // 카테고리 추가
-        categoryService.addCategory(savedBookmarkList.get().getId(), categoryDTO);
+        Category savedCategory = categoryService.addCategory(savedBookmarkList.get().getId(), categoryDTO);
 
         // 저장된 카테고리 확인
-        Optional<Category> savedCategory = Optional.ofNullable(categoryRepository.findByName(categoryDTO.getCategoryName()));
-        assertThat(savedCategory).isPresent();
-        assertThat(savedCategory.get().getName()).isEqualTo("Test Category");
+        assertThat(savedCategory.getName()).isEqualTo("Test Category");
     }
 
     @DisplayName("존재하지 않는 북마크 리스트에 대한 예외 확인")
@@ -109,4 +107,29 @@ class CategoryServiceImplTest {
         }).isInstanceOf(CustomException.class)
                 .hasMessageContaining(ErrorCode.BOOKMARK_LIST_NOT_FOUND.getMessage());
     }
+
+    @DisplayName("카테고리 삭제 확인")
+    @Test
+    void deleteCategory() {
+        // 사용자 저장 (테스트를 위해 필요시)
+        userRepository.save(user);
+
+        // 북마크 리스트 생성
+        bookmarkListService.createBookmarkList(user.getId(), bookmarkListDTO);
+
+        // 카테고리 DTO 생성
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setCategoryName("Test Category");
+
+        // 카테고리 추가
+        Category savedCategory = categoryService.addCategory(bookmarkListRepository.findByTitle("Test Bookmark List").get().getId(), categoryDTO);
+
+        // When: 카테고리 삭제
+        categoryService.deleteCategory(savedCategory.getId());
+
+        // Then: 카테고리가 삭제되었는지 확인
+        Optional<Category> deletedCategory = categoryRepository.findById(savedCategory.getId());
+        assertThat(deletedCategory).isNotPresent(); // 카테고리가 존재하지 않아야 함
+    }
+
 }

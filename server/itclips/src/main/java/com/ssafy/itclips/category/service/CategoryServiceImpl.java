@@ -21,7 +21,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
-    public void addCategory(Long listId, CategoryDTO categoryDTO) throws RuntimeException{
+    public Category addCategory(Long listId, CategoryDTO categoryDTO) throws RuntimeException{
         // 기존 북마크 목록을 조회
         BookmarkList existingBookmarkList = bookmarkListRepository.findById(listId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND));
@@ -29,6 +29,14 @@ public class CategoryServiceImpl implements CategoryService {
                 .name(categoryDTO.getCategoryName())
                 .build();
         category.addBookmarkList(existingBookmarkList);
-        categoryRepository.save(category);
+        return categoryRepository.save(category);
+    }
+
+    @Override
+    public void deleteCategory(Long categoryId) throws RuntimeException{
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CustomException(ErrorCode.CATEGORY_NOT_FOUND));
+
+        categoryRepository.delete(category);
     }
 }

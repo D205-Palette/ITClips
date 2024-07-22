@@ -451,29 +451,29 @@ LOCK TABLES `follow` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `groups`
+-- Table structure for table `user_group`
 --
 
-DROP TABLE IF EXISTS `groups`;
+DROP TABLE IF EXISTS `user_group`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `groups` (
+CREATE TABLE `user_group` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `user_id` bigint NOT NULL,
   `bookmark_list_id` bigint NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `bookmark_list_id` (`bookmark_list_id`,`user_id`),
   KEY `user_id` (`user_id`),
-  CONSTRAINT `groups_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
-  CONSTRAINT `groups_ibfk_2` FOREIGN KEY (`bookmark_list_id`) REFERENCES `bookmark_list` (`id`)
+  CONSTRAINT `user_group_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `user_group_ibfk_2` FOREIGN KEY (`bookmark_list_id`) REFERENCES `bookmark_list` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `groups`
+-- Dumping data for table `user_group`
 --
 
-LOCK TABLES `groups` WRITE;
+LOCK TABLES `user_group` WRITE;
 /*!40000 ALTER TABLE `groups` DISABLE KEYS */;
 /*!40000 ALTER TABLE `groups` ENABLE KEYS */;
 UNLOCK TABLES;

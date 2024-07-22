@@ -1,16 +1,27 @@
-package com.ssafy.itclips.tmp;
+package com.ssafy.itclips.tmp.user;
 
+import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
+import com.ssafy.itclips.group.entity.UserGroup;
+import com.ssafy.itclips.tmp.Role;
+import com.ssafy.itclips.tmp.UserTag;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "user", schema = "itclips")
 public class User {
@@ -67,4 +78,32 @@ public class User {
     @Column(name = "dark_mode")
     private Boolean darkMode;
 
+    @OneToMany(mappedBy = "user")
+    private List<BookmarkList> bookmarkLists = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<UserGroup> groups = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private Set<UserTag> userTags = new LinkedHashSet<>();
+
+    public void addBookmarkList(BookmarkList bookmarkList) {
+        bookmarkLists.add(bookmarkList);
+        bookmarkList.setUser(this);
+    }
+
+    public void setGroups(BookmarkList bookmarkList, UserGroup group) {
+        group.setUser(this);
+        group.setBookmarkList(bookmarkList);
+        bookmarkList.getGroups().add(group);
+        groups.add(group);
+    }
+
+    @Builder
+    public User(String email, String password, String nickname, String profileImage) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.profileImage = profileImage;
+    }
 }

@@ -33,10 +33,8 @@ public class TagController {
     })
     public ResponseEntity<String> addTags(
             @RequestBody @Parameter(description = "추가할 태그 목록", required = true) List<TagDTO> tags) {
-
-
         HttpStatus httpStatus = HttpStatus.CREATED;
-        if (!tagService.saveTags(tags)) {
+        if (tagService.saveTags(tags) != null) {
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
         }
 

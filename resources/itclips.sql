@@ -15,6 +15,127 @@
 /* !40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /* !40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+
+--
+-- Table structure for table `user`
+--
+
+DROP TABLE IF EXISTS `user`;
+/* !40101 SET @saved_cs_client     = @@character_set_client */;
+/* !50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `user` (
+                        `id` bigint NOT NULL AUTO_INCREMENT,
+                        `email` varchar(255) NOT NULL,
+                        `password` varchar(511) NOT NULL,
+                        `nickname` varchar(50) NOT NULL,
+                        `profile_image` varchar(255) DEFAULT NULL,
+                        `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+                        `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                        `birth` timestamp NULL DEFAULT NULL,
+                        `job` varchar(50) DEFAULT NULL,
+                        `gender` tinyint(1) DEFAULT 0,
+                        `refresh_token` varchar(511) DEFAULT NULL,
+                        `role` ENUM('USER', 'ADMIN') DEFAULT 'USER',
+                        `dark_mode` tinyint(1) DEFAULT '0',
+                        `provider` VARCHAR(20) NOT NULL,
+                        PRIMARY KEY (`id`),
+                        UNIQUE KEY `email` (`email`),
+                        UNIQUE KEY `nickname` (`nickname`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/* !40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user`
+--
+
+LOCK TABLES `user` WRITE;
+/* !40000 ALTER TABLE `user` DISABLE KEYS */;
+/* !40000 ALTER TABLE `user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `bookmark_list`
+--
+
+DROP TABLE IF EXISTS `bookmark_list`;
+/* !40101 SET @saved_cs_client     = @@character_set_client */;
+/* !50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `bookmark_list` (
+                                 `id` bigint NOT NULL AUTO_INCREMENT,
+                                 `user_id` bigint NOT NULL,
+                                 `title` varchar(255) NOT NULL,
+                                 `description` text,
+                                 `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                 `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                                 `image` varchar(255) DEFAULT NULL,
+                                 `is_public` tinyint(1) NOT NULL DEFAULT '0',
+                                 PRIMARY KEY (`id`),
+                                 KEY `FK_User_TO_BookmarkList_1` (`user_id`),
+                                 CONSTRAINT `FK_User_TO_BookmarkList_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/* !40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `bookmark_list`
+--
+
+LOCK TABLES `bookmark_list` WRITE;
+/* !40000 ALTER TABLE `bookmark_list` DISABLE KEYS */;
+/* !40000 ALTER TABLE `bookmark_list` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tag`
+--
+
+DROP TABLE IF EXISTS `tag`;
+/* !40101 SET @saved_cs_client     = @@character_set_client */;
+/* !50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tag` (
+                       `id` bigint NOT NULL AUTO_INCREMENT,
+                       `title` varchar(20) NOT NULL,
+                       `is_origin` tinyint(1) DEFAULT '0',
+                       PRIMARY KEY (`id`),
+                       UNIQUE KEY `title` (`title`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/* !40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tag`
+--
+
+LOCK TABLES `tag` WRITE;
+/* !40000 ALTER TABLE `tag` DISABLE KEYS */;
+/* !40000 ALTER TABLE `tag` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `category`
+--
+
+DROP TABLE IF EXISTS `category`;
+/* !40101 SET @saved_cs_client     = @@character_set_client */;
+/* !50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `category` (
+                            `id` bigint NOT NULL AUTO_INCREMENT,
+                            `name` varchar(20) NOT NULL DEFAULT 'Undefined',
+                            `bookmarklist_id` bigint NOT NULL,
+                            PRIMARY KEY (`id`),
+                            KEY `fk_category_bookmarklist_idx` (`bookmarklist_id`),
+                            CONSTRAINT `fk_category_bookmarklist` FOREIGN KEY (`bookmarklist_id`) REFERENCES `bookmark_list` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/* !40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `category`
+--
+
+LOCK TABLES `category` WRITE;
+/* !40000 ALTER TABLE `category` DISABLE KEYS */;
+/* !40000 ALTER TABLE `category` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
 --
 -- Table structure for table `bookmark`
 --
@@ -104,36 +225,7 @@ LOCK TABLES `bookmark_like` WRITE;
 /* !40000 ALTER TABLE `bookmark_like` ENABLE KEYS */;
 UNLOCK TABLES;
 
---
--- Table structure for table `bookmark_list`
---
 
-DROP TABLE IF EXISTS `bookmark_list`;
-/* !40101 SET @saved_cs_client     = @@character_set_client */;
-/* !50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `bookmark_list` (
-                                 `id` bigint NOT NULL AUTO_INCREMENT,
-                                 `user_id` bigint NOT NULL,
-                                 `title` varchar(255) NOT NULL,
-                                 `description` text,
-                                 `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                                 `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                                 `image` varchar(255) DEFAULT NULL,
-                                 `is_public` tinyint(1) NOT NULL DEFAULT '0',
-                                 PRIMARY KEY (`id`),
-                                 KEY `FK_User_TO_BookmarkList_1` (`user_id`),
-                                 CONSTRAINT `FK_User_TO_BookmarkList_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/* !40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `bookmark_list`
---
-
-LOCK TABLES `bookmark_list` WRITE;
-/* !40000 ALTER TABLE `bookmark_list` DISABLE KEYS */;
-/* !40000 ALTER TABLE `bookmark_list` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `bookmark_list_comment`
@@ -345,30 +437,29 @@ LOCK TABLES `bookmark_tag` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `category`
+-- Table structure for table `chat_room`
 --
 
-DROP TABLE IF EXISTS `category`;
+DROP TABLE IF EXISTS `chat_room`;
 /* !40101 SET @saved_cs_client     = @@character_set_client */;
 /* !50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `category` (
-                            `id` bigint NOT NULL AUTO_INCREMENT,
-                            `name` varchar(20) NOT NULL DEFAULT 'Undefined',
-                            `bookmarklist_id` bigint NOT NULL,
-                            PRIMARY KEY (`id`),
-                            KEY `fk_category_bookmarklist_idx` (`bookmarklist_id`),
-                            CONSTRAINT `fk_category_bookmarklist` FOREIGN KEY (`bookmarklist_id`) REFERENCES `bookmark_list` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+CREATE TABLE `chat_room` (
+                             `id` bigint NOT NULL AUTO_INCREMENT,
+                             `name` varchar(20) NOT NULL,
+                             PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /* !40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `category`
+-- Dumping data for table `chat_room`
 --
 
-LOCK TABLES `category` WRITE;
-/* !40000 ALTER TABLE `category` DISABLE KEYS */;
-/* !40000 ALTER TABLE `category` ENABLE KEYS */;
+LOCK TABLES `chat_room` WRITE;
+/* !40000 ALTER TABLE `chat_room` DISABLE KEYS */;
+/* !40000 ALTER TABLE `chat_room` ENABLE KEYS */;
 UNLOCK TABLES;
+
+
 
 --
 -- Table structure for table `chat`
@@ -396,29 +487,6 @@ CREATE TABLE `chat` (
 LOCK TABLES `chat` WRITE;
 /* !40000 ALTER TABLE `chat` DISABLE KEYS */;
 /* !40000 ALTER TABLE `chat` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `chat_room`
---
-
-DROP TABLE IF EXISTS `chat_room`;
-/* !40101 SET @saved_cs_client     = @@character_set_client */;
-/* !50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `chat_room` (
-                             `id` bigint NOT NULL AUTO_INCREMENT,
-                             `name` varchar(20) NOT NULL,
-                             PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/* !40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `chat_room`
---
-
-LOCK TABLES `chat_room` WRITE;
-/* !40000 ALTER TABLE `chat_room` DISABLE KEYS */;
-/* !40000 ALTER TABLE `chat_room` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -657,67 +725,6 @@ LOCK TABLES `roadmap_step` WRITE;
 /* !40000 ALTER TABLE `roadmap_step` ENABLE KEYS */;
 UNLOCK TABLES;
 
---
--- Table structure for table `tag`
---
-
-DROP TABLE IF EXISTS `tag`;
-/* !40101 SET @saved_cs_client     = @@character_set_client */;
-/* !50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `tag` (
-                       `id` bigint NOT NULL AUTO_INCREMENT,
-                       `title` varchar(20) NOT NULL,
-                       `is_origin` tinyint(1) DEFAULT '0',
-                       PRIMARY KEY (`id`),
-                       UNIQUE KEY `title` (`title`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/* !40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `tag`
---
-
-LOCK TABLES `tag` WRITE;
-/* !40000 ALTER TABLE `tag` DISABLE KEYS */;
-/* !40000 ALTER TABLE `tag` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `user`
---
-
-DROP TABLE IF EXISTS `user`;
-/* !40101 SET @saved_cs_client     = @@character_set_client */;
-/* !50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `user` (
-                        `id` bigint NOT NULL AUTO_INCREMENT,
-                        `email` varchar(255) NOT NULL,
-                        `password` varchar(511) NOT NULL,
-                        `nickname` varchar(50) NOT NULL,
-                        `profile_image` varchar(255) DEFAULT NULL,
-                        `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-                        `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                        `birth` timestamp NULL DEFAULT NULL,
-                        `job` varchar(50) DEFAULT NULL,
-                        `gender` tinyint(1) DEFAULT 0,
-                        `refresh_token` varchar(511) DEFAULT NULL,
-                        `role` ENUM('USER', 'ADMIN') DEFAULT 'USER',
-                        `dark_mode` tinyint(1) DEFAULT '0',
-                        `provider` VARCHAR(20) NOT NULL,
-                        PRIMARY KEY (`id`),
-                        UNIQUE KEY `email` (`email`),
-                        UNIQUE KEY `nickname` (`nickname`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/* !40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user`
---
-
-LOCK TABLES `user` WRITE;
-/* !40000 ALTER TABLE `user` DISABLE KEYS */;
-/* !40000 ALTER TABLE `user` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `user_tag`

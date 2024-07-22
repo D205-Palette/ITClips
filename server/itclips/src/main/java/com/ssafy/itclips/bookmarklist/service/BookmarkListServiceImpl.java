@@ -16,10 +16,10 @@ import com.ssafy.itclips.tag.repository.BookmarkListTagRepository;
 import com.ssafy.itclips.tag.service.TagService;
 import com.ssafy.itclips.user.entity.User;
 import com.ssafy.itclips.user.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,8 +44,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
     public void createBookmarkList(Long userId, BookmarkListDTO bookmarkListDTO) throws RuntimeException {
         User user = userRepository.findById(userId)
                 .orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
-//        List<User> groupUsers = getGroupUsers(bookmarkListDTO.getUsers());
-//        groupUsers.add(user);
+
         List<Tag> tags = createNewTags(bookmarkListDTO.getTags());
         List<Category> categories =createNewCategories(bookmarkListDTO.getCategories());
         BookmarkList bookmarkList = createNewBookmarkList(bookmarkListDTO, user);
@@ -61,7 +60,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
 
     @Override
     @Transactional
-    public void updateBookmarkList(Long userId, Long listId, BookmarkListDTO bookmarkListDTO) {
+    public void updateBookmarkList(Long userId, Long listId, BookmarkListDTO bookmarkListDTO) throws RuntimeException{
         // 기존 북마크 목록을 조회
         BookmarkList existingBookmarkList = bookmarkListRepository.findById(listId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND));
@@ -72,11 +71,11 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         // 새로운 태그 및 카테고리 생성
         List<Tag> tags = createNewTags(bookmarkListDTO.getTags());
         List<Category> categories = createNewCategories(bookmarkListDTO.getCategories());
-//        List<User> groupUsers = getGroupUsers(bookmarkListDTO.getUsers());
+        List<User> groupUsers = getGroupUsers(bookmarkListDTO.getUsers());
         // 사용자 그룹 업데이트
         List<UserGroup> groups = new ArrayList<>();
         List<BookmarkListTag> bookmarkListTags = new ArrayList<>();
-//        setRelations(groupUsers,existingBookmarkList,groups,tags,bookmarkListTags,categories);
+        setRelations(groupUsers,existingBookmarkList,groups,tags,bookmarkListTags,categories);
         // 저장
         bookmarkListRepository.save(existingBookmarkList);
         categoryRepository.saveAll(categories);
@@ -86,7 +85,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
 
     @Override
     @Transactional
-    public void deleteBookmarkList(Long userId, Long listId) {
+    public void deleteBookmarkList(Long userId, Long listId) throws RuntimeException{
         BookmarkList bookmarkList = bookmarkListRepository.findById(listId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND));
 
@@ -107,7 +106,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
 
 
     @Transactional
-    public void deleteRelations(Long userId, BookmarkList existingBookmarkList) {
+    public void deleteRelations(Long userId, BookmarkList existingBookmarkList) throws RuntimeException{
         bookmarkListTagRepository.deleteAllByBookmarklList(existingBookmarkList);
         categoryRepository.deleteAllByBookmarklList(existingBookmarkList);
         groupRepository.deleteByBookmarkListAndUserIdNot(existingBookmarkList, userId);
@@ -137,12 +136,12 @@ public class BookmarkListServiceImpl implements BookmarkListService {
     }
 
 
-//    private List<User> getGroupUsers(List<String> emails) {
-//        return Optional.ofNullable(emails)
-//                .filter(e -> !e.isEmpty())
-//                .map(userRepository::findByEmails)
-//                .orElseGet(ArrayList::new);
-//    }
+    private List<User> getGroupUsers(List<String> emails) {
+        return Optional.ofNullable(emails)
+                .filter(e -> !e.isEmpty())
+                .map(userRepository::findByEmails)
+                .orElseGet(ArrayList::new);
+    }
 
     private List<Category> createNewCategories(List<String> categoryNames) {
         return (categoryNames != null && !categoryNames.isEmpty())

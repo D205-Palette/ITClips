@@ -7,7 +7,6 @@ import com.ssafy.itclips.tag.repository.TagRepository;
 import jakarta.transaction.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

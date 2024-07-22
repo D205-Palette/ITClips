@@ -16,10 +16,10 @@ import com.ssafy.itclips.tag.repository.BookmarkListTagRepository;
 import com.ssafy.itclips.tag.service.TagService;
 import com.ssafy.itclips.tmp.user.User;
 import com.ssafy.itclips.tmp.user.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,7 +61,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
 
     @Override
     @Transactional
-    public void updateBookmarkList(Long userId, Long listId, BookmarkListDTO bookmarkListDTO) {
+    public void updateBookmarkList(Long userId, Long listId, BookmarkListDTO bookmarkListDTO) throws RuntimeException{
         // 기존 북마크 목록을 조회
         BookmarkList existingBookmarkList = bookmarkListRepository.findById(listId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND));
@@ -86,7 +86,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
 
     @Override
     @Transactional
-    public void deleteBookmarkList(Long userId, Long listId) {
+    public void deleteBookmarkList(Long userId, Long listId) throws RuntimeException{
         BookmarkList bookmarkList = bookmarkListRepository.findById(listId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND));
 
@@ -107,7 +107,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
 
 
     @Transactional
-    public void deleteRelations(Long userId, BookmarkList existingBookmarkList) {
+    public void deleteRelations(Long userId, BookmarkList existingBookmarkList) throws RuntimeException{
         bookmarkListTagRepository.deleteAllByBookmarklList(existingBookmarkList);
         categoryRepository.deleteAllByBookmarklList(existingBookmarkList);
         groupRepository.deleteByBookmarkListAndUserIdNot(existingBookmarkList, userId);

@@ -39,4 +39,9 @@ public class Category {
     public Category(String name) {
         this.name = name;
     }
+
+    public void addBookmarkList(BookmarkList bookmarklist) {
+        this.bookmarklist = bookmarklist;
+        bookmarklist.getCategories().add(this);
+    }
 }

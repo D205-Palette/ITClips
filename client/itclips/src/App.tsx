@@ -1,32 +1,48 @@
-import React from 'react';
-import ListItem from './components/ListsItem(List)';
-import MainTab from './components/MainTab';
-import AlbumItem from './components/ListsItem(Album)';
-import { Route, Routes } from 'react-router-dom';
-import MyView from './pages/MyView';
+import React from "react";
+import MainTab from "./components/MainTab";
+import { Route, Routes } from "react-router-dom";
+import MyView from "./pages/MyView";
+import "./index.css";
+import { useStore } from "./stores/authStore";
 
-function App() {
+// component
+import NavBar from "./components/NavBar";
+
+// View
+import Intro from "./pages/Intro";
+import SignUpView from "./pages/SignUpView";
+
+const App = () => {
+  const isLogin = useStore((state) => state.isLoggedIn);
+
   return (
-    <div className='App'>
-
-      <nav id="NAV" > 
-      <h1>Navbar</h1>
-      </nav>
-      
-      <div className='grid grid-cols-8 gap-4'>
-
-        <div id="aside"> 
+    <div className="App">
+      <header className="App-header">
+        <NavBar />
+        <div className="container mx-auto px-4">
+          <Routes>
+            {isLogin ? (
+              <Route path="/myview" element={<MyView />} />
+            ) : (
+              <>
+                <Route path="/intro" element={<Intro />} />
+                <Route path="/signup" element={<SignUpView />} />{" "}
+              </>
+            )}
+          </Routes>
         </div>
-        
-        <div id="Main" className='col-start-4 col-span-4'>
-        <MainTab />
-        <MyView />
-        </div>
+      </header>
 
+      <div className="grid grid-cols-8 gap-4">
+        <div id="aside"></div>
+
+        <div id="Main" className="col-start-4 col-span-4">
+          <MainTab />
+          <MyView />
+        </div>
       </div>
-
     </div>
   );
-}
+};
 
 export default App;

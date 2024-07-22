@@ -7,7 +7,7 @@ import { useStore } from "./stores/authStore";
 
 // component
 import NavBar from "./components/NavBar";
-
+import AsideBookmarkList from "./components/AsideProfile"
 // View
 import Intro from "./pages/Intro";
 import SignUpView from "./pages/SignUpView";
@@ -34,7 +34,9 @@ const App = () => {
       </header>
 
       <div className="grid grid-cols-8 gap-4">
-        <div id="aside"></div>
+        <div id="aside" className="col-start-2 col-span-2">
+          <AsideBookmarkList />
+        </div>
 
         <div id="Main" className="col-start-4 col-span-4">
           <MainTab />

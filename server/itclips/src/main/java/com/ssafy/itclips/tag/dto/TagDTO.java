@@ -1,9 +1,7 @@
 package com.ssafy.itclips.tag.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
 @Getter
 @Setter
@@ -11,6 +9,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class TagDTO {
     private String title;
-    private Boolean isOrigin;
 
 }

@@ -5,9 +5,10 @@ import MessageListContainer from "./items/MessageListContainer";
 
 interface MessageListProps {
   onSelectChat: (id: number) => void;
+  onShowInvite: (state: number) => void;
 }
 
-const MessageList: React.FC<MessageListProps> = ({ onSelectChat }) => {
+const MessageList: React.FC<MessageListProps> = ({ onSelectChat, onShowInvite }) => {
 
   // 더미 데이터
   const [ data ] = useState([
@@ -25,14 +26,18 @@ const MessageList: React.FC<MessageListProps> = ({ onSelectChat }) => {
   // }
 
   const onClickMessage = (id: number) => {
-    // 해당 메세지 대화창으로 이동하게 구현하기 (라우터 이용해서 구현)
+    // 해당 메세지 대화창으로 이동하게 구현하기
     onSelectChat(id);
   }
 
+  const onClickInvite = (state: number) => {
+    onShowInvite(state);
+  }
+
   return (
-    <div className="rounded-3xl w-80 p-8 flex flex-col items-center">
+    <div className="rounded-3xl w-80 p-8 flex flex-col">
       {/* 메세지 헤더 영역 */}
-      <MessageHeader />
+      <MessageHeader onClickInvite = { onClickInvite } />
       {/* 받은 메세지 영역 */}
       <MessageListContainer 
         messages = { data }

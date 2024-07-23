@@ -14,40 +14,42 @@ const FindIdModal = () => {
   const { modalState } = navStore();
   const { closeFindIdModal, openFindIdCompleteModal } = modalState;
 
-  const handleEmailSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleEmailSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     setErrorMessage(null);
 
-    try {
-      await axios.post("/user/email", { email });
-      setIsEmailSent(true);
-      setErrorMessage(true);
-    } catch (error) {
-      setErrorMessage(false);
-    } finally {
-      setIsSubmitting(false);
-    }
+    axios.post("/user/email", { email })
+      .then(() => {
+        setIsEmailSent(true);
+        setErrorMessage(true);
+      })
+      .catch(() => {
+        setErrorMessage(false);
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
   };
 
-  const handleVerificationSubmit = async (
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
+  const handleVerificationSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     setErrorMessage(null);
 
-    try {
-      const response = await axios.get("/user/idInquiry", {
-        params: { email, code: verificationCode },
+    axios.get("/user/idInquiry", {
+      params: { email, code: verificationCode },
+    })
+      .then((response) => {
+        setUserId(response.data.userId);
+        openFindIdCompleteModal();
+      })
+      .catch(() => {
+        setErrorMessage(false);
+      })
+      .finally(() => {
+        setIsSubmitting(false);
       });
-      setUserId(response.data.userId);
-      openFindIdCompleteModal();
-    } catch (error) {
-      setErrorMessage(false);
-    } finally {
-      setIsSubmitting(false);
-    }
   };
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -55,7 +57,6 @@ const FindIdModal = () => {
       closeFindIdModal();
     }
   };
-
 
   // 아이디 찾기 테스트 로직
   const handleTestEmailSuccess = () => {

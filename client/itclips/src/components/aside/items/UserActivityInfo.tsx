@@ -26,7 +26,7 @@ const UserActivityInfo = () => {
   }
 
   return (
-    <div className="w-full grid grid-cols-1 gap-y-4">
+    <div className="w-full grid grid-cols-1 gap-y-4 mt-6">
       <div className="grid grid-cols-12">
         <div className="col-start-3 col-span-5 text-start text-gray-500">팔로워</div>
         <div className="col-start-9">

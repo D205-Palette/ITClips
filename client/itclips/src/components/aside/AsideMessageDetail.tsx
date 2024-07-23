@@ -34,7 +34,7 @@ const AsideMessageDetail = ({ chatId, onBack }: any) => {
   };
 
   return (
-    <div className="p-4 max-w-sm mx-auto h-[32rem] flex flex-col">
+    <div className="p-4 max-w-sm mx-auto h-[36rem] flex flex-col">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center">
           {/* 뒤로가기 버튼 */}

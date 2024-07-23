@@ -41,7 +41,6 @@ const App = () => {
       <div className="relative grid grid-cols-8 gap-4">
         <div id="aside" className="absolute col-start-2 col-span-2">
           { isMessageOpen && <MessageLayout /> }
-          
         </div>
         {/* 겹치기 테스트용 */}
         <div className="col-start-2 col-span-2">

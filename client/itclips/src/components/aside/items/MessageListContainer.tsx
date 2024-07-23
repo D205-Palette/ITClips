@@ -15,7 +15,7 @@ interface ChildComponentProps {
 const MessageContainer: React.FC<ChildComponentProps> = ({ messages, onClickMessage }) => {
   return (
     <div>
-      <ul className="space-y-4 max-h-96 overflow-y-auto">
+      <ul className="space-y-4 h-[26rem] overflow-y-auto">
         {messages.map((message: Message) => (
           <li key={message.id} className="flex justify-between items-center bg-aside-layout rounded w-100 px-3 py-2" onClick={() => onClickMessage(message.id)}>
             <div className="p-3">

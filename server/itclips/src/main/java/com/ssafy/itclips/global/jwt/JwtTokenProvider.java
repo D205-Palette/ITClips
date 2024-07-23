@@ -5,6 +5,7 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.xml.bind.DatatypeConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,12 +26,13 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Component
+@PropertySource("classpath:application-secret.yml")
 public class JwtTokenProvider {
 
     private final Key key;
 
     // 해싱 키 주입
-    public JwtTokenProvider(@Value("${jwt.secretKey}") String secretKey) {
+    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
         byte[] keyBytes = DatatypeConverter.parseBase64Binary(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }

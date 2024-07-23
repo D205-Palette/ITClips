@@ -6,7 +6,8 @@ import Intro3 from '../assets/images/Intro3.svg';
 
 const Intro: React.FC = () => {
   // Zustand 스토어에서 모달 상태 업데이트 함수 가져오기
-  const openLoginModal = navStore(state => state.openLoginModal);
+
+  const openLoginModal = navStore(state => state.modalState.openLoginModal);
 
   return (
     

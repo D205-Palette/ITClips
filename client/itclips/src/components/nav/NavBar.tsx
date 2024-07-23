@@ -1,47 +1,29 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom"
+import React, { useRef } from "react";
+import { Link } from "react-router-dom";
 import { navStore } from "../../stores/navStore";
 import DarkModeToggle from "./DarkModeToggle";
 import NotificationButton from "./NavNotificationButton";
-import LoginModal from "./LoginModal";
-import FindIdModal from "./FindIdModal";
+
+import NavLoginModal from "./NavLoginModal";
 
 import HomeButton from "../nav/NavHomeButton";
 import LogoutButton from "../nav/NavLogoutButton";
 import MessageButton from "../nav/NavMessageButton";
 
 const NavBar = () => {
-  // Zustand 상태 훅
-  const isLoginModalOpen = navStore((state) => state.isLoginModalOpen);
-  const isFindIdModalOpen = navStore((state) => state.isFindIdModalOpen);
-  const openLoginModal = navStore((state) => state.openLoginModal);
-  const login = navStore((state) => state.login);
-  const isLoggedIn = navStore((state) => state.isLoggedIn);
+  const {
+    login,
+    modalState,
+    isLoggedIn,
+  } = navStore();
+  
+  const {
+    isLoginModalOpen,
+    openLoginModal,    
+  } = modalState;
 
-  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
-  const notificationRef = useRef<HTMLDivElement>(null);
+
   const messageRef = useRef<HTMLDivElement>(null);
-
-  const toggleNotifications = () => {
-    setIsNotificationOpen(!isNotificationOpen);
-  };
-
-  // 클릭 외부 감지
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        notificationRef.current &&
-        !notificationRef.current.contains(event.target as Node)
-      ) {
-        setIsNotificationOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   return (
     <>
@@ -49,11 +31,12 @@ const NavBar = () => {
         {/* 좌측 네비게이션 링크들 */}
         <div className="flex items-center gap-4">
           <HomeButton />
+          {/* 로그인 시에만 보임 */}
           {isLoggedIn && (
             <ul className="flex gap-4 list-none">
               <Link to='/home'>MY</Link>
               <Link to='/feed'>피드</Link>
-              <Link to='/serach'>검색</Link>              
+              <Link to='/search'>검색</Link>
             </ul>
           )}
         </div>
@@ -62,6 +45,7 @@ const NavBar = () => {
         <div className="flex items-center gap-4">
           <DarkModeToggle />
 
+          {/* 로그인 전 */}
           {!isLoggedIn ? (
             <>
               <button
@@ -70,8 +54,9 @@ const NavBar = () => {
               >
                 로그인
               </button>
+
               <a
-                href="/SignUpView"
+                href="/signup"
                 className="transition-colors duration-300 hover:text-gray-400"
               >
                 회원가입
@@ -84,6 +69,7 @@ const NavBar = () => {
               </button>
             </>
           ) : (
+            // 로그인 후
             <>
               <MessageButton />
               <NotificationButton />
@@ -92,8 +78,9 @@ const NavBar = () => {
           )}
         </div>
       </nav>
-      {isLoginModalOpen && <LoginModal />}
-      {isFindIdModalOpen && <FindIdModal />}
+
+      {/* 로그인, 아이디찾기, 비밀번호찾기 모달창 */}
+      {isLoginModalOpen && <NavLoginModal />}
     </>
   );
 };

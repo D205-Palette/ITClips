@@ -3,6 +3,8 @@
 import { Route, Routes, Link } from "react-router-dom";
 import ListItem from "./ListsItem(List)";
 import AlbumItem from "./ListsItem(Album)";
+import { FaRegBookmark } from "react-icons/fa";
+import { IoBookmarksOutline } from "react-icons/io5";
 
 function ButtonV1(): any {
   return (
@@ -32,10 +34,10 @@ export default function MainTab() {
       <div className="flex justify-around">
         {/* {version ? <ButtonV1 /> : <ButtonV2 />} */}
 
-        <Link to="/bookmarklist">북마크 리스트</Link>
-        <Link to="/groupbookmarklist">그룹 북마크 리스트</Link>
-        <Link to="/favorites">즐겨찾기</Link>
-        <Link to="/roadmap">로드맵</Link>
+        <Link to="/myview/bookmarklist"><div className="flex flex-row"><div className="flex items-center"><FaRegBookmark /></div>북마크 리스트</div></Link>
+        <Link to="/myview/groupbookmarklist"><div className="flex flex-row"><div className="flex items-center"><IoBookmarksOutline /></div>그룹 북마크 리스트</div></Link>
+        <Link to="/myview/favorites">즐겨찾기</Link>
+        <Link to="/myview/roadmap">로드맵</Link>
       </div>
     </>
   );

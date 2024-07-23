@@ -21,15 +21,6 @@ const NotificationDropdown: React.FC = () => {
     { id: 8, text: "알림 8" },
     { id: 9, text: "알림 9" },
     { id: 10, text: "알림 10" },
-    { id: 10, text: "알림 10" },
-    { id: 10, text: "알림 10" },
-    { id: 10, text: "알림 10" },
-    { id: 10, text: "알림 10" },
-    { id: 10, text: "알림 10" },
-    { id: 10, text: "알림 10" },
-    { id: 10, text: "알림 10" },
-    { id: 10, text: "알림 10" },
-    { id: 10, text: "알림 10" },
   ];
 
   return (

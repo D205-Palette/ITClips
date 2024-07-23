@@ -1,6 +1,6 @@
 import { useState } from "react";
 import useStore from "../../stores/mainStore";
-import KebabDropdown from "../KebabDropdown";
+import KebabDropdown from "../common/KebabDropdown";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import ListItemHover from "./ListsItem(AlbumHovering)";
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom"
 import { navStore } from "../../stores/navStore";
 import DarkModeToggle from "./DarkModeToggle";
-import NotificationButton from "../NavNotificationButton";
+import NotificationButton from "./NavNotificationButton";
 import LoginModal from "./LoginModal";
 import FindIdModal from "./FindIdModal";
 

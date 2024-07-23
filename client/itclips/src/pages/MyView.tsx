@@ -5,7 +5,7 @@ import { FaList } from "react-icons/fa";
 import { HiOutlineSquares2X2, HiMiniSquares2X2  } from "react-icons/hi2";
 import { useState } from "react";
 import { CiBoxList } from "react-icons/ci";
-import SearchBar from '../components/MainSearchBar';
+import SearchBar from '../components/main/MainSearchBar';
 import MainTab from '../components/main/MainTab';
 import MyBookmarkList from './MyBookmarkList';
 import AsideBookmarkList from "../components/aside/AsideProfile"

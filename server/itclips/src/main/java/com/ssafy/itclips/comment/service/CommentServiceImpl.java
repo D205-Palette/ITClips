@@ -37,4 +37,18 @@ public class CommentServiceImpl implements CommentService {
         comment.addUserAndList(user,existingBookmarkList);
         commentRepository.save(comment);
     }
+
+    @Override
+    @Transactional
+    public void deleteComment(Long userId, Long commentId) throws RuntimeException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+        BookmarkListComment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CustomException(ErrorCode.COMMENT_NOT_FOUND));
+
+        if(comment.getUser().getId() != user.getId()){
+            throw new CustomException(ErrorCode.COMMENT_NOT_ALLOWED);
+        }
+        commentRepository.delete(comment);
+    }
 }

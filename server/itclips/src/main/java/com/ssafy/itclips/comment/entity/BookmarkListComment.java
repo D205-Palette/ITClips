@@ -7,6 +7,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.*;
 
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "bookmark_list_comment", schema = "itclips")
+@NoArgsConstructor
 public class BookmarkListComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

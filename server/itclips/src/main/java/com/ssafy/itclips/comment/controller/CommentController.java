@@ -27,4 +27,13 @@ public class CommentController {
         commentService.createComment(userId,listId,commentDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+    @DeleteMapping("/delete/{userId}/{commentId}")
+    @Operation(summary = "댓글 삭제", description = "북마크리스트 댓글을 삭제합니다")
+    public ResponseEntity<?> removeComment(@PathVariable @Parameter(description = "유저 정보", required = true) Long userId,
+                                           @PathVariable @Parameter(description = "댓글 정보", required = true) Long commentId) {
+
+        commentService.deleteComment(userId,commentId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

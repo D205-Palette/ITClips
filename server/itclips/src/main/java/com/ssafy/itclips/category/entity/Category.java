@@ -1,5 +1,6 @@
 package com.ssafy.itclips.category.entity;
 
+import com.ssafy.itclips.bookmark.entity.BookmarkCategory;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
 import com.ssafy.itclips.category.dto.CategoryRequestDTO;
 import jakarta.persistence.*;
@@ -12,6 +13,11 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -35,6 +41,9 @@ public class Category {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "bookmarklist_id", nullable = false)
     private BookmarkList bookmarklist;
+
+    @OneToMany(mappedBy = "category")
+    private List<BookmarkCategory> bookmarkCategories = new ArrayList<>();
 
     @Builder
     public Category(String name) {

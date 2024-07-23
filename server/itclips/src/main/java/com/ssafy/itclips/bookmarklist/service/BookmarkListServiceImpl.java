@@ -45,7 +45,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         User user = userRepository.findById(userId)
                 .orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        List<Tag> tags = createNewTags(bookmarkListDTO.getTags());
+        List<Tag> tags = tagService.saveTags(bookmarkListDTO.getTags());
         List<Category> categories =createNewCategories(bookmarkListDTO.getCategories());
         BookmarkList bookmarkList = createNewBookmarkList(bookmarkListDTO, user);
         List<UserGroup> groups = new ArrayList<>();
@@ -71,7 +71,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         // 기존 태그, 카테고리, 그룹 삭제
         deleteRelations(userId, existingBookmarkList);
         // 새로운 태그 및 카테고리 생성
-        List<Tag> tags = createNewTags(bookmarkListDTO.getTags());
+        List<Tag> tags = tagService.saveTags(bookmarkListDTO.getTags());
         List<Category> categories = createNewCategories(bookmarkListDTO.getCategories());
         List<User> groupUsers = getGroupUsers(bookmarkListDTO.getUsers());
         // 사용자 그룹 업데이트
@@ -127,14 +127,6 @@ public class BookmarkListServiceImpl implements BookmarkListService {
             bookmarkListTags.add(listTag);
         });
         categories.forEach(bookmarkList::addCategory);
-    }
-
-    private List<Tag> createNewTags(List<TagDTO> newTags) {
-        List<Tag> tags = new ArrayList<>();
-        if(newTags != null && !newTags.isEmpty()) {
-            tags = tagService.saveTags(newTags);
-        }
-        return tags;
     }
 
 

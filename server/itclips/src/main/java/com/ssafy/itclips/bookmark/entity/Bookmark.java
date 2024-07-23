@@ -9,6 +9,10 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -55,5 +59,11 @@ public class Bookmark {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "bookmarklist_id", nullable = false)
     private BookmarkList bookmarklist;
+
+    @OneToMany(mappedBy = "bookmark")
+    private List<BookmarkCategory> bookmarkCategories = new ArrayList<>();
+
+    @OneToMany(mappedBy = "bookmark")
+    private List<BookmarkTag> bookmarkTags = new ArrayList<>();
 
 }

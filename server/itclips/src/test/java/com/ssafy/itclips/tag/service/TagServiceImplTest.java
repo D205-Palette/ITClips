@@ -41,7 +41,7 @@ class TagServiceImplTest {
     @Test
     void getOriginTags() {
         Tag tag = Tag.builder()
-                .title("java")
+                .title("test tag58832")
                 .isOrigin(true)
                 .build();
         tagRepository.save(tag);

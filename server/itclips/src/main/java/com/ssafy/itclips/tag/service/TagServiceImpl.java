@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -25,6 +26,9 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional
     public List<Tag> saveTags(List<TagDTO> tags) throws RuntimeException {
+        if (tags == null || tags.isEmpty()) {
+            return Collections.emptyList(); // tags가 null이거나 비어있으면 빈 리스트 반환
+        }
         // 태그 제목을 리스트로 추출하고 첫 글자는 대문자, 나머지는 소문자로 변환
         List<String> titles = tags.stream()
                 .map(dto -> capitalizeFirstLetter(dto.getTitle()))

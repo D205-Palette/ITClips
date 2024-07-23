@@ -11,7 +11,7 @@ const ImageContainer = () => {
 
   return (
     <div className="mb-4">
-      <img src={require(`../../../assets/${image.src}`)} className="w-16 h-16 bg-gray-200 rounded-full mb-4"></img>
+      <img src={require(`../../../assets/images/${image.src}`)} className="w-16 h-16 bg-gray-200 rounded-full mb-4"></img>
     </div>
   );
 };

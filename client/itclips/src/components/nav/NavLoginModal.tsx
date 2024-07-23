@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { navStore } from '../../stores/navStore';
 import googleLogo from '../../assets/images/google_logo.svg';
 import githubLogo from '../../assets/images/github_logo.svg';
-import axios from 'axios'; // Axios import 추가
+import axios from 'axios';
 
 import FindIdModal from './FindIdModal';
 import FindPasswordModal from './FindPasswordModal';
@@ -13,10 +13,20 @@ import FindPasswordCompleteModal from './FindPasswordCompleteModal';
 const LoginModal = () => {
   const navigate = useNavigate();
 
-  // 모달 open/close 상태 관리
-  const closeLoginModal = navStore(state => state.closeLoginModal);
-  const openFindIdModal = navStore(state => state.openFindIdModal);
-  const openFindPasswordModal = navStore(state => state.openFindPasswordModal);
+  const {    
+    modalState,    
+  } = navStore();
+  
+  const {
+    isFindIdModalOpen,
+    isFindIdCompleteModalOpen,
+    isFindPasswordModalOpen,    
+    openFindIdModal,
+    openFindIdCompleteModal,
+    openFindPasswordModal,
+    closeLoginModal,
+  } = modalState;
+     
 
   // 로그인 에러 메세지
   const [errorMessage, setErrorMessage] = useState('');
@@ -54,8 +64,8 @@ const LoginModal = () => {
         password,
       });
 
+      // 로그인 성공 시 로직
       if (response.status === 200) {
-        // 로그인 성공 시 로직
         setErrorMessage(''); // 에러 메시지 초기화
         closeLoginModal();
       } else {
@@ -66,7 +76,6 @@ const LoginModal = () => {
       setErrorMessage('아이디 또는 비밀번호가 잘못 되었습니다. 아이디와 비밀번호를 정확히 입력해 주세요.');
     }
   };
-
 
   return (
     <div
@@ -140,10 +149,10 @@ const LoginModal = () => {
           <img src={githubLogo} alt="Github Login" />
         </button>
 
-        <div className="flex justify-between mt-4">
-          <button className="btn k" onClick={openFindIdModal}>아이디 찾기</button>
-          <button className="btn " onClick={openFindPasswordModal}>비밀번호 찾기</button>
-          <button className="btn " onClick={handleSignUpClick}>회원가입</button>
+        <div className="grid grid-cols-1 sm:grid-cols-3 mx-10">
+          <button className="btn btn-ghost" onClick={openFindIdModal}>아이디 찾기</button>
+          <button className="btn btn-ghost" onClick={openFindPasswordModal}>비밀번호 찾기</button>
+          <button className="btn btn-ghost" onClick={handleSignUpClick}>회원가입</button>
         </div>
         <button
           onClick={closeLoginModal}
@@ -152,6 +161,9 @@ const LoginModal = () => {
           ×
         </button>
       </div>
+      {isFindIdModalOpen && <FindIdModal />}
+      {/* {isFindIdCompleteModalOpen && <FindIdCompleteModal />} */}
+      {isFindPasswordModalOpen && <FindPasswordModal />}
     </div>
   );
 };

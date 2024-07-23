@@ -1,11 +1,7 @@
-import create from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware'
+import create from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
 
-interface StoreState {
-  login: () => void;          // 추가된 함수
-  logout: () => void;         // 추가된 함수
-  isLoggedIn: boolean;  // 추가된 필드
-
+interface ModalState {
   isLoginModalOpen: boolean;
   openLoginModal: () => void;
   closeLoginModal: () => void;
@@ -13,39 +9,56 @@ interface StoreState {
   isFindIdModalOpen: boolean;
   openFindIdModal: () => void;
   closeFindIdModal: () => void;
-  
+
   isFindPasswordModalOpen: boolean;
   openFindPasswordModal: () => void;
   closeFindPasswordModal: () => void;
-  
-  isOpen: boolean;
-  openModal: () => void;
-  closeModal: () => void;
-  
+
+  isFindIdCompleteModalOpen: boolean;
+  openFindIdCompleteModal: () => void;
+  closeFindIdCompleteModal: () => void;
+
+  isFindPasswordCompleteModalOpen: boolean;
+  openFindPasswordCompleteModal: () => void;
+  closeFindPasswordCompleteModal: () => void;
+
 }
+
+interface StoreState {
+  login: () => void; // 추가된 함수
+  logout: () => void; // 추가된 함수
+  isLoggedIn: boolean; // 추가된 필드
+
+  modalState: ModalState;
+
+  };
 
 
 export const navStore = create<StoreState>((set) => ({
   isLoggedIn: false,
-  login: () => set({ isLoggedIn: true }),  // 로그인 함수
+  login: () => set({ isLoggedIn: true }), // 로그인 함수
   logout: () => set({ isLoggedIn: false }), // 로그아웃 함수
 
-  isOpen: false,
-  openModal: () => set({ isOpen: true }),
-  closeModal: () => set({ isOpen: false }),
+  // 모달 상태 관리
+  modalState: {
+    isLoginModalOpen: false,
+    openLoginModal: () => set((state) => ({ modalState: { ...state.modalState, isLoginModalOpen: true } })),
+    closeLoginModal: () => set((state) => ({ modalState: { ...state.modalState, isLoginModalOpen: false } })),
 
-  // 로그인 모달 상태 관리
-  isLoginModalOpen: false,
-  openLoginModal: () => set({ isLoginModalOpen: true }),
-  closeLoginModal: () => set({ isLoginModalOpen: false }),
+    isFindIdModalOpen: false,
+    openFindIdModal: () => set((state) => ({ modalState: { ...state.modalState, isFindIdModalOpen: true } })),
+    closeFindIdModal: () => set((state) => ({ modalState: { ...state.modalState, isFindIdModalOpen: false } })),
 
-  // 아이디 찾기 모달 상태 관리
-  isFindIdModalOpen: false,
-  openFindIdModal: () => set({ isFindIdModalOpen: true }),
-  closeFindIdModal: () => set({ isFindIdModalOpen: false }),
+    isFindPasswordModalOpen: false,
+    openFindPasswordModal: () => set((state) => ({ modalState: { ...state.modalState, isFindPasswordModalOpen: true } })),
+    closeFindPasswordModal: () => set((state) => ({ modalState: { ...state.modalState, isFindPasswordModalOpen: false } })),
 
-  // 비밀번호 찾기 모달 상태 관리
-  isFindPasswordModalOpen: false,
-  openFindPasswordModal: () => set({ isFindPasswordModalOpen: true }),
-  closeFindPasswordModal: () => set({ isFindPasswordModalOpen: false }),
+    isFindIdCompleteModalOpen: false,
+    openFindIdCompleteModal: () => set((state) => ({ modalState: { ...state.modalState, isFindIdCompleteModalOpen: true } })),
+    closeFindIdCompleteModal: () => set((state) => ({ modalState: { ...state.modalState, isFindIdCompleteModalOpen: false } })),
+
+    isFindPasswordCompleteModalOpen: false,
+    openFindPasswordCompleteModal: () => set((state) => ({ modalState: { ...state.modalState, isFindPasswordCompleteModalOpen: true } })),
+    closeFindPasswordCompleteModal: () => set((state) => ({ modalState: { ...state.modalState, isFindPasswordCompleteModalOpen: false } })),
+  },
 }));

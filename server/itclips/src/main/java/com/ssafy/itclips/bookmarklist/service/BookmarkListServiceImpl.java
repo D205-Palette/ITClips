@@ -64,7 +64,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
     @Override
     @Transactional
     public void updateBookmarkList(Long userId, Long listId, BookmarkListDTO bookmarkListDTO) throws RuntimeException{
-        // 기존 북마크 목록을 조회
+        // 기존 북마크 리스트 목록을 조회
         BookmarkList existingBookmarkList = bookmarkListRepository.findById(listId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND));
         // 업데이트할 내용 설정

@@ -3,6 +3,7 @@ package com.ssafy.itclips.bookmarklist.entity;
 import com.ssafy.itclips.bookmark.entity.Bookmark;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListDTO;
 import com.ssafy.itclips.category.entity.Category;
+import com.ssafy.itclips.comment.entity.BookmarkListComment;
 import com.ssafy.itclips.group.entity.UserGroup;
 import com.ssafy.itclips.tag.entity.BookmarkListTag;
 import com.ssafy.itclips.user.entity.User;
@@ -77,6 +78,9 @@ public class BookmarkList {
 
     @OneToMany(mappedBy = "bookmarkList")
     private List<BookmarkListTag> tags = new ArrayList<>();
+
+    @OneToMany(mappedBy = "bookmarkList")
+    private List<BookmarkListComment> bookmarkListComments = new ArrayList<>();
 
     @Builder
     private BookmarkList(User user, String title, String description, String image, Boolean isPublic) {

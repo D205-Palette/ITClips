@@ -1,6 +1,7 @@
 package com.ssafy.itclips.user.entity;
 
 import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
+import com.ssafy.itclips.comment.entity.BookmarkListComment;
 import com.ssafy.itclips.group.entity.UserGroup;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -87,6 +88,9 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private Set<UserTag> userTags = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<BookmarkListComment> bookmarkListComments = new ArrayList<>();
 
     public void addBookmarkList(BookmarkList bookmarkList) {
         bookmarkLists.add(bookmarkList);

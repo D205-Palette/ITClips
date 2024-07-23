@@ -2,15 +2,18 @@ import React, { useState } from "react";
 
 import MessageBackButton from "./items/MessageBackButton";
 
+// 창의 상태를 저장하는 부모컴포넌트의 state 불러와서 직접 조정
+
 interface InviteProps {
-  onStart: () => void;
+  onStartChat: (chatId: number) => any;
   onBack: () => void;
 }
 
-const AsideStartNewMessage: React.FC<InviteProps> = ({ onStart, onBack }) => {
+const AsideStartNewMessage: React.FC<InviteProps> = ({ onStartChat, onBack }) => {
   const [inviteEmails, setInviteEmails] = useState<string[]>([]);
   const [inputEmail, setInputEmail] = useState("");
 
+  // 새 대화를 시작할 이메일 추가
   const handleAddInviteEmail = () => {
     if (inputEmail.trim() && !inviteEmails.includes(inputEmail)) {
       setInviteEmails([...inviteEmails, inputEmail]);
@@ -18,8 +21,14 @@ const AsideStartNewMessage: React.FC<InviteProps> = ({ onStart, onBack }) => {
     }
   };
 
+  // 새 대화를 시작할 이메일 삭제
   const handleRemoveInviteEmail = (email: string) => {
     setInviteEmails(inviteEmails.filter(inviteEmail => inviteEmail !== email));
+  };
+
+  // 새 대화 시작
+  const handleStartChat = (chatId: number) => {
+    onStartChat(chatId);
   };
 
   return (
@@ -54,7 +63,7 @@ const AsideStartNewMessage: React.FC<InviteProps> = ({ onStart, onBack }) => {
       </div>
       {/* 시작 버튼 */}
       <div className="mt-auto">
-        <button onClick={onStart} className="btn btn-primary w-full">시작</button>
+        <button onClick={() => handleStartChat(1)} className="btn btn-primary w-full">시작</button>
       </div>
     </div>
   );

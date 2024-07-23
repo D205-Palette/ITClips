@@ -20,12 +20,13 @@ const MessageLayout = () => {
   // 새 채팅 초대 함수
   const handleNewChat = (state: any) => {
     setShowInvite(state);
-    console.log(state);
   }
 
   // 새 채팅 시작 함수
-  const handleChatStart = () => {
-    // 아직 구현 안됨
+  const handleChatStart = (chatId: any) => {
+    // 현재 api 완료 안되서 채팅id로만 이동하는 흐름 정도만 구현
+    handleBackToList();
+    setSelectedChat(chatId);
   };
 
   return (
@@ -42,7 +43,7 @@ const MessageLayout = () => {
         <AsideMessageDetail chatId={selectedChat} onBack={handleBackToList} />
       )}
       {selectedChat === null && showInvite !== null && (
-        <AsideStartNewMessage onStart={handleChatStart} onBack={handleBackToList} />
+        <AsideStartNewMessage onStartChat={handleChatStart} onBack={handleBackToList} />
       )}
       {/* 둘다 값이 들어오는 경우는 없기 때문에 무시 (예외 처리) */}
     </div>

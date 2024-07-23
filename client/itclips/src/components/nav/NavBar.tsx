@@ -10,6 +10,7 @@ import HomeButton from "../nav/NavHomeButton";
 import LogoutButton from "../nav/NavLogoutButton";
 import MessageButton from "../nav/NavMessageButton";
 
+
 const NavBar = () => {
   const {
     login,

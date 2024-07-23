@@ -2,10 +2,12 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import "./index.css";
 import { navStore } from "./stores/navStore";
+import { asideStore } from "./stores/asideStore";
 
 // component
 import NavBar from "./components/nav/NavBar";
-import AsideBookmarkList from "./components/aside/AsideProfile"
+import AsideProfile from "./components/aside/AsideProfile"
+import MessageLayout from "./components/aside/MessageLayout";
 // View
 import Intro from "./pages/Intro";
 import SignUpView from "./pages/SignUpView";
@@ -18,6 +20,7 @@ import SearchView from './pages/SearchView'
 import MyBookmarkList from "./pages/MyView/MyBookmarkList";
 
 const App = () => {
+  const isMessageOpen = asideStore(state => state.isMessageOpen);
   const isLogin = navStore((state) => state.isLoggedIn);
 
   return (
@@ -42,6 +45,9 @@ const App = () => {
         <Route path="/search" element={<SearchView />} />
         <Route path="/feed" element={<FeedView />} />
       </Routes>
+
+
+        
 
     </div>
   );

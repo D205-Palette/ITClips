@@ -48,7 +48,7 @@ const FindIdCompleteModal: React.FC<FindIdCompleteModalProps> = ({
           로그인 하러 가기
         </button>
 
-        <div>아이디</div>   
+        <div>{FindedId}</div>   
 
         <button
           onClick={closeModal}

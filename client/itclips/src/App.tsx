@@ -1,13 +1,13 @@
 import React from "react";
-import MainTab from "./components/MainTab";
+import MainTab from "./components/main/MainTab";
 import { Route, Routes } from "react-router-dom";
 import MyView from "./pages/MyView";
 import "./index.css";
 import { useStore } from "./stores/authStore";
 
 // component
-import NavBar from "./components/NavBar";
-import AsideBookmarkList from "./components/AsideProfile"
+import NavBar from "./components/nav/NavBar";
+import AsideBookmarkList from "./components/aside/AsideProfile"
 // View
 import Intro from "./pages/Intro";
 import SignUpView from "./pages/SignUpView";
@@ -40,6 +40,7 @@ const App = () => {
 
         <div id="Main" className="col-start-4 col-span-4">
           <MainTab />
+          
           <MyView />
         </div>
       </div>

@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useStore } from "../stores/authStore";
+import { useStore } from "../../stores/authStore";
 import DarkModeToggle from "./DarkModeToggle";
 import NotificationButton from "./NavNotificationButton";
-import LoginModal from "./LoginModal";
+import LoginModal from "../LoginModal";
 import HomeButton from "./NavHomeButton";
 import LogoutButton from "./NavLogoutButton";
 import MessageButton from "./NavMessageButton";

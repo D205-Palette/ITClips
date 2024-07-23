@@ -15,7 +15,7 @@ const listStore = create<Article>((set) => ({
   title: "생성된 리스트_01",
   bookmark_list_tags: ["JAVA", "FE"],
   description: "리스트에 관한 설명",
-  bookmark_list_like: 5 ,
+  bookmark_list_like: 5 , 
 }));
 
 export default listStore

@@ -1,5 +1,6 @@
 package com.ssafy.itclips.roadmap.controller;
 
+import com.ssafy.itclips.roadmap.dto.RoadmapInfoDTO;
 import com.ssafy.itclips.roadmap.entity.Roadmap;
 import com.ssafy.itclips.roadmap.service.RoadmapService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,9 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,8 +25,16 @@ public class RoadmapController {
     @GetMapping("/list")
     @Operation(summary = "모든 로드맵 보기", description = "생성된 모든 로드맵을 볼 수 있습니다.")
     public ResponseEntity<?> roadmapList(){
-        List<Roadmap> roadmapList =  roadmapService.findAllRoadmapList();
+        List<RoadmapInfoDTO> roadmapList =  roadmapService.findAllRoadmapList();
 
+        log.info("roadmapList: {}", roadmapList);
+        return new ResponseEntity<>(roadmapList, HttpStatus.OK);
+    }
+
+    @GetMapping("/{userId}")
+    @Operation(summary = "유저 로드맵 보기" , description = "특정 유저가 생성한 로드맵을 볼 수 있습니다. ")
+    public ResponseEntity<?> findRoadmap(@PathVariable("userId") Long userId){
+        List<RoadmapInfoDTO> roadmapList = roadmapService.findUserRoadmapList(userId);
         log.info("roadmapList: {}", roadmapList);
         return new ResponseEntity<>(roadmapList, HttpStatus.OK);
     }

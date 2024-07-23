@@ -1,24 +1,22 @@
 import React from "react";
-import MainTab from "./components/MainTab";
+import MainTab from "./components/main/MainTab";
 import { Route, Routes } from "react-router-dom";
 import MyView from "./pages/MyView";
 import "./index.css";
-import { useStore } from "./stores/authStore";
+import { navStore } from "./stores/navStore";
 import { asideStore } from "./stores/asideStore";
 
 // component
-import NavBar from "./components/NavBar";
-import AsideProfile from "./components/aside/AsideProfile";
-import AsideBookmarkList from "./components/aside/AsideBookmarkList";
-import AsideMessage from "./components/aside/AsideMessage";
+import NavBar from "./components/nav/NavBar";
+import AsideProfile from "./components/aside/AsideProfile"
 import MessageLayout from "./components/aside/MessageLayout";
 // View
 import Intro from "./pages/Intro";
 import SignUpView from "./pages/SignUpView";
 
 const App = () => {
-  const isLogin = useStore((state) => state.isLoggedIn);
   const isMessageOpen = asideStore(state => state.isMessageOpen);
+  const isLogin = navStore((state) => state.isLoggedIn);
 
   return (
     <div className="App">
@@ -30,8 +28,8 @@ const App = () => {
               <Route path="/myview" element={<MyView />} />
             ) : (
               <>
-                <Route path="/intro" element={<Intro />} />
-                <Route path="/signup" element={<SignUpView />} />{" "}
+                <Route path="/" element={<Intro />} />
+                <Route path="/signup" element={<SignUpView />} />{" "}                
               </>
             )}
           </Routes>
@@ -48,6 +46,7 @@ const App = () => {
         </div>
         <div id="Main" className="col-start-4 col-span-4">
           <MainTab />
+          
           <MyView />
         </div>
       </div>

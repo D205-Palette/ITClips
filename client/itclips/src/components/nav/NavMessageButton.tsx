@@ -1,5 +1,5 @@
 import { FaEnvelope } from 'react-icons/fa';
-import { asideStore } from "../stores/asideStore";
+import { asideStore } from '../../stores/asideStore';
 
 const MessageButton = () => {       
 

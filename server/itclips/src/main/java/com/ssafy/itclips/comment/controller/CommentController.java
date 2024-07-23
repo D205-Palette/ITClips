@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/comment")
 @RequiredArgsConstructor
-@Tag(name = "Comment Controller", description = "리뷰 관련 API")
+@Tag(name = "Comment Controller", description = "댓글 관련 API")
 public class CommentController {
 
     private final CommentService commentService;
@@ -47,6 +47,21 @@ public class CommentController {
                                            @PathVariable @Parameter(description = "댓글 정보", required = true) Long commentId) {
 
         commentService.deleteComment(userId,commentId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/update/{userId}/{commentId}")
+    @Operation(summary = "댓글 수정", description = "북마크리스트 댓글을 수정합니다")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "댓글을 성공적으로 수정했습니다."),
+            @ApiResponse(responseCode = "404", description = "사용자, 댓글을 찾을 수 없습니다."),
+            @ApiResponse(responseCode = "405", description = "댓글에 접근 할 권한이 없습니다."),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
+    })
+    public ResponseEntity<?> updateComment(@PathVariable @Parameter(description = "유저 정보", required = true) Long userId,
+                                           @PathVariable @Parameter(description = "댓글 정보", required = true) Long commentId,
+                                           @RequestBody @Parameter(description = "수정 정보", required = true) CommentDTO commentDTO) {
+        commentService.updateComment(userId,commentId,commentDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

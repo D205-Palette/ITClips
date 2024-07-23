@@ -12,6 +12,8 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -49,14 +51,14 @@ public class User {
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at")
-    private Instant createdAt;
+    private LocalDateTime createdAt;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "updated_at")
-    private Instant updatedAt;
+    private LocalDateTime updatedAt;
 
     @Column(name = "birth")
-    private Instant birth;
+    private LocalDate birth;
 
     @Size(max = 50)
     @Column(name = "job", length = 50)
@@ -89,6 +91,16 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<UserTag> userTags = new LinkedHashSet<>();
 
+    public User update(String nickname, String provider) {
+        this.nickname = nickname;
+        this.provider = provider;
+        return this;
+    }
+
+    public String getRoleKey() {
+        return this.role.getKey();
+    }
+
     public void addBookmarkList(BookmarkList bookmarkList) {
         bookmarkLists.add(bookmarkList);
         bookmarkList.setUser(this);
@@ -103,7 +115,7 @@ public class User {
 
     @Builder
     public User(Long id, String email, String password, String nickname, String profileImage,
-                Instant createdAt, Instant updatedAt, Instant birth, String job, Boolean gender,
+                LocalDateTime createdAt, LocalDateTime updatedAt, LocalDate birth, String job, Boolean gender,
                 String refreshToken, Role role, Boolean darkMode, String provider) {
         this.id = id;
         this.email = email;

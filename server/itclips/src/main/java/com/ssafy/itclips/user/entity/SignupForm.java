@@ -8,11 +8,21 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class SignupForm {
-    private String name;
+    private String nickname;
     private String email;
     private String password;
-    private String gender;
+    private Boolean gender;
     private LocalDate birth;
-    private String info;
-    private String profileUrl;
+    private String profileImage;
+
+    public User toEntity(String encodedPassword) {
+        User user = new User();
+        user.setNickname(this.nickname);
+        user.setEmail(this.email);
+        user.setPassword(encodedPassword);
+        user.setGender(this.gender);
+        user.setBirth(this.birth);
+        user.setProfileImage(this.profileImage);
+        return user;
+    }
 }

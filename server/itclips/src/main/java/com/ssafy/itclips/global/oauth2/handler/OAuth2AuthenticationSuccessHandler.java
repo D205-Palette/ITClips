@@ -1,7 +1,5 @@
 package com.ssafy.itclips.global.oauth2.handler;
 
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.itclips.global.jwt.JwtTokenProvider;
 import com.ssafy.itclips.global.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.ssafy.itclips.global.oauth2.util.CookieUtils;
@@ -40,7 +38,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private final JwtTokenProvider tokenProvider;
     private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
-    private final ObjectMapper objectMapper;
     private final UserRepository userRepository;
 
     /**

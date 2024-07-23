@@ -14,8 +14,6 @@ import java.io.IOException;
 @Component
 public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
-    private ObjectMapper objectMapper = new ObjectMapper();
-
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException {

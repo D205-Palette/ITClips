@@ -7,8 +7,4 @@ public class CustomOAuth2AuthenticationException extends AuthenticationException
     public CustomOAuth2AuthenticationException(String msg) {
         super(msg);
     }
-
-    public CustomOAuth2AuthenticationException(String msg, Throwable t) {
-        super(msg, t);
-    }
 }

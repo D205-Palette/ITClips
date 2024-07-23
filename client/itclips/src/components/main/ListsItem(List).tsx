@@ -56,7 +56,7 @@ export default function ListItem() {
                   {list.bookmark_list_like}{" "}
                 </button>
                 <button>
-                  <KebabDropdown />
+                  <KebabDropdown whatMenu="리스트" />
                 </button>
               </div>
             </div>

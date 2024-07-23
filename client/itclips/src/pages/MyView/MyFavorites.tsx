@@ -1,9 +1,12 @@
-import ListItem from "../components/main/ListsItem(List)";
+import SearchBar from "../../components/main/MainSearchBar";
 
 const MyFavorites = () => {       
   return (
+    <>
     <a href="/SignUpView" className="transition-colors duration-300 hover:text-gray-400"></a>
-    // <a href="" >
+
+    <SearchBar whatSearch={'즐겨찾기'} />
+    </>
   );
 };
 

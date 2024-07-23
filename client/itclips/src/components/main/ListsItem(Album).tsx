@@ -45,7 +45,7 @@ export default function ListItem() {
 
         <div className="card-body flex flex-col p-6 relative ">
             <div className="absolute top-0 right-0 z-50">
-              <KebabDropdown />
+              <KebabDropdown whatMenu="리스트"/>
             </div>
           <div className="flex flex-col flex-auto justify-around">
             <div>

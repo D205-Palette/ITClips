@@ -23,7 +23,8 @@ import java.util.Set;
 @Entity
 @Table(name = "user", schema = "itclips")
 public class User {
-    @Id
+
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 

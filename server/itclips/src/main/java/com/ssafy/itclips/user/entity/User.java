@@ -1,6 +1,7 @@
 package com.ssafy.itclips.user.entity;
 
 import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
+import com.ssafy.itclips.comment.entity.BookmarkListComment;
 import com.ssafy.itclips.group.entity.UserGroup;
 import com.ssafy.itclips.roadmap.entity.Roadmap;
 import jakarta.persistence.*;
@@ -91,6 +92,9 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Roadmap> roadmapList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<BookmarkListComment> bookmarkListComments = new ArrayList<>();
 
     public void addBookmarkList(BookmarkList bookmarkList) {
         bookmarkLists.add(bookmarkList);

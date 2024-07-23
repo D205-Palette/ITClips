@@ -3,6 +3,7 @@ package com.ssafy.itclips.bookmarklist.entity;
 import com.ssafy.itclips.bookmark.entity.Bookmark;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListDTO;
 import com.ssafy.itclips.category.entity.Category;
+import com.ssafy.itclips.comment.entity.BookmarkListComment;
 import com.ssafy.itclips.group.entity.UserGroup;
 import com.ssafy.itclips.tag.entity.BookmarkListTag;
 import com.ssafy.itclips.user.entity.User;
@@ -17,10 +18,7 @@ import lombok.Setter;
 import org.hibernate.annotations.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
@@ -76,10 +74,13 @@ public class BookmarkList {
     private List<Category> categories = new ArrayList<>();
 
     @OneToMany(mappedBy = "bookmarkList")
-    private List<UserGroup> groups = new ArrayList<>();
+    private Set<UserGroup> groups = new HashSet<>();
 
     @OneToMany(mappedBy = "bookmarkList")
     private List<BookmarkListTag> tags = new ArrayList<>();
+
+    @OneToMany(mappedBy = "bookmarkList")
+    private List<BookmarkListComment> bookmarkListComments = new ArrayList<>();
 
     @Builder
     private BookmarkList(User user, String title, String description, String image, Boolean isPublic) {

@@ -1,6 +1,7 @@
 package com.ssafy.itclips.bookmarklist.service;
 
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListDTO;
+import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
 import com.ssafy.itclips.bookmarklist.repository.BookmarkListRepository;
 import com.ssafy.itclips.category.entity.Category;
@@ -14,6 +15,7 @@ import com.ssafy.itclips.tag.entity.BookmarkListTag;
 import com.ssafy.itclips.tag.entity.Tag;
 import com.ssafy.itclips.tag.repository.BookmarkListTagRepository;
 import com.ssafy.itclips.tag.service.TagService;
+import com.ssafy.itclips.user.dto.UserTitleDTO;
 import com.ssafy.itclips.user.entity.User;
 import com.ssafy.itclips.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,10 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,6 +37,8 @@ public class BookmarkListServiceImpl implements BookmarkListService {
     private final GroupRepository groupRepository;
     private final BookmarkListTagRepository bookmarkListTagRepository;
     private final TagService tagService;
+
+    private final static Integer USER_NUM = 1;
 
     @Override
     @Transactional
@@ -63,7 +64,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
     @Override
     @Transactional
     public void updateBookmarkList(Long userId, Long listId, BookmarkListDTO bookmarkListDTO) throws RuntimeException{
-        // 기존 북마크 목록을 조회
+        // 기존 북마크 리스트 목록을 조회
         BookmarkList existingBookmarkList = bookmarkListRepository.findById(listId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND));
         // 업데이트할 내용 설정
@@ -106,12 +107,67 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         bookmarkListRepository.delete(bookmarkList);
     }
 
+    @Override
+    @Transactional
+    public List<BookmarkListResponseDTO> getLists(Long userId, Boolean target) throws RuntimeException {
+        List<BookmarkList> bookmarkLists = bookmarkListRepository.findDetailedByUserId(userId);
+
+        if (bookmarkLists.isEmpty()) {
+            throw new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND);
+        }
+
+        return bookmarkLists.stream()
+                .map(this::convertToBookmarkListResponseDTO)
+                .filter(dto -> (target ? dto.getUsers().size() > USER_NUM : dto.getUsers().size() == USER_NUM))
+                .collect(Collectors.toList());
+    }
+
 
     @Transactional
     public void deleteRelations(Long userId, BookmarkList existingBookmarkList) throws RuntimeException{
         bookmarkListTagRepository.deleteAllByBookmarklList(existingBookmarkList);
         categoryRepository.deleteAllByBookmarklList(existingBookmarkList);
         groupRepository.deleteByBookmarkListAndUserIdNot(existingBookmarkList, userId);
+    }
+
+    private BookmarkListResponseDTO convertToBookmarkListResponseDTO(BookmarkList bookmarkList) {
+        List<UserTitleDTO> users = bookmarkList.getGroups().stream()
+                .map(this::convertToUserTitleDTO)
+                .collect(Collectors.toList());
+
+        Set<TagDTO> tags = new HashSet<>(bookmarkList.getTags().stream()
+                .map(this::convertToTagDTO)
+                .collect(Collectors.toMap(
+                        TagDTO::getTitle, // Key: title
+                        tagDTO -> tagDTO, // Value: tagDTO
+                        (existing, replacement) -> existing // Handle duplicates by keeping the existing tagDTO
+                ))
+                .values());
+
+        return BookmarkListResponseDTO.builder()
+                .id(bookmarkList.getId())
+                .title(bookmarkList.getTitle())
+                .image(bookmarkList.getImage())
+                .description(bookmarkList.getDescription())
+                .bookmarkCount(bookmarkList.getBookmarks().size())
+                .users(users)
+                .tags(tags)
+                .likeCount(1)  // This seems to be hardcoded, consider fetching the actual like count if possible.
+                .build();
+    }
+
+    private UserTitleDTO convertToUserTitleDTO(UserGroup userGroup) {
+        User user = userGroup.getUser();
+        return UserTitleDTO.builder()
+                .id(user.getId())
+                .nickName(user.getNickname())
+                .build();
+    }
+
+    private TagDTO convertToTagDTO(BookmarkListTag bookmarkListTag) {
+        return TagDTO.builder()
+                .title(bookmarkListTag.getTag().getTitle())
+                .build();
     }
 
     private static void setRelations(List<User> groupUsers, BookmarkList bookmarkList, List<UserGroup> groups, List<Tag> tags, List<BookmarkListTag> bookmarkListTags, List<Category> categories) {

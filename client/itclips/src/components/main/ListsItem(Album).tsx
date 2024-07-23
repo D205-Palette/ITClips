@@ -6,16 +6,6 @@ import ListItemHover from "./ListsItem(AlbumHovering)";
 
 // 이미지 , 리스트명, 북마크 개수, 태그,(설명), 좋아요 버튼&좋아요 수, 리스트 세부 조작 버튼
 // 아님 호버링 기능을 여기에다 포함이 나을듯?
-function HeartButton() {
-  const [isLike, setIsLike] = useState(false);
-  const clickHeart = (): void => {
-    setIsLike(!isLike);
-    //여기에 좋아요 api호출
-  };
-  return (
-    <div onClick={clickHeart}>{isLike ? <FaHeart /> : <FaRegHeart />}</div>
-  );
-}
 
 // function Hovering(isHover:boolean){
 
@@ -24,6 +14,11 @@ function HeartButton() {
 export default function ListItem() {
   const list = useStore((state) => state);
   const [isHover, setIsHovering] = useState(false);
+  const [isLike, setIsLike] = useState(false);
+  const clickHeart = (): void => {
+    setIsLike(!isLike);
+    //여기에 좋아요 api호출
+  };
 
   return (
     <>
@@ -64,8 +59,9 @@ export default function ListItem() {
                 ))}
               </div>
               <div>
-                <button className="btn btn-ghost p-1">
-                  <HeartButton />
+                <button onClick={clickHeart} className="btn btn-ghost p-1">
+                {isLike ? <FaHeart /> : <FaRegHeart />}
+                  
                   {list.bookmark_list_like}
                 </button>
               </div>

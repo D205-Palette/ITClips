@@ -43,8 +43,8 @@ const App = () => {
         </div>
         {/* 겹치기 테스트용 */}
         <div className="col-start-2 col-span-2">
-            {/* <AsideProfile /> */}
-            <AsideBookmarkList />
+            <AsideProfile />
+            {/* <AsideBookmarkList /> */}
         </div>
         <div id="Main" className="col-start-4 col-span-4">
           <MainTab />

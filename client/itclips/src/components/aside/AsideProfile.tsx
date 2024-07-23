@@ -10,7 +10,7 @@ const AsideProfile: React.FC = () => {
   // (임시) 팔로우 상태인지? - 팔로우 버튼 테스트
   const [isFollow, setIsFollow] = useState<boolean>(false);
   // (임시) 다른 유저의 정보인지? - 프로필 화면 테스트
-  const [isOther, setIsOther] = useState<boolean>(false);
+  const [isOther, setIsOther] = useState<boolean>(true);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const onClickStartChat = (): void => {

@@ -1,6 +1,7 @@
 package com.ssafy.itclips.bookmark.service;
 
 import com.ssafy.itclips.bookmark.dto.BookmarkRequestDTO;
+import com.ssafy.itclips.bookmark.dto.BookmarkUpdateDTO;
 import com.ssafy.itclips.bookmark.entity.Bookmark;
 import com.ssafy.itclips.category.entity.BookmarkCategory;
 import com.ssafy.itclips.category.repository.BookmarkCategoryRepository;
@@ -49,10 +50,31 @@ public class BookmarkServiceImpl implements BookmarkService {
         bookmarkCategory.addBookmarkCategory(bookmark,existingCategory);
         bookmarkCategoryRepository.save(bookmarkCategory);
 
+        saveBookmarkTags(bookmarkRequestDTO, bookmark);
+    }
+
+    @Override
+    @Transactional
+    public void updateBookmark(Long bookmarkId, BookmarkRequestDTO bookmarkRequestDTO) throws RuntimeException {
+        Bookmark bookmark = bookmarkRepository.findById(bookmarkId)
+                .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_NOT_FOUND));
+        bookmark.updateBookmark(bookmarkRequestDTO);
+
+        bookmarkRepository.save(bookmark);
+        bookmarkTagRepository.deleteAllByBookmark(bookmark);
+
+        saveBookmarkTags(bookmarkRequestDTO, bookmark);
+    }
+
+    @Transactional
+    public void saveBookmarkTags(BookmarkRequestDTO bookmarkRequestDTO, Bookmark bookmark) {
         List<BookmarkTag> bookmarkTags = new ArrayList<>();
         createTags(bookmarkRequestDTO, bookmark, bookmarkTags);
         bookmarkTagRepository.saveAll(bookmarkTags);
     }
+
+
+
 
     private void createTags(BookmarkRequestDTO bookmarkRequestDTO, Bookmark bookmark, List<BookmarkTag> bookmarkTags) {
         List<Tag> tags = tagService.saveTags(bookmarkRequestDTO.getTags());

@@ -1,5 +1,7 @@
 package com.ssafy.itclips.bookmark.entity;
 
+import com.ssafy.itclips.bookmark.dto.BookmarkRequestDTO;
+import com.ssafy.itclips.bookmark.dto.BookmarkUpdateDTO;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
 import com.ssafy.itclips.category.entity.BookmarkCategory;
 import com.ssafy.itclips.tag.entity.BookmarkTag;
@@ -81,6 +83,11 @@ public class Bookmark {
         this.url = url;
         this.isReported = isReported;
         this.order = order;
+    }
+
+    public void updateBookmark(BookmarkRequestDTO bookmarkRequestDTO) {
+        this.title = bookmarkRequestDTO.getTitle();
+        this.description = bookmarkRequestDTO.getContent();
     }
 
     public void addBookmarkList(BookmarkList bookmarkList) {

@@ -1,6 +1,7 @@
 package com.ssafy.itclips.bookmark.controller;
 
 import com.ssafy.itclips.bookmark.dto.BookmarkRequestDTO;
+import com.ssafy.itclips.bookmark.dto.BookmarkUpdateDTO;
 import com.ssafy.itclips.bookmark.service.BookmarkService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -34,5 +35,19 @@ public class BookmarkController {
                                             @RequestBody @Parameter(description = "북마크 생성 정보", required = true) BookmarkRequestDTO bookmarkRequestDTO) {
         bookmarkService.createBookmark(listId,categoryId,bookmarkRequestDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PutMapping("/update/{bookmarkId}")
+    @Operation(summary = "북마크 수정", description = "북마크를 수정합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "북마크가 성공적으로 수정되었습니다."),
+            @ApiResponse(responseCode = "404", description = "북마크를 찾을 수 없습니다."),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
+    })
+    public ResponseEntity<?> updateBookmark(@PathVariable @Parameter(description = "북마크 ID", required = true) Long bookmarkId,
+                                            @RequestBody @Parameter(description = "북마크 수정 정보", required = true) BookmarkRequestDTO bookmarkRequestDTO) {
+
+        bookmarkService.updateBookmark(bookmarkId,bookmarkRequestDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

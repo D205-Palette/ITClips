@@ -15,10 +15,14 @@ import com.ssafy.itclips.category.repository.CategoryRepository;
 import com.ssafy.itclips.error.CustomException;
 import com.ssafy.itclips.error.ErrorCode;
 import com.ssafy.itclips.tag.dto.TagDTO;
+import com.ssafy.itclips.tag.entity.BookmarkTag;
+import com.ssafy.itclips.tag.entity.Tag;
+import com.ssafy.itclips.tag.repository.BookmarkTagRepository;
 import com.ssafy.itclips.user.entity.Role;
 import com.ssafy.itclips.user.entity.User;
 import com.ssafy.itclips.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,9 +56,11 @@ class BookmarkServiceImplTest {
 
     private static User user;
     private static BookmarkRequestDTO bookmarkRequestDTO;
+    @Autowired
+    private BookmarkTagRepository bookmarkTagRepository;
 
-    @BeforeAll
-    static void setUp() {
+    @BeforeEach
+    void setUp() {
         user = User.builder()
                 .email("aaa@example.com")
                 .password("!23")
@@ -63,8 +69,6 @@ class BookmarkServiceImplTest {
                 .build();
         user.setId(125125L);
         user.setRole(Role.USER);
-
-
 
         bookmarkRequestDTO = new BookmarkRequestDTO();
         bookmarkRequestDTO.setTitle("Test Bookmark");
@@ -94,10 +98,47 @@ class BookmarkServiceImplTest {
 
         // 북마크 생성
         bookmarkService.createBookmark(savedBookmarkList.get().getId(), savedBookmarkList.get().getCategories().get(0).getId(), bookmarkRequestDTO);
-
+        Bookmark bookmark = bookmarkRepository.findByTitle("Test Bookmark");
         // Then
         // 북마크가 잘 생성되었는지 확인
-        assertThat(bookmarkRepository.findByTitle("Test Bookmark")).isNotNull();
+        assertThat(bookmark).isNotNull();
+    }
+
+    @DisplayName("북마크 업데이트 확인")
+    @Test
+    void updateBookmark() {
+        // 사용자 저장 (테스트를 위해 필요시)
+        userRepository.save(user);
+
+        // 북마크 리스트 생성
+        BookmarkListDTO bookmarkListDTO = new BookmarkListDTO();
+        bookmarkListDTO.setTitle("Test Bookmark List");
+        bookmarkListDTO.setDescription("Description for Test Bookmark List");
+        bookmarkListDTO.setIsPublic(true);
+        bookmarkListDTO.setUsers(null); // 사용자 추가
+
+        // 북마크 리스트 생성
+        bookmarkListService.createBookmarkList(user.getId(), bookmarkListDTO);
+        Optional<BookmarkList> savedBookmarkList = bookmarkListRepository.findByTitle("Test Bookmark List");
+        // 북마크 생성
+        bookmarkService.createBookmark(savedBookmarkList.get().getId(), savedBookmarkList.get().getCategories().get(0).getId(), bookmarkRequestDTO);
+        Bookmark existingBookmark = bookmarkRepository.findByTitle("Test Bookmark");
+        bookmarkRequestDTO.setTitle("updated");
+        bookmarkRequestDTO.setContent("updated");
+        bookmarkRequestDTO.setTags(List.of(new TagDTO("tag3"), new TagDTO("tag4")));
+
+        // When
+        bookmarkService.updateBookmark(existingBookmark.getId(), bookmarkRequestDTO);
+        // Then
+        Optional<Bookmark> updatedBookmark = bookmarkRepository.findById(existingBookmark.getId());
+        assertThat(updatedBookmark).isPresent(); // 북마크가 존재하는지 확인
+        assertThat(updatedBookmark.get().getTitle()).isEqualTo("updated"); // 제목이 업데이트 되었는지 확인
+        assertThat(updatedBookmark.get().getDescription()).isEqualTo("updated"); // 설명이 업데이트 되었는지 확인
+
+        // 태그가 올바르게 저장되었는지 확인
+        List<BookmarkTag> updatedTags = bookmarkTagRepository.findByBookmarkId(updatedBookmark.get().getId());
+        assertThat(updatedTags).extracting(tag -> tag.getTag().getTitle()) // 각 태그의 제목 가져오기
+                .containsExactlyInAnyOrder("Tag3", "Tag4"); // 새로운 태그 제목 확인
     }
 
     @DisplayName("존재하지 않는 북마크 리스트로 북마크 생성 시 예외 발생")
@@ -134,4 +175,6 @@ class BookmarkServiceImplTest {
         });
         assertThat(exception.getErrorCode()).isEqualTo(ErrorCode.CATEGORY_NOT_FOUND);
     }
+
+
 }

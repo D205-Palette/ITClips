@@ -9,4 +9,5 @@ public interface RoadmapService {
 
     List<RoadmapInfoDTO> findAllRoadmapList() throws RuntimeException;
     List<RoadmapInfoDTO> findUserRoadmapList(Long userId) throws RuntimeException;
+    void deleteRoadmap(Long roadmapId) throws RuntimeException;
 }

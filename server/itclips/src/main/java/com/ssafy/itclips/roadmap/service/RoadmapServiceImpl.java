@@ -52,6 +52,11 @@ public class RoadmapServiceImpl implements RoadmapService {
         return roadmapInfoDTOList;
     }
 
+    @Override
+    public void deleteRoadmap(Long roadmapId) throws RuntimeException {
+        roadmapRepository.deleteById(roadmapId);
+    }
+
 
     // 로드맵 삭제
 

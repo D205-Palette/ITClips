@@ -176,5 +176,39 @@ class BookmarkServiceImplTest {
         assertThat(exception.getErrorCode()).isEqualTo(ErrorCode.CATEGORY_NOT_FOUND);
     }
 
+    @Test
+    @DisplayName("북마크 삭제 테스트")
+    void deleteBookmark() {
+        // 사용자 저장 (테스트를 위해 필요시)
+        userRepository.save(user);
+
+        // 북마크 리스트 생성
+        BookmarkListDTO bookmarkListDTO = new BookmarkListDTO();
+        bookmarkListDTO.setTitle("Test Bookmark List");
+        bookmarkListDTO.setDescription("Description for Test Bookmark List");
+        bookmarkListDTO.setIsPublic(true);
+        bookmarkListDTO.setUsers(null); // 사용자 추가
+
+        // 북마크 리스트 생성
+        bookmarkListService.createBookmarkList(user.getId(), bookmarkListDTO);
+
+        // When
+        Optional<BookmarkList> savedBookmarkList = bookmarkListRepository.findByTitle("Test Bookmark List");
+        assertThat(savedBookmarkList).isPresent(); // 북마크 목록이 존재하는지 확인
+
+        // 북마크 생성
+        bookmarkService.createBookmark(savedBookmarkList.get().getId(), savedBookmarkList.get().getCategories().get(0).getId(), bookmarkRequestDTO);
+        Bookmark bookmark = bookmarkRepository.findByTitle("Test Bookmark");
+        // Then
+        // 북마크가 잘 생성되었는지 확인
+        assertThat(bookmark).isNotNull();
+
+        bookmarkService.deleteBookmark(bookmark.getId());
+        // Then
+        Optional<Bookmark> deletedBookmark = bookmarkRepository.findById(bookmark.getId());
+        assertThat(deletedBookmark).isNotPresent(); // 북마크가 존재하지 않는지 확인
+
+    }
+
 
 }

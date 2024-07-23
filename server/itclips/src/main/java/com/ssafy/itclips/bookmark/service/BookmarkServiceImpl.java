@@ -73,7 +73,11 @@ public class BookmarkServiceImpl implements BookmarkService {
         bookmarkTagRepository.saveAll(bookmarkTags);
     }
 
-
+    @Override
+    @Transactional
+    public void deleteBookmark(Long bookmarkId) throws RuntimeException {
+        bookmarkRepository.deleteById(bookmarkId);
+    }
 
 
     private void createTags(BookmarkRequestDTO bookmarkRequestDTO, Bookmark bookmark, List<BookmarkTag> bookmarkTags) {

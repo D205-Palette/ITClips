@@ -50,4 +50,11 @@ public class BookmarkController {
         bookmarkService.updateBookmark(bookmarkId,bookmarkRequestDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @DeleteMapping("/delete/{bookmarkId}")
+    public ResponseEntity<?> deleteBookmark(@PathVariable Long bookmarkId) {
+        bookmarkService.deleteBookmark(bookmarkId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

@@ -67,10 +67,10 @@ public class BookmarkList {
     private Boolean isPublic = false;
 
     @OneToMany(mappedBy = "bookmarklist")
-    private Set<Bookmark> bookmarks = new LinkedHashSet<>();
+    private List<Bookmark> bookmarks = new ArrayList<>();
 
     @OneToMany(mappedBy = "bookmarkList")
-    private Set<BookmarkListTag> bookmarkListTags = new LinkedHashSet<>();
+    private List<BookmarkListTag> bookmarkListTags = new ArrayList<>();
 
     @OneToMany(mappedBy = "bookmarklist")
     private List<Category> categories = new ArrayList<>();

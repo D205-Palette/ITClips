@@ -1,6 +1,5 @@
 package com.ssafy.itclips.category.entity;
 
-import com.ssafy.itclips.bookmark.entity.BookmarkCategory;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
 import com.ssafy.itclips.category.dto.CategoryRequestDTO;
 import jakarta.persistence.*;
@@ -15,9 +14,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter

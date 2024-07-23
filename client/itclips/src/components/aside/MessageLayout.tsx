@@ -19,7 +19,7 @@ const MessageLayout = () => {
   };
 
   return (
-    <div>
+    <div className="bg-white">
       {!selectedChat ? (
         <AsideMessage onSelectChat={handleSelectChat} />
       ) : (

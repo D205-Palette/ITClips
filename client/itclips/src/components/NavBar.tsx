@@ -8,6 +8,7 @@ import LogoutButton from "./NavLogoutButton";
 import MessageButton from "./NavMessageButton";
 import NavGotoButton from "./NavGotoButton";
 
+
 const NavBar = () => {
   // Zustand 상태 훅
   const isLoginModalOpen = useStore((state) => state.isLoginModalOpen);

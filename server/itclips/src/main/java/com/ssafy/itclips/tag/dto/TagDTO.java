@@ -1,13 +1,16 @@
 package com.ssafy.itclips.tag.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class TagDTO {
     private String title;
 
+    @Builder
+    public TagDTO(String title) {
+        this.title = title;
+    }
 }

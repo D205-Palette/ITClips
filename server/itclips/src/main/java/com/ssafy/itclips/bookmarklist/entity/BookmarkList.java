@@ -17,10 +17,7 @@ import lombok.Setter;
 import org.hibernate.annotations.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
@@ -76,7 +73,7 @@ public class BookmarkList {
     private List<Category> categories = new ArrayList<>();
 
     @OneToMany(mappedBy = "bookmarkList")
-    private List<UserGroup> groups = new ArrayList<>();
+    private Set<UserGroup> groups = new HashSet<>();
 
     @OneToMany(mappedBy = "bookmarkList")
     private List<BookmarkListTag> tags = new ArrayList<>();

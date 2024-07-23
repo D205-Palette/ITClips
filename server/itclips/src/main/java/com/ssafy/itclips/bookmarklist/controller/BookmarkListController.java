@@ -1,7 +1,7 @@
 package com.ssafy.itclips.bookmarklist.controller;
 
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListDTO;
-import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
+import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
 import com.ssafy.itclips.bookmarklist.service.BookmarkListService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/list")
 @RequiredArgsConstructor
@@ -23,11 +25,22 @@ public class BookmarkListController {
 
     private final BookmarkListService bookmarkListService;
 
+    @GetMapping("/personal/{userId}")
+    @Operation(summary = "개인 북마크리스트 찾기", description = "개인 북마크리스트를 찾습니다")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "북마크리스트를 성공적으로 조회했습니다."),
+            @ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없습니다."),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
+    })
+    public ResponseEntity<?> getPersonalLists(@PathVariable @Parameter(description = "유저 정보", required = true) Long userId) {
+        List<BookmarkListResponseDTO> lists = bookmarkListService.getPersonalLists(userId);
+        return new ResponseEntity<List<BookmarkListResponseDTO>>(lists,HttpStatus.OK);
+    }
 
     @PostMapping("/add/{userId}")
     @Operation(summary = "북마크리스트 추가", description = "북마크리스트를 추가합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "태그가 성공적으로 추가되었습니다."),
+            @ApiResponse(responseCode = "201", description = "북마크리스트가 성공적으로 추가되었습니다."),
             @ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없습니다."),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
     })

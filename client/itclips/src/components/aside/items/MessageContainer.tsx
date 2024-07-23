@@ -2,32 +2,24 @@ import React from "react";
 
 interface Message {
   id: number;
-  title: string;
-  subtitle: string;
-  hasNotification?: boolean;
+  content: string;
+  isSent?: boolean;
 }
 
-interface ChildComponentProps {
+interface MessageContainerProps {
   messages: Message[];
-  onClickMessage: (id: number) => any;
 }
 
-const MessageContainer: React.FC<ChildComponentProps> = ({ messages, onClickMessage }) => {
+const MessageContainer: React.FC<MessageContainerProps> = ({ messages }) => {
   return (
-    <div>
-      <ul className="space-y-4 max-h-96 overflow-y-auto">
-        {messages.map((message: Message) => (
-          <li key={message.id} className="flex justify-between items-center bg-aside-layout rounded w-100 px-3 py-2" onClick={() => onClickMessage(message.id)}>
-            <div className="p-3">
-              <h3 className="font-semibold text-start">{message.title}</h3>
-              <p className="text-sm text-gray-500 text-start message-content">{message.subtitle}</p>
-            </div>
-            {message.hasNotification && (
-              <span className="badge badge-sm badge-error m-5"></span>
-            )}
-          </li>
-        ))}
-      </ul>
+    <div className="flex-1 overflow-y-auto mb-4 space-y-4">
+      {messages.map((message: Message) => (
+        <div key={message.id} className={`flex ${message.isSent ? 'justify-end' : 'justify-start'}`}>
+          <div className={`max-w-xs p-3 rounded-lg ${message.isSent ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>
+            {message.content}
+          </div>
+        </div>
+      ))}
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import MessageHeader from "./items/MessageHeader";
-import MessageContainer from "./items/MessageContainer";
+import MessageListContainer from "./items/MessageListContainer";
 
 interface MessageListProps {
   onSelectChat: (id: number) => void;
@@ -34,7 +34,7 @@ const MessageList: React.FC<MessageListProps> = ({ onSelectChat }) => {
       {/* 메세지 헤더 영역 */}
       <MessageHeader />
       {/* 받은 메세지 영역 */}
-      <MessageContainer 
+      <MessageListContainer 
         messages = { data }
         onClickMessage = { onClickMessage }
       />

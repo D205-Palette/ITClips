@@ -1,83 +1,40 @@
 import React, { useState } from "react";
+import { navStore } from "../../stores/navStore";
 
-const FindIdModal = () => {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [verificationCode, setVerificationCode] = useState("");
-  const [isEmailSent, setIsEmailSent] = useState(false);
+const FindIdCompleteModal = () => {
+  const { modalState } = navStore();
+  const { closeFindPasswordCompleteModal, closeFindPasswordModal } = modalState;
 
-  const handleEmailSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("Form submitted", { username, email });
-    // 여기에 이메일 인증 로직을 추가하세요.
-    // 예: API 호출을 통해 인증 이메일 발송
-    setIsEmailSent(true); // 이메일이 성공적으로 발송되었다고 가정
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {      
+      closeFindPasswordModal();
+    }
   };
-
-  const handleVerificationSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("Verification code submitted", verificationCode);
-    // 여기에 인증번호 확인 로직을 추가하세요.
-    // 예: API 호출을 통해 인증번호 확인
+  const toLogin = () => {
+    closeFindPasswordModal();
   };
 
   return (
-    <div className="bg-base-100 p-8 rounded-lg shadow-lg relative w-[801px] h-[654px]">
-      <h1 className="text-3xl font-semibold mb-6 text-center">
-        본인인증에 사용될 아이디와 이메일을 입력해주세요.
-      </h1>
-
-      <form className="space-y-4 mb-4" onSubmit={handleEmailSubmit}>
-        <div className="space-y-4">
-          <input
-            type="text"
-            required
-            className="input input-bordered w-full"
-            placeholder="아이디를 입력해주세요."
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <div className="flex">
-            <input
-              type="email"
-              required
-              className="input input-bordered flex-grow"
-              placeholder="이메일을 입력해주세요."
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <button type="submit" className="btn btn-primary ml-2">
-              인증하기
-            </button>            
-          </div>
-        </div>
-      </form>
-
-      {isEmailSent && (
-        <>
-          <p className="text-center text-green-600 mb-4">
-            이메일로 인증번호를 발송하였습니다. 확인 후 인증번호를 입력해주세요.
-          </p>
-          <form className="space-y-4" onSubmit={handleVerificationSubmit}>
-            <div className="form-control">
-              <input
-                type="text"
-                required
-                className="input input-bordered"
-                placeholder="인증번호를 입력해주세요."
-                value={verificationCode}
-                onChange={(e) => setVerificationCode(e.target.value)}
-              />
-            </div>
-
-            <button type="submit" className="btn btn-primary w-full">
-              비밀번호 찾기
-            </button>
-          </form>
-        </>
-      )}
+    <div
+      className="fixed inset-0 flex items-center justify-center z-50"
+      onClick={handleBackdropClick}
+    >
+      <div className="bg-base-100 p-8 rounded-lg shadow-lg relative w-[801px] h-[654px]">
+        <h1 className="text-3xl font-semibold mb-6 text-center">
+          임시비밀번호 받기 성공
+        </h1>
+        <button className="btn " onClick={toLogin}>
+          로그인 하러 가기
+        </button>
+      <button
+          onClick={closeFindPasswordModal}
+          className="absolute top-2 right-2 btn btn-ghost"
+        >
+          ×
+        </button>
+      </div>
     </div>
   );
 };
 
-export default FindIdModal;
+export default FindIdCompleteModal;

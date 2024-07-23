@@ -10,6 +10,7 @@ import { asideStore } from "./stores/asideStore";
 import NavBar from "./components/nav/NavBar";
 import AsideProfile from "./components/aside/AsideProfile"
 import MessageLayout from "./components/aside/MessageLayout";
+import AsideBookmarkList from "./components/aside/AsideBookmarkList";
 // View
 import Intro from "./pages/Intro";
 import SignUpView from "./pages/SignUpView";
@@ -42,7 +43,8 @@ const App = () => {
         </div>
         {/* 겹치기 테스트용 */}
         <div className="col-start-2 col-span-2">
-            <AsideProfile />
+            {/* <AsideProfile /> */}
+            <AsideBookmarkList />
         </div>
         <div id="Main" className="col-start-4 col-span-4">
           <MainTab />

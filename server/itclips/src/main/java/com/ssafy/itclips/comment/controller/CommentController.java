@@ -4,6 +4,8 @@ import com.ssafy.itclips.comment.dto.CommentDTO;
 import com.ssafy.itclips.comment.service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,11 @@ public class CommentController {
 
     @PostMapping("/add/{userId}/{listId}")
     @Operation(summary = "댓글 달기", description = "북마크리스트 댓글을 추가합니다")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "댓글을 성공적으로 생성했습니다."),
+            @ApiResponse(responseCode = "404", description = "사용자,리스트를 찾을 수 없습니다."),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
+    })
     public ResponseEntity<?> addComment(@PathVariable @Parameter(description = "유저 정보", required = true) Long userId,
                                         @PathVariable @Parameter(description = "리스트 정보", required = true) Long listId,
                                         @RequestBody @Parameter(description = "댓글 정보", required = true) CommentDTO commentDTO) {
@@ -30,6 +37,12 @@ public class CommentController {
 
     @DeleteMapping("/delete/{userId}/{commentId}")
     @Operation(summary = "댓글 삭제", description = "북마크리스트 댓글을 삭제합니다")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "댓글을 성공적으로 삭제했습니다."),
+            @ApiResponse(responseCode = "404", description = "사용자, 댓글을 찾을 수 없습니다."),
+            @ApiResponse(responseCode = "405", description = "댓글에 접근 할 권한이 없습니다."),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
+    })
     public ResponseEntity<?> removeComment(@PathVariable @Parameter(description = "유저 정보", required = true) Long userId,
                                            @PathVariable @Parameter(description = "댓글 정보", required = true) Long commentId) {
 

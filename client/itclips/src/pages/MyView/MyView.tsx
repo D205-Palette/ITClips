@@ -5,14 +5,17 @@ import { Route, Routes } from "react-router-dom";
 import MyGroupBookmarkList from '../..//pages/MyView/MyGroupBookmarkList';
 import MyFavorites from '../..//pages/MyView/MyFavorites';
 import MyRoadmap from '../..//pages/MyView/MyRoadmap';
-
+import { asideStore } from "../../stores/asideStore";
 // component
 import AsideBookmarkList from "../../components/aside/AsideProfile"
 import AsideProfile from '../..//components/aside/AsideProfile'
 
-
+import MessageLayout from "../../components/aside/MessageLayout";
 export default function MyView() {
 
+
+
+  const isMessageOpen = asideStore(state => state.isMessageOpen);
 
   return (
     <>
@@ -21,6 +24,9 @@ export default function MyView() {
         <div id="aside" className="col-start-2 col-span-2 hidden xl:block ">
           {/* aside 자리 */}
           {/* 여기에 프로필이나 메세지일때 넣기 */}
+          <div id="aside" className="absolute col-start-2 col-span-2">
+          { isMessageOpen && <MessageLayout /> }
+          </div>
           <Routes>
             <Route path='' element={<AsideBookmarkList />} />
             <Route path="groupbookmarklist" element={<AsideBookmarkList />} />

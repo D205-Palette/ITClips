@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 
 const AsideMessageDetail = ({ chatId, onBack }: any) => {
   // chatId는 넘겨받아서 axios로 데이터 다시 호출
+  // chatId나 다른 데이터 넘겨받아서 axios로 채팅 내용 호출받으면 됨
   
   // 더미 데이터
   const [messages, setMessages] = useState([

@@ -23,10 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,6 +37,8 @@ public class BookmarkListServiceImpl implements BookmarkListService {
     private final GroupRepository groupRepository;
     private final BookmarkListTagRepository bookmarkListTagRepository;
     private final TagService tagService;
+
+    private final static Integer USER_NUM = 1;
 
     @Override
     @Transactional
@@ -110,7 +109,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
 
     @Override
     @Transactional
-    public List<BookmarkListResponseDTO> getPersonalLists(Long userId) throws RuntimeException {
+    public List<BookmarkListResponseDTO> getLists(Long userId, Boolean target) throws RuntimeException {
         List<BookmarkList> bookmarkLists = bookmarkListRepository.findDetailedByUserId(userId);
 
         if (bookmarkLists.isEmpty()) {
@@ -119,6 +118,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
 
         return bookmarkLists.stream()
                 .map(this::convertToBookmarkListResponseDTO)
+                .filter(dto -> (target ? dto.getUsers().size() > USER_NUM : dto.getUsers().size() == USER_NUM))
                 .collect(Collectors.toList());
     }
 
@@ -133,11 +133,16 @@ public class BookmarkListServiceImpl implements BookmarkListService {
     private BookmarkListResponseDTO convertToBookmarkListResponseDTO(BookmarkList bookmarkList) {
         List<UserTitleDTO> users = bookmarkList.getGroups().stream()
                 .map(this::convertToUserTitleDTO)
-                .toList();
-
-        List<TagDTO> tags = bookmarkList.getTags().stream()
-                .map(this::convertToTagDTO)
                 .collect(Collectors.toList());
+
+        Set<TagDTO> tags = new HashSet<>(bookmarkList.getTags().stream()
+                .map(this::convertToTagDTO)
+                .collect(Collectors.toMap(
+                        TagDTO::getTitle, // Key: title
+                        tagDTO -> tagDTO, // Value: tagDTO
+                        (existing, replacement) -> existing // Handle duplicates by keeping the existing tagDTO
+                ))
+                .values());
 
         return BookmarkListResponseDTO.builder()
                 .id(bookmarkList.getId())

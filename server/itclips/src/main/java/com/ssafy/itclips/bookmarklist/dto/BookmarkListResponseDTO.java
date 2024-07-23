@@ -5,6 +5,7 @@ import com.ssafy.itclips.user.dto.UserTitleDTO;
 import lombok.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -17,12 +18,12 @@ public class BookmarkListResponseDTO {
     private Integer bookmarkCount;
     private Integer likeCount;
     private String image;
-    List<TagDTO> tags;
+    Set<TagDTO> tags;
     List<UserTitleDTO> users;
 
     @Builder
     public BookmarkListResponseDTO(Long id, String title, String description,
-                                   Integer bookmarkCount, Integer likeCount, String image, List<TagDTO> tags,List<UserTitleDTO> users) {
+                                   Integer bookmarkCount, Integer likeCount, String image, Set<TagDTO> tags,List<UserTitleDTO> users) {
         this.id = id;
         this.title = title;
         this.description = description;

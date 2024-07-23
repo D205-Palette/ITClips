@@ -33,7 +33,19 @@ public class BookmarkListController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
     })
     public ResponseEntity<?> getPersonalLists(@PathVariable @Parameter(description = "유저 정보", required = true) Long userId) {
-        List<BookmarkListResponseDTO> lists = bookmarkListService.getPersonalLists(userId);
+        List<BookmarkListResponseDTO> lists = bookmarkListService.getLists(userId,false);
+        return new ResponseEntity<List<BookmarkListResponseDTO>>(lists,HttpStatus.OK);
+    }
+
+    @GetMapping("/group/{userId}")
+    @Operation(summary = "그룹 북마크리스트 찾기", description = "그룹 북마크리스트를 찾습니다")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "북마크리스트를 성공적으로 조회했습니다."),
+            @ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없습니다."),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
+    })
+    public ResponseEntity<?> getGroupLists(@PathVariable @Parameter(description = "유저 정보", required = true) Long userId) {
+        List<BookmarkListResponseDTO> lists = bookmarkListService.getLists(userId,true);
         return new ResponseEntity<List<BookmarkListResponseDTO>>(lists,HttpStatus.OK);
     }
 

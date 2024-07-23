@@ -1,14 +1,23 @@
 import { VscKebabVertical } from "react-icons/vsc";
+import { FC } from "react";
 
-export default function SearchBar() {
+interface Props {
+  whatSearch: string
+}
+
+
+// 뭐찾을지 여기에 api호출
+
+
+
+const SearchBar : FC<Props> = ({whatSearch})  => {
   return (
     <>
-      {/* <input type="text" placeholder="북마크리스트의 이름을 검색합니다 " className="input w-full max-w-xs" /> */}
       <label className="input flex items-center gap-2 m-3 bg-gray-100 rounded-xl">
         <input
           type="text"
           className="grow"
-          placeholder="북마크리스트의 이름을 검색합니다"
+          placeholder={whatSearch + "의 이름을 검색합니다"}
         />
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -23,6 +32,9 @@ export default function SearchBar() {
           />
         </svg>
       </label>
+      
     </>
   );
 }
+
+export default  SearchBar;

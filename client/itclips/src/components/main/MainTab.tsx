@@ -34,10 +34,10 @@ export default function MainTab() {
       <div className="flex justify-around">
         {/* {version ? <ButtonV1 /> : <ButtonV2 />} */}
 
-        <Link to="/myview/bookmarklist"><div className="flex flex-row"><div className="flex items-center"><FaRegBookmark /></div>북마크 리스트</div></Link>
-        <Link to="/myview/groupbookmarklist"><div className="flex flex-row"><div className="flex items-center"><IoBookmarksOutline /></div>그룹 북마크 리스트</div></Link>
-        <Link to="/myview/favorites">즐겨찾기</Link>
-        <Link to="/myview/roadmap">로드맵</Link>
+        <Link to=""><div className="flex flex-row"><div className="flex items-center"><FaRegBookmark /></div>북마크 리스트</div></Link>
+        <Link to="groupbookmarklist"><div className="flex flex-row"><div className="flex items-center"><IoBookmarksOutline /></div>그룹 북마크 리스트</div></Link>
+        <Link to="favorites">즐겨찾기</Link>
+        <Link to="roadmap">로드맵</Link>
       </div>
     </>
   );

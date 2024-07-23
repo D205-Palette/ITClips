@@ -1,4 +1,4 @@
-import ListItemAlbum from "../components/main/ListsItem(Album)";
+import ListItemAlbum from "../../components/main/ListsItem(Album)";
 
 const MyBookmarkList = () => {       
   return (

@@ -51,9 +51,9 @@ const NavBar = () => {
           <HomeButton />
           {isLoggedIn && (
             <ul className="flex gap-4 list-none">
-              <Link to='/home'>MY</Link>
-              <Link to='/feed'>피드</Link>
-              <Link to='/serach'>검색</Link>              
+              <Link to='my'>MY</Link>
+              <Link to='feed'>피드</Link>
+              <Link to='serach'>검색</Link>              
             </ul>
           )}
         </div>

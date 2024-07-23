@@ -7,7 +7,7 @@ export default function HomeButton() {
   return (
     <div className="font-bold text-xl">
       
-      <a href={isLoggedIn ? "/home" : "/"}>IT Clips</a>
+      <a href={isLoggedIn ? "/my" : "/intro"}>IT Clips</a>
     </div>
   );
 }

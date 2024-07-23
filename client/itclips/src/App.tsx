@@ -1,7 +1,5 @@
 import React from "react";
-import MainTab from "./components/main/MainTab";
 import { Route, Routes } from "react-router-dom";
-import MyView from "./pages/MyView/MyView";
 import "./index.css";
 import { navStore } from "./stores/navStore";
 
@@ -11,6 +9,7 @@ import AsideBookmarkList from "./components/aside/AsideProfile"
 // View
 import Intro from "./pages/Intro";
 import SignUpView from "./pages/SignUpView";
+import MyView from "./pages/MyView/MyView";
 import MyGroupBookmarkList from './pages/MyView/MyGroupBookmarkList';
 import MyFavorites from './pages/MyView/MyFavorites';
 import MyRoadmap from './pages/MyView/MyRoadmap';

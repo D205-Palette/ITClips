@@ -1,4 +1,3 @@
-import { VscKebabVertical } from "react-icons/vsc";
 import { FC } from "react";
 
 interface Props {
@@ -9,11 +8,10 @@ interface Props {
 // 뭐찾을지 여기에 api호출
 
 
-
 const SearchBar : FC<Props> = ({whatSearch})  => {
   return (
     <>
-      <label className="input flex items-center gap-2 m-3 bg-gray-100 rounded-xl">
+      <label className="input flex items-center gap-2 my-5 bg-gray-100 rounded-xl ">
         <input
           type="text"
           className="grow"

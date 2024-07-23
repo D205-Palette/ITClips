@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,6 +15,6 @@ import java.util.ArrayList;
 public class BookmarkRequestDTO {
     private String url;
     private String title;
-    private ArrayList<TagDTO> tags;
+    private List<TagDTO> tags;
     private String content;
 }

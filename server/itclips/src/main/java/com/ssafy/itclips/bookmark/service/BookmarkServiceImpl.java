@@ -50,13 +50,17 @@ public class BookmarkServiceImpl implements BookmarkService {
         bookmarkCategoryRepository.save(bookmarkCategory);
 
         List<BookmarkTag> bookmarkTags = new ArrayList<>();
+        createTags(bookmarkRequestDTO, bookmark, bookmarkTags);
+        bookmarkTagRepository.saveAll(bookmarkTags);
+    }
+
+    private void createTags(BookmarkRequestDTO bookmarkRequestDTO, Bookmark bookmark, List<BookmarkTag> bookmarkTags) {
         List<Tag> tags = tagService.saveTags(bookmarkRequestDTO.getTags());
         tags.forEach(tag -> {
             BookmarkTag bookmarkTag = new BookmarkTag();
-            bookmarkTag.addBookmarkTag(tag,bookmark);
+            bookmarkTag.addBookmarkTag(tag, bookmark);
             bookmarkTags.add(bookmarkTag);
         });
-        bookmarkTagRepository.saveAll(bookmarkTags);
     }
 
     private static Bookmark buildBookmark(BookmarkRequestDTO bookmarkRequestDTO, Integer count) {

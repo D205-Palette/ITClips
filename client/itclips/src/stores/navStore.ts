@@ -1,4 +1,5 @@
 import create from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware'
 
 interface StoreState {
   login: () => void;          // 추가된 함수

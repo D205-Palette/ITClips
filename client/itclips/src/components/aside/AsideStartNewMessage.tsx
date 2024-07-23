@@ -8,18 +8,18 @@ interface InviteProps {
 }
 
 const AsideStartNewMessage: React.FC<InviteProps> = ({ onStart, onBack }) => {
-  const [invitees, setInvitees] = useState<string[]>([]);
+  const [inviteEmails, setInviteEmails] = useState<string[]>([]);
   const [inputEmail, setInputEmail] = useState("");
 
-  const handleAddInvitee = () => {
-    if (inputEmail.trim() && !invitees.includes(inputEmail)) {
-      setInvitees([...invitees, inputEmail]);
+  const handleAddInviteEmail = () => {
+    if (inputEmail.trim() && !inviteEmails.includes(inputEmail)) {
+      setInviteEmails([...inviteEmails, inputEmail]);
       setInputEmail("");
     }
   };
 
-  const handleRemoveInvitee = (email: string) => {
-    setInvitees(invitees.filter(invitee => invitee !== email));
+  const handleRemoveInviteEmail = (email: string) => {
+    setInviteEmails(inviteEmails.filter(inviteEmail => inviteEmail !== email));
   };
 
   return (
@@ -41,14 +41,14 @@ const AsideStartNewMessage: React.FC<InviteProps> = ({ onStart, onBack }) => {
           placeholder="메세지 보낼 상대 이름"
           className="input input-bordered flex-1 mr-2"
         />
-        <button onClick={handleAddInvitee} className="btn btn-primary">추가</button>
+        <button onClick={handleAddInviteEmail} className="btn btn-primary">추가</button>
       </div>
       {/* 초대할 상대 리스트 */}
       <div className="flex flex-col space-y-2 mb-4">
-        {invitees.map((invitee, index) => (
+        {inviteEmails.map((inviteEmail, index) => (
           <div key={index} className="flex items-center justify-between">
-            <span>{invitee}</span>
-            <button onClick={() => handleRemoveInvitee(invitee)} className="btn btn-error btn-sm">x</button>
+            <span>{inviteEmail}</span>
+            <button onClick={() => handleRemoveInviteEmail(inviteEmail)} className="btn btn-error btn-sm">x</button>
           </div>
         ))}
       </div>

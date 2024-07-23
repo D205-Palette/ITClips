@@ -1,8 +1,8 @@
 import { FaSignOutAlt } from 'react-icons/fa';
-import { useStore } from '../stores/authStore';
+import { navStore } from '../../stores/navStore';
 
 const LogoutButton = () => {
-  const logout = useStore(state => state.logout);
+  const logout = navStore(state => state.logout);
 
   return (
     <button

@@ -1,7 +1,7 @@
 // 이미지 , 리스트명, 북마크 개수, 태그, 설명, 좋아요 버튼&좋아요 수, 리스트 세부 조작 버튼
 import { useState } from "react";
-import useStore from "../stores/listStore";
-import KebabDropdown from "./KebabDropdown";
+import useStore from "../stores/mainStore";
+import KebabDropdown from "./common/KebabDropdown";
 
 function HeartButton() {
   const [isLike, setIsLike] = useState(false);

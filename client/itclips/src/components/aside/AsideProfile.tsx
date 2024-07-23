@@ -1,4 +1,6 @@
-import profileImage from "../assets/profile_image.png"
+import profileImage from "../../assets/images/profile_image.png"
+
+
 
 // 일단 API 어떻게 들어올지 몰라서 임시로 받는 값 만들어 둠
 interface ProfileProps {

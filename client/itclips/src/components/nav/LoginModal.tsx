@@ -1,9 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useStore } from '../stores/authStore';
+import { navStore } from '../../stores/navStore';
+
+import FindIdModal from './FindIdModal'
+import FindPasswordModal from './FindPasswordModal'
+import FindIdCompleteModal from './FindIdCompleteModal'
+import FindPasswordCompleteModal from './FindPasswordCompleteModal'
+
 
 const LoginModal = () => {
-  const closeLoginModal = useStore(state => state.closeLoginModal);
+  const [isOpen, setIsOpen] = useState(false);
+
+  
+  const closeLoginModal = navStore(state => state.closeLoginModal);
+  const openFindIdModal = navStore(state => state.openFindIdModal);
+  
   const navigate = useNavigate();
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -19,9 +30,10 @@ const LoginModal = () => {
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-      onClick={handleBackdropClick}
+    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+    onClick={handleBackdropClick}
     >
+      
       <div className="bg-base-100 p-8 rounded-lg shadow-lg relative w-[801px] h-[654px]">
         <h2 className="text-3xl font-semibold mb-6 text-center">로그인</h2>
         <form className="space-y-4">
@@ -58,10 +70,15 @@ const LoginModal = () => {
             로그인
           </button>
         </form>
+
+   
+
         <div className="flex justify-between mt-4">
-          <button className="btn btn-link" onClick={() => console.log('아이디 찾기')}>아이디 찾기</button>
+          
+          <a className="btn btn-link" onClick={openFindIdModal} href=''>아이디 찾기</a>
           <button className="btn btn-link" onClick={() => console.log('비밀번호 찾기')}>비밀번호 찾기</button>
           <button className="btn btn-link" onClick={handleSignUpClick}>회원가입</button>
+        
         </div>
         <button
           onClick={closeLoginModal}
@@ -69,9 +86,11 @@ const LoginModal = () => {
         >
           ×
         </button>
-
-
+        
       </div>
+
+      <FindIdModal/>
+      <FindPasswordModal/>
     </div>
   );
 };

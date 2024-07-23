@@ -1,5 +1,4 @@
 import { FaEnvelope } from 'react-icons/fa';
-import { useStore } from '../stores/authStore';
 
 const MessageButton = () => {       
   return (

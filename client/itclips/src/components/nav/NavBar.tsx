@@ -1,19 +1,22 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useStore } from "../stores/authStore";
+import { Link } from "react-router-dom"
+import { navStore } from "../../stores/navStore";
 import DarkModeToggle from "./DarkModeToggle";
-import NotificationButton from "./NavNotificationButton";
+import NotificationButton from "../NavNotificationButton";
 import LoginModal from "./LoginModal";
-import HomeButton from "./NavHomeButton";
-import LogoutButton from "./NavLogoutButton";
-import MessageButton from "./NavMessageButton";
-import NavGotoButton from "./NavGotoButton";
+import FindIdModal from "./FindIdModal";
+
+import HomeButton from "../nav/NavHomeButton";
+import LogoutButton from "../nav/NavLogoutButton";
+import MessageButton from "../nav/NavMessageButton";
 
 const NavBar = () => {
   // Zustand 상태 훅
-  const isLoginModalOpen = useStore((state) => state.isLoginModalOpen);
-  const openLoginModal = useStore((state) => state.openLoginModal);
-  const login = useStore((state) => state.login);
-  const isLoggedIn = useStore((state) => state.isLoggedIn);
+  const isLoginModalOpen = navStore((state) => state.isLoginModalOpen);
+  const isFindIdModalOpen = navStore((state) => state.isFindIdModalOpen);
+  const openLoginModal = navStore((state) => state.openLoginModal);
+  const login = navStore((state) => state.login);
+  const isLoggedIn = navStore((state) => state.isLoggedIn);
 
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
@@ -48,9 +51,9 @@ const NavBar = () => {
           <HomeButton />
           {isLoggedIn && (
             <ul className="flex gap-4 list-none">
-              <NavGotoButton path="home" name="MY" />
-              <NavGotoButton path="feed" name="피드" />
-              <NavGotoButton path="search" name="검색" />
+              <Link to='/home'>MY</Link>
+              <Link to='/feed'>피드</Link>
+              <Link to='/serach'>검색</Link>              
             </ul>
           )}
         </div>
@@ -90,6 +93,7 @@ const NavBar = () => {
         </div>
       </nav>
       {isLoginModalOpen && <LoginModal />}
+      {isFindIdModalOpen && <FindIdModal />}
     </>
   );
 };

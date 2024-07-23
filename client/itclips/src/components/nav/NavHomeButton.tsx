@@ -1,13 +1,13 @@
 import React from "react";
-import { useStore } from '../stores/authStore';
+import { navStore } from "../../stores/navStore";
 
 export default function HomeButton() {
-  const isLoggedIn = useStore(state => state.isLoggedIn);
+  const isLoggedIn = navStore(state => state.isLoggedIn);
 
   return (
     <div className="font-bold text-xl">
       
-      <a href={isLoggedIn ? "/home" : "/intro"}>IT Clips</a>
+      <a href={isLoggedIn ? "/home" : "/"}>IT Clips</a>
     </div>
   );
 }

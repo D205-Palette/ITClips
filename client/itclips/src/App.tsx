@@ -3,7 +3,7 @@ import MainTab from "./components/main/MainTab";
 import { Route, Routes } from "react-router-dom";
 import MyView from "./pages/MyView";
 import "./index.css";
-import { useStore } from "./stores/authStore";
+import { navStore } from "./stores/navStore";
 
 // component
 import NavBar from "./components/nav/NavBar";
@@ -13,7 +13,7 @@ import Intro from "./pages/Intro";
 import SignUpView from "./pages/SignUpView";
 
 const App = () => {
-  const isLogin = useStore((state) => state.isLoggedIn);
+  const isLogin = navStore((state) => state.isLoggedIn);
 
   return (
     <div className="App">
@@ -25,8 +25,8 @@ const App = () => {
               <Route path="/myview" element={<MyView />} />
             ) : (
               <>
-                <Route path="/intro" element={<Intro />} />
-                <Route path="/signup" element={<SignUpView />} />{" "}
+                <Route path="/" element={<Intro />} />
+                <Route path="/signup" element={<SignUpView />} />{" "}                
               </>
             )}
           </Routes>

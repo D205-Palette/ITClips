@@ -9,7 +9,7 @@ interface Article {
   bookmark_list_like: number;
 }
 
-const listStore = create<Article>((set) => ({
+const mainStore = create<Article>((set) => ({
   image:"이미지 주소",
   bookmarks:[{url:'www.naver.com'}, {url:'www.google.com'}],
   title: "생성된 리스트_01",
@@ -18,4 +18,4 @@ const listStore = create<Article>((set) => ({
   bookmark_list_like: 5 , 
 }));
 
-export default listStore
+export default mainStore

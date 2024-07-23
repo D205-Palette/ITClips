@@ -1,15 +1,18 @@
 import React from 'react';
-import { useStore } from '../stores/authStore';
-import Intro1 from '../assets/Intro1.svg';
-import Intro2 from '../assets/Intro2.svg';
-import Intro3 from '../assets/Intro3.svg';
+import { navStore } from '../stores/navStore';
+import Intro1 from '../assets/images/Intro1.svg';
+import Intro2 from '../assets/images/Intro2.svg';
+import Intro3 from '../assets/images/Intro3.svg';
 
 const Intro: React.FC = () => {
   // Zustand 스토어에서 모달 상태 업데이트 함수 가져오기
-  const openLoginModal = useStore(state => state.openLoginModal);
+  const openLoginModal = navStore(state => state.openLoginModal);
 
   return (
+    
+
     <div className="flex flex-col items-center w-full min-h-[800px]">
+
 
       {/* 첫 번째 섹션 */}
       <div className="w-full h-[1024px] flex items-center justify-between px-[109px]">

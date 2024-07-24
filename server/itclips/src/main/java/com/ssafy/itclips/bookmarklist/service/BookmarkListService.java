@@ -21,4 +21,6 @@ public interface BookmarkListService {
     void scrapBookmarkList(Long userId, Long listId) throws RuntimeException;
 
     void removeScrapBookmarkList(Long scrapId) throws RuntimeException;
+
+    List<BookmarkListResponseDTO> getScrapedLists(Long userId) throws RuntimeException;
 }

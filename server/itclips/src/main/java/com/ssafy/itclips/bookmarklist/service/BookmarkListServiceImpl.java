@@ -114,6 +114,26 @@ public class BookmarkListServiceImpl implements BookmarkListService {
     }
 
     @Override
+    public List<BookmarkListResponseDTO> getScrapedLists(Long userId) throws RuntimeException {
+        List<BookmarkListScrap> bookmarkListScraps = bookmarkListScrapRepository.findByUserId(userId);
+        List<BookmarkList> bookmarkLists = getList(bookmarkListScraps);
+
+        if (bookmarkLists.isEmpty()) {
+            throw new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND);
+        }
+
+        return bookmarkLists.stream()
+                .map(this::convertToBookmarkListResponseDTO)
+                .collect(Collectors.toList());
+    }
+
+    private static List<BookmarkList> getList(List<BookmarkListScrap> bookmarkListScraps) {
+        return bookmarkListScraps.stream()
+                .map(BookmarkListScrap::getBookmarkList)
+                .toList();
+    }
+
+    @Override
     @Transactional
     public List<BookmarkListResponseDTO> getLists(Long userId, Boolean target) throws RuntimeException {
         List<BookmarkList> bookmarkLists = bookmarkListRepository.findDetailedByUserId(userId);

@@ -142,4 +142,16 @@ public class BookmarkListController {
         bookmarkListService.removeScrapBookmarkList(scrapId);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
+
+    @GetMapping("/scrap/{userId}")
+    @Operation(summary = "스크랩 한 리스트 보기", description = "스크랩한 글을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "스크랩한 리스트를 성공적으로 조회했습니다."),
+            @ApiResponse(responseCode = "404", description = "스크랩한 글이 없습니다."),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
+    })
+    public ResponseEntity<?> getScrappedLists(@PathVariable @Parameter(description = "유저 ID", required = true) Long userId) {
+        List<BookmarkListResponseDTO> lists = bookmarkListService.getScrapedLists(userId);
+        return new ResponseEntity<List<BookmarkListResponseDTO>>(lists,HttpStatus.OK);
+    }
 }

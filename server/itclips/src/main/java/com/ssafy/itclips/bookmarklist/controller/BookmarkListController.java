@@ -140,6 +140,6 @@ public class BookmarkListController {
     })
     public ResponseEntity<?> deleteBookmarkListScrap(@PathVariable @Parameter(description = "스크랩 ID", required = true) Long scrapId){
         bookmarkListService.removeScrapBookmarkList(scrapId);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 }

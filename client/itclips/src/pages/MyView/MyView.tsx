@@ -11,9 +11,9 @@ import AsideBookmarkList from "../../components/aside/AsideProfile"
 import AsideProfile from '../..//components/aside/AsideProfile'
 
 import MessageLayout from "../../components/aside/MessageLayout";
+
+
 export default function MyView() {
-
-
 
   const isMessageOpen = asideStore(state => state.isMessageOpen);
 

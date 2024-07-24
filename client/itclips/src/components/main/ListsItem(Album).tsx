@@ -3,7 +3,7 @@ import useStore from "../../stores/mainStore";
 import KebabDropdown from "../common/KebabDropdown";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import ListItemHover from "./ListsItem(AlbumHovering)";
-
+import darkModeStore from '../../stores/darkModeStore'
 // 이미지 , 리스트명, 북마크 개수, 태그,(설명), 좋아요 버튼&좋아요 수, 리스트 세부 조작 버튼
 // 아님 호버링 기능을 여기에다 포함이 나을듯?
 
@@ -19,15 +19,18 @@ export default function ListItem() {
     setIsLike(!isLike);
     //여기에 좋아요 api호출
   };
+  const isDark = darkModeStore((state) => state.isDark)
 
   return (
     <>
-      <div className="card w-56 bg-base-100 shadow-xl">
+      <div className={"card w-56 bg-base-100 shadow-xl "}
+      onMouseOver={() => setIsHovering(true)}
+      onMouseOut={() => setIsHovering(false)}
+      >
           
         <figure
-          onMouseOver={() => setIsHovering(true)}
-          onMouseOut={() => setIsHovering(false)}
-          className="w-56 h-56"
+          
+          className={"w-56 h-56 " + (isDark? "hover:brightness-150" : "hover:brightness-95")}
         >
           
           {isHover ? (
@@ -43,7 +46,7 @@ export default function ListItem() {
           )}
         </figure>
 
-        <div className="card-body flex flex-col p-6 relative ">
+        <div className="card-body flex flex-col p-6 relative hover:cursor-pointer ">
             <div className="absolute top-0 right-0 z-50">
               <KebabDropdown whatMenu="리스트"/>
             </div>

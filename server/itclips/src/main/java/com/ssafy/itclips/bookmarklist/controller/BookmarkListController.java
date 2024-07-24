@@ -80,14 +80,14 @@ public class BookmarkListController {
     @DeleteMapping("/delete/{userId}/{listId}")
     @Operation(summary = "북마크 리스트 삭제", description = "주어진 유저 ID와 리스트 ID로 북마크 리스트를 삭제합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "202", description = "북마크 리스트가 성공적으로 삭제되었습니다."),
+            @ApiResponse(responseCode = "200", description = "북마크 리스트가 성공적으로 삭제되었습니다."),
             @ApiResponse(responseCode = "404", description = "리스트를 찾을 수 없습니다."),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
     })
     public ResponseEntity<?> deleteBookmarkList(@PathVariable @Parameter(description = "유저 ID", required = true) Long userId,
                                                 @PathVariable @Parameter(description = "리스트 ID", required = true) Long listId) {
         bookmarkListService.deleteBookmarkList(userId, listId);
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/like/{userId}/{listId}")
@@ -107,7 +107,7 @@ public class BookmarkListController {
     @DeleteMapping("/like/{userId}/{listId}")
     @Operation(summary = "북마크 리스트 좋아요 취소", description = "주어진 유저 ID가 리스트 ID의 북마크 리스트를 좋아요를 취소합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "202", description = "북마크 리스트 좋아요가 성공적으로 취소되었습니다."),
+            @ApiResponse(responseCode = "200", description = "북마크 리스트 좋아요가 성공적으로 취소되었습니다."),
             @ApiResponse(responseCode = "400", description = "이미 취소 한 글 입니다."),
             @ApiResponse(responseCode = "404", description = "유저,리스트를 찾을 수 없습니다."),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
@@ -115,7 +115,7 @@ public class BookmarkListController {
     public ResponseEntity<?> deleteBookmarkListLike(@PathVariable Long userId,
                                                     @PathVariable Long listId) {
         bookmarkListService.deleteBookmarkListLike(userId,listId);
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/scrap/{userId}/{listId}")
@@ -134,13 +134,13 @@ public class BookmarkListController {
     @DeleteMapping("/scrap/{scrapId}")
     @Operation(summary = "북마크 리스트 스크랩 취소", description = "스크랩을 취소합니다")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "202", description = "리스트 스크랩이 성공적으로 취소되었습니다."),
+            @ApiResponse(responseCode = "200", description = "리스트 스크랩이 성공적으로 취소되었습니다."),
             @ApiResponse(responseCode = "400", description = "스크랩하지 않은 글 입니다."),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
     })
     public ResponseEntity<?> deleteBookmarkListScrap(@PathVariable @Parameter(description = "스크랩 ID", required = true) Long scrapId){
         bookmarkListService.removeScrapBookmarkList(scrapId);
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/scrap/{userId}")

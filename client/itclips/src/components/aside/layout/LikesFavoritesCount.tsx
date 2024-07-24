@@ -1,3 +1,6 @@
+// LikesFavoritesCount.tsx 는 AsideBookmarkList.tsx 에서 좋아요, 즐겨찾기 갯수를 출력하는 컴포넌트
+
+// icons
 import { FaRegHeart, FaRegStar } from "react-icons/fa";
 
 interface LikesFavoritesInfo {

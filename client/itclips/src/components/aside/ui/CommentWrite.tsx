@@ -1,3 +1,5 @@
+// CommentWrite.tsx 는 댓글 작성을 위한 입력칸과 작성 버튼
+
 const CommentWrite = () => {
   return (
     <div className="grid grid-cols-8 mt-4">

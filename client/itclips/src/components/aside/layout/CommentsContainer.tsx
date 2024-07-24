@@ -1,4 +1,7 @@
-import CommentWrite from "./CommentWrite";
+// CommentsContainer.tsx 는 댓글들을 리스트로 출력하는 컴포넌트
+
+// components
+import CommentWrite from "../ui/CommentWrite";
 
 interface Comments {
   id: number;

@@ -1,4 +1,8 @@
+// MessageHeader.tsx 는 AsideMessage.tsx의 상단바 컴포넌트
+
 import React from "react";
+
+// icons
 import { FaPlus } from "react-icons/fa6";
 
 interface MessageHeaderProps {

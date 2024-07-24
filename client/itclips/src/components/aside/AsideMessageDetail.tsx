@@ -1,8 +1,11 @@
+// AsideMessageDetail.tsx 는 메세지창의 메세지 목록 중 하나를 클릭했을 때 그 메세지의 상세창 컴포넌트
+
 import React, { useState } from "react";
 
-import MessageBackButton from "./items/MessageBackButton";
-import MessageInviteButton from "./items/MessageInviteButton";
-import MessageContainer from "./items/MessageContainer";
+// components
+import MessageBackButton from "./ui/MessageBackButton";
+import MessageInviteButton from "./ui/MessageInviteButton";
+import MessageContainer from "./layout/MessageContainer";
 
 interface Message {
   id: number;

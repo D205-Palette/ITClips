@@ -134,7 +134,7 @@ public class BookmarkListController {
     @DeleteMapping("/scrap/{scrapId}")
     @Operation(summary = "북마크 리스트 스크랩 취소", description = "스크랩을 취소합니다")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "리스트 스크랩이 성공적으로 취소되었습니다."),
+            @ApiResponse(responseCode = "202", description = "리스트 스크랩이 성공적으로 취소되었습니다."),
             @ApiResponse(responseCode = "400", description = "스크랩하지 않은 글 입니다."),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
     })

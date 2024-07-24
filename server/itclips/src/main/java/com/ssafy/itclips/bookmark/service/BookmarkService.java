@@ -8,4 +8,6 @@ public interface BookmarkService {
     void updateBookmark(Long bookmarkId, BookmarkRequestDTO bookmarkRequestDTO) throws RuntimeException;
 
     void deleteBookmark(Long bookmarkId) throws RuntimeException;
+
+    void likeBookmark(Long userId, Long bookmarkId) throws RuntimeException;
 }

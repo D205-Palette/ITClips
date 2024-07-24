@@ -19,7 +19,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -74,6 +76,12 @@ public class Bookmark {
 
     @OneToMany(mappedBy = "bookmark")
     private List<BookmarkTag> bookmarkTags = new ArrayList<>();
+
+    @OneToMany(mappedBy = "bookmark")
+    private List<BookmarkLike> bookmarkLikes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "bookmark")
+    private List<BookmarkReport> bookmarkReports = new ArrayList<>();
 
 
     @Builder

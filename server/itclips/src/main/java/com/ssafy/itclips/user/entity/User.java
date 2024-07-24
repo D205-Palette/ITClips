@@ -1,5 +1,7 @@
 package com.ssafy.itclips.user.entity;
 
+import com.ssafy.itclips.bookmark.entity.BookmarkLike;
+import com.ssafy.itclips.bookmark.entity.BookmarkReport;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkListScrap;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkListLike;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
@@ -99,6 +101,12 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<BookmarkListScrap> bookmarkListScraps = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<BookmarkLike> bookmarkLikes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<BookmarkReport> bookmarkReports = new ArrayList<>();
 
     public void addBookmarkList(BookmarkList bookmarkList) {
         bookmarkLists.add(bookmarkList);

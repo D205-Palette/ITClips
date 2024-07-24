@@ -3,6 +3,8 @@ package com.ssafy.itclips.bookmark.service;
 import com.ssafy.itclips.bookmark.dto.BookmarkRequestDTO;
 import com.ssafy.itclips.bookmark.dto.BookmarkUpdateDTO;
 import com.ssafy.itclips.bookmark.entity.Bookmark;
+import com.ssafy.itclips.bookmark.entity.BookmarkLike;
+import com.ssafy.itclips.bookmark.repository.BookmarkLikeRepository;
 import com.ssafy.itclips.category.entity.BookmarkCategory;
 import com.ssafy.itclips.category.repository.BookmarkCategoryRepository;
 import com.ssafy.itclips.bookmark.repository.BookmarkRepository;
@@ -16,6 +18,8 @@ import com.ssafy.itclips.tag.entity.BookmarkTag;
 import com.ssafy.itclips.tag.entity.Tag;
 import com.ssafy.itclips.tag.repository.BookmarkTagRepository;
 import com.ssafy.itclips.tag.service.TagService;
+import com.ssafy.itclips.user.entity.User;
+import com.ssafy.itclips.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +32,8 @@ import java.util.List;
 public class BookmarkServiceImpl implements BookmarkService {
 
     private final BookmarkRepository bookmarkRepository;
+    private final UserRepository userRepository;
+    private final BookmarkLikeRepository bookmarkLikeRepository;
     private final TagService tagService;
     private final BookmarkListRepository bookmarkListRepository;
     private final CategoryRepository categoryRepository;
@@ -76,7 +82,20 @@ public class BookmarkServiceImpl implements BookmarkService {
     @Override
     @Transactional
     public void deleteBookmark(Long bookmarkId) throws RuntimeException {
+        Bookmark bookmark = bookmarkRepository.findById(bookmarkId)
+                .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_NOT_FOUND));
         bookmarkRepository.deleteById(bookmarkId);
+    }
+
+    @Override
+    public void likeBookmark(Long userId, Long bookmarkId) throws RuntimeException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        Bookmark bookmark = bookmarkRepository.findById(bookmarkId)
+                .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_NOT_FOUND));
+        BookmarkLike bookmarkLike = new BookmarkLike();
+        bookmarkLike.addUserAndBookmark(user,bookmark);
+        bookmarkLikeRepository.save(bookmarkLike);
     }
 
 

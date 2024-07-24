@@ -52,9 +52,28 @@ public class BookmarkController {
     }
 
     @DeleteMapping("/delete/{bookmarkId}")
-    public ResponseEntity<?> deleteBookmark(@PathVariable Long bookmarkId) {
+    @Operation(summary = "북마크 삭제", description = "북마크를 삭제합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "북마크가 성공적으로 삭제되었습니다."),
+            @ApiResponse(responseCode = "404", description = "북마크를 찾을 수 없습니다."),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
+    })
+    public ResponseEntity<?> deleteBookmark(@PathVariable @Parameter(description = "북마크 ID", required = true) Long bookmarkId) {
         bookmarkService.deleteBookmark(bookmarkId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/like/{userId}/{bookmarkId}")
+    @Operation(summary = "북마크 좋아요", description = "북마크를 좋아요합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "북마크 좋아요가 성공적으로 진행되었습니다."),
+            @ApiResponse(responseCode = "404", description = "유저, 북마크를 찾을 수 없습니다."),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
+    })
+    public ResponseEntity<?> likeBookmark(@PathVariable @Parameter(description = "유저 ID", required = true) Long userId,
+                                          @PathVariable @Parameter(description = "북마크 ID", required = true) Long bookmarkId) {
+        bookmarkService.likeBookmark(userId,bookmarkId);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 }

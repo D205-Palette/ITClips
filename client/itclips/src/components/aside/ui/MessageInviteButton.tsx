@@ -1,5 +1,9 @@
-import { FaPlus } from "react-icons/fa6";
+// MessageInviteButton.tsx 는 AsideMessageDetail.tsx 컴포넌트에서 사용하는 + 버튼(초대)
+
 import { useRef, RefObject } from 'react';
+
+// icons
+import { FaPlus } from "react-icons/fa6";
 
 const MessageInviteButton = () => {
   const modalRef: RefObject<HTMLDialogElement> = useRef(null);

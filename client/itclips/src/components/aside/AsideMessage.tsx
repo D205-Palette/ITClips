@@ -1,7 +1,10 @@
+// AsideMessage.tsx 는 메세지 컴포넌트 메인
+
 import React, { useState } from "react";
 
-import MessageHeader from "./items/MessageHeader";
-import MessageListContainer from "./items/MessageListContainer";
+// components
+import MessageHeader from "./layout/MessageHeader";
+import MessageListContainer from "./layout/MessageListContainer";
 
 interface MessageListProps {
   onSelectChat: (id: number) => void;

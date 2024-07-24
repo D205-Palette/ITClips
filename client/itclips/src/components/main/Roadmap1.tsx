@@ -3,7 +3,7 @@ import { useState } from "react";
 import useStore from "../../stores/mainStore";
 import KebabDropdown from "../common/KebabDropdown";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
-
+import darkModeStore from "../../stores/darkModeStore";
 
 const RoadMap  = {
     image: 'asdf',
@@ -23,7 +23,7 @@ export default function ListItem() {
     setIsLike(!isLike);
     //여기에 좋아요 api호출
   };
-
+  const isDark = darkModeStore((state) => state.isDark)
   return (
     <>
       <div
@@ -42,7 +42,9 @@ export default function ListItem() {
             </figure>
 
             <div className="card-body flex flex-row justify-between h-full relative">
-                    <div className={(RoadMap.percentage == 100 ? 'bg-green-300' : 'bg-sky-100' ) +" h-full absolute z-0 top-0 left-0" }
+            <div className={(!isDark ? 
+                    (RoadMap.percentage == 100 ? 'bg-green-300' : 'bg-sky-100' ) : 
+                    (RoadMap.percentage == 100 ? 'bg-green-900' : 'bg-sky-900' )) +" h-full absolute z-0 top-0 left-0" }
                     style={{ width: `${RoadMap.percentage}%` }}
                     ></div>
                     <div className="flex flex-col justify-around z-20">
@@ -55,12 +57,13 @@ export default function ListItem() {
                         </div>
                     </div>
 
-                    <div className="flex items-center text-blue-400 font-bold text-xl z-20">
-                        <p>{RoadMap.percentage +'%'}</p>
+                    <div className="flex items-center text-blue-400 font-bold text-xl z-0">
+                    <p className={(!isDark?(RoadMap.percentage == 100 ? "text-green-500" : "text-blue-400" ):
+                          (RoadMap.percentage == 100 ? "text-green-200" : "text-blue-200" ))}>{RoadMap.percentage +'%'}</p>
                     </div>
 
                     <div className="card-actions justify-end flex items-center">
-                        <button onClick={clickHeart} className="btn btn-ghost">
+                        <button onClick={clickHeart} className="btn btn-ghost z-0">
                         {isLike ? <FaHeart /> : <FaRegHeart />}
                         {RoadMap.roadmap_like}{" "}
                         </button>

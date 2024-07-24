@@ -2,17 +2,24 @@ import React, { useState, useEffect } from "react";
 import { FaSun, FaMoon } from "react-icons/fa";
 import sun from "../assets/sun.svg";
 import moon from "../assets/moon.svg";
+import darkModeStore from '../../stores/darkModeStore'
 
 const DarkModeToggle = () => {
+  const isDark = darkModeStore((state) => state.isDark)
+  const changeMode = darkModeStore((state) => state.changeMode);
+
   const [theme, setTheme] = useState(
     localStorage.getItem("theme") ? localStorage.getItem("theme") : "light"
   );
 
+
   // update state on toggle
   const handleToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
+      changeMode("dark")
       setTheme("dark");
     } else {
+      changeMode("light")
       setTheme("light");
     }
   };
@@ -35,8 +42,10 @@ const DarkModeToggle = () => {
         type="checkbox"
         value="synthwave"
         onChange={handleToggle}
+        checked={theme === 'light' ? false : true}
         className="toggle theme-controller bg-base-content col-span-2 col-start-1 row-start-1"
       />
+
       <svg
         className="stroke-base-100 fill-base-100 col-start-1 row-start-1"
         xmlns="http://www.w3.org/2000/svg"
@@ -52,6 +61,7 @@ const DarkModeToggle = () => {
         <circle cx="12" cy="12" r="5" />
         <path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" />
       </svg>
+
       <svg
         className="stroke-base-100 fill-base-100 col-start-2 row-start-1"
         xmlns="http://www.w3.org/2000/svg"

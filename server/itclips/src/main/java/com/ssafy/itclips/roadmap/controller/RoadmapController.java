@@ -65,7 +65,11 @@ public class RoadmapController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-//    // 로드맵 취소
-//    @DeleteMapping("/like/{roadmapId}/{userId}")
-//    @Operation(summary = "로드맵 좋아요 취소 " ,description = "좋아요 취소 ")
+    // 로드맵 취소
+    @DeleteMapping("/like/{roadmapId}/{userId}")
+    @Operation(summary = "로드맵 좋아요 취소 " ,description = "좋아요 취소 ")
+    public ResponseEntity<?> unlikeRoadmap(@PathVariable("roadmapId") Long roadmapId,@PathVariable("userId") Long userId){
+        roadmapService.unlikeRoadmap(roadmapId, userId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

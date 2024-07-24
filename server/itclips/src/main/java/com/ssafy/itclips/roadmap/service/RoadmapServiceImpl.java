@@ -115,7 +115,7 @@ public class RoadmapServiceImpl implements RoadmapService {
 
         // 이미 좋아요한 경우 예외처리
         RoadmapLike existLike = roadmapLikeRepository.findByRoadmapIdAndUserId(roadmapId, userId);
-        if(existLike == null){
+        if(existLike != null){
             throw new CustomException(ErrorCode.ROADMAP_LIKE_EXIST);
         }
 
@@ -124,6 +124,19 @@ public class RoadmapServiceImpl implements RoadmapService {
     }
 
     // 좋아요 취소
+    @Transactional
+    @Override
+    public void unlikeRoadmap(Long roadmapId, Long userId) throws RuntimeException {
+        RoadmapLike existLike = roadmapLikeRepository.findByRoadmapIdAndUserId(roadmapId, userId);
+        if(existLike != null){
+            roadmapLikeRepository.deleteByRoadmapIdAndUserId(roadmapId, userId);
+        }
+        else{
+            throw new CustomException(ErrorCode.ROADMAP_LIKE_NOT_FOUND);
+        }
+
+    }
+
 
 
     // 좋아요한 사람 리스트

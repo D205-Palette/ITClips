@@ -19,4 +19,7 @@ public interface RoadmapService {
 
     // 로드맵 좋아요
     void likeRoadmap(Long roadmapId, Long userId) throws RuntimeException;
+
+    // 좋아요 취소
+    void unlikeRoadmap(Long roadmapId, Long userId) throws RuntimeException;
 }

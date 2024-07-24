@@ -2,7 +2,6 @@ package com.ssafy.itclips.bookmarklist.service;
 
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
-import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
 
 import java.util.List;
 
@@ -15,5 +14,7 @@ public interface BookmarkListService {
 
     List<BookmarkListResponseDTO> getLists(Long userId,Boolean target) throws RuntimeException;
 
-    void createLikeBookmarkList(Long userId, Long listId) throws RuntimeException;
+    void createBookmarkListLike(Long userId, Long listId) throws RuntimeException;
+
+    void deleteBookmarkListLike(Long userId, Long listId);
 }

@@ -126,7 +126,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
     }
 
     @Override
-    public void createLikeBookmarkList(Long userId, Long listId) throws RuntimeException {
+    public void createBookmarkListLike(Long userId, Long listId) throws RuntimeException {
         User user = userRepository.findById(userId)
                 .orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
         BookmarkList bookmarkList = bookmarkListRepository.findById(listId)
@@ -138,6 +138,19 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         BookmarkListLike bookmarkListLike = new BookmarkListLike();
         bookmarkListLike.addUserAndBookmarkList(user,bookmarkList);
         bookmarkListLikeRepository.save(bookmarkListLike);
+    }
+
+    @Override
+    public void deleteBookmarkListLike(Long userId, Long listId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+        BookmarkList bookmarkList = bookmarkListRepository.findById(listId)
+                .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND));
+        BookmarkListLike existBookmarkListLike = bookmarkListLikeRepository.findByBookmarkListIdAndUserId(listId,userId);
+        if (existBookmarkListLike == null) {
+            throw new CustomException(ErrorCode.LIST_LIKE_NOT_FOUND);
+        }
+        bookmarkListLikeRepository.delete(existBookmarkListLike);
     }
 
 

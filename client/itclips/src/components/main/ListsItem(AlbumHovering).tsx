@@ -4,20 +4,7 @@ import KebabDropdown from "../common/KebabDropdown";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 // 이미지 , 리스트명, 북마크 개수, 태그,(설명), 좋아요 버튼&좋아요 수, 리스트 세부 조작 버튼
 // 아님 호버링 기능을 여기에다 포함이 나을듯?
-function HeartButton() {
-  const [isLike, setIsLike] = useState(false);
-  const clickHeart = (): void => {
-    setIsLike(!isLike);
-    //여기에 좋아요 api호출
-  };
-  return (
-    <div onClick={clickHeart}>{isLike ? <FaHeart /> : <FaRegHeart />}</div>
-  );
-}
 
-// function Hovering(isHover:boolean){
-
-// }
 
 export default function ListItem() {
   const list = useStore((state) => state);

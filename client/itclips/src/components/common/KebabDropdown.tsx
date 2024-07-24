@@ -50,7 +50,7 @@ const KebabDropdown : FC<Props> = ({whatMenu}) => {
           <li className={whatMenu==="로드맵"? "hidden" : ''}>
             <a>즐겨찾기</a>
           </li>
-          <li>
+          <li className={whatMenu==="로드맵"? "hidden" : ''}>
             <a>신고하기</a>
           </li>
         </ul>

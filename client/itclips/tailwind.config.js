@@ -3,11 +3,13 @@
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
-      extend: {},
-  },
-  colors: {
-    "aside-layout": "#f8fafc",
-    "message-content": "a8a8a8",
+    extend: {
+      colors: {
+        "aside-light": "#f8fafc",
+        "aside-dark": "#282c34",
+        "message-content": "a8a8a8",
+      },
+    },
   },
   plugins: [require('daisyui')],
   daisyui: {

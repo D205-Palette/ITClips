@@ -10,6 +10,7 @@ import CommentsContainer from "./layout/CommentsContainer";
 
 // stores
 import darkModeStore from "../../stores/darkModeStore";
+import { asideStore } from "../../stores/asideStore";
 
 interface Comment {
   id: number;
@@ -54,11 +55,12 @@ const ProfileCard = () => {
   }
 
   const isDark = darkModeStore(state => state.isDark);
+  const isMessageOpen = asideStore(state => state.isMessageOpen);
 
   return (
     <div className={`${ isDark ? "bg-aside-dark" : "bg-aside-light" } rounded-3xl w-80 p-8 flex flex-col items-center`}>
       {/* 더보기 버튼 */}
-      <AsideKebabDropdown />
+      { !isMessageOpen && <AsideKebabDropdown /> }
       {/* 북마크리스트 썸네일 */}
       <ImageContainer />
       {/* 북마크리스트 정보 */}

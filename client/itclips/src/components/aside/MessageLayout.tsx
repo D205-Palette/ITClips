@@ -44,7 +44,7 @@ const MessageLayout = () => {
     // 아래 조건은 아무것도 안했을 때 채팅목록을
     // 채팅 목록 중 하나를 클릭했을때 채팅 상세 페이지로
     // 채팅 목록에서 + 버튼을 눌렀을 때 새 채팅 화면으로 이동하도록 조건
-    <div className={`${ isDark ? "bg-aside-dark" : "bg-aside-light" } bg-sky-300 rounded-3xl w-80 h-[35rem]`}>
+    <div className={`${ isDark ? "bg-aside-dark" : "bg-aside-light" } rounded-3xl w-80 h-[35rem]`}>
       {selectedChat === null && showInvite === null && (
         <AsideMessage onSelectChat={handleSelectChat} onShowInvite={handleNewChat} />
       )}

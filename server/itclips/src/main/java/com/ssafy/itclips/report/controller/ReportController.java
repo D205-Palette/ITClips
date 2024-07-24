@@ -22,4 +22,12 @@ public class ReportController {
         reportService.createReportBookmark(userId,bookmarkId,reportDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+    @PostMapping("/list/{userId}/{listId}")
+    public ResponseEntity<?> reportBookmarkList(@PathVariable Long userId,
+                                            @PathVariable Long listId,
+                                            @RequestBody ReportDTO reportDTO) {
+        reportService.createReportList(userId,listId,reportDTO);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 }

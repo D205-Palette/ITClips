@@ -1,5 +1,6 @@
 package com.ssafy.itclips.bookmarklist.entity;
 
+import com.ssafy.itclips.report.entity.BookmarkListReport;
 import com.ssafy.itclips.bookmark.entity.Bookmark;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListDTO;
 import com.ssafy.itclips.category.entity.Category;
@@ -87,6 +88,9 @@ public class BookmarkList {
 
     @OneToMany(mappedBy = "bookmarkList")
     private List<BookmarkListScrap> bookmarkListScraps = new ArrayList<>();
+
+    @OneToMany(mappedBy = "bookmarkList")
+    private List<BookmarkListReport> bookmarkListReports = new ArrayList<>();
 
     @Builder
     private BookmarkList(User user, String title, String description, String image, Boolean isPublic) {

@@ -1,4 +1,8 @@
+// ProfileSettingsModal.tsx 는 AsideProfile.tsx 에서 톱니바퀴 모양의 설정 버튼을 눌렀을 때 출력되는 컴포넌트
+
 import React, { useState } from 'react';
+
+// icons
 import { IoCloseOutline } from 'react-icons/io5';
 
 // 프로필 모달 상태 props

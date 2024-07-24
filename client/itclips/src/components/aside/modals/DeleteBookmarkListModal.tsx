@@ -1,3 +1,5 @@
+// DeleteBookmarkListModal.tsx 는 AsideBookmarkList.tsx 에서 더보기 메뉴의 '삭제하기' 버튼을 눌렀을 때 출력되는 컴포넌트
+
 import React from 'react';
 
 interface DeleteConfirmModalProps {

@@ -1,3 +1,5 @@
+// Tags.tsx 는 AsideBookmarkList.tsx 에서 태그를 출력하는 컴포넌트
+
 interface Tag {
   username: string;
   content: string;

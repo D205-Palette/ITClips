@@ -1,6 +1,9 @@
+// AsideStartNewMessage.tsx 는 메세지창 상단바에서 + 버튼을 눌렀을 때 출력되는 컴포넌트
+
 import React, { useState } from "react";
 
-import MessageBackButton from "./items/MessageBackButton";
+// components
+import MessageBackButton from "./ui/MessageBackButton";
 
 // 창의 상태를 저장하는 부모컴포넌트의 state 불러와서 직접 조정
 

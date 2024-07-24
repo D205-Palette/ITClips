@@ -1,9 +1,12 @@
-import AsideKebabDropdown from "./items/AsideKebabDropdown";
-import ImageContainer from "./items/ImageContainer";
-import DetailInfo from "./items/DetailInfo";
-import LikesFavoritesCount from "./items/LikesFavoritesCount";
-import Tags from "./items/Tags";
-import CommentsContainer from "./items/CommentsContainer";
+// AsideBookmarkList.tsx 는 북마크리스트 정보를 출력하는 컴포넌트
+
+// components
+import AsideKebabDropdown from "./ui/AsideKebabDropdown";
+import ImageContainer from "./layout/ImageContainer";
+import DetailInfo from "./layout/DetailInfo";
+import LikesFavoritesCount from "./layout/LikesFavoritesCount";
+import Tags from "./layout/Tags";
+import CommentsContainer from "./layout/CommentsContainer";
 
 interface Comment {
   id: number;

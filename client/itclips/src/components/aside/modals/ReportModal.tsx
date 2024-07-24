@@ -1,5 +1,8 @@
-// ReportModal.tsx
+// ReportModal.tsx 는 AsideBookmarkList.tsx 에서 더보기 메뉴의 '신고하기' 버튼을 눌렀을 때 출력되는 컴포넌트
+
 import React, { useState } from 'react';
+
+// components
 import ReportConfirmModal from './ReportConfirmModal';
 
 interface ReportModalProps {
@@ -15,16 +18,15 @@ const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   const handleReport = () => {
-    // 여기에 신고 처리 로직을 구현합니다.
-    // 예를 들어, API 호출 등을 수행할 수 있습니다.
+    // 신고 처리 로직 넣어야됨
     
-    // 신고 처리 후 확인 모달을 엽니다.
+    // 신고 처리 후 확인 모달
     setIsConfirmationModalOpen(true);
   };
 
   const handleConfirmationClose = () => {
     setIsConfirmationModalOpen(false);
-    onClose(); // 원래의 신고 모달도 닫습니다.
+    onClose(); // 신고 모달 전부 닫기
   };
 
   return (

@@ -1,4 +1,8 @@
+// BookmarkListEditModal.tsx 는 AsideBookmarkList.tsx 에서 더보기 메뉴의 '수정하기' 버튼을 눌렀을 때 출력되는 컴포넌트
+
 import React, { useState } from 'react';
+
+// icons
 import { IoCloseOutline } from 'react-icons/io5';
 
 interface EditModalProps {

@@ -1,3 +1,5 @@
+// ReportComfirmModal.tsx 는 ReportModal.tsx(북마크리스트 신고하기 모달) 에서 신고하기 버튼을 누른 후 출력되는 컴포넌트
+
 import React from 'react';
 
 interface ReportConfirmationModalProps {

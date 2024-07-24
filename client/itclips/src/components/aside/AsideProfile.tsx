@@ -1,10 +1,15 @@
+// AsideProfile.tsx 는 나의 프로필 및 다른 유저의 프로필을 보여주는 컴포넌트
+
 import React, { useState } from "react";
+
+// icons
 import { IoChatboxEllipsesOutline, IoSettingsOutline } from "react-icons/io5";
 
-import ImageContainer from "./items/ImageContainer";
-import DetailInfo from "./items/DetailInfo";
-import UserActivityInfo from "./items/UserActivityInfo";
-import ProfileSettingsModal from "./items/ProfileSettingsModal";
+// components
+import ImageContainer from "./layout/ImageContainer";
+import DetailInfo from "./layout/DetailInfo";
+import UserActivityInfo from "./layout/UserActivityInfo";
+import ProfileSettingsModal from "./modals/ProfileSettingsModal";
 
 const AsideProfile: React.FC = () => {
   // (임시) 팔로우 상태인지? - 팔로우 버튼 테스트

@@ -1,3 +1,5 @@
+// DetailInfo.tsx 는 유저의 정보(이름, 이메일, 소개글)를 보여주는 컴포넌트
+
 interface Info {
   title: string;
   email: string;

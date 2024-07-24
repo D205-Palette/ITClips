@@ -1,9 +1,15 @@
+// AsideKebabDropdown.tsx 는 aside 컴포넌트의 더보기 메뉴
+
 import React, { useState } from 'react';
+
+// icons
 import { VscKebabVertical } from "react-icons/vsc";
-import BookmarkListEditModal from "./BookmarkListEditModal";
-import DeleteBookmarkListModal from "./DeleteBookmarkListModal";
-import UrlCopyModal from "./UrlCopyModal";
-import ReportModal from "./ReportModal";
+
+// components
+import BookmarkListEditModal from "../modals/BookmarkListEditModal";
+import DeleteBookmarkListModal from "../modals/DeleteBookmarkListModal";
+import UrlCopyModal from "../modals/UrlCopyModal";
+import ReportModal from "../modals/ReportModal";
 
 const AsideKebabDropdown: React.FC = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);

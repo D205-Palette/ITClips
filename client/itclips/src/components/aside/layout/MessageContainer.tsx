@@ -1,3 +1,5 @@
+// MessageContainer.tsx 는 AsideMessageDetail.tsx 에서 대화한 메세지들을 출력하는 컴포넌트
+
 import React from "react";
 
 interface Message {

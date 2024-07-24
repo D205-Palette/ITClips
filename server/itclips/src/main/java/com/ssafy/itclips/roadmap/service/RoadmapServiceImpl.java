@@ -11,11 +11,14 @@ import com.ssafy.itclips.roadmap.dto.RoadmapInfoDTO;
 import com.ssafy.itclips.roadmap.dto.RoadmapStepResponseDto;
 import com.ssafy.itclips.roadmap.entity.Roadmap;
 import com.ssafy.itclips.roadmap.entity.RoadmapComment;
+import com.ssafy.itclips.roadmap.entity.RoadmapLike;
 import com.ssafy.itclips.roadmap.entity.RoadmapStep;
 import com.ssafy.itclips.roadmap.repository.RoadmapCommentRepository;
 import com.ssafy.itclips.roadmap.repository.RoadmapLikeRepository;
 import com.ssafy.itclips.roadmap.repository.RoadmapRepository;
 import com.ssafy.itclips.roadmap.repository.RoadmapStepRepository;
+import com.ssafy.itclips.user.entity.User;
+import com.ssafy.itclips.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -35,6 +38,7 @@ public class RoadmapServiceImpl implements RoadmapService {
     private final RoadmapStepRepository roadmapStepRepository;
     private final BookmarkListService bookmarkListService;
     private final RoadmapLikeRepository roadmapLikeRepository;
+    private final UserRepository userRepository;
 
     //전체 로드맵 조회
     @Override
@@ -95,25 +99,31 @@ public class RoadmapServiceImpl implements RoadmapService {
         // 좋아요 수
         Long likeCnt = roadmapLikeRepository.countByRoadmapId(roadmap.getId());
 
-
         // dto에 넣기
-        RoadmapDTO roadmapDTO = new RoadmapDTO().builder()
-                .id(roadmap.getId())
-                .userId(roadmap.getUser().getId())
-                .userName(roadmap.getUser().getNickname())
-                .title(roadmap.getTitle())
-                .description(roadmap.getDescription())
-                .createdAt(roadmap.getCreatedAt())
-                .image(roadmap.getImage())
-                .isPublic(roadmap.getIsPublic())
-                .stepList(stepResponseDtoList)
-                .commentList(roadmapCommentDTOList)
-                .likeCnt(likeCnt)
-                .build();
+        RoadmapDTO roadmapDTO = makeRoadmapDTO(roadmap, stepResponseDtoList, roadmapCommentDTOList, likeCnt);
 
 
         return roadmapDTO;
     }
+
+
+
+    // 로드맵 좋아요
+    @Override
+    public void likeRoadmap(Long roadmapId, Long userId) throws RuntimeException {
+        RoadmapLike like = new RoadmapLike();
+        Roadmap roadmap = roadmapRepository.findById(roadmapId).orElseThrow(() -> new CustomException(ErrorCode.ROADMAP_NOT_FOUND));
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        like.setRoadmap(roadmap);
+        like.setUser(user);
+        roadmapLikeRepository.save(like);
+    }
+
+    // 좋아요 취소
+
+
+    // 좋아요한 사람 리스트
 
 
 
@@ -123,11 +133,6 @@ public class RoadmapServiceImpl implements RoadmapService {
     // 로드맵수정
 
 
-
-
-    // 로드맵 좋아요
-
-
     // 로드맵 스크랩
 
 
@@ -135,7 +140,6 @@ public class RoadmapServiceImpl implements RoadmapService {
 
 
     // 댓글달기
-
 
 
     //댓글 삭제
@@ -169,6 +173,10 @@ public class RoadmapServiceImpl implements RoadmapService {
 
         return stepResponseDtoList;
     }
+
+
+    //////////////////////// meke dto ///////////////////////////////////
+
 
     // 로드맵 단계 DTO
     private static RoadmapStepResponseDto makeRoadmapStepDTO(Long roadmapId, RoadmapStep roadmapStep, BookmarkListResponseDTO bookmarkListResponseDTO) {
@@ -206,5 +214,23 @@ public class RoadmapServiceImpl implements RoadmapService {
                 .isPublic(roadmap.getIsPublic())
                 .createdAt(roadmap.getCreatedAt())
                 .build();
+    }
+
+    // 로드맵 dto
+    private static RoadmapDTO makeRoadmapDTO(Roadmap roadmap, List<RoadmapStepResponseDto> stepResponseDtoList, List<RoadmapCommentDTO> roadmapCommentDTOList, Long likeCnt) {
+        RoadmapDTO roadmapDTO = new RoadmapDTO().builder()
+                .id(roadmap.getId())
+                .userId(roadmap.getUser().getId())
+                .userName(roadmap.getUser().getNickname())
+                .title(roadmap.getTitle())
+                .description(roadmap.getDescription())
+                .createdAt(roadmap.getCreatedAt())
+                .image(roadmap.getImage())
+                .isPublic(roadmap.getIsPublic())
+                .stepList(stepResponseDtoList)
+                .commentList(roadmapCommentDTOList)
+                .likeCnt(likeCnt)
+                .build();
+        return roadmapDTO;
     }
 }

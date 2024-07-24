@@ -23,6 +23,7 @@ public class RoadmapController {
 
     private final RoadmapService roadmapService;
 
+    // 모든 로드맵 보기
     @GetMapping("/list")
     @Operation(summary = "모든 로드맵 보기", description = "생성된 모든 로드맵을 볼 수 있습니다.")
     public ResponseEntity<?> roadmapList(){
@@ -32,6 +33,7 @@ public class RoadmapController {
         return new ResponseEntity<>(roadmapList, HttpStatus.OK);
     }
 
+    // 특정 유저 로드맵 보기
     @GetMapping("/list/{userId}")
     @Operation(summary = "유저 로드맵 보기" , description = "특정 유저가 생성한 로드맵을 볼 수 있습니다. ")
     public ResponseEntity<?> findUserRoadmap(@PathVariable("userId") Long userId){
@@ -48,10 +50,18 @@ public class RoadmapController {
     }
 
     // 로드맵 상세 보기
-    @GetMapping("{roadmapId}")
+    @GetMapping("/{roadmapId}")
     @Operation(summary = "로드맵 상세보기", description = "로드맵 상세페이지입니다. ")
     public ResponseEntity<?> roadmapDetail(@PathVariable("roadmapId") Long roadmapId){
         RoadmapDTO roadmapDTO = roadmapService.roadmapDetail(roadmapId);
         return new ResponseEntity<>(roadmapDTO, HttpStatus.OK);
+    }
+
+    //로드맵 좋아요
+    @GetMapping("/like/{roadmapId}/{userId}")
+    @Operation(summary = "로드맵 좋아요" ,description = "누르면 좋아요")
+    public ResponseEntity<?> likeRoadmap(@PathVariable("roadmapId") Long roadmapId,@PathVariable("userId") Long userId){
+        roadmapService.likeRoadmap(roadmapId, userId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

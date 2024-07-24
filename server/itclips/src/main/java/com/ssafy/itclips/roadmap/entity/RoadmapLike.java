@@ -6,17 +6,19 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "roadmap_like", schema = "itclips")
 public class RoadmapLike {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -33,8 +35,14 @@ public class RoadmapLike {
     private User user;
 
     @NotNull
-    @ColumnDefault("CURRENT_TIMESTAMP")
+    @CreationTimestamp
     @Column(name = "created_at", nullable = false)
-    private Instant createdAt;
+    private LocalDateTime createdAt;
 
+    public void addRoadmapAndUser(Roadmap roadmap, User user) {
+        this.roadmap = roadmap;
+        this.user = user;
+        roadmap.getRoadmapLikeList().add(this);
+        //todo : 유저에 좋아요 리스트 달기
+    }
 }

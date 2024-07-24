@@ -3,26 +3,23 @@ import { useState } from "react";
 import useStore from "../../stores/mainStore";
 import KebabDropdown from "../common/KebabDropdown";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
-
+import darkModeStore from '../../stores/darkModeStore'
 
 
 export default function ListItem() {
   const list = useStore((state) => state);
-  const [isHover, setIsHovering] = useState(false);
+
   const [isLike, setIsLike] = useState(false);
   const clickHeart = (): void => {
     setIsLike(!isLike);
     //여기에 좋아요 api호출
   };
-
+  const isDark = darkModeStore((state) => state.isDark)
+  
   return (
     <>
       <div
-        className="card card-side bg-base-100 shadow-xl hover:cursor-pointer hover:bg-slate-50 h-28" 
-        onMouseOver={() => setIsHovering(true)}
-        onMouseOut={() => setIsHovering(false)}
-      >
-
+        className={(isDark? "hover:brightness-150" : "hover:brightness-95") + " card card-side bg-base-100 shadow-xl hover:cursor-pointer h-28"} >
           <>
             <figure>
               <img
@@ -56,7 +53,7 @@ export default function ListItem() {
                   {list.bookmark_list_like}{" "}
                 </button>
                 <button>
-                  <KebabDropdown />
+                  <KebabDropdown whatMenu="리스트" />
                 </button>
               </div>
             </div>

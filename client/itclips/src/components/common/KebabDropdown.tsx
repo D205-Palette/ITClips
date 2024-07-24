@@ -1,7 +1,12 @@
 import { VscKebabVertical } from "react-icons/vsc";
-import { CiMenuKebab } from "react-icons/ci";
+import { FC } from "react";
 
-export default function KebabDropdown() {
+interface Props {
+  whatMenu: string
+}
+
+
+const KebabDropdown : FC<Props> = ({whatMenu}) => {
   return (
     <>
       {/*  다시 눌러야 닫히는 방식
@@ -32,7 +37,8 @@ export default function KebabDropdown() {
       <div className="dropdown dropdown-bottom dropdown-end">
         <div tabIndex={0} role="button" className="btn m-1 btn-ghost"><VscKebabVertical /></div>
         <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-        <li>
+          {/* 나중에 타인 정보 페이지면 수정 삭제도 안뜨게 하기 */}
+          <li>
             <a>수정하기</a>
           </li>
           <li>
@@ -41,10 +47,10 @@ export default function KebabDropdown() {
           <li>
             <a>url복사</a>
           </li>
-          <li>
+          <li className={whatMenu==="로드맵"? "hidden" : ''}>
             <a>즐겨찾기</a>
           </li>
-          <li>
+          <li className={whatMenu==="로드맵"? "hidden" : ''}>
             <a>신고하기</a>
           </li>
         </ul>
@@ -52,3 +58,4 @@ export default function KebabDropdown() {
     </>
   );
 }
+export default KebabDropdown;

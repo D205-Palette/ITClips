@@ -35,9 +35,9 @@ const NavBar = () => {
           {/* 로그인 시에만 보임 */}
           {isLoggedIn && (
             <ul className="flex gap-4 list-none">
-              <Link to='/home'>MY</Link>
-              <Link to='/feed'>피드</Link>
-              <Link to='/search'>검색</Link>
+              <Link to='my'>MY</Link>
+              <Link to='feed'>피드</Link>
+              <Link to='search'>검색</Link>
             </ul>
           )}
         </div>

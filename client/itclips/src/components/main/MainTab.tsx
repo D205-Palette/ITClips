@@ -1,10 +1,10 @@
 // 버전 1 : 리스트, 공유 리스트, 즐겨찾기, 로드맵
 // 버전 2 : 팔로워, 팔로잉
-import { Route, Routes, Link } from "react-router-dom";
-import ListItem from "./ListsItem(List)";
-import AlbumItem from "./ListsItem(Album)";
+import { Link } from "react-router-dom";
+import { FaRegStar, FaStar } from "react-icons/fa";
 import { FaRegBookmark } from "react-icons/fa";
-import { IoBookmarksOutline } from "react-icons/io5";
+import { FaRegMap } from "react-icons/fa6";
+import { MdOutlineBookmarks } from "react-icons/md";
 
 function ButtonV1(): any {
   return (
@@ -34,10 +34,10 @@ export default function MainTab() {
       <div className="flex justify-around">
         {/* {version ? <ButtonV1 /> : <ButtonV2 />} */}
 
-        <Link to="/myview/bookmarklist"><div className="flex flex-row"><div className="flex items-center"><FaRegBookmark /></div>북마크 리스트</div></Link>
-        <Link to="/myview/groupbookmarklist"><div className="flex flex-row"><div className="flex items-center"><IoBookmarksOutline /></div>그룹 북마크 리스트</div></Link>
-        <Link to="/myview/favorites">즐겨찾기</Link>
-        <Link to="/myview/roadmap">로드맵</Link>
+        <Link to=""><div className="flex flex-row"><div className="flex items-center  mx-2"><FaRegBookmark /></div>북마크 리스트</div></Link>
+        <Link to="groupbookmarklist"><div className="flex flex-row"><div className="flex items-center  mx-2"><MdOutlineBookmarks /></div>그룹 북마크 리스트</div></Link>
+        <Link to="favorites"><div className="flex flex-row"><div className="flex items-center  mx-2"><FaRegStar /></div>즐겨찾기</div></Link>
+        <Link to="roadmap"><div className="flex flex-row"><div className="flex items-center mx-2"><FaRegMap /></div>로드맵</div></Link>
       </div>
     </>
   );

@@ -3,6 +3,8 @@ package com.ssafy.itclips.bookmarklist.service;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
+import com.ssafy.itclips.bookmarklist.entity.BookmarkListLike;
+import com.ssafy.itclips.bookmarklist.repository.BookmarkListLikeRepository;
 import com.ssafy.itclips.bookmarklist.repository.BookmarkListRepository;
 import com.ssafy.itclips.category.entity.Category;
 import com.ssafy.itclips.category.repository.CategoryRepository;
@@ -36,6 +38,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
     private final CategoryRepository categoryRepository;
     private final GroupRepository groupRepository;
     private final BookmarkListTagRepository bookmarkListTagRepository;
+    private final BookmarkListLikeRepository bookmarkListLikeRepository;
     private final TagService tagService;
 
     private final static Integer USER_NUM = 1;
@@ -120,6 +123,21 @@ public class BookmarkListServiceImpl implements BookmarkListService {
                 .map(this::convertToBookmarkListResponseDTO)
                 .filter(dto -> (target ? dto.getUsers().size() > USER_NUM : dto.getUsers().size() == USER_NUM))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void createLikeBookmarkList(Long userId, Long listId) throws RuntimeException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+        BookmarkList bookmarkList = bookmarkListRepository.findById(listId)
+                .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND));
+        BookmarkListLike existBookmarkListLike = bookmarkListLikeRepository.findByBookmarkListIdAndUserId(listId,userId);
+        if (existBookmarkListLike != null) {
+            throw new CustomException(ErrorCode.LIST_LIKE_ALREADY_EXIST);
+        }
+        BookmarkListLike bookmarkListLike = new BookmarkListLike();
+        bookmarkListLike.addUserAndBookmarkList(user,bookmarkList);
+        bookmarkListLikeRepository.save(bookmarkListLike);
     }
 
 

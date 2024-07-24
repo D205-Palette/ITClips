@@ -56,7 +56,7 @@ public class CommentController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "댓글을 성공적으로 삭제했습니다."),
             @ApiResponse(responseCode = "404", description = "사용자, 댓글을 찾을 수 없습니다."),
-            @ApiResponse(responseCode = "405", description = "댓글에 접근 할 권한이 없습니다."),
+            @ApiResponse(responseCode = "401", description = "댓글에 접근 할 권한이 없습니다."),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
     })
     public ResponseEntity<?> removeComment(@PathVariable @Parameter(description = "유저 정보", required = true) Long userId,
@@ -71,7 +71,7 @@ public class CommentController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "댓글을 성공적으로 수정했습니다."),
             @ApiResponse(responseCode = "404", description = "사용자, 댓글을 찾을 수 없습니다."),
-            @ApiResponse(responseCode = "405", description = "댓글에 접근 할 권한이 없습니다."),
+            @ApiResponse(responseCode = "401", description = "댓글에 접근 할 권한이 없습니다."),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
     })
     public ResponseEntity<?> updateComment(@PathVariable @Parameter(description = "유저 정보", required = true) Long userId,

@@ -82,6 +82,9 @@ public class BookmarkList {
     @OneToMany(mappedBy = "bookmarkList")
     private List<BookmarkListComment> bookmarkListComments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "bookmarkList")
+    private List<BookmarkListLike> bookmarkListLikes = new ArrayList<>();
+
     @Builder
     private BookmarkList(User user, String title, String description, String image, Boolean isPublic) {
         this.user = user;

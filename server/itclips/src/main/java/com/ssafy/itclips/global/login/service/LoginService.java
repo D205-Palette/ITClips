@@ -1,4 +1,4 @@
-package com.ssafy.itclips.login.service;
+package com.ssafy.itclips.global.login.service;
 
 import com.ssafy.itclips.user.entity.User;
 import com.ssafy.itclips.user.repository.UserRepository;

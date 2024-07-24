@@ -1,4 +1,4 @@
-package com.ssafy.itclips.login.handler;
+package com.ssafy.itclips.global.login.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.itclips.global.jwt.JwtTokenProvider;

@@ -30,7 +30,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         String token = resolveToken((HttpServletRequest) req);
 
         // 2. JwtTokenProvider의 validateToken() 메서드로 JWT 토큰 유효성 검증
-        if (jwtTokenProvider.validateToken(token)) {
+        if (token != null && jwtTokenProvider.validateToken(token)) {
             // 3. 유효한 토큰인 경우 JwtTokenProvider의 getAuthentication() 메서드로
             //      인증 객체 가져와서 SecurityContext에 저장 => 요청 처리 동안 인증 정보 유지
             Authentication auth = jwtTokenProvider.getAuthentication(token);

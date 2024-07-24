@@ -36,12 +36,12 @@ public class User {
     private String email;
 
     @Size(max = 511)
-    @NotNull
+//    @NotNull(message = "Password cannot be null")
     @Column(name = "password", nullable = false, length = 511)
     private String password;
 
     @Size(max = 50)
-    @NotNull
+    @NotNull(message = "Nickname cannot be null")
     @Column(name = "nickname", nullable = false, length = 50)
     private String nickname;
 

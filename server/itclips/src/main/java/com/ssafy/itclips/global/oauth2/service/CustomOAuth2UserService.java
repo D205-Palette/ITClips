@@ -17,12 +17,6 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.Optional;
 
-/**
- * 사용자 정보를 로드하고, 시스템 내부의 사용자 정보를 갱신하거나 등록하는 서비스로,
- * OAuth2 로그인을 통해 제공받은 사용자 정보를 애플리케이션의 사용자 데이터와 연동하여 관리하는 중요한 역할.
- * 이클래스를 통해 OAuth2 로그인 프로세스가 원활하게 수행될 수 있도록 지원하며, 사용자 정보가 최신 상태로 유지
- * 사용자 인증 후 사용자의 권한과 관련된 정보를 시큐리티에 제공하여 접근 제어
- */
 @Service
 @Slf4j
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
@@ -33,11 +27,6 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         this.userRepository = userRepository;
     }
 
-    /**
-     *  사용자 정보를 로드하는 메서드, 사용자 인증 요청을 담고 있는 OAuth2UserRequest를 매개변수로 함
-     *  DefaultOAuth2UserService 객체를 생성하여 실제 OAuth2 프로바이더로부터 사용자 정보 가져온다.
-     *  saveOrUpdate를 통해 사용자 정보를 조회하여, 존재하면 정보를 업데이트, 존재하지 않으면 새로 저장
-     */
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
@@ -50,7 +39,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         User user = saveOrUpdate(attributes);
 
         if (attributes.getEmail() == null) {
-            throw new CustomOAuth2AuthenticationException("당신의 깃허브 이메일을 확인할 수 없습니다. 깃 허브 이메일을 공개하도록 설정해주시고 다시 로그인하여 주세요.");
+            throw new CustomOAuth2AuthenticationException("당신의 이메일을 확인할 수 없습니다. 이메일을 공개하도록 설정해주시고 다시 로그인하여 주세요.");
         }
 
         return new DefaultOAuth2User(
@@ -59,6 +48,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                 attributes.getNameAttributeKey()
         );
     }
+
     private User saveOrUpdate(OAuthAttributes attributes) {
         Optional<User> optionalUser = userRepository.findByEmail(attributes.getEmail());
         return optionalUser.map(m -> {
@@ -66,6 +56,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
             return userRepository.save(m);
         }).orElseGet(() -> {
             User newUser = attributes.toEntity();
+            newUser.setPassword("DEFAULT_PASSWORD");
             return userRepository.save(newUser);
         });
     }

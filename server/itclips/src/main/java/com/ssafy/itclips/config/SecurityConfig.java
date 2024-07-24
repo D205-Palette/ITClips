@@ -6,10 +6,10 @@ import com.ssafy.itclips.global.jwt.JwtTokenProvider;
 import com.ssafy.itclips.global.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.ssafy.itclips.global.oauth2.handler.OAuth2AuthenticationFailureHandler;
 import com.ssafy.itclips.global.oauth2.service.CustomOAuth2UserService;
-import com.ssafy.itclips.login.filter.CustomJsonUsernamePasswordAuthenticationFilter;
-import com.ssafy.itclips.login.handler.LoginFailureHandler;
-import com.ssafy.itclips.login.handler.LoginSuccessHandler;
-import com.ssafy.itclips.login.service.LoginService;
+import com.ssafy.itclips.global.login.filter.CustomJsonUsernamePasswordAuthenticationFilter;
+import com.ssafy.itclips.global.login.handler.LoginFailureHandler;
+import com.ssafy.itclips.global.login.handler.LoginSuccessHandler;
+import com.ssafy.itclips.global.login.service.LoginService;
 import com.ssafy.itclips.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -80,7 +80,7 @@ public class SecurityConfig {
 
                 //== URL별 권한 관리 옵션 ==//
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/**", "/login/**", "/global/oauth2/**", "/user/signup", "/user/oauthSignup").permitAll()
+                        .requestMatchers("/**", "/login/**", "/global/oauth2/**", "/user/signup", "/user/oauthSignup").permitAll()
                         .anyRequest().authenticated()
                 )
                 //== 소셜 로그인 설정 ==//

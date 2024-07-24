@@ -1,4 +1,4 @@
-package com.ssafy.itclips.login.filter;
+package com.ssafy.itclips.global.login.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;

@@ -40,25 +40,26 @@ spring:
       client:
         registration:
           google:
-            client-id:
-            client-secret:
+            client-id: null
+            client-secret: null
             scope: profile, email
+
           github:
-            client-id:
-            client-secret:
+            client-id: asdf
+            client-secret: asdf
             scope: user:email
 
           naver:
-            client-id:
-            client-secret:
+            client-id: asdf
+            client-secret: asdf
             redirect-uri: http://localhost:80/login/oauth2/code/naver
             authorization-grant-type: authorization_code
             scope: name, email
             client-name: Naver
 
           kakao:
-            client-id:
-            client-secret:
+            client-id: asdf
+            client-secret: asdf
             client-name: Kakao
             client-authentication-method: POST
             redirect-uri: http://localhost:80/login/oauth2/code/kakao
@@ -66,6 +67,7 @@ spring:
             scope:
               - profile_nickname
               - account_email
+
         provider:
           naver:
             authorization_uri: https://nid.naver.com/oauth2.0/authorize

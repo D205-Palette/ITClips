@@ -1,9 +1,9 @@
 package com.ssafy.itclips.bookmark.entity;
 
 import com.ssafy.itclips.bookmark.dto.BookmarkRequestDTO;
-import com.ssafy.itclips.bookmark.dto.BookmarkUpdateDTO;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
 import com.ssafy.itclips.category.entity.BookmarkCategory;
+import com.ssafy.itclips.report.entity.BookmarkReport;
 import com.ssafy.itclips.tag.entity.BookmarkTag;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -16,12 +16,9 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter

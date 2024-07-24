@@ -1,6 +1,6 @@
-package com.ssafy.itclips.bookmark.repository;
+package com.ssafy.itclips.report.repository;
 
-import com.ssafy.itclips.bookmark.entity.BookmarkReport;
+import com.ssafy.itclips.report.entity.BookmarkReport;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BookmarkReportRepository extends JpaRepository<BookmarkReport, Long> {

@@ -1,7 +1,7 @@
 package com.ssafy.itclips.user.entity;
 
 import com.ssafy.itclips.bookmark.entity.BookmarkLike;
-import com.ssafy.itclips.bookmark.entity.BookmarkReport;
+import com.ssafy.itclips.report.entity.BookmarkReport;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkListScrap;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkListLike;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkList;

@@ -1,7 +1,6 @@
 package com.ssafy.itclips.bookmark.controller;
 
 import com.ssafy.itclips.bookmark.dto.BookmarkRequestDTO;
-import com.ssafy.itclips.bookmark.dto.BookmarkUpdateDTO;
 import com.ssafy.itclips.bookmark.service.BookmarkService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

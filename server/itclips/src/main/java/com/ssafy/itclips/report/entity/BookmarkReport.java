@@ -4,7 +4,9 @@ import com.ssafy.itclips.bookmark.entity.Bookmark;
 import com.ssafy.itclips.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -16,6 +18,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 @Table(name = "bookmark_report", schema = "itclips")
 public class BookmarkReport {
     @Id
@@ -41,9 +44,9 @@ public class BookmarkReport {
     private LocalDateTime createdAt;
 
     @NotNull
-    @Lob
+    @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false)
-    private String category;
+    private ReportCategory category;
 
     @NotNull
     @Lob
@@ -51,9 +54,21 @@ public class BookmarkReport {
     private String reason;
 
     @NotNull
-    @ColumnDefault("'pending'")
-    @Lob
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private String status;
+    private ReportStatus status;
+
+    @Builder
+    public BookmarkReport(ReportCategory category, String reason, ReportStatus status) {
+        this.category = category;
+        this.reason = reason;
+        this.status = status != null ? status : ReportStatus.PENDING;
+    }
+    public void addUserAndBookmark(User user, Bookmark bookmark) {
+        this.user = user;
+        this.bookmark = bookmark;
+        user.getBookmarkReports().add(this);
+        bookmark.getBookmarkReports().add(this);
+    }
 
 }

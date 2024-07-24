@@ -4,8 +4,10 @@ import com.ssafy.itclips.bookmarklist.dto.BookmarkListDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkListLike;
+import com.ssafy.itclips.bookmarklist.entity.BookmarkListScrap;
 import com.ssafy.itclips.bookmarklist.repository.BookmarkListLikeRepository;
 import com.ssafy.itclips.bookmarklist.repository.BookmarkListRepository;
+import com.ssafy.itclips.bookmarklist.repository.BookmarkListScrapRepository;
 import com.ssafy.itclips.category.entity.Category;
 import com.ssafy.itclips.category.repository.CategoryRepository;
 import com.ssafy.itclips.error.CustomException;
@@ -39,6 +41,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
     private final GroupRepository groupRepository;
     private final BookmarkListTagRepository bookmarkListTagRepository;
     private final BookmarkListLikeRepository bookmarkListLikeRepository;
+    private final BookmarkListScrapRepository bookmarkListScrapRepository;
     private final TagService tagService;
 
     private final static Integer USER_NUM = 1;
@@ -141,7 +144,8 @@ public class BookmarkListServiceImpl implements BookmarkListService {
     }
 
     @Override
-    public void deleteBookmarkListLike(Long userId, Long listId) {
+    @Transactional
+    public void deleteBookmarkListLike(Long userId, Long listId) throws RuntimeException{
         User user = userRepository.findById(userId)
                 .orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
         BookmarkList bookmarkList = bookmarkListRepository.findById(listId)
@@ -151,6 +155,28 @@ public class BookmarkListServiceImpl implements BookmarkListService {
             throw new CustomException(ErrorCode.LIST_LIKE_NOT_FOUND);
         }
         bookmarkListLikeRepository.delete(existBookmarkListLike);
+    }
+
+    @Override
+    public void scrapBookmarkList(Long userId, Long listId) throws RuntimeException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+        BookmarkList bookmarkList = bookmarkListRepository.findById(listId)
+                .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND));
+        if(bookmarkListScrapRepository.findByUserIdAndBookmarkListId(userId,listId) != null) {
+            throw new CustomException(ErrorCode.LIST_ALREADY_SCRAPPED);
+        }
+        BookmarkListScrap bookmarkListScrap = new BookmarkListScrap();
+        bookmarkListScrap.addUserAndBookmarkList(user,bookmarkList);
+        bookmarkListScrapRepository.save(bookmarkListScrap);
+    }
+
+    @Override
+    @Transactional
+    public void removeScrapBookmarkList(Long scrapId) throws RuntimeException {
+        BookmarkListScrap existBookmarkListScrap = bookmarkListScrapRepository.findById(scrapId)
+                .orElseThrow(() -> new CustomException(ErrorCode.LIST_NOT_SCRAPPED));
+        bookmarkListScrapRepository.delete(existBookmarkListScrap);
     }
 
 

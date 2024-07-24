@@ -16,5 +16,9 @@ public interface BookmarkListService {
 
     void createBookmarkListLike(Long userId, Long listId) throws RuntimeException;
 
-    void deleteBookmarkListLike(Long userId, Long listId);
+    void deleteBookmarkListLike(Long userId, Long listId) throws RuntimeException;
+
+    void scrapBookmarkList(Long userId, Long listId) throws RuntimeException;
+
+    void removeScrapBookmarkList(Long scrapId) throws RuntimeException;
 }

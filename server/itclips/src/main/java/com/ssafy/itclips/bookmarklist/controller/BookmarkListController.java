@@ -117,4 +117,29 @@ public class BookmarkListController {
         bookmarkListService.deleteBookmarkListLike(userId,listId);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
+
+    @PostMapping("/scrap/{userId}/{listId}")
+    @Operation(summary = "북마크 리스트 스크랩", description = "주어진 유저 ID가 리스트 ID의 북마크 리스트를 스크랩합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "북마크 리스트가 성공적으로 스크랩되었습니다."),
+            @ApiResponse(responseCode = "400", description = "이미 스크랩 한 글 입니다."),
+            @ApiResponse(responseCode = "404", description = "유저,리스트를 찾을 수 없습니다."),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
+    })
+    public ResponseEntity<?> addBookmarkListScrap(@PathVariable @Parameter(description = "유저 ID", required = true) Long userId,
+                                                 @PathVariable @Parameter(description = "리스트 ID", required = true) Long listId) {
+        bookmarkListService.scrapBookmarkList(userId,listId);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+    @DeleteMapping("/scrap/{scrapId}")
+    @Operation(summary = "북마크 리스트 스크랩 취소", description = "스크랩을 취소합니다")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "리스트 스크랩이 성공적으로 취소되었습니다."),
+            @ApiResponse(responseCode = "400", description = "스크랩하지 않은 글 입니다."),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
+    })
+    public ResponseEntity<?> deleteBookmarkListScrap(@PathVariable @Parameter(description = "스크랩 ID", required = true) Long scrapId){
+        bookmarkListService.removeScrapBookmarkList(scrapId);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 }

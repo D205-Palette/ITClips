@@ -10,4 +10,6 @@ public interface BookmarkService {
     void deleteBookmark(Long bookmarkId) throws RuntimeException;
 
     void likeBookmark(Long userId, Long bookmarkId) throws RuntimeException;
+
+    void removeLikeBookmark(Long userId, Long bookmarkId) throws RuntimeException;
 }

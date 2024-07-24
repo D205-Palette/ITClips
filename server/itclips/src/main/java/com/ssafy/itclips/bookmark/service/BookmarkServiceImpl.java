@@ -93,9 +93,26 @@ public class BookmarkServiceImpl implements BookmarkService {
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         Bookmark bookmark = bookmarkRepository.findById(bookmarkId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_NOT_FOUND));
+        if(bookmarkLikeRepository.findByBookmarkIdAndUserId(bookmarkId,userId) != null) {
+            throw new CustomException(ErrorCode.BOOKMARK_LIKE_ALREADY_EXIST);
+        }
         BookmarkLike bookmarkLike = new BookmarkLike();
         bookmarkLike.addUserAndBookmark(user,bookmark);
         bookmarkLikeRepository.save(bookmarkLike);
+    }
+
+    @Override
+    @Transactional
+    public void removeLikeBookmark(Long userId, Long bookmarkId) throws RuntimeException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        Bookmark bookmark = bookmarkRepository.findById(bookmarkId)
+                .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_NOT_FOUND));
+       BookmarkLike bookmarkLike = bookmarkLikeRepository.findByBookmarkIdAndUserId(bookmarkId,userId);
+       if(bookmarkLike == null) {
+           throw new CustomException(ErrorCode.BOOKMARK_LIKE_NOT_FOUND);
+       }
+       bookmarkLikeRepository.delete(bookmarkLike);
     }
 
 

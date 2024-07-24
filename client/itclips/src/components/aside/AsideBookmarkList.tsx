@@ -8,6 +8,9 @@ import LikesFavoritesCount from "./layout/LikesFavoritesCount";
 import Tags from "./layout/Tags";
 import CommentsContainer from "./layout/CommentsContainer";
 
+// stores
+import darkModeStore from "../../stores/darkModeStore";
+
 interface Comment {
   id: number;
   username: string;
@@ -50,8 +53,10 @@ const ProfileCard = () => {
     ]
   }
 
+  const isDark = darkModeStore(state => state.isDark);
+
   return (
-    <div className="bg-base-300 rounded-3xl w-80 p-8 flex flex-col items-center">
+    <div className={`${ isDark ? "bg-aside-dark" : "bg-aside-light" } rounded-3xl w-80 p-8 flex flex-col items-center`}>
       {/* 더보기 버튼 */}
       <AsideKebabDropdown />
       {/* 북마크리스트 썸네일 */}

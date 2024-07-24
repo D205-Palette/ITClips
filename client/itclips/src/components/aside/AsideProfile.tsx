@@ -11,6 +11,9 @@ import UserDetailInfo from "./layout/UserDetailInfo";
 import UserActivityInfo from "./layout/UserActivityInfo";
 import ProfileSettingsModal from "./modals/ProfileSettingsModal";
 
+// stores
+import darkModeStore from "../../stores/darkModeStore";
+
 interface User {
   username: string;
   email: string;
@@ -30,10 +33,13 @@ const AsideProfile: React.FC = () => {
     starCount: 300,
   }
 
+  const isDark = darkModeStore(state => state.isDark);
+
   // (임시) 팔로우 상태인지? - 팔로우 버튼 테스트
   const [isFollow, setIsFollow] = useState<boolean>(false);
+
   // (임시) 다른 유저의 정보인지? - 프로필 화면 테스트
-  const [isOther, setIsOther] = useState<boolean>(true);
+  const [isOther, setIsOther] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const onClickStartChat = (): void => {
@@ -57,7 +63,7 @@ const AsideProfile: React.FC = () => {
   };
 
   return (
-    <div className="bg-base-300 rounded-3xl w-80 p-8 flex flex-col items-center">
+    <div className={`${ isDark ? "bg-aside-dark" : "bg-aside-light" } rounded-3xl w-80 p-8 flex flex-col items-center`}>
       {/* 다른 유저일때 채팅하기 버튼 또는 환경설정 활성화 */}
       {isOther ? (
         <button className="btn btn-ghost btn-circle ms-16" onClick={onClickStartChat}>
@@ -73,13 +79,15 @@ const AsideProfile: React.FC = () => {
       {/* 닉네임, 이메일, 소개글 정보 컨테이너 */}
       <UserDetailInfo {...UserInfo} />
       {/* 자기인지 아닌지에 따라 활성화되는 팔로우 버튼 */}
-      {isOther && (
+      {isOther ? (
         <button
           className={`text-white btn ${isFollow ? 'btn-error' : 'btn-info'}`}
           onClick={onClickFollow}
         >
           {isFollow ? '언팔로우' : '팔로우'}
         </button>
+      ) : (
+        <div className="m-6"></div>
       )}
       {/* 팔로워, 팔로잉, 리스트, 북마크 수 출력 컨테이너 */}
       <UserActivityInfo />

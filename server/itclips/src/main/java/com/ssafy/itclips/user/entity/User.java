@@ -4,6 +4,7 @@ import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
 import com.ssafy.itclips.comment.entity.BookmarkListComment;
 import com.ssafy.itclips.group.entity.UserGroup;
 import com.ssafy.itclips.roadmap.entity.Roadmap;
+import com.ssafy.itclips.roadmap.entity.RoadmapLike;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -92,6 +93,9 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Roadmap> roadmapList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<RoadmapLike> roadmapLikeList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<BookmarkListComment> bookmarkListComments = new ArrayList<>();

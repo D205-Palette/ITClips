@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface RoadmapLikeRepository extends JpaRepository<RoadmapLike, Long> {
     // 로드맵 좋아요 수
     Long countByRoadmapId(Long roadmapId);
+    RoadmapLike findByRoadmapIdAndUserId(Long roadmapId, Long userId);
 }

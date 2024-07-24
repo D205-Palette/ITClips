@@ -14,7 +14,6 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
 @Entity
 @Table(name = "roadmap_like", schema = "itclips")
 public class RoadmapLike {
@@ -43,6 +42,6 @@ public class RoadmapLike {
         this.roadmap = roadmap;
         this.user = user;
         roadmap.getRoadmapLikeList().add(this);
-        //todo : 유저에 좋아요 리스트 달기
+        user.getRoadmapLikeList().add(this);
     }
 }

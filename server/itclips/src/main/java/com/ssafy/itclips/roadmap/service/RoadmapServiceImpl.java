@@ -2,7 +2,6 @@ package com.ssafy.itclips.roadmap.service;
 
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
 import com.ssafy.itclips.bookmarklist.service.BookmarkListService;
-import com.ssafy.itclips.bookmarklist.service.BookmarkListServiceImpl;
 import com.ssafy.itclips.error.CustomException;
 import com.ssafy.itclips.error.ErrorCode;
 import com.ssafy.itclips.roadmap.dto.RoadmapCommentDTO;
@@ -26,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -115,8 +113,13 @@ public class RoadmapServiceImpl implements RoadmapService {
         Roadmap roadmap = roadmapRepository.findById(roadmapId).orElseThrow(() -> new CustomException(ErrorCode.ROADMAP_NOT_FOUND));
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        like.setRoadmap(roadmap);
-        like.setUser(user);
+        // 이미 좋아요한 경우 예외처리
+        RoadmapLike existLike = roadmapLikeRepository.findByRoadmapIdAndUserId(roadmapId, userId);
+        if(existLike == null){
+            throw new CustomException(ErrorCode.ROADMAP_LIKE_EXIST);
+        }
+
+        like.addRoadmapAndUser(roadmap,user);
         roadmapLikeRepository.save(like);
     }
 

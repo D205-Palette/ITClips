@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.*;
 import com.ssafy.itclips.user.entity.User;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

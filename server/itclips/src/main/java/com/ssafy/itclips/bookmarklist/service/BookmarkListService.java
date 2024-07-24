@@ -14,4 +14,6 @@ public interface BookmarkListService {
     void deleteBookmarkList(Long userId, Long listId) throws RuntimeException;
 
     List<BookmarkListResponseDTO> getLists(Long userId,Boolean target) throws RuntimeException;
+
+    BookmarkListResponseDTO getBookmarkListResponseDTO(Long listId) throws RuntimeException;
 }

@@ -8,5 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface RoadmapRepository extends JpaRepository<Roadmap,Long> {
+    // 유저 아이디로 로드맵 찾기
     Optional<List<Roadmap>> findByUserId(Long id);
 }

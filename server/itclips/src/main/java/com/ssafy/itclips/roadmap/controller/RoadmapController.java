@@ -1,5 +1,6 @@
 package com.ssafy.itclips.roadmap.controller;
 
+import com.ssafy.itclips.roadmap.dto.RoadmapDTO;
 import com.ssafy.itclips.roadmap.dto.RoadmapInfoDTO;
 import com.ssafy.itclips.roadmap.entity.Roadmap;
 import com.ssafy.itclips.roadmap.service.RoadmapService;
@@ -31,17 +32,26 @@ public class RoadmapController {
         return new ResponseEntity<>(roadmapList, HttpStatus.OK);
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/list/{userId}")
     @Operation(summary = "유저 로드맵 보기" , description = "특정 유저가 생성한 로드맵을 볼 수 있습니다. ")
-    public ResponseEntity<?> findRoadmap(@PathVariable("userId") Long userId){
+    public ResponseEntity<?> findUserRoadmap(@PathVariable("userId") Long userId){
         List<RoadmapInfoDTO> roadmapList = roadmapService.findUserRoadmapList(userId);
         log.info("roadmapList: {}", roadmapList);
         return new ResponseEntity<>(roadmapList, HttpStatus.OK);
     }
 
+    // 로드맵 삭제
     @DeleteMapping("/{roadmapId}")
     public ResponseEntity<?> deleteRoadmap(@PathVariable("roadmapId") Long roadmapId){
         roadmapService.deleteRoadmap(roadmapId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // 로드맵 상세 보기
+    @GetMapping("{roadmapId}")
+    @Operation(summary = "로드맵 상세보기", description = "로드맵 상세페이지입니다. ")
+    public ResponseEntity<?> roadmapDetail(@PathVariable("roadmapId") Long roadmapId){
+        RoadmapDTO roadmapDTO = roadmapService.roadmapDetail(roadmapId);
+        return new ResponseEntity<>(roadmapDTO, HttpStatus.OK);
     }
 }

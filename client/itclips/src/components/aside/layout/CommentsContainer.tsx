@@ -3,22 +3,28 @@
 // components
 import CommentWrite from "../ui/CommentWrite";
 
-interface Comments {
+interface Comment {
   id: number;
   username: string;
   content: string;
 }
 
-const CommentsContainer = () => {
+interface Tag {
+  id: number;
+  content: string;
+}
 
-  // 더미 데이터
-  const data: Comments[] = [
-    { id:1, username: "고양양", content: "좋아요1" },
-    { id:2, username: "고양양친구", content: "좋아요2" },
-    { id:3, username: "고양양", content: "좋아요3" },
-    { id:4, username: "고양양친구", content: "퍼가요1" },
-    { id:5, username: "고양양", content: "퍼가요2" },
-  ]
+interface ItemProps {
+  itemName: string;
+  email: string;
+  description: string;
+  like: number;
+  fav: number;
+  tags: Tag[];
+  comments: Comment[];
+}
+
+const CommentsContainer = (data: ItemProps) => {
 
   return (
     <div className="flex flex-col">
@@ -29,7 +35,7 @@ const CommentsContainer = () => {
       </div>
       <div className="grid grid-cols-8 w-full">
         <div className="col-start-2 col-span-6 max-h-20 overflow-y-auto">
-          {data.map((comment) => (
+          {data.comments.map((comment) => (
             <div key={comment.id} className="flex justify-between items-center mb-2">
               <p className="text-sm">{comment.content}</p>
               <p className="text-sm">{comment.username}</p>

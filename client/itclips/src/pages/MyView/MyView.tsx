@@ -7,8 +7,8 @@ import MyFavorites from '../..//pages/MyView/MyFavorites';
 import MyRoadmap from '../..//pages/MyView/MyRoadmap';
 import { asideStore } from "../../stores/asideStore";
 // component
-import AsideBookmarkList from "../../components/aside/AsideProfile"
-import AsideProfile from '../..//components/aside/AsideProfile'
+import AsideBookmarkList from "../../components/aside/AsideBookmarkList";
+import AsideProfile from '../..//components/aside/AsideProfile';
 
 import MessageLayout from "../../components/aside/MessageLayout";
 
@@ -28,7 +28,7 @@ export default function MyView() {
           { isMessageOpen && <MessageLayout /> }
           </div>
           <Routes>
-            <Route path='' element={<AsideBookmarkList />} />
+            <Route path='' element={<AsideProfile />} />
             <Route path="groupbookmarklist" element={<AsideBookmarkList />} />
             <Route path="favorites" element={<AsideBookmarkList />} />
             <Route path="roadmap" element={<AsideBookmarkList />} />

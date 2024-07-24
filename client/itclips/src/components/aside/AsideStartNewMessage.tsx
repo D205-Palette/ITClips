@@ -35,7 +35,7 @@ const AsideStartNewMessage: React.FC<InviteProps> = ({ onStartChat, onBack }) =>
   };
 
   return (
-    <div className="p-4 max-w-sm mx-auto h-[36rem] flex flex-col">
+    <div className="p-4 max-w-sm mx-auto h-[35rem] flex flex-col">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center">
           {/* 뒤로가기 버튼 */}

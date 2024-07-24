@@ -7,11 +7,29 @@ import { IoChatboxEllipsesOutline, IoSettingsOutline } from "react-icons/io5";
 
 // components
 import ImageContainer from "./layout/ImageContainer";
-import DetailInfo from "./layout/DetailInfo";
+import UserDetailInfo from "./layout/UserDetailInfo";
 import UserActivityInfo from "./layout/UserActivityInfo";
 import ProfileSettingsModal from "./modals/ProfileSettingsModal";
 
+interface User {
+  username: string;
+  email: string;
+  description: string;
+  likeCount: number;
+  starCount: number;
+}
+
 const AsideProfile: React.FC = () => {
+
+  // 더미 데이터
+  const UserInfo: User = {
+    username: "고양양",
+    email: "abc@gmail.com",
+    description: "안녕하세요 고양양입니다. 재미있는 IT정보를 클립할거에여~",
+    likeCount: 200,
+    starCount: 300,
+  }
+
   // (임시) 팔로우 상태인지? - 팔로우 버튼 테스트
   const [isFollow, setIsFollow] = useState<boolean>(false);
   // (임시) 다른 유저의 정보인지? - 프로필 화면 테스트
@@ -21,6 +39,7 @@ const AsideProfile: React.FC = () => {
   const onClickStartChat = (): void => {
     // 다른 유저 프로필의 채팅하기 버튼을 눌렀을 때
     // 기존에 채팅창이 있는지 확인하고 있으면 바로 해당 채팅창으로, 없으면 새 채팅창으로
+    alert("채팅을 시작합니다.");
   };
 
   // 팔로우 or 언팔로우 버튼을 눌렀을 때 동작
@@ -38,7 +57,7 @@ const AsideProfile: React.FC = () => {
   };
 
   return (
-    <div className="bg-aside-layout rounded-3xl w-80 p-8 flex flex-col items-center">
+    <div className="bg-base-300 rounded-3xl w-80 p-8 flex flex-col items-center">
       {/* 다른 유저일때 채팅하기 버튼 또는 환경설정 활성화 */}
       {isOther ? (
         <button className="btn btn-ghost btn-circle ms-16" onClick={onClickStartChat}>
@@ -52,7 +71,7 @@ const AsideProfile: React.FC = () => {
       {/* 프로필 이미지 컨테이너 */}
       <ImageContainer />
       {/* 닉네임, 이메일, 소개글 정보 컨테이너 */}
-      <DetailInfo />
+      <UserDetailInfo {...UserInfo} />
       {/* 자기인지 아닌지에 따라 활성화되는 팔로우 버튼 */}
       {isOther && (
         <button

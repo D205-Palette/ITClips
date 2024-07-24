@@ -1,6 +1,6 @@
 // AsideKebabDropdown.tsx 는 aside 컴포넌트의 더보기 메뉴
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 // icons
 import { VscKebabVertical } from "react-icons/vsc";
@@ -11,7 +11,7 @@ import DeleteBookmarkListModal from "../modals/DeleteBookmarkListModal";
 import UrlCopyModal from "../modals/UrlCopyModal";
 import ReportModal from "../modals/ReportModal";
 
-const AsideKebabDropdown: React.FC = () => {
+const AsideKebabDropdown = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [isUrlCopyModalOpen, setIsUrlCopyModalOpen] = useState<boolean>(false);
@@ -36,7 +36,7 @@ const AsideKebabDropdown: React.FC = () => {
   return (
     <>
       <details className="dropdown dropdown-end dropdown-bottom self-end">
-        <summary className="btn btn-ghost m-1">
+        <summary className="btn btn-ghost btn-circle">
           <VscKebabVertical />
         </summary>
         <ul className="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow">

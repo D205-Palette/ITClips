@@ -3,27 +3,28 @@
 // components
 import AsideKebabDropdown from "./ui/AsideKebabDropdown";
 import ImageContainer from "./layout/ImageContainer";
-import DetailInfo from "./layout/DetailInfo";
+import ItemDetailInfo from "./layout/ItemDetailInfo";
 import LikesFavoritesCount from "./layout/LikesFavoritesCount";
 import Tags from "./layout/Tags";
 import CommentsContainer from "./layout/CommentsContainer";
 
 interface Comment {
   id: number;
-  text: string;
+  username: string;
+  content: string;
 }
 
 interface Tag {
   id: number;
-  text: string;
+  content: string;
 }
 
-interface BookmarkListProps {
-  listName: string;
+interface ItemProps {
+  itemName: string;
   email: string;
   description: string;
-  likeCount: number;
-  starCount: number;
+  like: number;
+  fav: number;
   tags: Tag[];
   comments: Comment[];
 }
@@ -31,36 +32,38 @@ interface BookmarkListProps {
 const ProfileCard = () => {
 
   // 더미 데이터
-  const bookmarkInfo: BookmarkListProps = {
-    listName: "북마크리스트",
+  const bookmarkInfo: ItemProps = {
+    itemName: "북마크리스트",
     email: "abc@gmail.com",
     description: "인기 북마크 리스트",
-    likeCount: 200,
-    starCount: 300,
+    like: 200,
+    fav: 300,
     tags: [
-      { id: 1, text: "#태그" },
-      { id: 2, text: "#태그2" },
+      { id: 1, content: "#태그" },
+      { id: 2, content: "#태그2" },
     ],
     comments: [
-      { id: 1, text: "좋아요~1" },
-      { id: 2, text: "좋아요~2" },
+      { id: 1, username: "고양양", content: "좋아요~1" },
+      { id: 2, username: "고양양", content: "좋아요~2" },
+      { id: 2, username: "고양양", content: "좋아요~3" },
+      { id: 2, username: "고양양", content: "좋아요~4" },
     ]
   }
 
   return (
-    <div className="bg-aside-layout rounded-3xl w-80 p-8 flex flex-col items-center">
+    <div className="bg-base-300 rounded-3xl w-80 p-8 flex flex-col items-center">
       {/* 더보기 버튼 */}
       <AsideKebabDropdown />
       {/* 북마크리스트 썸네일 */}
       <ImageContainer />
       {/* 북마크리스트 정보 */}
-      <DetailInfo />
+      <ItemDetailInfo {...bookmarkInfo} />
       {/* 좋아요, 즐겨찾기 칸 */}
-      <LikesFavoritesCount />
+      <LikesFavoritesCount {...bookmarkInfo} />
       {/* 태그 창 */}
-      <Tags />
+      <Tags {...bookmarkInfo} />
       {/* 댓글 창 */}
-      <CommentsContainer />
+      <CommentsContainer {...bookmarkInfo} />
     </div>
   );
 };

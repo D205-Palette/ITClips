@@ -46,10 +46,6 @@ const App = () => {
         <Route path="/search" element={<SearchView />} />
         <Route path="/feed" element={<FeedView />} />
       </Routes>
-
-
-        
-
     </div>
   );
 };

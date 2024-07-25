@@ -49,29 +49,6 @@ const SearchTag = () => {
             <> <div onClick={tabList} role="tab" className="tab tab-active mx-3"><FaList /></div> <div onClick={tabAlbum} role="tab" className="tab"> <HiOutlineSquares2X2 /></div></> }
         </div>
       </div>
-      {/* 북마크리스트 검색 결과 */}
-      <div className="flex justify-between mb-4">
-        <div className="space-x-2">
-          <button 
-            className={`px-4 py-2 rounded-full ${sortBy === 'views' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-            onClick={() => setSortBy('views')}
-          >
-            조회수
-          </button>
-          <button 
-            className={`px-4 py-2 rounded-full ${sortBy === 'bookmarks' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-            onClick={() => setSortBy('bookmarks')}
-          >
-            스크랩수
-          </button>
-          <button 
-            className={`px-4 py-2 rounded-full ${sortBy === 'likes' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-            onClick={() => setSortBy('likes')}
-          >
-            좋아요수
-          </button>
-        </div>
-      </div>
       {/* 검색 결과 */}
       <SearchTagItem
         items={data}

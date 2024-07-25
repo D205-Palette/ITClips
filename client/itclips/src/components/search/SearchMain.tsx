@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 // components
-import RecommandedItems from "./RecommandedItems";
+import RecommandedItems from "./layout/RecommandedItems";
 
 // icons
 import { FaList } from "react-icons/fa";

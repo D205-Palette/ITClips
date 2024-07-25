@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 // components
-import SearchTagItem from "./SearchRoadmapItem";
+import SearchTagItem from "./layout/SearchRoadmapItem";
 
 // icons
 import { FaList } from "react-icons/fa";

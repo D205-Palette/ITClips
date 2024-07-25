@@ -1,7 +1,7 @@
 import React from "react";
 
 // components
-import SearchUserItem from "./SearchUserItem";
+import SearchUserItem from "./layout/SearchUserItem";
 
 const SearchUser = () => {
 

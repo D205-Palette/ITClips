@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 // components
-import SearchBookmarkListItem from "./SearchBookmarkListItem";
+import SearchBookmarkListItem from "./layout/SearchBookmarkListItem";
 
 // icons
 import { FaList } from "react-icons/fa";

@@ -26,19 +26,37 @@ public class OAuthAttributes {
 
     public static OAuthAttributes of(String registrationId, String userNameAttributeName, Map<String, Object> attributes) {
         if ("google".equals(registrationId)) {
+            System.out.println("Google Login !!");
             return ofGoogle(userNameAttributeName, attributes);
+        } else if ("naver".equals(registrationId)) {
+            System.out.println("Naver Login !!");
+            return ofNaver(userNameAttributeName, attributes);
         }
         // 다른 프로바이더 처리
+        System.out.println("Null... ㅠㅠ");
         return null;
     }
 
     private static OAuthAttributes ofGoogle(String userNameAttributeName, Map<String, Object> attributes) {
         return OAuthAttributes.builder()
-                .nameAttributeKey(userNameAttributeName)
                 .email((String) attributes.get("email"))
                 .nickname((String) attributes.get("name"))
                 .provider("google")
                 .attributes(attributes)
+                .nameAttributeKey(userNameAttributeName)
+                .build();
+    }
+
+    private static OAuthAttributes ofNaver(String userNameAttributeName, Map<String, Object> attributes) {
+        System.out.println(attributes.toString());
+        Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+
+        return OAuthAttributes.builder()
+                .nickname((String) response.get("name"))
+                .email((String) response.get("email"))
+                .provider("Naver")
+                .attributes(response)
+                .nameAttributeKey(userNameAttributeName)
                 .build();
     }
 

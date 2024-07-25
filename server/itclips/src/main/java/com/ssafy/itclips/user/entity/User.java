@@ -31,7 +31,7 @@ public class User {
     private Long id;
 
     @Size(max = 255)
-    @NotNull
+//    @NotNull
     @Column(name = "email", nullable = false)
     private String email;
 
@@ -41,7 +41,7 @@ public class User {
     private String password;
 
     @Size(max = 50)
-    @NotNull(message = "Nickname cannot be null")
+//    @NotNull(message = "Nickname cannot be null")
     @Column(name = "nickname", nullable = false, length = 50)
     private String nickname;
 

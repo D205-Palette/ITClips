@@ -9,7 +9,7 @@ import SearchBar from "../../components/main/MainSearchBar";
 export default function MyView() {
   const [isList, setTab] = useState(true);
   function tabList (): void  {
-      setTab(true)
+    setTab(true)
   };
   function tabAlbum (): void  {
     setTab(false)

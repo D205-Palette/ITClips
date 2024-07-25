@@ -1,50 +1,68 @@
-import { createBrowserRouter } from 'react-router-dom';
-import MyBookmarkList from './pages/MyView/MyBookmarkList';
-import MyGroupBookmarkList from './pages/MyView/MyGroupBookmarkList';
-import MyFavorites from './pages/MyView/MyFavorites';
-import MyRoadmap from './pages/MyView/MyRoadmap';
-import FeedView from './pages/FeedView'
-import SearchView from './pages/SearchView'
-import Intro from './pages/Intro';
-import SignupView from './pages/SignUpView'
-import App from './App';
-import MyView from './pages/MyView/MyView';
+import { createBrowserRouter } from "react-router-dom";
+import App from "./App";
+import Intro from "./pages/Intro";
+import SignupView from "./pages/SignUpView";
+import SocialSignUpView from "./pages/SocialSignUpView";
+import MyView from "./pages/MyView/MyView";
+import MyBookmarkList from "./pages/MyView/MyBookmarkList";
+import MyGroupBookmarkList from "./pages/MyView/MyGroupBookmarkList";
+import MyFavorites from "./pages/MyView/MyFavorites";
+import MyRoadmap from "./pages/MyView/MyRoadmap";
+import FeedView from "./pages/FeedView";
+import SearchView from "./pages/SearchView";
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <App />,
     children: [
+      // 서비스 소개 페이지
       {
-        path: '/my',
-        element : <MyView />,
+        path: "/intro",
+        element: <Intro />,
+      },
+      // 일반 회원가입 페이지
+      {
+        path: "/signup",
+        element: <SignupView />,
+      },
+      // 소셜 회원가입 페이지
+      {
+        path: "/socialsignup",
+        element: <SocialSignUpView />,
+      },
+      // MY 페이지
+      {
+        path: "/my",
+        element: <MyView />,
         children: [
-            {
-              path: '',
-            },
-            {
-                path: 'groupbookmarklist',
-              },
-              {
-                path: 'favorites',
-              },
-              {
-                path: 'roadmap',
-              },
-
+          {
+            path: "",
+            element: <MyBookmarkList />,
+          },
+          {
+            path: "groupbookmarklist",
+            element: <MyGroupBookmarkList />,
+          },
+          {
+            path: "favorites",
+            element: <MyFavorites />,
+          },
+          {
+            path: "roadmap",
+            element: <MyRoadmap />,
+          },
         ],
       },
+      // 검색 페이지
       {
-        path: '/search',
+        path: "/search",
+        element: <SearchView />,
       },
+      // 피드 페이지
       {
-        path: '/feed',
-      },
-      {
-        path: '/intro',
-      },
-      {
-        path: '/signup',
+        path: "/feed",
+        element: <FeedView />,
       },
     ],
   },

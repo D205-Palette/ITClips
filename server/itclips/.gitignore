@@ -2,7 +2,7 @@
 /src/main/generated/
 
 ### key
-application-secret.yml
+/src/main/resources/application-secret.yml
 
 HELP.md
 .gradle

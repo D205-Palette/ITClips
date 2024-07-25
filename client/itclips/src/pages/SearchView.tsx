@@ -60,9 +60,11 @@ const SearchView = () => {
           </div>
         </div>
         {/* 실시간 인기 순위는 검색 메인에서만 */}
-        <div className="w-60 col-start-7">
-          <RealtimeList />
-        </div>
+        { whatCategory === "카테고리" && (
+          <div className="w-60 col-start-7">
+            <RealtimeList />
+          </div>
+        )}
       </div>
     </>
   );

@@ -17,6 +17,7 @@ interface Props {
 
 const RecommendedItems: React.FC<Props> = ({ items, viewMode }) => {
 
+  // 앨범 정렬
   if (viewMode === "grid") {
     return (
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -37,6 +38,7 @@ const RecommendedItems: React.FC<Props> = ({ items, viewMode }) => {
     );
   }
 
+  // 리스트 정렬
   return (
     <div className="space-y-4">
       {items.map((item) => (

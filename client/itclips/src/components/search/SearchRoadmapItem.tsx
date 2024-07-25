@@ -17,6 +17,7 @@ interface RoadmapViewProps {
 
 const SearchRoadmapItem: React.FC<RoadmapViewProps> = ({ items, viewMode }) => {
 
+  // 앨범 정렬
   if (viewMode === "grid") {
     return (
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -37,6 +38,7 @@ const SearchRoadmapItem: React.FC<RoadmapViewProps> = ({ items, viewMode }) => {
     );
   }
 
+  // 리스트 정렬
   return (
     <div className="space-y-4">
       {items.map((item) => (

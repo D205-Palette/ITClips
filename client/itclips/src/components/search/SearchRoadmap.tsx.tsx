@@ -49,7 +49,7 @@ const SearchRoadmap = () => {
             <> <div onClick={tabList} role="tab" className="tab tab-active mx-3"><FaList /></div> <div onClick={tabAlbum} role="tab" className="tab"> <HiOutlineSquares2X2 /></div></> }
         </div>
       </div>
-      {/* 북마크리스트 검색 결과 */}
+      {/* 로드맵 검색 옵션 */}
       <div className="flex justify-between mb-4">
         <div className="space-x-2">
           <button 

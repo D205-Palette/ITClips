@@ -30,6 +30,8 @@ interface StoreState {
   modalState: ModalState;
 }
 
+
+
 export const navStore = create<StoreState>()(
   persist(
     (set) => ({

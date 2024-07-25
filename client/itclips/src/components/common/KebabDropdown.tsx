@@ -1,6 +1,9 @@
 import { VscKebabVertical } from "react-icons/vsc";
 import { FC } from "react";
 
+
+// 무슨 탭에서 눌렀는지 받는 인자
+// 리스트,그룹 북마크 리스트, 즐겨찾기, 로드맵
 interface Props {
   whatMenu: string
 }

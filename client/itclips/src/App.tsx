@@ -19,10 +19,13 @@ import MyRoadmap from './pages/MyView/MyRoadmap';
 import FeedView from './pages/FeedView'
 import SearchView from './pages/SearchView'
 import MyBookmarkList from "./pages/MyView/MyBookmarkList";
+import tabStore from './stores/categoriesStore'
+import MyBookmark from "./pages/MyView/MyBookmark";
 
 const App = () => {
   const isMessageOpen = asideStore(state => state.isMessageOpen);
   const isLogin = navStore((state) => state.isLoggedIn);
+
 
   return (
     <div className="App">
@@ -32,19 +35,23 @@ const App = () => {
 
       {/* Body단*/}
       <Routes>
-        <Route path="/intro" element={<Intro />} />
-        <Route path="/signup" element={<SignUpView />} />
+
+        <Route path="intro" element={<Intro />} />
+        <Route path="signup" element={<SignUpView />} />
         
         {/* my탭의 하위 라우터들 */}
-        <Route path="/my" element={<MyView />}>
-          <Route path="bookmarklist" element={<MyBookmarkList />} />
+        <Route path="my" element={<MyView />}>
+          <Route path="bookmarklist" element={<MyBookmarkList />} >
+            <Route path="1" element={<MyBookmark />} />
+          </Route>
           <Route path="groupbookmarklist" element={<MyGroupBookmarkList />} />
           <Route path="favorites" element={<MyFavorites />} />
           <Route path="roadmap" element={<MyRoadmap />} />
         </Route>
 
-        <Route path="/search" element={<SearchView />} />
-        <Route path="/feed" element={<FeedView />} />
+        <Route path="search" element={<SearchView />} />
+        <Route path="feed" element={<FeedView />} />
+
       </Routes>
 
 

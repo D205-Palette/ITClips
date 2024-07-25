@@ -11,9 +11,10 @@ const RoadMap  = {
     // bookmark_list_tags:;
     description:"로드맵에 관한 설명" ,
     roadmap_like:3,
-    percentage: 13.7,
+    percentage: 14.7,
   }
-  
+
+
 
 export default function ListItem() {
 
@@ -23,28 +24,33 @@ export default function ListItem() {
     setIsLike(!isLike);
     //여기에 좋아요 api호출
   };
+
   const isDark = darkModeStore((state) => state.isDark)
+
   return (
     <>
+    
       <div
-        className="card card-side bg-base-100 shadow-xl hover:cursor-pointer hover:bg-slate-50 relative h-32" 
+        className={(isDark? "hover:brightness-150" : "hover:brightness-95") + " card card-side bg-base-100 shadow-xl hover:cursor-pointer h-32"} 
         onMouseOver={() => setIsHovering(true)}
         onMouseOut={() => setIsHovering(false)}
       >
+        
           <>
-            <figure className="w-28 z-20">
+            <figure className="w-28  z-20">
               <img
 
                 src="https://cdn.pixabay.com/photo/2017/07/31/17/12/water-2559064_1280.jpg"
                 alt="Movie"
-                className="size-full w-28"
+                className="h-full"
               />
             </figure>
-
-            <div className="card-body flex flex-row justify-between h-full relative">
-            <div className={(!isDark ? 
+        
+                <div className="card-body flex flex-row justify-between h-full relative">
+                    <div className={(!isDark ? 
                     (RoadMap.percentage == 100 ? 'bg-green-300' : 'bg-sky-100' ) : 
-                    (RoadMap.percentage == 100 ? 'bg-green-900' : 'bg-sky-900' )) +" h-full absolute z-0 top-0 left-0" }
+                    (RoadMap.percentage == 100 ? 'bg-green-900' : 'bg-sky-900' ))
+                     +" h-full absolute z-0 top-0 left-0" }
                     style={{ width: `${RoadMap.percentage}%` }}
                     ></div>
                     <div className="flex flex-col justify-around z-20">
@@ -74,8 +80,10 @@ export default function ListItem() {
                 </div>
          
           </>
-         
+            
       </div>
+    
+   
     </>
   );
 }

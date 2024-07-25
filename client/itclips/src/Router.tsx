@@ -9,6 +9,7 @@ import Intro from './pages/Intro';
 import SignupView from './pages/SignUpView'
 import App from './App';
 import MyView from './pages/MyView/MyView';
+import MyBookmark from './pages/MyView/MyBookmark';
 
 const router = createBrowserRouter([
   {
@@ -16,35 +17,56 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: '/my',
-        element : <MyView />,
+        path: 'my',
+        // element : <MyView />,
         children: [
             {
-              path: '',
+              path: 'bookmarklist',
+              children:[
+                {
+                  path: '1',
+                  
+                },
+              ],
             },
             {
                 path: 'groupbookmarklist',
+                children:[
+                  {
+                    path: ':list_pk'
+                  },
+                ],
               },
               {
                 path: 'favorites',
+                children:[
+                  {
+                    path: ':list_pk'
+                  },
+                ],
               },
               {
                 path: 'roadmap',
+                children:[
+                  {
+                    path: ':roadmap_pk'
+                  },
+                ],
               },
 
         ],
       },
       {
-        path: '/search',
+        path: 'search',
       },
       {
-        path: '/feed',
+        path: 'feed',
       },
       {
-        path: '/intro',
+        path: 'intro',
       },
       {
-        path: '/signup',
+        path: 'signup',
       },
     ],
   },

@@ -41,6 +41,7 @@ export default function ListItem() {
               <img
                 src="https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp"
                 alt="Movie"
+                className="h-full"
         
               />
             </figure>

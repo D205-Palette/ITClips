@@ -1,31 +1,38 @@
 import React, { useState } from 'react';
 
-const SearchBar = () => {
-  const [searchCategory, setSearchCategory] = useState('유저');
-  const [searchTerm, setSearchTerm] = useState('');
+interface ChildProps {
+  handleCategory: (category: string, keyword: string) => void;
+}
 
-  const categories = ['유저', '북마크리스트', '로드맵', '태그'];
+const SearchBar: React.FC<ChildProps> = ({ handleCategory }) => {
+  const [ searchCategory, setSearchCategory ] = useState("카테고리");
+  const [ searchKeyword, setSearchKeyword ] = useState("");
+
+  const categories = ["카테고리", "유저", "북마크리스트", "로드맵", "태그"];
 
   return (
     <div className="flex items-center space-x-2">
       <div className="dropdown">
-        <label tabIndex={0} className="btn m-1">{searchCategory}</label>
-        <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+        <label tabIndex={0} className="btn m-1 w-32">{searchCategory}</label>
+        <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-40">
+          {/* 검색 카테고리 드롭다운 */}
           {categories.map((category) => (
-            <li key={category} onClick={() => setSearchCategory(category)}>
+            <li key={category} onClick={() => setSearchCategory(category)} className="self-center">
               <a>{category}</a>
             </li>
           ))}
         </ul>
       </div>
+      {/* 검색바 */}
       <input 
         type="text" 
         placeholder="검색어를 입력하세요" 
         className="input input-bordered w-full" 
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        value={searchKeyword}
+        onChange={(e) => setSearchKeyword(e.target.value)}
       />
-      <button className="btn btn-primary">검색</button>
+      {/* 검색 버튼 */}
+      <button className="btn btn-primary" onClick={() => handleCategory(searchCategory, searchKeyword)}>검색</button>
     </div>
   );
 };

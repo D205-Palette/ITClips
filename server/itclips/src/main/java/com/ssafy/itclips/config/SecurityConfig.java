@@ -31,8 +31,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import com.ssafy.itclips.global.oauth2.handler.OAuth2AuthenticationSuccessHandler;
 
-@Configuration
 @EnableWebSecurity
+@Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -80,9 +80,11 @@ public class SecurityConfig {
 
                 //== URL별 권한 관리 옵션 ==//
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/**", "/login/**", "/global/oauth2/**", "/user/signup", "/user/oauthSignup").permitAll()
+                        .requestMatchers("/", "/css/**", "/images/**").permitAll()  // 기본 페이지, static 하위 폴더에 있는 자료들은 모두 접근 가능
+                        .requestMatchers("/user/signup", "/user/oauthSignup").permitAll()   // 회원가입 접근 가능
                         .anyRequest().authenticated()
                 )
+
                 //== 소셜 로그인 설정 ==//
                 .oauth2Login(oauth2 -> oauth2
                         .authorizationEndpoint(auth -> auth

@@ -1,26 +1,57 @@
 import React from 'react';
 
-interface Items {
+interface RecommandedItem {
   id: number;
   title: string;
+  username: string;
   imageUrl: string;
+  bookmarks: number;
   likes: number;
+  createdAt: string;
 }
 
-const RecommendedItems = () => {
-  const bookmarks: Items[] = [
-    // 더미 데이터
-  ];
+interface Props {
+  items: RecommandedItem[];
+  viewMode: 'grid' | 'list';
+}
+
+const RecommendedItems: React.FC<Props> = ({ items, viewMode }) => {
+
+  if (viewMode === "grid") {
+    return (
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        {items.map((item) => (
+          <div key={item.id} className="bg-white rounded-lg shadow overflow-hidden">
+            <img src={item.imageUrl} alt={item.title} className="w-full h-40 object-cover" />
+            <div className="p-4">
+              <h3 className="text-lg font-semibold truncate">{item.title}</h3>
+              <p className="text-sm text-gray-600 truncate">{item.username}</p>
+              <div className="flex justify-between mt-2 text-sm text-gray-500">
+                <span>북마크 {item.bookmarks}</span>
+                <span>❤️ {item.likes}</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   return (
-    <div className="grid grid-cols-3 gap-4">
-      {bookmarks.map((bookmark) => (
-        <div key={bookmark.id} className="card bg-base-100 shadow-xl">
-          <figure><img src={bookmark.imageUrl} alt={bookmark.title} /></figure>
-          <div className="card-body">
-            <h2 className="card-title">{bookmark.title}</h2>
-            <p>좋아요: {bookmark.likes}</p>
+    <div className="space-y-4">
+      {items.map((item) => (
+        <div key={item.id} className="flex items-center space-x-4 p-4 bg-white rounded-lg shadow">
+          <img src={item.imageUrl} alt={item.title} className="w-20 h-20 object-cover rounded" />
+          <div className="flex-grow">
+            <h3 className="text-lg font-semibold">{item.title}</h3>
+            <p className="text-sm text-gray-600">{item.username}</p>
+            <div className="flex space-x-4 mt-2">
+              <span className="text-sm text-gray-500">북마크 {item.bookmarks}</span>
+              <span className="text-sm text-gray-500">좋아요 {item.likes}</span>
+              <span className="text-sm text-gray-500">{item.createdAt}</span>
+            </div>
           </div>
+          <button className="text-gray-400 hover:text-gray-600">•••</button>
         </div>
       ))}
     </div>

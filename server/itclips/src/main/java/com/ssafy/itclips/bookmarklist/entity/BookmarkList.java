@@ -1,12 +1,16 @@
 package com.ssafy.itclips.bookmarklist.entity;
 
+import com.ssafy.itclips.bookmarklist.dto.BookmarkListDetailDTO;
+import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
 import com.ssafy.itclips.report.entity.BookmarkListReport;
 import com.ssafy.itclips.bookmark.entity.Bookmark;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListDTO;
 import com.ssafy.itclips.category.entity.Category;
 import com.ssafy.itclips.comment.entity.BookmarkListComment;
 import com.ssafy.itclips.group.entity.UserGroup;
+import com.ssafy.itclips.tag.dto.TagDTO;
 import com.ssafy.itclips.tag.entity.BookmarkListTag;
+import com.ssafy.itclips.user.dto.UserTitleDTO;
 import com.ssafy.itclips.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
@@ -111,5 +115,37 @@ public class BookmarkList {
         this.description = bookmarkListDto.getDescription();
         this.image = bookmarkListDto.getImage();
         this.isPublic = bookmarkListDto.getIsPublic();
+    }
+
+
+    public BookmarkListResponseDTO makeBookmarkListResponseDTO(Integer bookmarkCount, Integer likeCount, Boolean isLiked,
+                                                               Set<TagDTO> tags, List<UserTitleDTO> users) {
+        return BookmarkListResponseDTO.builder()
+                .id(this.id)
+                .title(this.title)
+                .image(this.image)
+                .description(this.description)
+                .bookmarkCount(bookmarkCount)
+                .users(users)
+                .tags(tags)
+                .isLiked(isLiked)
+                .likeCount(likeCount)
+                .build();
+    }
+
+    public BookmarkListDetailDTO makeBookmarkListDetailDTO( Integer likeCount, Integer scrapCount,Boolean isLiked,
+                                                      Boolean isScraped, Set<TagDTO> tags, List<UserTitleDTO> users) {
+        return BookmarkListDetailDTO.builder()
+                .id(this.id)
+                .title(this.title)
+                .description(this.description)
+                .likeCount(likeCount)
+                .scrapCount(scrapCount)
+                .image(this.image)
+                .isLiked(isLiked)
+                .isScraped(isScraped)
+                .tags(tags)
+                .users(users)
+                .build();
     }
 }

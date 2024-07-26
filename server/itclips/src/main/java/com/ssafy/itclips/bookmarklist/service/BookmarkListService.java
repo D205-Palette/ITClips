@@ -1,6 +1,7 @@
 package com.ssafy.itclips.bookmarklist.service;
 
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListDTO;
+import com.ssafy.itclips.bookmarklist.dto.BookmarkListDetailDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
 
 import java.util.List;
@@ -23,4 +24,6 @@ public interface BookmarkListService {
     void removeScrapBookmarkList(Long scrapId) throws RuntimeException;
 
     List<BookmarkListResponseDTO> getScrapedLists(Long userId) throws RuntimeException;
+
+    BookmarkListDetailDTO getListDetail(Long userId, Long listId) throws RuntimeException;
 }

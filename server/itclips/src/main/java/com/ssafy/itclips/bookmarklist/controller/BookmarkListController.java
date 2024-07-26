@@ -1,6 +1,7 @@
 package com.ssafy.itclips.bookmarklist.controller;
 
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListDTO;
+import com.ssafy.itclips.bookmarklist.dto.BookmarkListDetailDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
 import com.ssafy.itclips.bookmarklist.service.BookmarkListService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,6 +49,15 @@ public class BookmarkListController {
     public ResponseEntity<?> getGroupLists(@PathVariable @Parameter(description = "유저 정보", required = true) Long userId) {
         List<BookmarkListResponseDTO> lists = bookmarkListService.getLists(userId,true);
         return new ResponseEntity<List<BookmarkListResponseDTO>>(lists,HttpStatus.OK);
+    }
+
+    @GetMapping("/{listId}")
+    public ResponseEntity<?> getListDetail(@PathVariable Long listId,
+                                           @RequestParam Long userId) {
+        BookmarkListDetailDTO bookmarkListDetailDTO = bookmarkListService.getListDetail(userId,listId);
+
+        return new ResponseEntity<BookmarkListDetailDTO>(bookmarkListDetailDTO,HttpStatus.OK);
+
     }
 
     @PostMapping("/add/{userId}")

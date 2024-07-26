@@ -1,6 +1,7 @@
 package com.ssafy.itclips.bookmarklist.service;
 
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListDTO;
+import com.ssafy.itclips.bookmarklist.dto.BookmarkListDetailDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkListLike;
@@ -127,6 +128,14 @@ public class BookmarkListServiceImpl implements BookmarkListService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public BookmarkListDetailDTO getListDetail(Long userId, Long listId) throws RuntimeException {
+        BookmarkList bookmarkList = bookmarkListRepository.findById(listId)
+                .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND));
+
+        return convertToBookmarkListDetailDTO(bookmarkList, userId);
+    }
+
     private static List<BookmarkList> getList(List<BookmarkListScrap> bookmarkListScraps) {
         return bookmarkListScraps.stream()
                 .map(BookmarkListScrap::getBookmarkList)
@@ -207,34 +216,43 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         groupRepository.deleteByBookmarkListAndUserIdNot(existingBookmarkList, userId);
     }
 
+    private BookmarkListDetailDTO convertToBookmarkListDetailDTO(BookmarkList bookmarkList, Long userId) {
+        List<UserTitleDTO> users = getUserTitleDTOs(bookmarkList);
+        Set<TagDTO> tags = getTagDTOs(bookmarkList);
+
+        Integer likeCount = bookmarkList.getBookmarkListLikes().size();
+        Boolean isLiked = (bookmarkListLikeRepository.findByBookmarkListIdAndUserId(bookmarkList.getId(), userId) != null);
+        Integer scrapCount = bookmarkList.getBookmarkListScraps().size();
+        Boolean isScraped = (bookmarkListScrapRepository.findByUserIdAndBookmarkListId(userId, bookmarkList.getId()) != null);
+
+        return bookmarkList.makeBookmarkListDetailDTO(likeCount, scrapCount, isLiked, isScraped, tags, users);
+    }
+
     private BookmarkListResponseDTO convertToBookmarkListResponseDTO(BookmarkList bookmarkList, Long userId) {
-        List<UserTitleDTO> users = bookmarkList.getGroups().stream()
+        List<UserTitleDTO> users = getUserTitleDTOs(bookmarkList);
+        Set<TagDTO> tags = getTagDTOs(bookmarkList);
+
+        Integer likeCount = bookmarkList.getBookmarkListLikes().size();
+        Boolean isLiked = (bookmarkListLikeRepository.findByBookmarkListIdAndUserId(bookmarkList.getId(), userId) != null);
+
+        return bookmarkList.makeBookmarkListResponseDTO(bookmarkList.getBookmarks().size(), likeCount, isLiked, tags, users);
+    }
+
+    private List<UserTitleDTO> getUserTitleDTOs(BookmarkList bookmarkList) {
+        return bookmarkList.getGroups().stream()
                 .map(this::convertToUserTitleDTO)
                 .collect(Collectors.toList());
+    }
 
-        Set<TagDTO> tags = new HashSet<>(bookmarkList.getTags().stream()
+    private Set<TagDTO> getTagDTOs(BookmarkList bookmarkList) {
+        return new HashSet<>(bookmarkList.getTags().stream()
                 .map(this::convertToTagDTO)
                 .collect(Collectors.toMap(
-                        TagDTO::getTitle, // Key: title
-                        tagDTO -> tagDTO, // Value: tagDTO
-                        (existing, replacement) -> existing // Handle duplicates by keeping the existing tagDTO
+                        TagDTO::getTitle,
+                        tagDTO -> tagDTO,
+                        (existing, replacement) -> existing
                 ))
                 .values());
-
-        Integer likeCounts = bookmarkList.getBookmarkListLikes().size();
-        BookmarkListLike bookmarkListLike = bookmarkListLikeRepository.findByBookmarkListIdAndUserId(bookmarkList.getId(),userId);
-
-        return BookmarkListResponseDTO.builder()
-                .id(bookmarkList.getId())
-                .title(bookmarkList.getTitle())
-                .image(bookmarkList.getImage())
-                .description(bookmarkList.getDescription())
-                .bookmarkCount(bookmarkList.getBookmarks().size())
-                .users(users)
-                .tags(tags)
-                .isLiked(bookmarkListLike != null)
-                .likeCount(likeCounts)  // This seems to be hardcoded, consider fetching the actual like count if possible.
-                .build();
     }
 
     private UserTitleDTO convertToUserTitleDTO(UserGroup userGroup) {

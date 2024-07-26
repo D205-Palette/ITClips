@@ -43,14 +43,16 @@ public class RoadmapServiceImpl implements RoadmapService {
     @Override
     @Transactional
     public List<RoadmapInfoDTO> findAllRoadmapList() throws RuntimeException{
+        // roadmap 가져오기
         List<Roadmap> roadmapList = roadmapRepository.findAll();
         if(roadmapList.isEmpty()){
             throw new CustomException(ErrorCode.ROADMAP_NOT_FOUND);
         }
+
         List<RoadmapInfoDTO> roadmapInfoDTOList = new ArrayList<>();
 
         for (Roadmap roadmap : roadmapList) {
-            RoadmapInfoDTO roadmapInfoDTO = makeRoadmapDTO(roadmap);
+            RoadmapInfoDTO roadmapInfoDTO = RoadmapInfoDTO.toDto(roadmap);
             roadmapInfoDTOList.add(roadmapInfoDTO);
         }
 
@@ -69,7 +71,7 @@ public class RoadmapServiceImpl implements RoadmapService {
 
         // 로드맵 -> 로드맵 출력용으로 바꿈
         for (Roadmap roadmap : roadmapList) {
-            RoadmapInfoDTO roadmapInfoDTO = makeRoadmapDTO(roadmap);
+            RoadmapInfoDTO roadmapInfoDTO = RoadmapInfoDTO.toDto(roadmap);
             roadmapInfoDTOList.add(roadmapInfoDTO);
         }
 
@@ -286,20 +288,6 @@ public class RoadmapServiceImpl implements RoadmapService {
                 .userName(roadmapComment.getUser().getNickname())
                 .RoadmapId(roadmapId)
                 .createdAt(roadmapComment.getCreatedAt())
-                .build();
-    }
-
-    // 로드맵 정보 DTO
-    private static RoadmapInfoDTO makeRoadmapDTO(Roadmap roadmap) {
-
-        return RoadmapInfoDTO.builder()
-                .id(roadmap.getId())
-                .userName(roadmap.getUser().getNickname())
-                .title(roadmap.getTitle())
-                .description(roadmap.getDescription())
-                .image(roadmap.getImage())
-                .isPublic(roadmap.getIsPublic())
-                .createdAt(roadmap.getCreatedAt())
                 .build();
     }
 

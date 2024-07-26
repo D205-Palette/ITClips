@@ -29,7 +29,6 @@ public class RoadmapController {
     public ResponseEntity<?> roadmapList(){
         List<RoadmapInfoDTO> roadmapList =  roadmapService.findAllRoadmapList();
 
-        log.info("roadmapList: {}", roadmapList);
         return new ResponseEntity<>(roadmapList, HttpStatus.OK);
     }
 
@@ -38,7 +37,6 @@ public class RoadmapController {
     @Operation(summary = "유저 로드맵 보기" , description = "특정 유저가 생성한 로드맵을 볼 수 있습니다. ")
     public ResponseEntity<?> findUserRoadmap(@PathVariable("userId") Long userId){
         List<RoadmapInfoDTO> roadmapList = roadmapService.findUserRoadmapList(userId);
-        log.info("roadmapList: {}", roadmapList);
         return new ResponseEntity<>(roadmapList, HttpStatus.OK);
     }
 

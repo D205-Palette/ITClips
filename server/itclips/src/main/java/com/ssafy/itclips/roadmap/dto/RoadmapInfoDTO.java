@@ -1,5 +1,6 @@
 package com.ssafy.itclips.roadmap.dto;
 
+import com.ssafy.itclips.roadmap.entity.Roadmap;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,5 +27,18 @@ public class RoadmapInfoDTO {
         this.image = image;
         this.isPublic = isPublic;
         this.createdAt = createdAt;
+    }
+
+    public static RoadmapInfoDTO toDto(Roadmap roadmap){
+
+        return RoadmapInfoDTO.builder()
+                .id(roadmap.getId())
+                .userName(roadmap.getUser().getNickname())
+                .title(roadmap.getTitle())
+                .description(roadmap.getDescription())
+                .image(roadmap.getImage())
+                .isPublic(roadmap.getIsPublic())
+                .createdAt(roadmap.getCreatedAt())
+                .build();
     }
 }

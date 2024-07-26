@@ -9,4 +9,6 @@ import java.util.List;
 public interface BookmarkListScrapRepository extends JpaRepository<BookmarkListScrap, Long> {
     BookmarkListScrap findByUserIdAndBookmarkListId(Long userId, Long bookmarkListId);
     List<BookmarkListScrap> findByUserId(Long userId);
+
+    Boolean existsByUserIdAndBookmarkListId(Long userId, Long id);
 }

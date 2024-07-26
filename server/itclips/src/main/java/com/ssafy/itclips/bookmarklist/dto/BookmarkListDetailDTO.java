@@ -1,5 +1,7 @@
 package com.ssafy.itclips.bookmarklist.dto;
 
+import com.ssafy.itclips.bookmark.dto.BookmarkDetailDTO;
+import com.ssafy.itclips.category.dto.CategoryParamDTO;
 import com.ssafy.itclips.tag.dto.TagDTO;
 import com.ssafy.itclips.user.dto.UserTitleDTO;
 import lombok.Builder;
@@ -22,13 +24,15 @@ public class BookmarkListDetailDTO {
     private String image;
     private Boolean isLiked;
     private Boolean isScraped;
-    Set<TagDTO> tags;
-    List<UserTitleDTO> users;
+    private List<CategoryParamDTO> categories;
+    private Set<TagDTO> tags;
+    private List<UserTitleDTO> users;
+    private List<BookmarkDetailDTO> bookmarks;
 
     @Builder
-    public BookmarkListDetailDTO(Long id, String title, String description, Integer likeCount,
-                                 Integer scrapCount, String image, Boolean isLiked, Boolean isScraped,
-                                 Set<TagDTO> tags, List<UserTitleDTO> users) {
+    public BookmarkListDetailDTO(Long id, String title, String description, Integer likeCount, Integer scrapCount,
+                                 String image, Boolean isLiked, Boolean isScraped, List<CategoryParamDTO> categories,
+                                 Set<TagDTO> tags, List<UserTitleDTO> users,List<BookmarkDetailDTO> bookmarks) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -37,8 +41,10 @@ public class BookmarkListDetailDTO {
         this.image = image;
         this.isLiked = isLiked;
         this.isScraped = isScraped;
+        this.categories = categories;
         this.tags = tags;
         this.users = users;
+        this.bookmarks = bookmarks;
     }
 
 

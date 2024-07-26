@@ -1,5 +1,9 @@
 package com.ssafy.itclips.bookmarklist.service;
 
+import com.ssafy.itclips.bookmark.dto.BookmarkDetailDTO;
+import com.ssafy.itclips.bookmark.entity.Bookmark;
+import com.ssafy.itclips.bookmark.repository.BookmarkLikeRepository;
+import com.ssafy.itclips.bookmark.repository.BookmarkRepository;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListDetailDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
@@ -9,6 +13,7 @@ import com.ssafy.itclips.bookmarklist.entity.BookmarkListScrap;
 import com.ssafy.itclips.bookmarklist.repository.BookmarkListLikeRepository;
 import com.ssafy.itclips.bookmarklist.repository.BookmarkListRepository;
 import com.ssafy.itclips.bookmarklist.repository.BookmarkListScrapRepository;
+import com.ssafy.itclips.category.dto.CategoryParamDTO;
 import com.ssafy.itclips.category.entity.Category;
 import com.ssafy.itclips.category.repository.CategoryRepository;
 import com.ssafy.itclips.error.CustomException;
@@ -17,6 +22,7 @@ import com.ssafy.itclips.group.entity.UserGroup;
 import com.ssafy.itclips.group.repository.GroupRepository;
 import com.ssafy.itclips.tag.dto.TagDTO;
 import com.ssafy.itclips.tag.entity.BookmarkListTag;
+import com.ssafy.itclips.tag.entity.BookmarkTag;
 import com.ssafy.itclips.tag.entity.Tag;
 import com.ssafy.itclips.tag.repository.BookmarkListTagRepository;
 import com.ssafy.itclips.tag.service.TagService;
@@ -37,6 +43,8 @@ import java.util.stream.Collectors;
 public class BookmarkListServiceImpl implements BookmarkListService {
 
     private final BookmarkListRepository bookmarkListRepository;
+    private final BookmarkRepository bookmarkRepository;
+    private final BookmarkLikeRepository bookmarkLikeRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final GroupRepository groupRepository;
@@ -217,15 +225,45 @@ public class BookmarkListServiceImpl implements BookmarkListService {
     }
 
     private BookmarkListDetailDTO convertToBookmarkListDetailDTO(BookmarkList bookmarkList, Long userId) {
+        // list 정보
         List<UserTitleDTO> users = getUserTitleDTOs(bookmarkList);
         Set<TagDTO> tags = getTagDTOs(bookmarkList);
-
+        List<CategoryParamDTO> categories = getCategoryDTOs(bookmarkList);
         Integer likeCount = bookmarkList.getBookmarkListLikes().size();
-        Boolean isLiked = (bookmarkListLikeRepository.findByBookmarkListIdAndUserId(bookmarkList.getId(), userId) != null);
+        Boolean isLiked = bookmarkListLikeRepository.existsByBookmarkListIdAndUserId(bookmarkList.getId(), userId);
         Integer scrapCount = bookmarkList.getBookmarkListScraps().size();
-        Boolean isScraped = (bookmarkListScrapRepository.findByUserIdAndBookmarkListId(userId, bookmarkList.getId()) != null);
+        Boolean isScraped = bookmarkListScrapRepository.existsByUserIdAndBookmarkListId(userId, bookmarkList.getId());
 
-        return bookmarkList.makeBookmarkListDetailDTO(likeCount, scrapCount, isLiked, isScraped, tags, users);
+        // bookmark 정보
+        List<BookmarkDetailDTO> bookmarkDetails = bookmarkListRepository.findDetailedByListId(bookmarkList.getId());
+        bookmarkDetails.forEach(bookmarkDetailDTO -> addAdditionalInfoForBookmarkDetailDTO(bookmarkDetailDTO, userId));
+
+        return bookmarkList.makeBookmarkListDetailDTO(likeCount, scrapCount, isLiked, isScraped, categories, tags, users, bookmarkDetails);
+    }
+
+    private void addAdditionalInfoForBookmarkDetailDTO(BookmarkDetailDTO bookmarkDetailDTO, Long userId) {
+        Bookmark bookmark = bookmarkRepository.findById(bookmarkDetailDTO.getId())
+                .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_NOT_FOUND));
+
+        List<TagDTO> tagDTOs = bookmark.getBookmarkTags().stream()
+                .map(bookmarkTag -> TagDTO.builder()
+                        .title(bookmarkTag.getTag().getTitle())
+                        .build())
+                .collect(Collectors.toList());
+
+        Integer bookmarkLikeCount = bookmark.getBookmarkLikes().size();
+        Boolean isBookmarkLiked = bookmarkLikeRepository.existsByBookmarkIdAndUserId(bookmark.getId(), userId);
+
+        bookmarkDetailDTO.addTagsAndLike(tagDTOs, bookmarkLikeCount, isBookmarkLiked);
+    }
+
+    private List<CategoryParamDTO> getCategoryDTOs(BookmarkList bookmarkList) {
+        return bookmarkList.getCategories().stream()
+                .map(category -> CategoryParamDTO.builder()
+                        .categoryId(category.getId())
+                        .categoryName(category.getName())
+                        .build())
+                .collect(Collectors.toList());
     }
 
     private BookmarkListResponseDTO convertToBookmarkListResponseDTO(BookmarkList bookmarkList, Long userId) {

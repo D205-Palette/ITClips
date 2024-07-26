@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -52,6 +51,12 @@ public class BookmarkListController {
     }
 
     @GetMapping("/{listId}")
+    @Operation(summary = "북마크리스트 상세 보기", description = "북마크 리스트 상세 정보를 확인합니다")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "북마크리스트 정보를 성공적으로 조회했습니다."),
+            @ApiResponse(responseCode = "404", description = "사용자,리스트,북마크를 찾을 수 없습니다."),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
+    })
     public ResponseEntity<?> getListDetail(@PathVariable Long listId,
                                            @RequestParam Long userId) {
         BookmarkListDetailDTO bookmarkListDetailDTO = bookmarkListService.getListDetail(userId,listId);

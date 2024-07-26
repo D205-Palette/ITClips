@@ -1,7 +1,9 @@
 package com.ssafy.itclips.bookmarklist.entity;
 
+import com.ssafy.itclips.bookmark.dto.BookmarkDetailDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListDetailDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
+import com.ssafy.itclips.category.dto.CategoryParamDTO;
 import com.ssafy.itclips.report.entity.BookmarkListReport;
 import com.ssafy.itclips.bookmark.entity.Bookmark;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListDTO;
@@ -133,8 +135,8 @@ public class BookmarkList {
                 .build();
     }
 
-    public BookmarkListDetailDTO makeBookmarkListDetailDTO( Integer likeCount, Integer scrapCount,Boolean isLiked,
-                                                      Boolean isScraped, Set<TagDTO> tags, List<UserTitleDTO> users) {
+    public BookmarkListDetailDTO makeBookmarkListDetailDTO(Integer likeCount, Integer scrapCount, Boolean isLiked, Boolean isScraped,
+                                                           List<CategoryParamDTO> categories, Set<TagDTO> tags, List<UserTitleDTO> users, List<BookmarkDetailDTO> bookmarks) {
         return BookmarkListDetailDTO.builder()
                 .id(this.id)
                 .title(this.title)
@@ -144,8 +146,10 @@ public class BookmarkList {
                 .image(this.image)
                 .isLiked(isLiked)
                 .isScraped(isScraped)
+                .categories(categories)
                 .tags(tags)
                 .users(users)
+                .bookmarks(bookmarks)
                 .build();
     }
 }

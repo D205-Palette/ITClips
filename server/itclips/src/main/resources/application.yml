@@ -1,6 +1,8 @@
 # Web ContextRootPath and PortNumber Settings
 server:
   port: 80
+  servlet:
+    context-path: /api
 
 spring:
   application:

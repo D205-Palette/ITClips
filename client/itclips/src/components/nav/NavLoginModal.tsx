@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { navStore } from "../../stores/navStore";
-import googleLogo from "../../assets/images/google_logo.svg";
-import githubLogo from "../../assets/images/github_logo.svg";
 import axios from "axios";
 
 import FindIdModal from "./FindIdModal";
 import FindPasswordModal from "./FindPasswordModal";
+import GoogleLoginButton from "./GoogleLoginButton";
+import GithubLoginButton from "./GithubLoginButton";
 
 const LoginModal = () => {
   const navigate = useNavigate();
@@ -23,12 +23,6 @@ const LoginModal = () => {
 
   // 로그인 에러 메세지
   const [errorMessage, setErrorMessage] = useState("");
-
-  // 구글 로그인 로직
-  const googleLogin = () => {};
-
-  // 깃허브 로그인 로직
-  const githubLogin = () => {};
 
   // 모달 밖 클릭 시 모달 종료 로직
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -48,7 +42,7 @@ const LoginModal = () => {
     const formData = new FormData(e.currentTarget);
     const username = formData.get("username") as string;
     const password = formData.get("password") as string;
-    
+
     // api 로그인 요청
     axios
       .post("loginApiUrl위치", {
@@ -120,21 +114,15 @@ const LoginModal = () => {
         </form>
 
         {/* 소셜 로그인 */}
-        <button
-          onClick={googleLogin}
-          type="button"
-          className="btn bg-base-100 w-full"
-        >
-          <img src={googleLogo} alt="Google Login" />
-        </button>
 
-        <button
-          onClick={githubLogin}
-          type="button"
-          className="btn bg-base-100 w-full"
-        >
-          <img src={githubLogo} alt="Github Login" />
-        </button>
+        
+        {/* 구글 로그인 버튼*/}
+        <GoogleLoginButton />
+        
+        {/* 깃허브 로그인 버튼*/}
+        <GithubLoginButton />
+        
+        
 
         <div className="grid grid-cols-1 sm:grid-cols-3 mx-10">
           <button className="btn btn-ghost" onClick={openFindIdModal}>

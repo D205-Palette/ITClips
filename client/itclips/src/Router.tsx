@@ -1,14 +1,16 @@
 import { createBrowserRouter } from 'react-router-dom';
-import MyBookmarkList from './pages/MyView/MyBookmarkList';
-import MyGroupBookmarkList from './pages/MyView/MyGroupBookmarkList';
-import MyFavorites from './pages/MyView/MyFavorites';
-import MyRoadmap from './pages/MyView/MyRoadmap';
+import MyBookmarkList from './pages/ProfileView/MyBookmarkList';
+import MyGroupBookmarkList from './pages/ProfileView/MyGroupBookmarkList';
+import MyFavorites from './pages/ProfileView/MyFavorites';
+import MyRoadmap from './pages/ProfileView/MyRoadmap';
 import FeedView from './pages/FeedView'
 import SearchView from './pages/SearchView'
 import Intro from './pages/Intro';
 import SignupView from './pages/SignUpView'
 import App from './App';
-import MyView from './pages/MyView/MyView';
+import ProfileView from './pages/ProfileView';
+import MyBookmark from './pages/BookmarkView';
+import RoadMapView from './pages/RoadmapView'
 
 const router = createBrowserRouter([
   {
@@ -16,35 +18,60 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: '/my',
-        element : <MyView />,
+        path: 'user/:user_id',
+        element : <ProfileView />,
         children: [
             {
-              path: '',
+              path: 'bookmarklist',
+              element : <MyBookmarkList />
+              
             },
             {
-                path: 'groupbookmarklist',
+              path: 'groupbookmarklist',
+              element : <MyGroupBookmarkList />
               },
-              {
-                path: 'favorites',
-              },
-              {
-                path: 'roadmap',
-              },
+            {
+              path: 'favorites',
+              element: <MyFavorites />
+            },
+            {
+              path: 'roadmap',
+              element: <MyRoadmap />
+            },
+            {
+              path: 'follow',
+              // element: <Follow />
+            }
 
         ],
       },
       {
-        path: '/search',
+        path: 'bookmarklist/:bookmarklist_id',
+        element: <MyBookmark />
       },
       {
-        path: '/feed',
+        path: 'bookmark/:bookmark_id',
+        // element: <SearchView />
       },
       {
-        path: '/intro',
+        path: 'roadmap/:roadmap_id',
+        element: <RoadMapView />
       },
       {
-        path: '/signup',
+        path: 'search',
+        element: <SearchView />
+      },
+      {
+        path: 'feed',
+        element: <FeedView />
+      },
+      {
+        path: 'intro',
+        element: <Intro />
+      },
+      {
+        path: 'signup',
+        element: <SignupView />
       },
     ],
   },

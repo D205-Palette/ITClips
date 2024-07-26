@@ -13,7 +13,8 @@ const RoadMap  = {
     roadmap_like:3,
     percentage: 100,
   }
-  
+
+
 
 export default function ListItem() {
 
@@ -23,28 +24,31 @@ export default function ListItem() {
     setIsLike(!isLike);
     //여기에 좋아요 api호출
   };
+
   const isDark = darkModeStore((state) => state.isDark)
+  const [isKebab, setIsKebab] = useState(false);
   return (
     <>
+    
       <div
-        className="card card-side bg-base-100 shadow-xl hover:cursor-pointer hover:bg-slate-50 h-32" 
-        onMouseOver={() => setIsHovering(true)}
-        onMouseOut={() => setIsHovering(false)}
-      >
-          <>
-            <figure className="w-28">
-              <img
+        className={(isKebab? '' : (isDark? "hover:brightness-150" : "hover:brightness-95")) + " card card-side bg-base-100 shadow-xl hover:cursor-pointer h-32"} 
 
+      >
+        
+          <>
+            <figure className="w-28  z-20">
+              <img
                 src="https://cdn.pixabay.com/photo/2017/08/27/15/38/surfing-2686450_1280.jpg"
                 alt="Movie"
-                className="size-full"
+                className="h-full"
               />
             </figure>
-
-            <div className="card-body flex flex-row justify-between h-full relative">
-            <div className={(!isDark ? 
+        
+                <div className="card-body flex flex-row justify-between h-full relative">
+                    <div className={(!isDark ? 
                     (RoadMap.percentage == 100 ? 'bg-green-100' : 'bg-sky-100' ) : 
-                    (RoadMap.percentage == 100 ? 'bg-green-900' : 'bg-sky-800' )) +" h-full absolute z-0 top-0 left-0 rounded-e-2xl" }
+                    (RoadMap.percentage == 100 ? 'bg-green-900' : 'bg-sky-900' ))
+                     +" h-full absolute z-0 top-0 left-0 rounded-e-2xl" }
                     style={{ width: `${RoadMap.percentage}%` }}
                     ></div>
                     <div className="flex flex-col justify-around z-20">
@@ -57,8 +61,8 @@ export default function ListItem() {
                         </div>
                     </div>
 
-                    <div className="flex items-center  font-bold text-xl z-0">
-                        <p className={(!isDark?(RoadMap.percentage == 100 ? "text-green-500" : "text-blue-400" ):
+                    <div className="flex items-center text-blue-400 font-bold text-xl z-0">
+                    <p className={(!isDark?(RoadMap.percentage == 100 ? "text-green-500" : "text-blue-400" ):
                           (RoadMap.percentage == 100 ? "text-green-200" : "text-blue-200" ))}>{RoadMap.percentage +'%'}</p>
                     </div>
 
@@ -67,15 +71,17 @@ export default function ListItem() {
                         {isLike ? <FaHeart /> : <FaRegHeart />}
                         {RoadMap.roadmap_like}{" "}
                         </button>
-                        <button>
+                        <button onClick={()=>setIsKebab(true)}>
                         <KebabDropdown whatMenu="로드맵" />
                         </button>
                     </div>
                 </div>
          
           </>
-        
+            
       </div>
+    
+   
     </>
   );
 }

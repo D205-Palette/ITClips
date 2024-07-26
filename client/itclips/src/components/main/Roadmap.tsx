@@ -18,7 +18,6 @@ const RoadMap  = {
 
 export default function ListItem() {
 
-  const [isHover, setIsHovering] = useState(false);
   const [isLike, setIsLike] = useState(false);
   const clickHeart = (): void => {
     setIsLike(!isLike);
@@ -26,21 +25,23 @@ export default function ListItem() {
   };
 
   const isDark = darkModeStore((state) => state.isDark)
+  const [isKebab, setIsKebab] = useState(false);
+  const [isDropDown, setIsDropDown] = useState(false);
 
   return (
     <>
     
       <div
-        className={(isDark? "hover:brightness-150" : "hover:brightness-95") + " card card-side bg-base-100 shadow-xl hover:cursor-pointer h-32"} 
-        onMouseOver={() => setIsHovering(true)}
-        onMouseOut={() => setIsHovering(false)}
-      >
+        className={(isKebab? '' : (isDark? "hover:brightness-150" : "hover:brightness-95")) + " card card-side bg-base-100 shadow-xl hover:cursor-pointer h-32"} 
         
+      >
+       
           <>
             <figure className="w-28  z-20">
               <img
                 src="https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp"
                 alt="Movie"
+                className="h-full"
         
               />
             </figure>
@@ -58,7 +59,7 @@ export default function ListItem() {
                         </div>
 
                         <div>
-                        <p>{RoadMap.description}</p>
+                        <p>{RoadMap.description} {isKebab}</p>
                         </div>
                     </div>
 
@@ -68,12 +69,12 @@ export default function ListItem() {
                     </div>
 
                     <div className="card-actions justify-end flex items-center">
-                        <button onClick={clickHeart} className="btn btn-ghost z-0">
+                        <button onClick={clickHeart} className="btn btn-ghost z-0 ">
                         {isLike ? <FaHeart /> : <FaRegHeart />}
                         {RoadMap.roadmap_like}{" "}
                         </button>
-                        <button>
-                        <KebabDropdown whatMenu="로드맵" />
+                        <button onClick={()=>setIsKebab(true)} >
+                          <KebabDropdown whatMenu="로드맵" />
                         </button>
                     </div>
                 </div>

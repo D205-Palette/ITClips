@@ -13,6 +13,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import { FaPlus } from "react-icons/fa6";
 import categoriesStore from "../../stores/categoriesStore";
 // 조건 맞는애들만 카테고리 필터 해주는 거 ㅇㅋㅇㅋ
+import { useNavigate } from "react-router-dom";
 
 export default function CategoryTab() {
   const isDark = darkModeStore((state) => state.isDark);
@@ -21,12 +22,12 @@ export default function CategoryTab() {
 
   const onFocus = useRef<HTMLInputElement>(null);
   const [createMode, modeChange] = useState(false);
-
+  const navigate = useNavigate()
   // 뒤로가기 버튼
   const BackButton = (): any => {
     return (
-      <button className="me-5  ">
-        <IoIosArrowBack />{" "}
+      <button className="me-5  " onClick={()=>navigate(-1)}>
+        <IoIosArrowBack size="40px"/>{" "}
       </button>
     );
   };

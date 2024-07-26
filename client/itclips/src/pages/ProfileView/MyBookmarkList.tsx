@@ -1,6 +1,6 @@
 import MyBookmarkList from "../../components/main/ListsItem(List)";
 import MyBookmarkListAlbum from "../../components/main/ListsItem(Album)";
-import { Link } from "react-router-dom";
+import { Link   } from "react-router-dom";
 import { FaList } from "react-icons/fa";
 import { HiOutlineSquares2X2, HiMiniSquares2X2 } from "react-icons/hi2";
 import { useState } from "react";
@@ -14,6 +14,7 @@ export default function MyView() {
   function tabAlbum (): void  {
     setTab(false)
   };
+
 
   return (
     <>
@@ -30,7 +31,7 @@ export default function MyView() {
     </div>
 
     {/* 리스트형으로 보여줄지 액자형으로 보여줄지 */}
-    {!isList ? <MyBookmarkListAlbum /> : <MyBookmarkList />}
+    {!isList ? <MyBookmarkListAlbum /> :  <MyBookmarkList />}
     </>
   );
 }

@@ -7,7 +7,7 @@ export default function HomeButton() {
   return (
     <div className="font-bold text-xl">
       
-      <Link to={isLoggedIn ? "my/bookmarklist" : "intro"}>IT Clips</Link>
+      <Link to={isLoggedIn ? "user/:user_id" : "intro"}>IT Clips</Link>
     </div>
   );
 }

@@ -47,7 +47,7 @@ const NavBar = () => {
               <Link  to='feed'><p onClick={()=>changeTab('feed')} className={(whatTab==='feed'? "text-sky-500" :{textColor}) + ' font-bold'}>피드</p></Link>
               <Link  to='search'><p onClick={() => changeTab('search')} className={(whatTab==='search'? "text-sky-500" : {textColor}) + ' font-bold'}>검색</p></Link> */}
 
-              <NavLink  to='my' className={(({isActive}) => isActive? "text-sky-500 font-bold" : textColor + " font-bold")}>MY</NavLink>
+              <NavLink  to='user/:user_id' className={(({isActive}) => isActive? "text-sky-500 font-bold" : textColor + " font-bold")}>MY</NavLink>
               <NavLink  to='feed' className={(({isActive}) => isActive? "text-sky-500 font-bold" : textColor +" font-bold")}>피드</NavLink>
               <NavLink  to='search' className={(({isActive}) => isActive? "text-sky-500 font-bold" : textColor + " font-bold")}>검색</NavLink>
             </ul>

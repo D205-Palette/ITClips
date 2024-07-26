@@ -4,11 +4,11 @@ import useStore from "../../stores/mainStore";
 import KebabDropdown from "../common/KebabDropdown";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import darkModeStore from '../../stores/darkModeStore'
-
+import { useNavigate } from "react-router-dom";
 
 export default function ListItem() {
   const list = useStore((state) => state.list);
-
+  const navigate = useNavigate()
   const [isLike, setIsLike] = useState(false);
   const clickHeart = (): void => {
     setIsLike(!isLike);
@@ -19,9 +19,9 @@ export default function ListItem() {
   return (
     <>
       <div
-        className={(isDark? "hover:brightness-150" : "hover:brightness-95") + " card card-side bg-base-100 shadow-xl hover:cursor-pointer h-28"} >
+        className={(isDark? "hover:brightness-150" : "hover:brightness-95") + " card card-side bg-base-100 shadow-xl  h-28"} >
           <>
-            <figure>
+            <figure onClick={()=>navigate('/bookmarklist/:bookmarklist_id')} className="hover:cursor-pointer">
               <img
                 src="https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp"
                 alt="Movie"
@@ -30,10 +30,10 @@ export default function ListItem() {
             </figure>
 
             <div className="card-body flex flex-row">
-              <div className="flex flex-col flex-auto justify-around">
-                <div>
+              <div className="flex flex-col flex-auto justify-around ">
+                <div onClick={()=>navigate('/bookmarklist/:bookmarklist_id')}>
                   {" "}
-                  <h2 className="flex-auto card-title">{list.title}</h2>{" "}
+                  <h2 className="flex-auto card-title hover:cursor-pointer">{list.title}</h2>{" "}
                 </div>
                 <div>
                   {" "}

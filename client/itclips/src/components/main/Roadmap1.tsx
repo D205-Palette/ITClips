@@ -18,7 +18,6 @@ const RoadMap  = {
 
 export default function ListItem() {
 
-  const [isHover, setIsHovering] = useState(false);
   const [isLike, setIsLike] = useState(false);
   const clickHeart = (): void => {
     setIsLike(!isLike);
@@ -26,14 +25,13 @@ export default function ListItem() {
   };
 
   const isDark = darkModeStore((state) => state.isDark)
+  const [isKebab, setIsKebab] = useState(false);
 
   return (
     <>
     
       <div
-        className={(isDark? "hover:brightness-150" : "hover:brightness-95") + " card card-side bg-base-100 shadow-xl hover:cursor-pointer h-32"} 
-        onMouseOver={() => setIsHovering(true)}
-        onMouseOut={() => setIsHovering(false)}
+        className={(isKebab? '' : (isDark? "hover:brightness-150" : "hover:brightness-95"))  + " card card-side bg-base-100 shadow-xl hover:cursor-pointer h-32"} 
       >
         
           <>
@@ -73,7 +71,7 @@ export default function ListItem() {
                         {isLike ? <FaHeart /> : <FaRegHeart />}
                         {RoadMap.roadmap_like}{" "}
                         </button>
-                        <button>
+                        <button onClick={()=>setIsKebab(true)} >
                         <KebabDropdown whatMenu="로드맵" />
                         </button>
                     </div>

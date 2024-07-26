@@ -7,4 +7,7 @@ import java.util.List;
 public interface RoadmapStepRepository extends JpaRepository<RoadmapStep,Long> {
     // 로드맵 아이디로 단계 찾기
     List<RoadmapStep> findByRoadmapId(Long roadmapId);
+    void deleteByRoadmapId(Long roadmapId);
+    Boolean existsByRoadmapId(Long roadmapId);
+
 }

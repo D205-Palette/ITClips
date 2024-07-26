@@ -84,6 +84,11 @@ public class Roadmap {
         this.updatedAt = LocalDateTime.now();
     }
 
-
+    public void updateRoadmap(RoadmapRequestDTO roadmapRequestDTO) {
+        this.title = roadmapRequestDTO.getTitle();
+        this.description = roadmapRequestDTO.getDescription();
+        this.isPublic = roadmapRequestDTO.getIsPublic();
+        this.image = roadmapRequestDTO.getImage();
+    }
 
 }

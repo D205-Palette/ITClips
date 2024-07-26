@@ -100,6 +100,36 @@ public class RoadmapServiceImpl implements RoadmapService {
         createStep(listIds, roadmap);
     }
 
+
+    // 로드맵수정
+    @Override
+    @Transactional
+    public void updateRoadmap(Long roadmapId, RoadmapRequestDTO roadmapRequestDTO) throws RuntimeException {
+        // 수정할 로드맵 가져오기
+        Roadmap roadmap = roadmapRepository.findById(roadmapId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ROADMAP_NOT_FOUND));
+
+        // step에 넣을 bookmark list
+        List<Long> listIds = roadmapRequestDTO.getStepList();
+        if(listIds.isEmpty()){
+            throw new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND);
+        }
+
+        // 로드맵 업데이트
+        roadmap.updateRoadmap(roadmapRequestDTO);
+
+        // 스탭 삭제
+        roadmapStepRepository.deleteByRoadmapId(roadmapId);
+
+        // 삭제가 완료되었는지 확인
+        if (roadmapStepRepository.existsByRoadmapId(roadmapId)) {
+            throw new RuntimeException("Failed to delete existing steps");
+        }
+
+        // 스탭 생성
+        createStep(listIds, roadmap);
+    }
+
     // 단계 생성
     @Transactional
     public void createStep(List<Long> listId,Roadmap roadmap){
@@ -152,7 +182,6 @@ public class RoadmapServiceImpl implements RoadmapService {
     }
 
 
-
     // 로드맵 좋아요
     @Override
     public void likeRoadmap(Long roadmapId, Long userId) throws RuntimeException {
@@ -187,8 +216,6 @@ public class RoadmapServiceImpl implements RoadmapService {
     // 좋아요한 사람 리스트
 
 
-
-    // 로드맵수정
 
 
     // 로드맵 스크랩

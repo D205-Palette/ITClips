@@ -21,6 +21,8 @@ public interface RoadmapService {
     void deleteRoadmap(Long roadmapId) throws RuntimeException;
     // 로드맵 상세보기
     RoadmapDTO roadmapDetail(Long roadmapId) throws RuntimeException;
+    // 로드맵 수정
+    void updateRoadmap(Long roadmapId, RoadmapRequestDTO roadmapRequestDTO) throws RuntimeException;
 
 
     // 로드맵 좋아요

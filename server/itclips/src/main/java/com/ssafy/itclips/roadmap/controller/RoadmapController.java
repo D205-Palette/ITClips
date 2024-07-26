@@ -3,7 +3,6 @@ package com.ssafy.itclips.roadmap.controller;
 import com.ssafy.itclips.roadmap.dto.RoadmapDTO;
 import com.ssafy.itclips.roadmap.dto.RoadmapInfoDTO;
 import com.ssafy.itclips.roadmap.dto.RoadmapRequestDTO;
-import com.ssafy.itclips.roadmap.entity.Roadmap;
 import com.ssafy.itclips.roadmap.service.RoadmapService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -65,6 +64,14 @@ public class RoadmapController {
     public ResponseEntity<?> roadmapDetail(@PathVariable("roadmapId") Long roadmapId){
         RoadmapDTO roadmapDTO = roadmapService.roadmapDetail(roadmapId);
         return new ResponseEntity<>(roadmapDTO, HttpStatus.OK);
+    }
+
+    // 로드맵 수정
+    @PutMapping("/{roadmapId}")
+    @Operation(summary = "로드맵 수정", description = "로드맵 수정 페이지입니다. ")
+    public ResponseEntity<?> updateRoadmap(@PathVariable("roadmapId") Long roadmapId, @RequestBody RoadmapRequestDTO roadmapRequestDTO){
+        roadmapService.updateRoadmap(roadmapId,roadmapRequestDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     //로드맵 좋아요

@@ -15,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 public class RoadmapRequestDTO {
 
+    private Long id; // 아이디
     private String title; // 제목
     private String description; // 설명
     private String image; // 사진
@@ -39,4 +40,5 @@ public class RoadmapRequestDTO {
                 .isPublic(isPublic)
                 .build();
     }
+    // TODO: toDto 만들기
 }

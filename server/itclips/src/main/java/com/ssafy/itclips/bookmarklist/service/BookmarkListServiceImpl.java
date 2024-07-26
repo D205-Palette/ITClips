@@ -221,6 +221,8 @@ public class BookmarkListServiceImpl implements BookmarkListService {
                 ))
                 .values());
 
+        int likeCounts = bookmarkList.getBookmarkListLikes().size();
+
         return BookmarkListResponseDTO.builder()
                 .id(bookmarkList.getId())
                 .title(bookmarkList.getTitle())
@@ -229,7 +231,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
                 .bookmarkCount(bookmarkList.getBookmarks().size())
                 .users(users)
                 .tags(tags)
-                .likeCount(1)  // This seems to be hardcoded, consider fetching the actual like count if possible.
+                .likeCount(likeCounts)  // This seems to be hardcoded, consider fetching the actual like count if possible.
                 .build();
     }
 

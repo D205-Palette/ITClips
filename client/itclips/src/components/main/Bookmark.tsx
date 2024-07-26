@@ -4,10 +4,17 @@ import useStore from "../../stores/mainStore";
 import KebabDropdown from "../common/KebabDropdown";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import darkModeStore from '../../stores/darkModeStore'
-
+import mainStore from "../../stores/mainStore";
+// const bookmarks = {
+//     title: string,
+//     url: string,
+//     description: string,
+//     bookmark_like: number,
+//     category: string,
+//   }
 
 export default function ListItem() {
-  const list = useStore((state) => state.list);
+  const bookmarks = useStore((state) => state.bookmarks);
 
   const [isLike, setIsLike] = useState(false);
   const clickHeart = (): void => {
@@ -18,39 +25,31 @@ export default function ListItem() {
   
   return (
     <>
+    {bookmarks.map((bookmark) =>
       <div
         className={(isDark? "hover:brightness-150" : "hover:brightness-95") + " card card-side bg-base-100 shadow-xl hover:cursor-pointer h-28"} >
           <>
-            <figure>
-              <img
-                src="https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp"
-                alt="Movie"
-                className="size-28"
-              />
-            </figure>
-
             <div className="card-body flex flex-row">
               <div className="flex flex-col flex-auto justify-around">
                 <div>
                   {" "}
-                  <h2 className="flex-auto card-title">{list.title}</h2>{" "}
+                  <h2 className="flex-auto card-title">{bookmark.title}</h2>{" "}
                 </div>
-                <div>
-                  {" "}
-                  {list.bookmark_list_tags.map((tag: string) => (
-                    <span>{" # " + tag}</span>
-                  ))}{" "}
+                <div className="underline underline-offset-1">
+                  {bookmark.url}
                 </div>
               </div>
 
               <div className="flex items-center">
-                <p>{list.description}</p>
+                {bookmark.tags.map((tag: string) => (
+                    <span className='ms-1'>{" # " + tag }</span>
+                  ))}{" "}
               </div>
 
               <div className="card-actions justify-end flex items-center">
                 <button onClick={clickHeart} className="btn btn-ghost">
                   {isLike ? <FaHeart /> : <FaRegHeart />}
-                  {list.bookmark_list_like}{" "}
+                  {bookmark.bookmark_like}{" "}
                 </button>
                 <button>
                   <KebabDropdown whatMenu="리스트" />
@@ -60,6 +59,7 @@ export default function ListItem() {
           </>
         
       </div>
+      )}
     </>
   );
 }

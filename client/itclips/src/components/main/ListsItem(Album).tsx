@@ -12,7 +12,7 @@ import darkModeStore from '../../stores/darkModeStore'
 // }
 
 export default function ListItem() {
-  const list = useStore((state) => state);
+  const list = useStore((state) => state.list);
   const [isHover, setIsHovering] = useState(false);
   const [isLike, setIsLike] = useState(false);
   const clickHeart = (): void => {
@@ -23,16 +23,12 @@ export default function ListItem() {
 
   return (
     <>
-      <div className={"card w-56 bg-base-100 shadow-xl "}
+      <div className={"card w-56 bg-base-100 shadow-xl " +  (isDark? "hover:brightness-150" : "hover:brightness-95")}
       onMouseOver={() => setIsHovering(true)}
       onMouseOut={() => setIsHovering(false)}
       >
           
-        <figure
-          
-          className={"w-56 h-56 " + (isDark? "hover:brightness-150" : "hover:brightness-95")}
-        >
-          
+        <figure className={"w-56 h-56 " + (isDark? "hover:brightness-150" : "hover:brightness-95")} >
           {isHover ? (
             <ListItemHover />
           ) : (
@@ -50,7 +46,7 @@ export default function ListItem() {
             <div className="absolute top-0 right-0 z-50">
               <KebabDropdown whatMenu="리스트"/>
             </div>
-          <div className="flex flex-col flex-auto justify-around">
+          <div className="flex flex-col flex-auto justify-around  ">
             <div>
               <h5 className="flex-auto card-title my-1">{list.title}</h5>
             </div>

@@ -2,6 +2,7 @@ package com.ssafy.itclips.roadmap.controller;
 
 import com.ssafy.itclips.roadmap.dto.RoadmapDTO;
 import com.ssafy.itclips.roadmap.dto.RoadmapInfoDTO;
+import com.ssafy.itclips.roadmap.dto.RoadmapRequestDTO;
 import com.ssafy.itclips.roadmap.entity.Roadmap;
 import com.ssafy.itclips.roadmap.service.RoadmapService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,7 +34,7 @@ public class RoadmapController {
         return new ResponseEntity<>(roadmapList, HttpStatus.OK);
     }
 
-    // 특정 유저 로드맵 보기
+    // 특정 유저가 생성한 로드맵 보기
     @GetMapping("/list/{userId}")
     @Operation(summary = "유저 로드맵 보기" , description = "특정 유저가 생성한 로드맵을 볼 수 있습니다. ")
     public ResponseEntity<?> findUserRoadmap(@PathVariable("userId") Long userId){
@@ -42,8 +43,17 @@ public class RoadmapController {
         return new ResponseEntity<>(roadmapList, HttpStatus.OK);
     }
 
+    //로드맵 생성
+    @PostMapping("/{userId}")
+    @Operation(summary = "로드맵 생성 " , description = "로드맵을 생성합니다.")
+    public ResponseEntity<?> createRoadmap(@PathVariable("userId") Long userId, @RequestBody RoadmapRequestDTO roadmapRequestDTO){
+        roadmapService.createRoadmap(userId,roadmapRequestDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     // 로드맵 삭제
     @DeleteMapping("/{roadmapId}")
+    @Operation(summary = "로드맵 삭제", description = "로드맵을 삭제합니다.")
     public ResponseEntity<?> deleteRoadmap(@PathVariable("roadmapId") Long roadmapId){
         roadmapService.deleteRoadmap(roadmapId);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -65,11 +75,13 @@ public class RoadmapController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    // 로드맵 취소
+    // 로드맵 좋아요 취소
     @DeleteMapping("/like/{roadmapId}/{userId}")
     @Operation(summary = "로드맵 좋아요 취소 " ,description = "좋아요 취소 ")
     public ResponseEntity<?> unlikeRoadmap(@PathVariable("roadmapId") Long roadmapId,@PathVariable("userId") Long userId){
         roadmapService.unlikeRoadmap(roadmapId, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+
 }

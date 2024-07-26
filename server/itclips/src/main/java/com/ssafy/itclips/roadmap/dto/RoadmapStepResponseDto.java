@@ -16,11 +16,11 @@ public class RoadmapStepResponseDto {
     private Long id; // 스탭 아이디
     private Long roadmapId; // 로드맵 아이디
     private BookmarkListResponseDTO bookmarkListResponseDTO; // 리스트 출력용 dto
-    private Byte check; // 진행 여부
+    private Boolean check; // 진행 여부
     private Integer order; // 순서
 
     @Builder
-    public RoadmapStepResponseDto(Long id, Long roadmapId, BookmarkListResponseDTO bookmarkListResponseDTO, Byte check, Integer order) {
+    public RoadmapStepResponseDto(Long id, Long roadmapId, BookmarkListResponseDTO bookmarkListResponseDTO, Boolean check, Integer order) {
         this.id = id;
         this.roadmapId = roadmapId;
         this.bookmarkListResponseDTO = bookmarkListResponseDTO;

@@ -4,9 +4,12 @@ package com.ssafy.itclips.roadmap.entity;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -14,7 +17,10 @@ import org.hibernate.annotations.OnDeleteAction;
 @Setter
 @Entity
 @Table(name = "roadmap_step", schema = "itclips")
+@NoArgsConstructor
+@DynamicInsert
 public class RoadmapStep {
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
@@ -34,10 +40,18 @@ public class RoadmapStep {
     @NotNull
     @ColumnDefault("0")
     @Column(name = "`check`", nullable = false)
-    private Byte check;
+    private Boolean check;
 
     @NotNull
     @Column(name = "`order`", nullable = false)
     private Integer order;
 
+    @Builder
+    public RoadmapStep(Long id, Roadmap roadmap, BookmarkList bookmarkList, Boolean check, Integer order){
+        this.id = id;
+        this.roadmap = roadmap;
+        this.bookmarkList = bookmarkList;
+        this.check = check;
+        this.order = order;
+    }
 }

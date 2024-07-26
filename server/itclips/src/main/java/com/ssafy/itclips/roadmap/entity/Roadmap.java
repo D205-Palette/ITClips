@@ -1,10 +1,13 @@
 package com.ssafy.itclips.roadmap.entity;
 
+import com.ssafy.itclips.roadmap.dto.RoadmapRequestDTO;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.*;
 import com.ssafy.itclips.user.entity.User;
@@ -16,6 +19,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "roadmap", schema = "itclips")
+@NoArgsConstructor
 public class Roadmap {
 
     @Id
@@ -67,6 +71,19 @@ public class Roadmap {
     //roadmapLike
     @OneToMany(mappedBy = "roadmap")
     private List<RoadmapLike> roadmapLikeList = new ArrayList<RoadmapLike>();
+
+    @Builder
+    public Roadmap(Long id, User user, String title, String description,String image, Byte isPublic) {
+        this.id = id;
+        this.user = user;
+        this.title = title;
+        this.description = description;
+        this.isPublic = isPublic;
+        this.image = image;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
 
 
 }

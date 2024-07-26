@@ -1,13 +1,13 @@
 package com.ssafy.itclips.roadmap.service;
 
+import com.ssafy.itclips.bookmark.repository.BookmarkRepository;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
+import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
+import com.ssafy.itclips.bookmarklist.repository.BookmarkListRepository;
 import com.ssafy.itclips.bookmarklist.service.BookmarkListService;
 import com.ssafy.itclips.error.CustomException;
 import com.ssafy.itclips.error.ErrorCode;
-import com.ssafy.itclips.roadmap.dto.RoadmapCommentDTO;
-import com.ssafy.itclips.roadmap.dto.RoadmapDTO;
-import com.ssafy.itclips.roadmap.dto.RoadmapInfoDTO;
-import com.ssafy.itclips.roadmap.dto.RoadmapStepResponseDto;
+import com.ssafy.itclips.roadmap.dto.*;
 import com.ssafy.itclips.roadmap.entity.Roadmap;
 import com.ssafy.itclips.roadmap.entity.RoadmapComment;
 import com.ssafy.itclips.roadmap.entity.RoadmapLike;
@@ -37,6 +37,7 @@ public class RoadmapServiceImpl implements RoadmapService {
     private final BookmarkListService bookmarkListService;
     private final RoadmapLikeRepository roadmapLikeRepository;
     private final UserRepository userRepository;
+    private final BookmarkListRepository bookmarkListRepository;
 
     //전체 로드맵 조회
     @Override
@@ -56,7 +57,7 @@ public class RoadmapServiceImpl implements RoadmapService {
         return roadmapInfoDTOList;
     }
 
-    // userid 기준 조회
+    // userid 기준 로드맵 조회
     @Override
     public List<RoadmapInfoDTO> findUserRoadmapList(Long userId) throws RuntimeException {
         // 유저 아이디로 로드맵 찾기
@@ -73,6 +74,52 @@ public class RoadmapServiceImpl implements RoadmapService {
         }
 
         return roadmapInfoDTOList;
+    }
+
+    // 로드맵 생성
+    @Override
+    @Transactional
+    public void createRoadmap(Long userId, RoadmapRequestDTO roadmapRequestDTO) throws RuntimeException {
+        // 생성자
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        // step에 넣을 bookmark list
+        List<Long> listIds = roadmapRequestDTO.getStepList();
+        if(listIds.isEmpty()){
+            throw new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND);
+        }
+
+        // roadmap entity 생성
+        Roadmap saveRoadmap =roadmapRequestDTO.toEntity(user);
+
+        //roadmap 저장
+        Roadmap roadmap = roadmapRepository.save(saveRoadmap);
+
+        // 스탭 생성
+        createStep(listIds, roadmap);
+    }
+
+    // 단계 생성
+    @Transactional
+    public void createStep(List<Long> listId,Roadmap roadmap){
+        // order 값
+        int idx =0;
+        for(Long id : listId){
+            // 북마크 리스트 생성
+            BookmarkList bookmarkList = bookmarkListRepository.findById(id)
+                    .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND));
+
+            // 북마크 리스트로 step 생성
+            RoadmapStep roadmapStep = RoadmapStep.builder()
+                    .roadmap(roadmap)
+                    .bookmarkList(bookmarkList)
+                    .check(false)
+                    .order(idx++)
+                    .build();
+
+            roadmapStepRepository.save(roadmapStep);
+        }
     }
 
     // 로드맵 삭제
@@ -137,13 +184,8 @@ public class RoadmapServiceImpl implements RoadmapService {
 
     }
 
-
-
     // 좋아요한 사람 리스트
 
-
-
-    // 로드맵 생성
 
 
     // 로드맵수정
@@ -160,6 +202,9 @@ public class RoadmapServiceImpl implements RoadmapService {
 
     //댓글 삭제
 
+
+
+    ////////////////// get dto /////////////////////
 
     // 로드맵 댓글 가져오기
     private List<RoadmapCommentDTO> getRoadmapCommentDTOList(Long roadmapId) {
@@ -196,14 +241,13 @@ public class RoadmapServiceImpl implements RoadmapService {
 
     // 로드맵 단계 DTO
     private static RoadmapStepResponseDto makeRoadmapStepDTO(Long roadmapId, RoadmapStep roadmapStep, BookmarkListResponseDTO bookmarkListResponseDTO) {
-        RoadmapStepResponseDto stepDto = new RoadmapStepResponseDto().builder()
+        return RoadmapStepResponseDto.builder()
                 .id(roadmapStep.getId())
                 .roadmapId(roadmapId)
                 .bookmarkListResponseDTO(bookmarkListResponseDTO)
                 .check(roadmapStep.getCheck())
                 .order(roadmapStep.getOrder())
                 .build();
-        return stepDto;
     }
 
     // 로드맵 댓글 DTO

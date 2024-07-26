@@ -123,7 +123,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         }
 
         return bookmarkLists.stream()
-                .map(this::convertToBookmarkListResponseDTO)
+                .map(bookmarkList -> convertToBookmarkListResponseDTO(bookmarkList, userId)) // userId를 추가로 전달
                 .collect(Collectors.toList());
     }
 
@@ -143,7 +143,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         }
 
         return bookmarkLists.stream()
-                .map(this::convertToBookmarkListResponseDTO)
+                .map(bookmarkList -> convertToBookmarkListResponseDTO(bookmarkList, userId)) // userId를 추가로 전달
                 .filter(dto -> (target ? dto.getUsers().size() > USER_NUM : dto.getUsers().size() == USER_NUM))
                 .collect(Collectors.toList());
     }
@@ -207,7 +207,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         groupRepository.deleteByBookmarkListAndUserIdNot(existingBookmarkList, userId);
     }
 
-    private BookmarkListResponseDTO convertToBookmarkListResponseDTO(BookmarkList bookmarkList) {
+    private BookmarkListResponseDTO convertToBookmarkListResponseDTO(BookmarkList bookmarkList, Long userId) {
         List<UserTitleDTO> users = bookmarkList.getGroups().stream()
                 .map(this::convertToUserTitleDTO)
                 .collect(Collectors.toList());
@@ -221,7 +221,8 @@ public class BookmarkListServiceImpl implements BookmarkListService {
                 ))
                 .values());
 
-        int likeCounts = bookmarkList.getBookmarkListLikes().size();
+        Integer likeCounts = bookmarkList.getBookmarkListLikes().size();
+        BookmarkListLike bookmarkListLike = bookmarkListLikeRepository.findByBookmarkListIdAndUserId(bookmarkList.getId(),userId);
 
         return BookmarkListResponseDTO.builder()
                 .id(bookmarkList.getId())
@@ -231,6 +232,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
                 .bookmarkCount(bookmarkList.getBookmarks().size())
                 .users(users)
                 .tags(tags)
+                .isLiked(bookmarkListLike != null)
                 .likeCount(likeCounts)  // This seems to be hardcoded, consider fetching the actual like count if possible.
                 .build();
     }

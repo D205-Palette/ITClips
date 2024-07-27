@@ -105,4 +105,12 @@ public class RoadmapController {
         roadmapService.checkStep(stepId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    // 로드맵 스크랩
+    @PostMapping("/scrap/{roadmapId}/{userId}")
+    @Operation(summary = "로드맵 스크랩" , description = "로드맵 스크랩")
+    public ResponseEntity<?> scrap(@PathVariable("roadmapId") Long roadmapId,@PathVariable("userId") Long userId){
+        roadmapService.scrap(roadmapId, userId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

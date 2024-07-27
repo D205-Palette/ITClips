@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -140,6 +141,36 @@ public class RoadmapServiceImpl implements RoadmapService {
         createStep(listIds, roadmap);
     }
 
+
+    // 로드맵 스크랩
+    @Transactional
+    @Override
+    public void scrap(Long roadmapId, Long userId) throws RuntimeException {
+        // 생성자
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        //스크랩할 로드맵
+        Roadmap roadmap= roadmapRepository.findById(roadmapId)
+                        .orElseThrow(() -> new CustomException(ErrorCode.ROADMAP_NOT_FOUND));
+
+        // 북마크 리스트 아이디
+        List<Long> listIds= new ArrayList<>();
+        List<RoadmapStep> steps = roadmapStepRepository.findByRoadmapId(roadmapId);
+        for (RoadmapStep step : steps) {
+            listIds.add(step.getBookmarkList().getId());
+        }
+
+        // 저장되는 로드맵
+        RoadmapRequestDTO roadmapRequestDTO = RoadmapRequestDTO.toDTO(roadmap);
+        roadmapRequestDTO.setOrigin(roadmapId);
+        roadmapRequestDTO.setStepList(listIds);
+        Roadmap saveRoadmap = roadmapRequestDTO.toEntity(user);
+        roadmapRepository.save(saveRoadmap);
+
+        createStep(roadmapRequestDTO.getStepList(), saveRoadmap);
+    }
+
     // 단계 생성
     @Transactional
     public void createStep(List<Long> listId,Roadmap roadmap){
@@ -193,6 +224,7 @@ public class RoadmapServiceImpl implements RoadmapService {
 
 
     // 로드맵 좋아요
+    @Transactional
     @Override
     public void likeRoadmap(Long roadmapId, Long userId) throws RuntimeException {
         RoadmapLike like = new RoadmapLike();
@@ -259,8 +291,6 @@ public class RoadmapServiceImpl implements RoadmapService {
     }
 
 
-
-    // 로드맵 스크랩
 
     // 스크랩 한 사용자 리스트
 

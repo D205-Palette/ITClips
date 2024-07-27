@@ -13,6 +13,7 @@ public class RoadmapDTO {
 
     private Long id; // 로드맵 아이디
     private Long userId; // 생성자
+    private Long origin; /// 원본 로드맵
     private String userName; // 생성자 이름
     private String title; // 제목
     private String description; // 설명
@@ -25,10 +26,11 @@ public class RoadmapDTO {
 
 
     @Builder
-    public RoadmapDTO(Long id, Long userId,String userName,  String title, String description, LocalDateTime createdAt,
+    public RoadmapDTO(Long id, Long origin,  Long userId,String userName,  String title, String description, LocalDateTime createdAt,
                       String image, Byte isPublic, List<RoadmapStepResponseDto> stepList, List<RoadmapCommentDTO> commentList,
                       Long likeCnt) {
         this.id = id;
+        this.origin = origin;
         this.userId = userId;
         this.userName = userName;
         this.title = title;

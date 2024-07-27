@@ -15,16 +15,17 @@ import java.util.List;
 @NoArgsConstructor
 public class RoadmapRequestDTO {
 
-    private Long id; // 아이디
+    private Long origin; // 원본 로드맵
     private String title; // 제목
     private String description; // 설명
     private String image; // 사진
     private Byte isPublic; // 공개 여부
-    private List<Long> stepList; // 단계 리스트 간략 정보
+    private List<Long> stepList; // step 에 넣을 bookmarklist id
 
     @Builder
-    public RoadmapRequestDTO(String title, String description, String image, Byte isPublic, List<Long> stepList) {
+    public RoadmapRequestDTO(String title,Long origin,  String description, String image, Byte isPublic, List<Long> stepList) {
         this.title = title;
+        this.origin = origin;
         this.description = description;
         this.image = image;
         this.isPublic = isPublic;
@@ -34,6 +35,7 @@ public class RoadmapRequestDTO {
     public Roadmap toEntity(User user){
         return Roadmap.builder()
                 .user(user)
+                .origin(origin)
                 .title(title)
                 .description(description)
                 .image(image)
@@ -41,4 +43,13 @@ public class RoadmapRequestDTO {
                 .build();
     }
     // TODO: toDto 만들기
+    public static RoadmapRequestDTO toDTO(Roadmap roadmap){
+        return RoadmapRequestDTO.builder()
+                .origin(roadmap.getOrigin())
+                .title(roadmap.getTitle())
+                .description(roadmap.getDescription())
+                .image(roadmap.getImage())
+                .isPublic(roadmap.getIsPublic())
+                .build();
+    }
 }

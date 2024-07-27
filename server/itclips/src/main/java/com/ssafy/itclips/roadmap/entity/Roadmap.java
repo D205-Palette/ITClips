@@ -33,6 +33,9 @@ public class Roadmap {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column(name="origin")
+    private Long origin;
+
     @Size(max = 255)
     @NotNull
     @Column(name = "title", nullable = false)
@@ -73,9 +76,10 @@ public class Roadmap {
     private List<RoadmapLike> roadmapLikeList = new ArrayList<RoadmapLike>();
 
     @Builder
-    public Roadmap(Long id, User user, String title, String description,String image, Byte isPublic) {
+    public Roadmap(Long id, User user, Long origin , String title, String description,String image, Byte isPublic) {
         this.id = id;
         this.user = user;
+        this.origin = origin;
         this.title = title;
         this.description = description;
         this.isPublic = isPublic;

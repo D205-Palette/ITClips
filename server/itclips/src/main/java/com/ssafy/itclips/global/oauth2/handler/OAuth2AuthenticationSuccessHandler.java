@@ -84,6 +84,11 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                 email = oAuth2User.getAttribute("email");
                 name = oAuth2User.getAttribute("name");
                 break;
+            case "naver":
+                Map<String, Object> res = (Map<String, Object>) oAuth2User.getAttribute("response");
+                email = res.get("email").toString();
+                name = res.get("nickname").toString();
+                break;
             default:
                 throw new IllegalArgumentException("Unknown provider: " + provider);
         }
@@ -108,6 +113,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         }
 
         log.info("Token : " + token);
+        log.info("Final redirect URL: " + targetUrl);
 
         return UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam("accessToken", token)

@@ -245,19 +245,25 @@ public class RoadmapServiceImpl implements RoadmapService {
         return userListDTOList;
     }
 
-    // 유저 태그
-    private List<TagDTO> getUserTags(Long userId) {
-        List<UserTag> userTags = userTagRepository.findByUserId(userId);
-        List<TagDTO> tagDTOs = new ArrayList<>();
 
-        for (UserTag userTag : userTags) {
-            tagDTOs.add(TagDTO.toDTO(userTag.getTag()));
-        }
+    // 로드맵 단계 진행 체크
+    @Transactional
+    @Override
+    public void checkStep(Long stepId) throws RuntimeException {
+        RoadmapStep step = roadmapStepRepository.findById(stepId)
+                .orElseThrow(()->new CustomException(ErrorCode.STEP_NOT_FOUND));
+        step.setCheck(!step.getCheck());
 
-        return tagDTOs;
+        roadmapStepRepository.save(step);
+
     }
 
+
+
     // 로드맵 스크랩
+
+    // 스크랩 한 사용자 리스트
+
 
 
     // 로드맵 댓글 보기
@@ -301,6 +307,18 @@ public class RoadmapServiceImpl implements RoadmapService {
         return stepResponseDtoList;
     }
 
+
+    // 유저 태그
+    private List<TagDTO> getUserTags(Long userId) {
+        List<UserTag> userTags = userTagRepository.findByUserId(userId);
+        List<TagDTO> tagDTOs = new ArrayList<>();
+
+        for (UserTag userTag : userTags) {
+            tagDTOs.add(TagDTO.toDTO(userTag.getTag()));
+        }
+
+        return tagDTOs;
+    }
 
     //////////////////////// meke dto ///////////////////////////////////
 

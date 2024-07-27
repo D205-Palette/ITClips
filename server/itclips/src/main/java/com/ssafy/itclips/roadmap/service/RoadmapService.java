@@ -32,4 +32,7 @@ public interface RoadmapService {
     void unlikeRoadmap(Long roadmapId, Long userId) throws RuntimeException;
     // 좋아요한 유저 리스트
     List<UserListDTO>likeUserList(Long roadmapId) throws RuntimeException;
+
+    // 단계 진행
+    void checkStep(Long stepId) throws RuntimeException;
 }

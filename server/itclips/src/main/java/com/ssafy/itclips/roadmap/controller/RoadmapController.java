@@ -97,4 +97,12 @@ public class RoadmapController {
         return new ResponseEntity<>(likeUser, HttpStatus.OK);
     }
 
+
+    // 단계 진행
+    @PutMapping("/step/{stepId}")
+    @Operation(summary = "로드맵 단계진행 ", description = "체크된 상태라면 체크 해제, 안되어있으면 체크")
+    public ResponseEntity<?> step(@PathVariable("stepId") Long stepId){
+        roadmapService.checkStep(stepId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

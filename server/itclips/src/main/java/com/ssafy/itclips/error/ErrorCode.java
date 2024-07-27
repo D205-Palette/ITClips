@@ -17,7 +17,9 @@ public enum ErrorCode {
     ROADMAP_NOT_FOUND(HttpStatus.NOT_FOUND,"RM-001","로드맵을 찾을 수 없습니다."),
     ROADMAP_LIKE_EXIST(HttpStatus.NOT_FOUND,"RLE-001","이미 좋아요한 리스트입니다."),
     ROADMAP_LIKE_NOT_FOUND(HttpStatus.NOT_FOUND,"RLNF-001","좋아요한 리스트가 아닙니다."),
-    LIKE_USER_NOT_FOUND(HttpStatus.NOT_FOUND,"LUNF-001","좋아요한 사용자가 없습니다.");
+    LIKE_USER_NOT_FOUND(HttpStatus.NOT_FOUND,"LUNF-001","좋아요한 사용자가 없습니다."),
+    STEP_NOT_FOUND(HttpStatus.NOT_FOUND,"SNF-001","해당 로드맵 단계를 찾을 수 없습니다.");
+
 
     private final HttpStatus httpStatus;
     private final String code;

@@ -38,7 +38,6 @@ public class RoadmapStep {
     private BookmarkList bookmarkList;
 
     @NotNull
-    @ColumnDefault("0")
     @Column(name = "`check`", nullable = false)
     private Boolean check;
 

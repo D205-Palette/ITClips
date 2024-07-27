@@ -61,6 +61,7 @@ const NavBar = () => {
           {/* 로그인 전 */}
           {!isLoggedIn ? (
             <>
+             <NavLink  to='login' className={(({isActive}) => isActive? "text-sky-500 font-bold" : textColor + " font-bold")}>로그인</NavLink>
               <button
                 onClick={openLoginModal}
                 className="transition-colors duration-300 hover:text-gray-400"

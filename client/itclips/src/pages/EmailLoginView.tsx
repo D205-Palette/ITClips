@@ -1,13 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { navStore } from "../../stores/navStore";
+import { navStore } from "../stores/navStore";
 import axios from "axios";
 
-import FindIdModal from "./FindIdModal";
-import FindPasswordModal from "./FindPasswordModal";
-import GoogleLoginButton from "./GoogleLoginButton";
-import GithubLoginButton from "./GithubLoginButton";
-import NaverLoginButton from "./NaverLoginButton";
+// import FindIdModal from "./FindIdModal";
+// import FindPasswordModal from "./FindPasswordModal";
 
 const LoginModal = () => {
   const navigate = useNavigate();
@@ -116,14 +113,6 @@ const LoginModal = () => {
           </button>
         </form>
 
-        {/* 소셜 로그인 */}
-        <NaverLoginButton />
-        {/* 구글 로그인 버튼*/}
-        <GoogleLoginButton />
-        
-        {/* 깃허브 로그인 버튼*/}
-        <GithubLoginButton />
-        
         
 
         <div className="grid grid-cols-1 sm:grid-cols-3 mx-10">
@@ -146,8 +135,8 @@ const LoginModal = () => {
       </div>
 
       {/* 아이디 찾기, 비밀번호 찾기 모달 */}
-      {isFindIdModalOpen && <FindIdModal />}
-      {isFindPasswordModalOpen && <FindPasswordModal />}
+      {/* {isFindIdModalOpen && <FindIdModal />}
+      {isFindPasswordModalOpen && <FindPasswordModal />} */}
     </div>
   );
 };

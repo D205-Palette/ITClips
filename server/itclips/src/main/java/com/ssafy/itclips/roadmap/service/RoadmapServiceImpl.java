@@ -19,8 +19,10 @@ import com.ssafy.itclips.roadmap.repository.RoadmapStepRepository;
 import com.ssafy.itclips.tag.dto.TagDTO;
 import com.ssafy.itclips.tag.entity.Tag;
 import com.ssafy.itclips.tag.repository.TagRepository;
+import com.ssafy.itclips.tag.repository.UserTagRepository;
 import com.ssafy.itclips.user.dto.UserListDTO;
 import com.ssafy.itclips.user.entity.User;
+import com.ssafy.itclips.user.entity.UserTag;
 import com.ssafy.itclips.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +45,7 @@ public class RoadmapServiceImpl implements RoadmapService {
     private final UserRepository userRepository;
     private final BookmarkListRepository bookmarkListRepository;
     private final TagRepository tagRepository;
+    private final UserTagRepository userTagRepository;
 
     //전체 로드맵 조회
     @Override
@@ -224,20 +227,35 @@ public class RoadmapServiceImpl implements RoadmapService {
     // 좋아요한 사람 리스트
     @Override
     public List<UserListDTO> likeUserList(Long roadmapId) throws RuntimeException {
+        // 사용자 리스트 DTO
+        List<UserListDTO> userListDTOList = new ArrayList<>();
+
+        // 로드맵 좋아요 리스트에서 해당 로드맵 좋아요만 뽑음
         List<RoadmapLike> userList = roadmapLikeRepository.findByRoadmapId(roadmapId)
                 .orElseThrow(() -> new CustomException(ErrorCode.LIKE_USER_NOT_FOUND));
 
-        List<UserListDTO> userListDTOList = new ArrayList<>();
         for(RoadmapLike likeUser : userList){
+            // 좋아요한 사용자
             User user = userRepository.findById(likeUser.getId())
                     .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-//            List<TagDTO> tags =
-//            userListDTOList.add(UserListDTO.toDTO(likeUser.getUser()));
+            // 사용자 태그
+            List<TagDTO> tags = getUserTags(user.getId());
+            userListDTOList.add(UserListDTO.toDTO(user,tags));
         }
         return userListDTOList;
     }
 
+    // 유저 태그
+    private List<TagDTO> getUserTags(Long userId) {
+        List<UserTag> userTags = userTagRepository.findByUserId(userId);
+        List<TagDTO> tagDTOs = new ArrayList<>();
 
+        for (UserTag userTag : userTags) {
+            tagDTOs.add(TagDTO.toDTO(userTag.getTag()));
+        }
+
+        return tagDTOs;
+    }
 
     // 로드맵 스크랩
 

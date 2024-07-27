@@ -89,7 +89,7 @@ public class RoadmapController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    // 로드맵 좋아요 리스트
+    // 로드맵 좋아요 유저 리스트
     @GetMapping("/like/{roadmapId}")
     @Operation(summary = "로드맵에 좋아요한 사람 리스트", description = "로드맵에 좋아요한 유저 리스트입니다.")
     public ResponseEntity<?> likeUserList(@PathVariable("roadmapId") Long roadmapId){

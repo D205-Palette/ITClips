@@ -24,6 +24,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.util.Base64;
+import java.util.Map;
 import java.util.Optional;
 
 import static com.ssafy.itclips.global.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
@@ -47,12 +48,11 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
      */
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-        // 토큰 생성
+        // Token 생성
         String targetUrl = determineTargetUrl(request, response, authentication);
 
         clearAuthenticationAttributes(request, response);
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
-
     }
 
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
@@ -60,17 +60,42 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                 .map(Cookie::getValue);
 
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
-
-        String token = String.valueOf(tokenProvider.generateToken(authentication));
+        String token = generateToken(authentication);
 
         OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
         OAuth2User oAuth2User = oauthToken.getPrincipal();
         String provider = oauthToken.getAuthorizedClientRegistrationId();
 
-        String name = oAuth2User.getAttribute("name");
-        String email = oAuth2User.getAttribute("email");
+        String email = null;
+        String name = null;
 
-        User findUser = userRepository.findByEmail(email).get();
+        switch (provider) {
+            case "github":
+                email = oAuth2User.getAttribute("email");
+                name = oAuth2User.getAttribute("name");
+                break;
+            case "kakao":
+                Map<String, Object> kakaoAccount = oAuth2User.getAttribute("kakao_account");
+                email = (String) kakaoAccount.get("email");
+                Map<String, Object> properties = (Map<String, Object>) oAuth2User.getAttribute("properties");
+                name = (String) properties.get("nickname");
+                break;
+            case "google":
+                email = oAuth2User.getAttribute("email");
+                name = oAuth2User.getAttribute("name");
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown provider: " + provider);
+        }
+
+        if (email == null) {
+            throw new IllegalArgumentException("No user found with email: null");
+        }
+
+        String finalEmail = email;
+        User findUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> createException("No user found with email: " + finalEmail));
+
         String gender = String.valueOf(findUser.getGender());
         String profileImage = findUser.getProfileImage();
 
@@ -78,13 +103,12 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         try {
             encodedName = URLEncoder.encode(name, StandardCharsets.UTF_8.toString());
         } catch (UnsupportedEncodingException e) {
-            // 이 경우는 일반적으로 발생하지 않으므로, 로그를 남기고 기본값 설정
             log.error("Unsupported Encoding Exception: ", e);
             encodedName = "unknown";
         }
+
         log.info("Token : " + token);
 
-        // URL 파라미터로 사용자 정보와 토큰 추가
         return UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam("accessToken", token)
                 .queryParam("provider", provider)
@@ -93,6 +117,14 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                 .queryParam("gender", gender)
                 .queryParam("profileImage", profileImage)
                 .build().toUriString();
+    }
+
+    private IllegalArgumentException createException(String message) {
+        return new IllegalArgumentException(message);
+    }
+
+    private String generateToken(Authentication authentication) {
+        return String.valueOf(tokenProvider.generateToken(authentication));
     }
 
     /**

@@ -91,9 +91,10 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<UserTag> userTags = new LinkedHashSet<>();
 
-    public User update(String nickname, String provider) {
+    public User update(String nickname, String profileImage) {
         this.nickname = nickname;
-        this.provider = provider;
+        this.profileImage = profileImage;
+        this.updatedAt = LocalDateTime.now();
         return this;
     }
 

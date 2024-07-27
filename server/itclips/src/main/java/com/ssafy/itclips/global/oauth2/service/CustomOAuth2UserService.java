@@ -2,6 +2,7 @@ package com.ssafy.itclips.global.oauth2.service;
 
 import com.ssafy.itclips.global.oauth2.dto.OAuthAttributes;
 import com.ssafy.itclips.global.oauth2.userinfo.OAuth2UserInfo;
+import com.ssafy.itclips.user.entity.Role;
 import com.ssafy.itclips.user.entity.User;
 import com.ssafy.itclips.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2UserAuthority;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -28,6 +30,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
+        System.out.println("oAuth2User : " + oAuth2User);
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
@@ -49,14 +52,14 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                 oAuthAttributes.getNameAttributeKey());
     }
 
-    private User saveOrUpdate(OAuth2UserInfo oAuth2UserInfo, String provider) {
-        Optional<User> userOptional = userRepository.findByEmail(oAuth2UserInfo.getEmail());
-        User user = userOptional
-                .map(entity -> entity.update(oAuth2UserInfo.getNickname(), oAuth2UserInfo.getImageUrl()))
-                .orElseGet(() -> createUser(oAuth2UserInfo, provider));
+        private User saveOrUpdate(OAuth2UserInfo oAuth2UserInfo, String provider) {
+            Optional<User> userOptional = userRepository.findByEmail(oAuth2UserInfo.getEmail());
+            User user = userOptional
+                    .map(entity -> entity.update(oAuth2UserInfo.getNickname(), oAuth2UserInfo.getImageUrl()))
+                    .orElseGet(() -> createUser(oAuth2UserInfo, provider));
 
-        return userRepository.save(user);
-    }
+            return userRepository.save(user);
+        }
 
     private User createUser(OAuth2UserInfo oAuth2UserInfo, String provider) {
         return User.builder()
@@ -65,6 +68,9 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                 .nickname(oAuth2UserInfo.getNickname())
                 .profileImage(oAuth2UserInfo.getImageUrl())
                 .password(oAuth2UserInfo.getPassword())
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .role(Role.USER)
                 .build();
     }
 }

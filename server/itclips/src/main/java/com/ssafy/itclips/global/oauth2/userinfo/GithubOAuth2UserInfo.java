@@ -2,7 +2,7 @@ package com.ssafy.itclips.global.oauth2.userinfo;
 
 import java.util.Map;
 
-public class GithubOAuth2UserInfo extends OAuth2UserInfo{
+public class GithubOAuth2UserInfo extends OAuth2UserInfo {
 
     public GithubOAuth2UserInfo(Map<String, Object> attributes) {
         super(attributes);
@@ -25,12 +25,12 @@ public class GithubOAuth2UserInfo extends OAuth2UserInfo{
 
     @Override
     public String getEmail() {
-        return (String) attributes.get("html_url");
+        String email = (String) attributes.get("email");
+        return (email != null) ? email : getId();
     }
 
     @Override
     public String getPassword() {
         return "DEFAULT_PASSWORD";
     }
-
 }

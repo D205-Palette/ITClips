@@ -42,6 +42,7 @@ public class OAuthAttributes {
     }
 
     private static OAuthAttributes ofGoogle(String userNameAttributeName, Map<String, Object> attributes) {
+        System.out.println(attributes.toString());
         return OAuthAttributes.builder()
                 .nameAttributeKey(userNameAttributeName)
                 .oauth2UserInfo(new GoogleOAuth2UserInfo(attributes))
@@ -83,7 +84,7 @@ public class OAuthAttributes {
                 .nickname(oauth2UserInfo.getNickname())
                 .profileImage(oauth2UserInfo.getImageUrl())
                 .password(oauth2UserInfo.getPassword())
-                .role(Role.GUEST)
+                .role(Role.USER)
                 .build();
     }
 }

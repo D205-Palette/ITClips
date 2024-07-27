@@ -4,6 +4,7 @@ import com.ssafy.itclips.roadmap.dto.RoadmapDTO;
 import com.ssafy.itclips.roadmap.dto.RoadmapInfoDTO;
 import com.ssafy.itclips.roadmap.dto.RoadmapRequestDTO;
 import com.ssafy.itclips.roadmap.entity.Roadmap;
+import com.ssafy.itclips.user.dto.UserListDTO;
 
 import java.util.List;
 
@@ -29,4 +30,6 @@ public interface RoadmapService {
     void likeRoadmap(Long roadmapId, Long userId) throws RuntimeException;
     // 좋아요 취소
     void unlikeRoadmap(Long roadmapId, Long userId) throws RuntimeException;
+    // 좋아요한 유저 리스트
+    List<UserListDTO>likeUserList(Long roadmapId) throws RuntimeException;
 }

@@ -16,6 +16,10 @@ import com.ssafy.itclips.roadmap.repository.RoadmapCommentRepository;
 import com.ssafy.itclips.roadmap.repository.RoadmapLikeRepository;
 import com.ssafy.itclips.roadmap.repository.RoadmapRepository;
 import com.ssafy.itclips.roadmap.repository.RoadmapStepRepository;
+import com.ssafy.itclips.tag.dto.TagDTO;
+import com.ssafy.itclips.tag.entity.Tag;
+import com.ssafy.itclips.tag.repository.TagRepository;
+import com.ssafy.itclips.user.dto.UserListDTO;
 import com.ssafy.itclips.user.entity.User;
 import com.ssafy.itclips.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +42,7 @@ public class RoadmapServiceImpl implements RoadmapService {
     private final RoadmapLikeRepository roadmapLikeRepository;
     private final UserRepository userRepository;
     private final BookmarkListRepository bookmarkListRepository;
+    private final TagRepository tagRepository;
 
     //전체 로드맵 조회
     @Override
@@ -215,8 +220,22 @@ public class RoadmapServiceImpl implements RoadmapService {
 
     }
 
-    // 좋아요한 사람 리스트
 
+    // 좋아요한 사람 리스트
+    @Override
+    public List<UserListDTO> likeUserList(Long roadmapId) throws RuntimeException {
+        List<RoadmapLike> userList = roadmapLikeRepository.findByRoadmapId(roadmapId)
+                .orElseThrow(() -> new CustomException(ErrorCode.LIKE_USER_NOT_FOUND));
+
+        List<UserListDTO> userListDTOList = new ArrayList<>();
+        for(RoadmapLike likeUser : userList){
+            User user = userRepository.findById(likeUser.getId())
+                    .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+//            List<TagDTO> tags =
+//            userListDTOList.add(UserListDTO.toDTO(likeUser.getUser()));
+        }
+        return userListDTOList;
+    }
 
 
 

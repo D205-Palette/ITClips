@@ -16,7 +16,8 @@ public enum ErrorCode {
     COMMENT_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED,"CM-002","댓글에 접근할 권한이 없습니다."),
     ROADMAP_NOT_FOUND(HttpStatus.NOT_FOUND,"RM-001","로드맵을 찾을 수 없습니다."),
     ROADMAP_LIKE_EXIST(HttpStatus.NOT_FOUND,"RLE-001","이미 좋아요한 리스트입니다."),
-    ROADMAP_LIKE_NOT_FOUND(HttpStatus.NOT_FOUND,"RLNF-001","좋아요한 리스트가 아닙니다.");
+    ROADMAP_LIKE_NOT_FOUND(HttpStatus.NOT_FOUND,"RLNF-001","좋아요한 리스트가 아닙니다."),
+    LIKE_USER_NOT_FOUND(HttpStatus.NOT_FOUND,"LUNF-001","좋아요한 사용자가 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

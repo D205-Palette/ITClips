@@ -4,6 +4,7 @@ import com.ssafy.itclips.roadmap.dto.RoadmapDTO;
 import com.ssafy.itclips.roadmap.dto.RoadmapInfoDTO;
 import com.ssafy.itclips.roadmap.dto.RoadmapRequestDTO;
 import com.ssafy.itclips.roadmap.service.RoadmapService;
+import com.ssafy.itclips.user.dto.UserListDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -88,5 +89,12 @@ public class RoadmapController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    // 로드맵 좋아요 리스트
+    @GetMapping("/like/{roadmapId}")
+    @Operation(summary = "로드맵에 좋아요한 사람 리스트", description = "로드맵에 좋아요한 유저 리스트입니다.")
+    public ResponseEntity<?> likeUserList(@PathVariable("roadmapId") Long roadmapId){
+        List<UserListDTO> likeUser = roadmapService.likeUserList(roadmapId);
+        return new ResponseEntity<>(likeUser, HttpStatus.OK);
+    }
 
 }

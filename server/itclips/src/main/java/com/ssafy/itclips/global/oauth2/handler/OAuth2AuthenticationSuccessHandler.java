@@ -58,8 +58,9 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         Optional<String> redirectUri = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
                 .map(Cookie::getValue);
-
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
+
+        // OAuth2 인증 정보를 바탕으로 토큰을 생성
         String token = generateToken(authentication);
 
         OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;

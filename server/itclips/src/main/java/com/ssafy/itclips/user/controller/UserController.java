@@ -1,10 +1,12 @@
 package com.ssafy.itclips.user.controller;
 
 import com.ssafy.itclips.global.jwt.JwtToken;
+import com.ssafy.itclips.global.jwt.JwtTokenProvider;
 import com.ssafy.itclips.user.entity.LoginForm;
 import com.ssafy.itclips.user.entity.OauthSignupForm;
 import com.ssafy.itclips.user.entity.SignupForm;
 import com.ssafy.itclips.user.entity.User;
+import com.ssafy.itclips.user.repository.UserRepository;
 import com.ssafy.itclips.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -29,6 +31,8 @@ import java.io.IOException;
 public class UserController {
 
     private final UserService userService;
+    private final UserRepository userRepository;
+    private final JwtTokenProvider tokenProvider;
 
     private static final String UNAUTHORIZED_MESSAGE = "Unauthorized";
     private static final String PROFILE_IMAGE_UPDATE_SUCCESS = "프로필 이미지가 성공적으로 업데이트 되었습니다.";
@@ -181,6 +185,35 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("닉네임이 중복되었습니다.");
         }
         return ResponseEntity.ok("닉네임 사용 가능");
+    }
+
+    @Operation(summary = "리프레시 토큰으로 새로운 액세스 토큰 발급", description = "리프레시 토큰을 사용하여 새로운 액세스 토큰을 발급합니다.")
+    @PostMapping("/refresh")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "토큰 발급 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "400", description = "유효하지 않은 리프레시 토큰", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+    })
+    public ResponseEntity<JwtToken> refreshToken(@RequestHeader("Authorization-Refresh") String refreshToken) {
+        // 리프레시 토큰 유효성 검증
+        if (!tokenProvider.validateToken(refreshToken)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        // 리프레시 토큰으로 유저 조회
+        User user = userRepository.findByRefreshToken(refreshToken)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid refresh token"));
+
+        // 새로운 액세스 토큰 생성
+        Authentication authentication = tokenProvider.getAuthenticationFromRefreshToken(refreshToken);
+        JwtToken newJwtToken = tokenProvider.generateToken(authentication);
+
+        // 필요 시 새로운 리프레시 토큰 저장
+        user.setRefreshToken(newJwtToken.getRefreshToken());
+        userRepository.save(user);
+
+        // 새로운 토큰 응답
+        return ResponseEntity.ok(newJwtToken);
     }
 
     private boolean isAuthenticated() {

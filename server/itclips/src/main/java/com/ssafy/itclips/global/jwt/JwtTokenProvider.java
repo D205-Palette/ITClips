@@ -30,11 +30,17 @@ import java.util.stream.Collectors;
 public class JwtTokenProvider {
 
     private final Key key;
+    private final long accessTokenValidityInMilliseconds;
+    private final long refreshTokenValidityInMilliseconds;
 
     // 해싱 키 주입
-    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
+    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey,
+                            @Value("${jwt.access.expiration}") long accessTokenValidityInMilliseconds,
+                            @Value("${jwt.refresh.expiration}") long refreshTokenValidityInMilliseconds) {
         byte[] keyBytes = DatatypeConverter.parseBase64Binary(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
+        this.accessTokenValidityInMilliseconds = accessTokenValidityInMilliseconds;
+        this.refreshTokenValidityInMilliseconds = refreshTokenValidityInMilliseconds;
     }
 
     /**
@@ -47,17 +53,21 @@ public class JwtTokenProvider {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
+        long now = System.currentTimeMillis();
+
         // Access Token 생성
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim("auth", authorities)
-                .setExpiration(new Date(System.currentTimeMillis()+ 1000 * 60 * 60 * 24))
+                .setExpiration(new Date(now + accessTokenValidityInMilliseconds))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
         // Refresh Token 생성
         String refreshToken = Jwts.builder()
-                .setExpiration(new Date(System.currentTimeMillis()+ 1000 * 60 * 60 * 24))
+                .setSubject(authentication.getName())
+                .claim("auth", authorities)
+                .setExpiration(new Date(now + refreshTokenValidityInMilliseconds))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
@@ -83,6 +93,27 @@ public class JwtTokenProvider {
         }
 
         // 클레임에서권한 정보 가져오기
+        Collection<? extends GrantedAuthority> authorities =
+                Arrays.stream(claims.get("auth").toString().split(","))
+                        .map(SimpleGrantedAuthority::new)
+                        .toList();
+
+        UserDetails principal = new User(claims.getSubject(), "", authorities);
+        return new UsernamePasswordAuthenticationToken(principal, "", authorities);
+    }
+
+    /**
+     * 
+     * refresh token으로 사용자 인증 객체 생성
+     *
+     */
+    public Authentication getAuthenticationFromRefreshToken(String refreshToken) {
+        Claims claims = parseClaims(refreshToken);
+        if (claims.get("auth") == null) {
+            throw new RuntimeException("권한 정보가 없는 토큰입니다.");
+        }
+
+        // 클레임에서 권한 정보 가져오기
         Collection<? extends GrantedAuthority> authorities =
                 Arrays.stream(claims.get("auth").toString().split(","))
                         .map(SimpleGrantedAuthority::new)

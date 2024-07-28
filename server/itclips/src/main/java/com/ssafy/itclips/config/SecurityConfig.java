@@ -11,6 +11,8 @@ import com.ssafy.itclips.global.login.handler.LoginFailureHandler;
 import com.ssafy.itclips.global.login.handler.LoginSuccessHandler;
 import com.ssafy.itclips.global.login.service.LoginService;
 import com.ssafy.itclips.user.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +22,8 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -28,6 +32,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import com.ssafy.itclips.global.oauth2.handler.OAuth2AuthenticationSuccessHandler;
+
+import java.io.IOException;
 
 @EnableWebSecurity
 @Configuration
@@ -81,7 +87,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/index.html","/css/**", "/images/**").permitAll()  // 기본 페이지, static 하위 폴더에 있는 자료들은 모두 접근 가능
                         .requestMatchers("/swagger-ui.html", "/v3/api-docs/**", "/swagger-resources/**", "/swagger-ui/**").permitAll()
                         .requestMatchers("/user/signup", "/user/oauthSignup").permitAll()   // 회원가입 접근 가능
-                        .requestMatchers("/user/login").permitAll()     // 로그인 접근 가능
+                        .requestMatchers("/user/login", "/user/refresh").permitAll()     // 로그인 접근 가능
                         .requestMatchers("/user/**").permitAll()    // API 개발 중 접근 없이 swagger 테스트 하기 위함
                         .anyRequest().authenticated()
                 )
@@ -132,7 +138,16 @@ public class SecurityConfig {
      */
     @Bean
     public LoginSuccessHandler loginSuccessHandler() {
-        return new LoginSuccessHandler(jwtTokenProvider, userRepository, objectMapper);
+        return new LoginSuccessHandler(jwtTokenProvider, userRepository, objectMapper) {
+            @Override
+            protected void handle(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+                String targetUrl = determineTargetUrl(request, response);
+                if (response.isCommitted()) {
+                    return;
+                }
+                getRedirectStrategy().sendRedirect(request, response, targetUrl);
+            }
+        };
     }
 
     /**
@@ -140,7 +155,12 @@ public class SecurityConfig {
      */
     @Bean
     public LoginFailureHandler loginFailureHandler() {
-        return new LoginFailureHandler();
+        return new LoginFailureHandler() {
+            @Override
+            public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
+                getRedirectStrategy().sendRedirect(request, response, "/login?error");
+            }
+        };
     }
 
     /**
@@ -151,11 +171,10 @@ public class SecurityConfig {
      */
     @Bean
     public CustomJsonUsernamePasswordAuthenticationFilter customJsonUsernamePasswordAuthenticationFilter() {
-        CustomJsonUsernamePasswordAuthenticationFilter customJsonUsernamePasswordLoginFilter
-                = new CustomJsonUsernamePasswordAuthenticationFilter(objectMapper);
-        customJsonUsernamePasswordLoginFilter.setAuthenticationManager(authenticationManager());
-        customJsonUsernamePasswordLoginFilter.setAuthenticationSuccessHandler(loginSuccessHandler());
-        customJsonUsernamePasswordLoginFilter.setAuthenticationFailureHandler(loginFailureHandler());
-        return customJsonUsernamePasswordLoginFilter;
+        CustomJsonUsernamePasswordAuthenticationFilter customFilter = new CustomJsonUsernamePasswordAuthenticationFilter(objectMapper);
+        customFilter.setAuthenticationManager(authenticationManager());
+        customFilter.setAuthenticationSuccessHandler(loginSuccessHandler());
+        customFilter.setAuthenticationFailureHandler(loginFailureHandler());
+        return customFilter;
     }
 }

@@ -1,5 +1,6 @@
 package com.ssafy.itclips.global.oauth2.handler;
 
+import com.ssafy.itclips.global.jwt.JwtToken;
 import com.ssafy.itclips.global.jwt.JwtTokenProvider;
 import com.ssafy.itclips.global.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.ssafy.itclips.global.oauth2.util.CookieUtils;
@@ -49,28 +50,24 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         // Token 생성
-        String token = generateToken(authentication);
+        JwtToken jwtToken = tokenProvider.generateToken(authentication);
 
-        // Extract user details
+        // 추가 회원 정보
         OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
         OAuth2User oAuth2User = oauthToken.getPrincipal();
         String provider = oauthToken.getAuthorizedClientRegistrationId();
         String email = extractEmail(oAuth2User, provider);
-        String name = extractName(oAuth2User, provider);
 
+        // User 정보 조회 및 업데이트
         User findUser = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("No user found with email: " + email));
-
-        String gender = String.valueOf(findUser.getGender());
-        String profileImage = findUser.getProfileImage();
+        findUser.setRefreshToken(jwtToken.getRefreshToken());
+        userRepository.save(findUser);
 
         // HTTP response 헤더에 Token 설정
-        response.setHeader("Authorization", "Bearer " + token);
-//        response.setHeader("Provider", provider);
-//        response.setHeader("Name", URLEncoder.encode(name, StandardCharsets.UTF_8.toString()));
-//        response.setHeader("Email", email);
-//        response.setHeader("Gender", gender);
-//        response.setHeader("ProfileImage", profileImage);
+        response.setHeader("Authorization", jwtToken.getGrantType() + " " + jwtToken.getAccessToken());
+        response.setHeader("Authorization-Refresh", jwtToken.getRefreshToken());
+//        response.sendRedirect("oauth2/sign-up"); // 프론트의 회원가입 추가 정보 입력 폼으로 리다이렉트
 
         // target URl, redirect 설정
         clearAuthenticationAttributes(request, response);
@@ -118,14 +115,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         }
     }
 
-    private IllegalArgumentException createException(String message) {
-        return new IllegalArgumentException(message);
-    }
-
-    private String generateToken(Authentication authentication) {
-        return String.valueOf(tokenProvider.generateToken(authentication).getAccessToken());
-    }
-
     /**
      *  인증 과정에서 사용된 속성들 정리
      *  관련 쿠키도 제거
@@ -134,15 +123,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     protected void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response) {
         super.clearAuthenticationAttributes(request);
         httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
-    }
-
-    public String encodeToBase64(String data) {
-        return Base64.getEncoder().encodeToString(data.getBytes(StandardCharsets.UTF_8));
-    }
-
-    public String decodeFromBase64(String base64Data) {
-        byte[] decodedBytes = Base64.getDecoder().decode(base64Data);
-        return new String(decodedBytes, StandardCharsets.UTF_8);
     }
 }
 

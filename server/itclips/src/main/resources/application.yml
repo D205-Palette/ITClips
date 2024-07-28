@@ -38,3 +38,4 @@ spring:
 project:
   profileUploadPath: images/profile
   defaultProfileImage: images/profile.png
+

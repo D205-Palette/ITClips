@@ -50,10 +50,7 @@ public class UserController {
 
     @PostMapping("/oauthSignup")
     @Operation(summary = "OAuth 회원 가입", description = "OAuth를 통해 가입한 회원을 등록합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "회원 가입 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
-            @ApiResponse(responseCode = "500", description = "파일 업로드 중 오류 발생", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
-    })
+    @ApiResponses(value = @ApiResponse(responseCode = "200", description = "회원 가입 성공"))
     public ResponseEntity<?> oauthSignUp(@RequestPart("user") OauthSignupForm oauthSignupForm,
                                          @RequestPart(value = "profileImage", required = false) MultipartFile profileImage) throws IOException {
         try {
@@ -62,6 +59,11 @@ public class UserController {
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 업로드 중 오류가 발생했습니다.");
         }
+    }
+
+    @GetMapping("/jwt-test")
+    public String jwtTest() {
+        return "jwtTest 요청 성공";
     }
 
     @PostMapping("/updateProfileImage")

@@ -49,81 +49,73 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         // Token 생성
-        String targetUrl = determineTargetUrl(request, response, authentication);
-
-        clearAuthenticationAttributes(request, response);
-        getRedirectStrategy().sendRedirect(request, response, targetUrl);
-    }
-
-    protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        Optional<String> redirectUri = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
-                .map(Cookie::getValue);
-        String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
-
-        // OAuth2 인증 정보를 바탕으로 토큰을 생성
         String token = generateToken(authentication);
 
+        // Extract user details
         OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
         OAuth2User oAuth2User = oauthToken.getPrincipal();
         String provider = oauthToken.getAuthorizedClientRegistrationId();
+        String email = extractEmail(oAuth2User, provider);
+        String name = extractName(oAuth2User, provider);
 
-        String email = null;
-        String name = null;
-
-        switch (provider) {
-            case "github":
-                email = oAuth2User.getAttribute("email");
-                name = oAuth2User.getAttribute("name");
-                break;
-            case "kakao":
-                Map<String, Object> kakaoAccount = oAuth2User.getAttribute("kakao_account");
-                email = (String) kakaoAccount.get("email");
-                Map<String, Object> properties = (Map<String, Object>) oAuth2User.getAttribute("properties");
-                name = (String) properties.get("nickname");
-                break;
-            case "google":
-                email = oAuth2User.getAttribute("email");
-                name = oAuth2User.getAttribute("name");
-                break;
-            case "naver":
-                Map<String, Object> res = (Map<String, Object>) oAuth2User.getAttribute("response");
-                email = res.get("email").toString();
-                name = res.get("nickname").toString();
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown provider: " + provider);
-        }
-
-        if (email == null) {
-            throw new IllegalArgumentException("No user found with email: null");
-        }
-
-        String finalEmail = email;
         User findUser = userRepository.findByEmail(email)
-                .orElseThrow(() -> createException("No user found with email: " + finalEmail));
+                .orElseThrow(() -> new IllegalArgumentException("No user found with email: " + email));
 
         String gender = String.valueOf(findUser.getGender());
         String profileImage = findUser.getProfileImage();
 
-        String encodedName = null;
-        try {
-            encodedName = URLEncoder.encode(name, StandardCharsets.UTF_8.toString());
-        } catch (UnsupportedEncodingException e) {
-            log.error("Unsupported Encoding Exception: ", e);
-            encodedName = "unknown";
+        // HTTP response 헤더에 Token 설정
+        response.setHeader("Authorization", "Bearer " + token);
+//        response.setHeader("Provider", provider);
+//        response.setHeader("Name", URLEncoder.encode(name, StandardCharsets.UTF_8.toString()));
+//        response.setHeader("Email", email);
+//        response.setHeader("Gender", gender);
+//        response.setHeader("ProfileImage", profileImage);
+
+        // target URl, redirect 설정
+        clearAuthenticationAttributes(request, response);
+        String targetUrl = determineTargetUrl(request, response);
+        getRedirectStrategy().sendRedirect(request, response, targetUrl);
+    }
+
+    protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response) {
+        Optional<String> redirectUri = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
+                .map(Cookie::getValue);
+        return redirectUri.orElse(getDefaultTargetUrl());
+    }
+
+    private String extractEmail(OAuth2User oAuth2User, String provider) {
+        switch (provider) {
+            case "github":
+                return oAuth2User.getAttribute("email");
+            case "kakao":
+                Map<String, Object> kakaoAccount = oAuth2User.getAttribute("kakao_account");
+                return (String) kakaoAccount.get("email");
+            case "google":
+                return oAuth2User.getAttribute("email");
+            case "naver":
+                Map<String, Object> res = (Map<String, Object>) oAuth2User.getAttribute("response");
+                return res.get("email").toString();
+            default:
+                throw new IllegalArgumentException("Unknown provider: " + provider);
         }
+    }
 
-        log.info("Token : " + token);
-        log.info("Final redirect URL: " + targetUrl);
-
-        return UriComponentsBuilder.fromUriString(targetUrl)
-                .queryParam("accessToken", token)
-                .queryParam("provider", provider)
-                .queryParam("name", encodedName)
-                .queryParam("email", email)
-                .queryParam("gender", gender)
-                .queryParam("profileImage", profileImage)
-                .build().toUriString();
+    private String extractName(OAuth2User oAuth2User, String provider) {
+        switch (provider) {
+            case "github":
+                return oAuth2User.getAttribute("name");
+            case "kakao":
+                Map<String, Object> properties = (Map<String, Object>) oAuth2User.getAttribute("properties");
+                return (String) properties.get("nickname");
+            case "google":
+                return oAuth2User.getAttribute("name");
+            case "naver":
+                Map<String, Object> res = (Map<String, Object>) oAuth2User.getAttribute("response");
+                return res.get("nickname").toString();
+            default:
+                throw new IllegalArgumentException("Unknown provider: " + provider);
+        }
     }
 
     private IllegalArgumentException createException(String message) {
@@ -131,7 +123,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     }
 
     private String generateToken(Authentication authentication) {
-        return String.valueOf(tokenProvider.generateToken(authentication));
+        return String.valueOf(tokenProvider.generateToken(authentication).getAccessToken());
     }
 
     /**

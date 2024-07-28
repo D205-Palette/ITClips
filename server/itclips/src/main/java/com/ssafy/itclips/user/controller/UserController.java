@@ -47,7 +47,6 @@ public class UserController {
     public ResponseEntity<?> signUp(@RequestBody SignupForm signupForm) throws IOException {
         try {
             User joinUser = userService.signup(signupForm);
-            System.out.println("joinUser : " + joinUser);
             return ResponseEntity.ok(joinUser);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원 가입 중 오류가 발생했습니다.");
@@ -87,7 +86,7 @@ public class UserController {
         return "jwtTest 요청 성공";
     }
 
-    @PostMapping(value = "/profile/img/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/profile/img", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "프로필 이미지 업데이트", description = "사용자의 프로필 이미지를 업데이트합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "프로필 이미지 업데이트 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
@@ -108,7 +107,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/profile/{Id}")
+    @GetMapping("/profile")
     @Operation(summary = "회원 정보 조회", description = "사용자의 프로필 정보를 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 정보 조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
@@ -127,7 +126,7 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @PutMapping("/profile/{Id}")
+    @PutMapping("/profile")
     @Operation(summary = "회원 정보 수정", description = "사용자의 프로필 정보를 수정합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 정보 수정 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
@@ -147,7 +146,7 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/profile/{Id}")
+    @DeleteMapping("/profile")
     @Operation(summary = "회원 탈퇴", description = "사용자의 계정을 삭제합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 탈퇴 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
@@ -174,12 +173,12 @@ public class UserController {
     @GetMapping("/nicknameCheck")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "닉네임 중복 체크 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
-            @ApiResponse(responseCode = "400", description = "닉네임 중복 체크 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+            @ApiResponse(responseCode = "409", description = "닉네임 중복", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
     })
-    public ResponseEntity<?> nicknameCheck(@PathVariable("nickname") String nickname) {
+    public ResponseEntity<?> nicknameCheck(@RequestParam("nickname") String nickname) {
         boolean isDuplicated = userService.nicknameCheck(nickname);
         if (isDuplicated) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("닉네임이 중복되었습니다.");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("닉네임이 중복되었습니다.");
         }
         return ResponseEntity.ok("닉네임 사용 가능");
     }

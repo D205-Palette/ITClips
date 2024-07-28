@@ -10,7 +10,8 @@ import SignupView from './pages/SignUpView'
 import App from './App';
 import ProfileView from './pages/ProfileView';
 import MyBookmark from './pages/BookmarkView';
-import RoadMapView from './pages/RoadmapView'
+import RoadMapView from './pages/RoadmapView';
+import Follower from './pages/FollowView';
 
 const router = createBrowserRouter([
   {
@@ -39,9 +40,13 @@ const router = createBrowserRouter([
               element: <MyRoadmap />
             },
             {
-              path: 'follow',
-              // element: <Follow />
-            }
+              path: 'follower',
+              element: <Follower />
+            },
+            {
+              path: 'following',
+              element: <Follower />
+            },
 
         ],
       },

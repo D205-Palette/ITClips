@@ -31,17 +31,17 @@ public class User {
     private Long id;
 
     @Size(max = 255)
-//    @NotNull
+    @NotNull(message = "Email cannot be null")
     @Column(name = "email", nullable = false)
     private String email;
 
     @Size(max = 511)
-//    @NotNull(message = "Password cannot be null")
+    @NotNull(message = "Password cannot be null")
     @Column(name = "password", nullable = false, length = 511)
     private String password;
 
     @Size(max = 50)
-//    @NotNull(message = "Nickname cannot be null")
+    @NotNull(message = "Nickname cannot be null")
     @Column(name = "nickname", nullable = false, length = 50)
     private String nickname;
 
@@ -50,11 +50,11 @@ public class User {
     private String profileImage;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
     @Column(name = "birth")
@@ -75,8 +75,7 @@ public class User {
     @Column(nullable = false)
     private Role role;
 
-    @ColumnDefault("0")
-    @Column(name = "dark_mode")
+    @Column(name = "dark_mode", nullable = false)
     private Boolean darkMode;
 
     @Column(name = "provider")

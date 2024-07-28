@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -38,13 +39,13 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "회원 가입 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "파일 업로드 중 오류 발생", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
     })
-    public ResponseEntity<?> signUp(@RequestPart("user") SignupForm signupForm,
-                                    @RequestPart(value = "profileImage", required = false) MultipartFile profileImage) throws IOException {
+    public ResponseEntity<?> signUp(@RequestBody SignupForm signupForm) throws IOException {
         try {
-            User joinUser = userService.signup(signupForm, profileImage);
+            User joinUser = userService.signup(signupForm);
+            System.out.println("joinUser : " + joinUser);
             return ResponseEntity.ok(joinUser);
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 업로드 중 오류가 발생했습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원 가입 중 오류가 발생했습니다.");
         }
     }
 

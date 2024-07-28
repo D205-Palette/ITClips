@@ -4,25 +4,31 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 public class SignupForm {
-    private String nickname;
     private String email;
     private String password;
-    private Boolean gender;
+    private String nickname;
     private LocalDate birth;
-    private String profileImage;
+    private String job;
+    private Boolean gender;
 
     public User toEntity(String encodedPassword) {
         User user = new User();
-        user.setNickname(this.nickname);
-        user.setEmail(this.email);
+        user.setEmail(email);
         user.setPassword(encodedPassword);
-        user.setGender(this.gender);
-        user.setBirth(this.birth);
-        user.setProfileImage(this.profileImage);
+        user.setNickname(nickname);
+        user.setBirth(birth);
+        user.setJob(job);
+        user.setGender(gender);
+        user.setRole(Role.USER); // default
+        user.setDarkMode(true); // default
+        LocalDateTime now = LocalDateTime.now();
+        user.setCreatedAt(now); // default
+        user.setUpdatedAt(now); // default
         return user;
     }
 }

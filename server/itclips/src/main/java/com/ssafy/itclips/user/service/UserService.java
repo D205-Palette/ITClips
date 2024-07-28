@@ -23,4 +23,8 @@ public interface UserService {
     Long findIDByEmail(String email);
 
     User findUserByEmail(String email);
+
+    User updateUserByEmail(String email, User user);
+
+    boolean deleteUserByEmail(String email);
 }

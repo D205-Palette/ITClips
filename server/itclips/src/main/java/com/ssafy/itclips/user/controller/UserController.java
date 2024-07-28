@@ -6,9 +6,7 @@ import com.ssafy.itclips.user.entity.OauthSignupForm;
 import com.ssafy.itclips.user.entity.SignupForm;
 import com.ssafy.itclips.user.entity.User;
 import com.ssafy.itclips.user.service.UserService;
-import com.ssafy.itclips.user.service.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,8 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,9 +33,13 @@ public class UserController {
     private static final String UNAUTHORIZED_MESSAGE = "Unauthorized";
     private static final String PROFILE_IMAGE_UPDATE_SUCCESS = "프로필 이미지가 성공적으로 업데이트 되었습니다.";
     private static final String USER_NOT_FOUND_MESSAGE = "회원 정보를 찾을 수 없습니다.";
+    private static final String USER_UPDATE_SUCCESS = "회원 정보가 성공적으로 수정되었습니다.";
+    private static final String USER_DELETE_SUCCESS = "회원이 성공적으로 탈퇴되었습니다.";
+    private static final String USER_UPDATE_FAIL = "회원 정보 수정에 실패했습니다.";
+    private static final String USER_DELETE_FAIL = "회원 탈퇴에 실패했습니다.";
 
     @PostMapping("/signup")
-    @Operation(summary = "회원 가입", description = "새로운 회원을 등록합니다.")
+    @Operation(summary = "일반 회원 가입", description = "새로운 회원을 등록합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 가입 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "파일 업로드 중 오류 발생", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
@@ -55,7 +55,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    @Operation(summary = "로그인", description = "사용자 로그인을 처리하고 JWT 토큰을 반환합니다.")
+    @Operation(summary = "일반 로그인", description = "사용자 로그인을 처리하고 JWT 토큰을 반환합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "로그인 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "401", description = "인증 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
@@ -87,7 +87,7 @@ public class UserController {
         return "jwtTest 요청 성공";
     }
 
-    @PostMapping("/updateProfileImage")
+    @PostMapping(value = "/profile/img/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "프로필 이미지 업데이트", description = "사용자의 프로필 이미지를 업데이트합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "프로필 이미지 업데이트 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
@@ -108,10 +108,10 @@ public class UserController {
         }
     }
 
-    @GetMapping("/profile")
-    @Operation(summary = "회원 프로필 조회", description = "사용자의 프로필 정보를 조회합니다.")
+    @GetMapping("/profile/{Id}")
+    @Operation(summary = "회원 정보 조회", description = "사용자의 프로필 정보를 조회합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "프로필 정보 조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "200", description = "회원 정보 조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "회원 정보 없음", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
     })
@@ -125,6 +125,49 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(USER_NOT_FOUND_MESSAGE);
         }
         return ResponseEntity.ok(user);
+    }
+
+    @PutMapping("/profile/{Id}")
+    @Operation(summary = "회원 정보 수정", description = "사용자의 프로필 정보를 수정합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "회원 정보 수정 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404", description = "회원 정보 없음", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+    })
+    public ResponseEntity<?> updateProfile(@RequestParam("email") String email, @RequestBody User updatedUser) {
+        if (!isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(UNAUTHORIZED_MESSAGE);
+        }
+
+        try {
+            User user = userService.updateUserByEmail(email, updatedUser);
+            return ResponseEntity.ok(USER_UPDATE_SUCCESS);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(USER_UPDATE_FAIL);
+        }
+    }
+
+    @DeleteMapping("/profile/{Id}")
+    @Operation(summary = "회원 탈퇴", description = "사용자의 계정을 삭제합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "회원 탈퇴 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404", description = "회원 정보 없음", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+    })
+    public ResponseEntity<?> deleteUser(@RequestParam("email") String email) {
+        if (!isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(UNAUTHORIZED_MESSAGE);
+        }
+
+        try {
+            boolean isDeleted = userService.deleteUserByEmail(email);
+            if (!isDeleted) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(USER_DELETE_FAIL);
+            }
+            return ResponseEntity.ok(USER_DELETE_SUCCESS);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(USER_DELETE_FAIL);
+        }
     }
 
     private boolean isAuthenticated() {

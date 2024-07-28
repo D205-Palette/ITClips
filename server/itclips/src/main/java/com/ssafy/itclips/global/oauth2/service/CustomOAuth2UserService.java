@@ -63,14 +63,15 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
     private User createUser(OAuth2UserInfo oAuth2UserInfo, String provider) {
         return User.builder()
-                .provider(provider)
                 .email(oAuth2UserInfo.getEmail())
+                .password(oAuth2UserInfo.getPassword())
                 .nickname(oAuth2UserInfo.getNickname())
                 .profileImage(oAuth2UserInfo.getImageUrl())
-                .password(oAuth2UserInfo.getPassword())
+                .provider(provider)
+                .role(Role.USER)
+                .darkMode(true)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
-                .role(Role.USER)
                 .build();
     }
 }

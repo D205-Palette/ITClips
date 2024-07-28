@@ -129,6 +129,32 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."));
     }
 
+    @Transactional
+    @Override
+    public User updateUserByEmail(String email, User updatedUser) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."));
+
+        user.setNickname(updatedUser.getNickname());
+        user.setBirth(updatedUser.getBirth());
+        user.setJob(updatedUser.getJob());
+        user.setGender(updatedUser.getGender());
+        user.setRole(updatedUser.getRole());
+        user.setDarkMode(updatedUser.getDarkMode());
+        return userRepository.save(user);
+    }
+
+    @Transactional
+    @Override
+    public boolean deleteUserByEmail(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."));
+
+        userRepository.delete(user);
+        return !userRepository.existsByEmail(email);
+    }
+
+    // 파일 이름이 중복되지 않도록 고유한 파일 이름 생성
     private String generateUniqueFilename(String originalFilename) {
         String ext = "";
         int dotIndex = originalFilename.lastIndexOf('.');

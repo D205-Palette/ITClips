@@ -1,27 +1,34 @@
-import React from "react";
-import GoogleLoginButton from "../components/nav/GoogleLoginButton";
-import GithubLoginButton from "../components/nav/GithubLoginButton";
-import NaverLoginButton from "../components/nav/NaverLoginButton";
+import React from 'react';
+import { navStore } from '../stores/navStore';
+import GoogleLoginButton from '../components/login/GoogleLoginButton';
+import GithubLoginButton from '../components/login/GithubLoginButton';
+import NaverLoginButton from '../components/login/NaverLoginButton';
+import KakaoLoginButton from '../components/login/KakaoLoginButton';
+import EmailLoginModal from '../components/login/EmailLoginModal';
+import PasswordResetModal from '../components/login/PasswordResetModal';
 
-import { useNavigate } from 'react-router-dom';
+const LoginPage: React.FC = () => {
+  const { isEmailLoginOpen, isPasswordResetOpen, toggleEmailLogin } = navStore();
 
-export default function Login() {
-  const navigate = useNavigate();
-  // const showEmailLogin = useAuthStore((state) => state.showEmailLogin);
-
-  const handleEmailLoginClick = () => {
-    // showEmailLogin();
-    navigate('/login/email');
-  }
   return (
-    <div className="container mx-auto bg-base-200 border w-2/4">      
-      <h2 className="text-3xl font-semibold mb-6 text-center">ITClips</h2>
-      <GoogleLoginButton />
-      <GithubLoginButton />
-      <NaverLoginButton />      
-      <div>카카오 로그인</div>
-
-      <button>이메일 로그인</button> <button onClick={handleEmailLoginClick}>Email Login</button>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h1 className="text-2xl font-bold mb-4">Login</h1>
+        <GoogleLoginButton />
+        <GithubLoginButton />
+        <NaverLoginButton />
+        <KakaoLoginButton />
+        <button
+          className="btn btn-primary mt-4 w-full"
+          onClick={toggleEmailLogin}
+        >
+          Email Login
+        </button>
+      </div>
+      {isEmailLoginOpen && <EmailLoginModal />}
+      {isPasswordResetOpen && <PasswordResetModal />}
     </div>
   );
-}
+};
+
+export default LoginPage;

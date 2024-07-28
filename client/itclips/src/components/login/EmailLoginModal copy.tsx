@@ -4,7 +4,7 @@ import { navStore } from "../../stores/navStore";
 import axios from "axios";
 
 import FindIdModal from "./FindIdModal";
-import FindPasswordModal from "./FindPasswordModal";
+import FindPasswordModal from "./PasswordResetModal";
 import GoogleLoginButton from "./GoogleLoginButton";
 import GithubLoginButton from "./GithubLoginButton";
 import NaverLoginButton from "./NaverLoginButton";
@@ -12,15 +12,15 @@ import NaverLoginButton from "./NaverLoginButton";
 const LoginModal = () => {
   const navigate = useNavigate();
 
-  const { modalState } = navStore();
+  // const { modalState } = navStore();
 
-  const {
-    isFindIdModalOpen,
-    isFindPasswordModalOpen,
-    openFindIdModal,
-    openFindPasswordModal,
-    closeLoginModal,
-  } = modalState;
+  // const {
+  //   isFindIdModalOpen,
+  //   isFindPasswordModalOpen,
+  //   openFindIdModal,
+  //   openFindPasswordModal,
+  //   closeLoginModal,
+  // } = modalState;
 
   // 로그인 에러 메세지
   const [errorMessage, setErrorMessage] = useState("");
@@ -28,13 +28,13 @@ const LoginModal = () => {
   // 모달 밖 클릭 시 모달 종료 로직
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
-      closeLoginModal();
+      // closeLoginModal();
     }
   };
 
   const handleSignUpClick = () => {
     navigate("/signup");
-    closeLoginModal();
+    // closeLoginModal();
   };
 
   // 로그인 제출 시 로직
@@ -53,7 +53,7 @@ const LoginModal = () => {
       .then((response) => {
         if (response.status === 200) {
           setErrorMessage(""); // 에러 메시지 초기화
-          closeLoginModal();
+          // closeLoginModal();
         } else {
           setErrorMessage(
             "아이디 또는 비밀번호가 잘못 되었습니다. 아이디와 비밀번호를 정확히 입력해 주세요."
@@ -68,8 +68,6 @@ const LoginModal = () => {
       });
   };
 
-  
-  
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
@@ -120,17 +118,21 @@ const LoginModal = () => {
         <NaverLoginButton />
         {/* 구글 로그인 버튼*/}
         <GoogleLoginButton />
-        
+
         {/* 깃허브 로그인 버튼*/}
         <GithubLoginButton />
-        
-        
 
         <div className="grid grid-cols-1 sm:grid-cols-3 mx-10">
-          <button className="btn btn-ghost" onClick={openFindIdModal}>
+          <button
+            className="btn btn-ghost"
+            // onClick={openFindIdModal}
+          >
             아이디 찾기
           </button>
-          <button className="btn btn-ghost" onClick={openFindPasswordModal}>
+          <button
+            className="btn btn-ghost"
+            // onClick={openFindPasswordModal}
+          >
             비밀번호 찾기
           </button>
           <button className="btn btn-ghost" onClick={handleSignUpClick}>
@@ -138,7 +140,7 @@ const LoginModal = () => {
           </button>
         </div>
         <button
-          onClick={closeLoginModal}
+          // onClick={closeLoginModal}
           className="absolute top-2 right-2 btn btn-ghost"
         >
           ×
@@ -146,8 +148,8 @@ const LoginModal = () => {
       </div>
 
       {/* 아이디 찾기, 비밀번호 찾기 모달 */}
-      {isFindIdModalOpen && <FindIdModal />}
-      {isFindPasswordModalOpen && <FindPasswordModal />}
+      {/* {isFindIdModalOpen && <FindIdModal />} */}
+      {/* {isFindPasswordModalOpen && <FindPasswordModal />} */}
     </div>
   );
 };

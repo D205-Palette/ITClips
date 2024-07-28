@@ -4,35 +4,23 @@ import { navStore } from "../../stores/navStore";
 import DarkModeToggle from "./DarkModeToggle";
 import NotificationButton from "./NavNotificationButton";
 
-import NavLoginModal from "./NavLoginModal";
+import NavLoginModal from "../login/EmailLoginModal";
 
 import HomeButton from "../nav/NavHomeButton";
 import LogoutButton from "../nav/NavLogoutButton";
 import MessageButton from "../nav/NavMessageButton";
-import tabStore from '../../stores/categoriesStore'
+import tabStore from "../../stores/categoriesStore";
 import darkModeStore from "../../stores/darkModeStore";
 
-
-
 const NavBar = () => {
-  const {
-    login,
-    modalState,
-    isLoggedIn,
-  } = navStore();
-  
-  const {
-    isLoginModalOpen,
-    openLoginModal,    
-  } = modalState;
-
+  const { login, isLoggedIn } = navStore();  
 
   const messageRef = useRef<HTMLDivElement>(null);
 
   // const whatTab = tabStore((state) => state.whatNavTab);
   // const changeTab = tabStore((state) => state.changeNavTab);
-  const isDark = darkModeStore((state)=>state.isDark)
-  const textColor = (isDark? "text-slate-300" : "text-slate-900")
+  const isDark = darkModeStore((state) => state.isDark);
+  const textColor = isDark ? "text-slate-300" : "text-slate-900";
 
   return (
     <>
@@ -47,9 +35,30 @@ const NavBar = () => {
               <Link  to='feed'><p onClick={()=>changeTab('feed')} className={(whatTab==='feed'? "text-sky-500" :{textColor}) + ' font-bold'}>피드</p></Link>
               <Link  to='search'><p onClick={() => changeTab('search')} className={(whatTab==='search'? "text-sky-500" : {textColor}) + ' font-bold'}>검색</p></Link> */}
 
-              <NavLink  to='my' className={(({isActive}) => isActive? "text-sky-500 font-bold" : textColor + " font-bold")}>MY</NavLink>
-              <NavLink  to='feed' className={(({isActive}) => isActive? "text-sky-500 font-bold" : textColor +" font-bold")}>피드</NavLink>
-              <NavLink  to='search' className={(({isActive}) => isActive? "text-sky-500 font-bold" : textColor + " font-bold")}>검색</NavLink>
+              <NavLink
+                to="my"
+                className={({ isActive }) =>
+                  isActive ? "text-sky-500 font-bold" : textColor + " font-bold"
+                }
+              >
+                MY
+              </NavLink>
+              <NavLink
+                to="feed"
+                className={({ isActive }) =>
+                  isActive ? "text-sky-500 font-bold" : textColor + " font-bold"
+                }
+              >
+                피드
+              </NavLink>
+              <NavLink
+                to="search"
+                className={({ isActive }) =>
+                  isActive ? "text-sky-500 font-bold" : textColor + " font-bold"
+                }
+              >
+                검색
+              </NavLink>
             </ul>
           )}
         </div>
@@ -61,14 +70,14 @@ const NavBar = () => {
           {/* 로그인 전 */}
           {!isLoggedIn ? (
             <>
-             <NavLink  to='login' className={(({isActive}) => isActive? "text-sky-500 font-bold" : textColor + " font-bold")}>로그인</NavLink>
-              <button
-                onClick={openLoginModal}
-                className="transition-colors duration-300 hover:text-gray-400"
+              <NavLink
+                to="login"
+                className={({ isActive }) =>
+                  isActive ? "text-sky-500 font-bold" : textColor + " font-bold"
+                }
               >
                 로그인
-              </button>
-
+              </NavLink>
               <a
                 href="/signup"
                 className="transition-colors duration-300 hover:text-gray-400"
@@ -91,10 +100,8 @@ const NavBar = () => {
             </>
           )}
         </div>
-      </nav>
-
-      {/* 로그인, 아이디찾기, 비밀번호찾기 모달창 */}
-      {isLoginModalOpen && <NavLoginModal />}
+      </nav>      
+      
     </>
   );
 };

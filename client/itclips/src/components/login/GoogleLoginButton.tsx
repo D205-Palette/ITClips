@@ -72,7 +72,7 @@ const GoogleLoginButton = () => {
       type="button"
       className="btn bg-base-100 w-3/4"
     >
-      <FcGoogle className="w-10 h-10" />
+      <FcGoogle className="w-8 h-8" />
       <p>구글 로그인</p>
     </button>
   );

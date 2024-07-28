@@ -11,8 +11,8 @@ const FindIdModal = () => {
   const [errorMessage, setErrorMessage] = useState<boolean | null>(null);
   const [userId, setUserId] = useState<string>("");
 
-  const { modalState } = navStore();
-  const { closeFindIdModal, openFindIdCompleteModal } = modalState;
+  // const { modalState } = navStore();
+  // const { closeFindIdModal, openFindIdCompleteModal } = modalState;
 
   const handleEmailSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -42,7 +42,7 @@ const FindIdModal = () => {
     })
       .then((response) => {
         setUserId(response.data.userId);
-        openFindIdCompleteModal();
+        // openFindIdCompleteModal();
       })
       .catch(() => {
         setErrorMessage(false);
@@ -54,7 +54,7 @@ const FindIdModal = () => {
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
-      closeFindIdModal();
+      // closeFindIdModal();
     }
   };
 
@@ -135,7 +135,7 @@ const FindIdModal = () => {
           )}
 
           <button
-            onClick={closeFindIdModal}
+            // onClick={closeFindIdModal}
             className="absolute top-2 right-2 btn btn-ghost"
           >
             ×

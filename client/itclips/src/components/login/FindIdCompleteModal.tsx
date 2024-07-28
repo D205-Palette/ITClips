@@ -11,8 +11,8 @@ const FindIdCompleteModal: React.FC<FindIdCompleteModalProps> = ({
   FindedId,
   setUserId,
 }) => {
-  const { modalState } = navStore();
-  const { openFindPasswordModal, closeFindIdModal, openLoginModal } = modalState;
+  // const { modalState } = navStore();
+  // const { openFindPasswordModal, closeFindIdModal, openLoginModal } = modalState;
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
@@ -21,7 +21,7 @@ const FindIdCompleteModal: React.FC<FindIdCompleteModalProps> = ({
   };
 
   const toLogin = () => {
-    closeFindIdModal()
+    // closeFindIdModal()
     setUserId('')
   }
 
@@ -40,7 +40,9 @@ const FindIdCompleteModal: React.FC<FindIdCompleteModalProps> = ({
           인증이 완료되었습니다. 아이디를 안내드립니다.
         </h1>
 
-        <button className="btn " onClick={openFindPasswordModal}>
+        <button className="btn " 
+        // onClick={openFindPasswordModal}
+        >
           비밀번호 찾기
         </button>
 

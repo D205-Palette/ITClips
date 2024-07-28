@@ -2,16 +2,16 @@ import React, { useState } from "react";
 import { navStore } from "../../stores/navStore";
 
 const FindIdCompleteModal = () => {
-  const { modalState } = navStore();
-  const { closeFindPasswordCompleteModal, closeFindPasswordModal } = modalState;
+  // const { modalState } = navStore();
+  // const { closeFindPasswordCompleteModal, closeFindPasswordModal } = modalState;
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {      
-      closeFindPasswordModal();
+      // closeFindPasswordModal();
     }
   };
   const toLogin = () => {
-    closeFindPasswordModal();
+    // closeFindPasswordModal();
   };
 
   return (
@@ -27,7 +27,7 @@ const FindIdCompleteModal = () => {
           로그인 하러 가기
         </button>
       <button
-          onClick={closeFindPasswordModal}
+          // onClick={closeFindPasswordModal}
           className="absolute top-2 right-2 btn btn-ghost"
         >
           ×

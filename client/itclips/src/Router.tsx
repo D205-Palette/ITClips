@@ -10,6 +10,8 @@ import MyFavorites from "./pages/MyView/MyFavorites";
 import MyRoadmap from "./pages/MyView/MyRoadmap";
 import FeedView from "./pages/FeedView";
 import SearchView from "./pages/SearchView";
+import LoginView from "./pages/LoginView"
+import EmailLoginView from "./pages/EmailLoginView"
 
 const router = createBrowserRouter([
   {
@@ -20,6 +22,16 @@ const router = createBrowserRouter([
       {
         path: "/intro",
         element: <Intro />,
+      },
+      // 로그인 페이지
+      {
+        path: "login",
+        element: <LoginView/>,        
+      // Email 로그인 페이지
+      },
+      {
+        path: "emaillogin",
+        element: <EmailLoginView/>
       },
       // 일반 회원가입 페이지
       {

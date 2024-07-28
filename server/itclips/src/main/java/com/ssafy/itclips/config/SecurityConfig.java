@@ -83,6 +83,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/index.html","/css/**", "/images/**").permitAll()  // 기본 페이지, static 하위 폴더에 있는 자료들은 모두 접근 가능
                         .requestMatchers("/swagger-ui.html", "/v3/api-docs/**", "/swagger-resources/**", "/swagger-ui/**").permitAll()
                         .requestMatchers("/user/signup", "/user/oauthSignup").permitAll()   // 회원가입 접근 가능
+                        .requestMatchers("/user/**").permitAll()    // API 개발 중 접근 없이 swagger 테스트 하기 위함
                         .anyRequest().authenticated()
                 )
 

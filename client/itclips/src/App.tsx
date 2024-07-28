@@ -34,28 +34,7 @@ const App = () => {
       </header>
 
       {/* Body단*/}
-      {/* <Routes>
-
-        <Route path="intro" element={<Intro />} />
-        <Route path="signup" element={<SignUpView />} />
-        
-        my탭의 하위 라우터들
-        <Route path="my" element={<MyView />}>
-          <Route path="bookmarklist" element={<MyBookmarkList />} >
-            <Route path="1" element={<MyBookmark />} />
-          </Route>
-          <Route path="groupbookmarklist" element={<MyGroupBookmarkList />} />
-          <Route path="favorites" element={<MyFavorites />} />
-          <Route path="roadmap" element={<MyRoadmap />} />
-        </Route>
-
-        <Route path="search" element={<SearchView />} />
-        <Route path="feed" element={<FeedView />} />
-
-      </Routes> */}
-      <Outlet />
-
-        
+      <Outlet />    
 
     </div>
   );

@@ -5,36 +5,46 @@ import Bookmark from "../components/main/Bookmark";
 import AsideBookmarkList from "../components/aside/AsideBookmarkList";
 import { asideStore } from "../stores/asideStore";
 import MessageLayout from "../components/aside/MessageLayout";
+import MainTab from "../components/main/MainTab";
+import { useNavigate } from "react-router-dom";
+import { IoIosArrowBack } from "react-icons/io";
+import ListItem from "../components/main/ListsItem(Roadmap)";
 
 
-const MyRoadmap = () => {
+const RoadmapView = () => {
   const bookmarks = mainStore((state) => state.bookmarks);
+  const lists = mainStore((state) => state.lists);
   const isMessageOpen = asideStore((state) => state.isMessageOpen);
+  const navigate = useNavigate();
+
+  const BackButton = (): any => {
+    return (
+      <button className="me-5  " onClick={() => navigate(-1)}>
+        <IoIosArrowBack size="40px" />{" "}
+      </button>
+    );
+  };
 
   return (
     <>
-      <div id="Body" className="grid grid-cols-8 gap-4">
-        {/* aside 자리 */}
-        <div id="aside" className="col-start-2 col-span-2 hidden xl:block ">
-          {/* 메세지 뜨는 위치 */}
-          <div id="aside" className="absolute col-start-2 col-span-2">
-            {isMessageOpen && <MessageLayout />}
-          </div>
-          <AsideBookmarkList />
+      <div className="grid  grid-cols-6">
+        <div className="col-span-6">
+          <MainTab />
         </div>
 
-        {/* main자리 */}
-        <div
-          id="Main"
-          className="lg:col-start-4 lg:col-span-4 md:col-start-3 md:col-span-5 sm:col-start-2 sm:col-span-6"
-        >
-          <CategoryTab />
-
-          <Bookmark />
+        <div className="col-span-6 flex flex-row justify-between my-9">
+          <div ><BackButton /></div> 
+          <div className="flex items-center text-sky-500 text-3xl font-bold ">58.1%</div>
         </div>
+
+        {lists.map((list)=> <ListItem list={list} />)}
+        
+        
+      
+
       </div>
     </>
-  );
+  )
 };
 
-export default MyRoadmap;
+export default RoadmapView;

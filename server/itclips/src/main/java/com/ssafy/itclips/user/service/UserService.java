@@ -27,4 +27,6 @@ public interface UserService {
     User updateUserByEmail(String email, User user);
 
     boolean deleteUserByEmail(String email);
+
+    boolean nicknameCheck(String nickname);
 }

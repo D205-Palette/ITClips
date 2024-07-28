@@ -170,6 +170,20 @@ public class UserController {
         }
     }
 
+    @Operation(summary = "닉네임 중복 체크", description = "요청한 닉네임이 중복되었는지 체크합니다.")
+    @GetMapping("/nicknameCheck")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "닉네임 중복 체크 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "400", description = "닉네임 중복 체크 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+    })
+    public ResponseEntity<?> nicknameCheck(@PathVariable("nickname") String nickname) {
+        boolean isDuplicated = userService.nicknameCheck(nickname);
+        if (isDuplicated) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("닉네임이 중복되었습니다.");
+        }
+        return ResponseEntity.ok("닉네임 사용 가능");
+    }
+
     private boolean isAuthenticated() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication != null && authentication.isAuthenticated();

@@ -154,6 +154,11 @@ public class UserServiceImpl implements UserService {
         return !userRepository.existsByEmail(email);
     }
 
+    @Override
+    public boolean nicknameCheck(String nickname) {
+        return userRepository.existsByNickname(nickname);
+    }
+
     // 파일 이름이 중복되지 않도록 고유한 파일 이름 생성
     private String generateUniqueFilename(String originalFilename) {
         String ext = "";

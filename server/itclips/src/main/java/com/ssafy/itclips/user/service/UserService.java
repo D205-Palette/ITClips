@@ -1,5 +1,7 @@
 package com.ssafy.itclips.user.service;
 
+import com.ssafy.itclips.global.jwt.JwtToken;
+import com.ssafy.itclips.user.entity.LoginForm;
 import com.ssafy.itclips.user.entity.OauthSignupForm;
 import com.ssafy.itclips.user.entity.SignupForm;
 import com.ssafy.itclips.user.entity.User;
@@ -9,6 +11,8 @@ import java.io.IOException;
 
 public interface UserService {
     User signup(SignupForm signupForm) throws IOException;
+
+    JwtToken login(LoginForm loginForm) throws IOException;
 
     User oauthSignup(OauthSignupForm form, MultipartFile profileImage) throws IOException;
 

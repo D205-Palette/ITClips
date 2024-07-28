@@ -1,11 +1,14 @@
 package com.ssafy.itclips.user.controller;
 
+import com.ssafy.itclips.global.jwt.JwtToken;
+import com.ssafy.itclips.user.entity.LoginForm;
 import com.ssafy.itclips.user.entity.OauthSignupForm;
 import com.ssafy.itclips.user.entity.SignupForm;
 import com.ssafy.itclips.user.entity.User;
 import com.ssafy.itclips.user.service.UserService;
 import com.ssafy.itclips.user.service.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -46,6 +51,21 @@ public class UserController {
             return ResponseEntity.ok(joinUser);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원 가입 중 오류가 발생했습니다.");
+        }
+    }
+
+    @PostMapping("/login")
+    @Operation(summary = "로그인", description = "사용자 로그인을 처리하고 JWT 토큰을 반환합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "로그인 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "401", description = "인증 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+    })
+    public ResponseEntity<?> login(@RequestBody LoginForm loginForm) {
+        try {
+            JwtToken jwtToken = userService.login(loginForm);
+            return ResponseEntity.ok(jwtToken);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 실패! 이메일 또는 비밀번호가 올바르지 않습니다.");
         }
     }
 

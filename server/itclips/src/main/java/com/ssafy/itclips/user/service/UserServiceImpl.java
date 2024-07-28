@@ -1,5 +1,8 @@
 package com.ssafy.itclips.user.service;
 
+import com.ssafy.itclips.global.jwt.JwtToken;
+import com.ssafy.itclips.global.jwt.JwtTokenProvider;
+import com.ssafy.itclips.user.entity.LoginForm;
 import com.ssafy.itclips.user.entity.OauthSignupForm;
 import com.ssafy.itclips.user.entity.SignupForm;
 import com.ssafy.itclips.user.entity.User;
@@ -8,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +39,8 @@ public class UserServiceImpl implements UserService {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserRepository userRepository;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final AuthenticationManager authenticationManager;
 
     @Transactional
     @Override
@@ -47,6 +55,19 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         return userRepository.findByEmail(signupForm.getEmail())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found."));
+    }
+
+    @Override
+    public JwtToken login(LoginForm loginForm) {
+        // 인증 객체 생성
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(loginForm.getEmail(), loginForm.getPassword());
+
+        // 인증 처리
+        Authentication authentication = authenticationManager.authenticate(authenticationToken);
+
+        // JWT 토큰 생성 및 반환
+        return jwtTokenProvider.generateToken(authentication);
     }
 
     @Transactional

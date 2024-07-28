@@ -13,6 +13,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -30,12 +31,16 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private String accessTokenExpiration;
 
     @Override
+    @Transactional
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) {
         try {
             String email = extractUsername(authentication);
             String token = String.valueOf(jwtTokenProvider.generateToken(authentication));
             User user = userRepository.findByEmail(email).get();
+
+            // Initialize lazy collections
+            user.getBookmarkLists().size();
 
             Map<String, Object> tokenMap = new HashMap<>();
             tokenMap.put("accessToken", token);

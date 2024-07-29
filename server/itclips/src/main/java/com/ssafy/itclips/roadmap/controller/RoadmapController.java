@@ -100,10 +100,18 @@ public class RoadmapController {
 
 
     // 단계 진행
-    @PutMapping("/step/{stepId}")
+    @PutMapping("/step/{stepId}/{userId}")
     @Operation(summary = "로드맵 단계진행 ", description = "체크된 상태라면 체크 해제, 안되어있으면 체크")
-    public ResponseEntity<?> step(@PathVariable("stepId") Long stepId){
-        roadmapService.checkStep(stepId);
+    public ResponseEntity<?> step(@PathVariable("stepId") Long stepId, @PathVariable("userId")Long userId){
+        roadmapService.checkStep(stepId,userId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // 단계 삭제
+    @DeleteMapping("/step/{stepId}/{userId}")
+    @Operation(summary = "로드맵 단계 삭제 " , description = "로드맵 단계 삭제")
+    public ResponseEntity<?> deleteStep(@PathVariable("stepId") Long stepId, @PathVariable("userId")Long userId){
+        roadmapService.deleteStep(stepId,userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

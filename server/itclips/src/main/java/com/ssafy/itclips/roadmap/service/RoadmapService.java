@@ -36,7 +36,8 @@ public interface RoadmapService {
 
 
     // 단계 진행
-    void checkStep(Long stepId) throws RuntimeException;
+    void checkStep(Long stepId, Long userId) throws RuntimeException;
+    void deleteStep(Long stepId, Long userId) throws RuntimeException;
 
 
     //스크랩

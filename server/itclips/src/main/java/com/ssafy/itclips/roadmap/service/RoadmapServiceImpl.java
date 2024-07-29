@@ -295,11 +295,10 @@ public class RoadmapServiceImpl implements RoadmapService {
         return userListDTOList;
     }
 
-
     // 로드맵 단계 진행 체크
     @Transactional
     @Override
-    public void checkStep(Long stepId) throws RuntimeException {
+    public void checkStep(Long stepId, Long userId) throws RuntimeException {
         RoadmapStep step = roadmapStepRepository.findById(stepId)
                 .orElseThrow(()->new CustomException(ErrorCode.STEP_NOT_FOUND));
         step.setCheck(!step.getCheck());
@@ -309,6 +308,11 @@ public class RoadmapServiceImpl implements RoadmapService {
     }
 
     //단계 삭제
+    @Override
+    public void deleteStep(Long stepId, Long userId) throws RuntimeException {
+        roadmapStepRepository.deleteById(stepId);
+    }
+
 
 
     // 댓글달기

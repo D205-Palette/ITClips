@@ -17,8 +17,8 @@ const FollowerItemKebabDropdown = () => {
 
   // 채팅 시작하는 함수
   const startSendMessage = () => {
-    toggleMessage();
-    // 열린 메세지 창에서 채팅 시작하는 로직 구현해야 함
+    const startNewChat = asideStore.getState().startNewChat;
+    startNewChat(1);
   }
 
   const handleMenu = (menu: string) => {

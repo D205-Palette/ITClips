@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from "react";
 
 // icons
 import { VscKebabVertical } from "react-icons/vsc";
@@ -17,15 +17,15 @@ const FollowerItemKebabDropdown = () => {
 
   // 채팅 시작하는 함수
   const startSendMessage = () => {
-    toggleMessage();
-    // 열린 메세지 창에서 채팅 시작하는 로직 구현해야 함
+    const startNewChat = asideStore.getState().startNewChat;
+    startNewChat(1);
   }
 
   const handleMenu = (menu: string) => {
     if (menu === "메세지 보내기") {
       startSendMessage();
     } else if (menu === "삭제") {
-      // 팔로잉 삭제 로직
+      // 팔로워 삭제 로직
     }
     setIsDropdownOpen(false);
   };

@@ -70,7 +70,7 @@ const GoogleLoginButton = () => {
     <button
       onClick={() => login()}
       type="button"
-      className="btn bg-base-100 w-3/4"
+      className="btn btn-outline bg-base-100 w-3/4"
     >
       <FcGoogle className="w-8 h-8" />
       <p>구글 로그인</p>

@@ -14,7 +14,7 @@ export default function NaverLoginButton() {
     <button
       onClick={loginWithNaver}
       type="button"
-      className="btn bg-base-100 w-3/4"
+      className="btn btn-outline bg-base-100 w-3/4"
     >
       <SiNaver className="w-5 h-5 text-green-500"/>
       <p>네이버 로그인</p>

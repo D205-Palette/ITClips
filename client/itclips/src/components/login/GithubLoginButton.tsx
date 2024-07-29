@@ -21,7 +21,7 @@ const GithubLoginButton = () => {
     <button
       onClick={loginWithGithub}
       type="button"
-      className="btn bg-base-100 w-3/4"
+      className="btn btn-outline bg-base-100 w-3/4"
     >
       <FaGithub className="w-8 h-8" />
       <p>깃허브 로그인</p>

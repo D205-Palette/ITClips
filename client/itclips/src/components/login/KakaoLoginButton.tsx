@@ -15,7 +15,7 @@ export default function NaverLoginButton() {
     <button
       onClick={loginWithNaver}
       type="button"
-      className="btn bg-base-100 w-3/4"
+      className="btn btn-outline bg-base-100 w-3/4"
     >      
       <SiKakaotalk className="w-5 h-5 text-yellow-400 bg-black rounded-sm"/>
       <p>카카오 로그인</p>

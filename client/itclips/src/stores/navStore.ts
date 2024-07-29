@@ -6,10 +6,12 @@ interface NavStore {
   logout: () => void;
   isLoggedIn: boolean;
 
+  isLoginListOpen: boolean;
   isEmailLoginOpen: boolean;
-  isPasswordResetOpen: boolean;
-  toggleEmailLogin: () => void;
-  togglePasswordReset: () => void;
+  isPasswordResetOpen: boolean;  
+  setLoginListOpen: (open: boolean) => void;
+  setEmailLoginOpen: (open: boolean) => void;
+  setPasswordResetOpen: (open: boolean) => void;
 }
 
 export const navStore = create<NavStore>()(
@@ -18,10 +20,12 @@ export const navStore = create<NavStore>()(
       isLoggedIn: false,
       login: () => set({ isLoggedIn: true }),
       logout: () => set({ isLoggedIn: false }),
+      isLoginListOpen: true,
       isEmailLoginOpen: false,
-      isPasswordResetOpen: false,
-      toggleEmailLogin: () => set((state) => ({ isEmailLoginOpen: !state.isEmailLoginOpen })),
-      togglePasswordReset: () => set((state) => ({ isPasswordResetOpen: !state.isPasswordResetOpen })),
+      isPasswordResetOpen: false,      
+      setLoginListOpen: (open) => set({ isLoginListOpen: open }),
+      setEmailLoginOpen: (open) => set({ isEmailLoginOpen: open }),
+      setPasswordResetOpen: (open) => set({ isPasswordResetOpen: open }),
     }),
     {
       name: "nav-store", // 로컬 스토리지에 저장할 키 이름

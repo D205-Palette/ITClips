@@ -316,6 +316,10 @@ public class RoadmapServiceImpl implements RoadmapService {
     public void checkStep(Long stepId, Long userId) throws RuntimeException {
         RoadmapStep step = roadmapStepRepository.findById(stepId)
                 .orElseThrow(()->new CustomException(ErrorCode.STEP_NOT_FOUND));
+
+        Roadmap roadmap = step.getRoadmap();
+        checkUser(roadmap, userId);
+
         step.setCheck(!step.getCheck());
 
         roadmapStepRepository.save(step);

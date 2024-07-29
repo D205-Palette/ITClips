@@ -314,14 +314,19 @@ public class RoadmapServiceImpl implements RoadmapService {
     @Transactional
     @Override
     public void checkStep(Long stepId, Long userId) throws RuntimeException {
+
+        // 스탭 가져오기
         RoadmapStep step = roadmapStepRepository.findById(stepId)
                 .orElseThrow(()->new CustomException(ErrorCode.STEP_NOT_FOUND));
 
+        // 권한 확인
         Roadmap roadmap = step.getRoadmap();
         checkUser(roadmap, userId);
 
+        // 0 -> 1 1->0
         step.setCheck(!step.getCheck());
 
+        //저장
         roadmapStepRepository.save(step);
 
     }
@@ -329,6 +334,15 @@ public class RoadmapServiceImpl implements RoadmapService {
     //단계 삭제
     @Override
     public void deleteStep(Long stepId, Long userId) throws RuntimeException {
+        // 스탭
+        RoadmapStep step = roadmapStepRepository.findById(stepId)
+                .orElseThrow(()->new CustomException(ErrorCode.STEP_NOT_FOUND));
+
+        // 권한 확인
+        Roadmap roadmap = step.getRoadmap();
+        checkUser(roadmap, userId);
+
+        // 삭제
         roadmapStepRepository.deleteById(stepId);
     }
 

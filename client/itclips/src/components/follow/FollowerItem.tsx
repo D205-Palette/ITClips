@@ -18,13 +18,18 @@ interface Props {
 
 const FollowerItem: React.FC<Props> = ({ items }) => {
 
-  // 리스트 정렬
+  // 드롭다운 클릭 이벤트 핸들러
+  const handleDropdownClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
   return (
     <div className="space-y-4">
       {items.map((item) => (
         <div key={item.id}>
           <NavLink to="/user/:user_id" className="flex items-center space-x-4 p-4 bg-white rounded-lg shadow">
-            <img src={item.imageUrl} className="w-20 h-20 object-cover rounded" />
+            <img src={item.imageUrl} alt={item.username} className="w-20 h-20 object-cover rounded" />
             <div className="flex-grow">
               <h3 className="text-lg font-semibold">{item.username}</h3>
               <p className="text-sm text-gray-600">{item.email}</p>
@@ -32,9 +37,9 @@ const FollowerItem: React.FC<Props> = ({ items }) => {
                 <span className="text-sm text-gray-500">{item.tag}</span>
               </div>
             </div>
-            <button className="text-gray-400 hover:text-gray-600">
+            <div onClick={handleDropdownClick} className="text-gray-400 hover:text-gray-600">
               <FollowerItemKebabDropdown />
-            </button>
+            </div>
           </NavLink>
         </div>
       ))}

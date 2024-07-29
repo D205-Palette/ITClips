@@ -2,16 +2,8 @@ import { useState } from 'react';
 import { VscKebabVertical } from "react-icons/vsc";
 
 // components
-// import BookmarkListEditModal from "../modals/BookmarkListEditModal";
-// import DeleteBookmarkListModal from "../modals/DeleteBookmarkListModal";
-// import UrlCopyModal from "../modals/UrlCopyModal";
-// import ReportModal from "../modals/ReportModal";
 
 const FollowerItemKebabDropdown = () => {
-  const [ isEditModalOpen, setIsEditModalOpen ] = useState<boolean>(false);
-  const [ isDeleteModalOpen, setIsDeleteModalOpen ] = useState<boolean>(false);
-  const [ isUrlCopyModalOpen, setIsUrlCopyModalOpen ] = useState<boolean>(false);
-  const [ isReportModalOpen, setIsReportModalOpen ] = useState<boolean>(false);
 
   const [ isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 
@@ -21,11 +13,11 @@ const FollowerItemKebabDropdown = () => {
 
   const handleMenu = (menu: string) => {
     if (menu === "메세지 보내기") {
-      setIsEditModalOpen(true);
+      // 메세지 보내기 로직
     } else if (menu === "삭제") {
-      setIsDeleteModalOpen(true);
+      // 팔로워 삭제 로직
     } else if (menu === "삭제 후 차단") {
-      setIsUrlCopyModalOpen(true);
+      // 팔로워 삭제 후 차단 로직
     }
     setIsDropdownOpen(false);
   };
@@ -55,10 +47,6 @@ const FollowerItemKebabDropdown = () => {
           </ul>
         </div>
       )}
-      {/* <BookmarkListEditModal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} />
-      <DeleteBookmarkListModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} />
-      <UrlCopyModal isOpen={isUrlCopyModalOpen} onClose={() => setIsUrlCopyModalOpen(false)} />
-      <ReportModal isOpen={isReportModalOpen} onClose={() => setIsReportModalOpen(false)} /> */}
     </div>
   );
 };

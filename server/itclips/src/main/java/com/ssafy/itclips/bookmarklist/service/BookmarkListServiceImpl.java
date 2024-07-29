@@ -349,4 +349,11 @@ public class BookmarkListServiceImpl implements BookmarkListService {
     }
 
 
+    @Override
+    public BookmarkListResponseDTO getBookmarkListResponseDTO(Long listId) {
+        BookmarkList bookmarkList = bookmarkListRepository.findById(listId).orElseThrow();
+
+        return convertToBookmarkListResponseDTO(bookmarkList);
+    }
+
 }

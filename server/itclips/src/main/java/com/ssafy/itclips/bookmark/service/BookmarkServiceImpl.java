@@ -48,6 +48,7 @@ public class BookmarkServiceImpl implements BookmarkService {
         Category existingCategory = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CustomException(ErrorCode.CATEGORY_NOT_FOUND));
         Integer count = bookmarkCategoryRepository.countByCategoryId(categoryId);
+        //dto entity 넣기
         Bookmark bookmark = buildBookmark(bookmarkRequestDTO, count);
         bookmark.addBookmarkList(existingBookmarkList);
         bookmarkRepository.save(bookmark);

@@ -614,12 +614,14 @@ DROP TABLE IF EXISTS `roadmap`;
 CREATE TABLE `roadmap` (
                            `id` bigint NOT NULL AUTO_INCREMENT,
                            `user_id` bigint NOT NULL,
+                           `origin` bigint,
                            `title` varchar(255) NOT NULL,
                            `description` text,
                            `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                            `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                            `image` varchar(255) DEFAULT NULL,
                            `is_public` tinyint NOT NULL DEFAULT '0',
+                           `hit` bigint,
                            PRIMARY KEY (`id`),
                            KEY `user_id` (`user_id`),
                            CONSTRAINT `roadmap_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE

@@ -19,6 +19,11 @@ public enum ErrorCode {
     BOOKMARK_LIKE_ALREADY_EXIST(HttpStatus.BAD_REQUEST,"BM-002", "이미 좋아요 한 북마크입니다."),
     BOOKMARK_LIKE_NOT_FOUND(HttpStatus.NOT_FOUND,"BM-003","좋아요하지 않은 북마크입니다"),
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND,"CM-001","댓글을 찾을 수 업습니다."),
+    ROADMAP_NOT_FOUND(HttpStatus.NOT_FOUND,"RM-001","로드맵을 찾을 수 없습니다."),
+    ROADMAP_LIKE_EXIST(HttpStatus.NOT_FOUND,"RLE-001","이미 좋아요한 리스트입니다."),
+    ROADMAP_LIKE_NOT_FOUND(HttpStatus.NOT_FOUND,"RLNF-001","좋아요한 리스트가 아닙니다."),
+    LIKE_USER_NOT_FOUND(HttpStatus.NOT_FOUND,"LUNF-001","좋아요한 사용자가 없습니다."),
+    STEP_NOT_FOUND(HttpStatus.NOT_FOUND,"SNF-001","해당 로드맵 단계를 찾을 수 없습니다."),
     COMMENT_NOT_ALLOWED(HttpStatus.UNAUTHORIZED,"CM-002","댓글에 접근할 권한이 없습니다."),
     REPORT_ALREADY_EXIST(HttpStatus.BAD_REQUEST,"RP-001","이미 신고한 정보입니다");
     ;

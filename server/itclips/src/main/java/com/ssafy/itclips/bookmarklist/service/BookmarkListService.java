@@ -3,6 +3,7 @@ package com.ssafy.itclips.bookmarklist.service;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListDetailDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
+import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
 
 import java.util.List;
 
@@ -26,4 +27,6 @@ public interface BookmarkListService {
     List<BookmarkListResponseDTO> getScrapedLists(Long userId) throws RuntimeException;
 
     BookmarkListDetailDTO getListDetail(Long userId, Long listId) throws RuntimeException;
+
+    BookmarkListResponseDTO getBookmarkListResponseDTO(Long listId) throws RuntimeException;
 }

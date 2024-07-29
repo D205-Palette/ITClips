@@ -171,6 +171,23 @@ public class RoadmapServiceImpl implements RoadmapService {
         createStep(roadmapRequestDTO.getStepList(), saveRoadmap);
     }
 
+    // 로드맵 스크랩한 유저 리스트
+    @Override
+    public List<UserListDTO> scrapUserList(Long roadmapId) throws RuntimeException {
+        List<UserListDTO> scrapUserListDTOList = new ArrayList<>();
+
+        List<Roadmap> scrapRoadmapList = roadmapRepository.findByOrigin(roadmapId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ROADMAP_NOT_FOUND));
+
+        for (Roadmap roadmap : scrapRoadmapList) {
+
+            // 사용자 태그
+            List<TagDTO> tags = getUserTags(roadmap.getUser().getId());
+            scrapUserListDTOList.add(UserListDTO.toDTO(roadmap.getUser(),tags));
+        }
+        return scrapUserListDTOList;
+    }
+
     // 단계 생성
     @Transactional
     public void createStep(List<Long> listId,Roadmap roadmap){
@@ -290,16 +307,8 @@ public class RoadmapServiceImpl implements RoadmapService {
 
     }
 
-
-
-    // 스크랩 한 사용자 리스트
-
-
-
-    // 로드맵 댓글 보기
-
-
     // 댓글달기
+
 
 
     //댓글 삭제

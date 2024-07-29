@@ -113,4 +113,14 @@ public class RoadmapController {
         roadmapService.scrap(roadmapId, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    // 로드맵 스크랩한 유저 리스트
+    @GetMapping("/scrap/{roadmapId}")
+    @Operation(summary = "로드맵 스크랩한 유저 ", description = "해당 로드맵에 스크랩한 유저 리스트입니다. ")
+    public ResponseEntity<?> scrapRoadmap(@PathVariable("roadmapId") Long roadmapId){
+        List<UserListDTO> scrapUser =  roadmapService.scrapUserList(roadmapId);
+        return new ResponseEntity<>(scrapUser, HttpStatus.OK);
+    }
+
+
 }

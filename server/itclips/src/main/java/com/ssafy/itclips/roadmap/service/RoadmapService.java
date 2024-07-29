@@ -40,4 +40,6 @@ public interface RoadmapService {
 
     //스크랩
     void scrap(Long roadmapId, Long userId) throws RuntimeException;
+    //스크랩한 유저 리스트
+    List<UserListDTO> scrapUserList(Long roadmapId) throws RuntimeException;
 }

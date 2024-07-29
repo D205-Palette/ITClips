@@ -14,8 +14,8 @@ const NavBar = () => {
   const { isLoggedIn } = navStore();  
   const messageRef = useRef<HTMLDivElement>(null);
 
-  const isDark = darkModeStore((state) => state.isDark);
-  const textColor = isDark ? "text-slate-300" : "text-slate-900";
+  const isDark = darkModeStore((state)=>state.isDark)
+  const textColor = (isDark? "text-slate-300" : "text-slate-900")
 
   return (
     <>
@@ -25,31 +25,10 @@ const NavBar = () => {
           <HomeButton />
           {/* 로그인 시에만 보임 */}
           {isLoggedIn && (
-            <ul className="flex gap-4 list-none">              
-              <NavLink
-                to="my"
-                className={({ isActive }) =>
-                  isActive ? "text-sky-500 font-bold" : textColor + " font-bold"
-                }
-              >
-                MY
-              </NavLink>
-              <NavLink
-                to="feed"
-                className={({ isActive }) =>
-                  isActive ? "text-sky-500 font-bold" : textColor + " font-bold"
-                }
-              >
-                피드
-              </NavLink>
-              <NavLink
-                to="search"
-                className={({ isActive }) =>
-                  isActive ? "text-sky-500 font-bold" : textColor + " font-bold"
-                }
-              >
-                검색
-              </NavLink>
+            <ul className="flex gap-4 list-none">
+              <NavLink  to='user/:user_id' className={(({isActive}) => isActive? "text-sky-500 font-bold" : textColor + " font-bold")}>MY</NavLink>
+              <NavLink  to='feed' className={(({isActive}) => isActive? "text-sky-500 font-bold" : textColor +" font-bold")}>피드</NavLink>
+              <NavLink  to='search' className={(({isActive}) => isActive? "text-sky-500 font-bold" : textColor + " font-bold")}>검색</NavLink>
             </ul>
           )}
         </div>

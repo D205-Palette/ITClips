@@ -7,6 +7,12 @@ interface Tab {
 
   whatCategory:string
   changeCategory: (category:string) => void
+
+  isFollow:string
+  changeIsFollow: (mainOrFollow:string)  => void
+
+  // isFollower:boolean
+  // changeIsFollower: (isFollower:boolean) => void
 }
 
 const Tab = create<Tab>((set) => ({
@@ -15,6 +21,12 @@ const Tab = create<Tab>((set) => ({
 
     whatCategory:'',
     changeCategory: (category) => set((state) => ({whatCategory :  (state.whatCategory == category ? '' : category)})),
+
+    isFollow: 'main',
+    changeIsFollow: (mainOrFollow) => set((state)=> ({isFollow : mainOrFollow})),
+    
+    // isFollower:true,
+    // changeIsFollower: (isFollower) => set((state)=>({isFollower : isFollower}) )
 }));
 
 export default Tab

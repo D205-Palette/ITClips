@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState,FC } from "react";
 import useStore from "../../stores/mainStore";
 import KebabDropdown from "../common/KebabDropdown";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import ListItemHover from "./ListsItem(AlbumHovering)";
 import darkModeStore from '../../stores/darkModeStore'
+import { useNavigate } from "react-router-dom";
 // 이미지 , 리스트명, 북마크 개수, 태그,(설명), 좋아요 버튼&좋아요 수, 리스트 세부 조작 버튼
 // 아님 호버링 기능을 여기에다 포함이 나을듯?
 
@@ -11,8 +12,23 @@ import darkModeStore from '../../stores/darkModeStore'
 
 // }
 
-export default function ListItem() {
-  const list = useStore((state) => state.list);
+interface Props {
+  list: {
+    pk: number;
+    image: string;
+    bookmarks: object[];
+    title: string;
+    bookmark_list_tags: string[];
+    description: string;
+    bookmark_list_like: number;
+  }
+};
+
+const ListItem : FC<Props> = ({list}) => {
+
+
+  const navigate = useNavigate();
+
   const [isHover, setIsHovering] = useState(false);
   const [isLike, setIsLike] = useState(false);
   const clickHeart = (): void => {
@@ -23,7 +39,7 @@ export default function ListItem() {
 
   return (
     <>
-      <div className={"card w-56 bg-base-100 shadow-xl " +  (isDark? "hover:brightness-150" : "hover:brightness-95")}
+      <div  className={"card w-56 bg-base-100 shadow-xl " +  (isDark? "hover:brightness-150" : "hover:brightness-95")}
       onMouseOver={() => setIsHovering(true)}
       onMouseOut={() => setIsHovering(false)}
       >
@@ -42,13 +58,15 @@ export default function ListItem() {
           )}
         </figure>
 
-        <div className="card-body flex flex-col p-6 relative hover:cursor-pointer ">
+        <div 
+        
+        className="card-body flex flex-col p-6 relative ">
             <div className="absolute top-0 right-0 z-50">
               <KebabDropdown whatMenu="리스트"/>
             </div>
-          <div className="flex flex-col flex-auto justify-around  ">
+          <div className="flex flex-col flex-auto justify-around hover:cursor-pointer ">
             <div>
-              <h5 className="flex-auto card-title my-1">{list.title}</h5>
+              <h5 onClick={()=>navigate("/bookmarklist/:bookmarklist_id")} className="flex-auto card-title my-1 ">{list.title}</h5>
             </div>
 
             <div className="flex justify-between">
@@ -59,7 +77,7 @@ export default function ListItem() {
               </div>
               <div>
                 <button onClick={clickHeart} className="btn btn-ghost p-1">
-                {isLike ? <FaHeart /> : <FaRegHeart />}
+                {isLike ? <FaHeart color="red"/> : <FaRegHeart />}
                   
                   {list.bookmark_list_like}
                 </button>
@@ -84,4 +102,6 @@ export default function ListItem() {
       </div>
     </>
   );
-}
+};
+
+export default  ListItem;

@@ -54,7 +54,7 @@ const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose }) => {
               <span className="label-text">신고내용</span>
             </label>
             <textarea 
-              className="textarea textarea-bordered h-24" 
+              className="textarea textarea-bordered h-24 resize-none" 
               value={reportContent}
               onChange={(e) => setReportContent(e.target.value)}
             ></textarea>

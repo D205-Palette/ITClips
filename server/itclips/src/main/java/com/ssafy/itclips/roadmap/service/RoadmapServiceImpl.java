@@ -325,7 +325,15 @@ public class RoadmapServiceImpl implements RoadmapService {
     }
 
 
+
     //댓글 삭제
+    @Override
+    public void deleteComment(Long commentId, Long userId) throws RuntimeException {
+        RoadmapComment comment = roadmapCommentRepository.findById(commentId)
+                .orElseThrow(() -> new CustomException(ErrorCode.COMMENT_NOT_FOUND));
+
+        roadmapCommentRepository.delete(comment);
+    }
 
 
 

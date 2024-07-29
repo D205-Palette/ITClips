@@ -132,4 +132,12 @@ public class RoadmapController {
         roadmapService.comment(roadmapId,userId, roadmapCommentRequestDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    //로드맵 댓글 삭제
+    @DeleteMapping("/comment/{commentId}/{userId}")
+    @Operation(summary = "로드맵 댓글 삭제", description = "로드맵 댓글 삭제")
+    public ResponseEntity<?> deleteComment(@PathVariable("commentId") Long commentId, @PathVariable("userId") Long userId){
+            roadmapService.deleteComment(commentId, userId);
+            return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

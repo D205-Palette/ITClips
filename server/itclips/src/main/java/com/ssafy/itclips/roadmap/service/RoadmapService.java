@@ -47,4 +47,6 @@ public interface RoadmapService {
 
     // 로드맵 댓글 달기
     void comment(Long roadmapId, Long userId, RoadmapCommentRequestDTO roadmapCommentRequestDTO) throws RuntimeException;
+    // 로드맵 댓글 삭제
+    void deleteComment(Long commentId, Long userId) throws RuntimeException;
 }

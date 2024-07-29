@@ -307,8 +307,22 @@ public class RoadmapServiceImpl implements RoadmapService {
 
     }
 
-    // 댓글달기
+    //단계 삭제
 
+
+    // 댓글달기
+    @Transactional
+    @Override
+    public void comment(Long roadmapId, Long userId, RoadmapCommentRequestDTO roadmapCommentRequestDTO) throws RuntimeException {
+        Roadmap roadmap = roadmapRepository.findById(roadmapId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ROADMAP_NOT_FOUND));
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        RoadmapComment roadmapComment = RoadmapCommentRequestDTO.toEntity(roadmap, user, roadmapCommentRequestDTO);
+
+        roadmapCommentRepository.save(roadmapComment);
+    }
 
 
     //댓글 삭제

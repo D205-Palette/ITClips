@@ -1,5 +1,6 @@
 package com.ssafy.itclips.roadmap.controller;
 
+import com.ssafy.itclips.roadmap.dto.RoadmapCommentRequestDTO;
 import com.ssafy.itclips.roadmap.dto.RoadmapDTO;
 import com.ssafy.itclips.roadmap.dto.RoadmapInfoDTO;
 import com.ssafy.itclips.roadmap.dto.RoadmapRequestDTO;
@@ -123,4 +124,12 @@ public class RoadmapController {
     }
 
 
+    //로드맵 댓글달기
+    @PostMapping("/comment/{roadmapId}/{userId}")
+    @Operation(summary = "로드맵 댓글 달기", description = "로드맵에 댓글 달기")
+    public ResponseEntity<?> comment(@PathVariable("roadmapId") Long roadmapId,@PathVariable("userId") Long userId,
+        @RequestBody RoadmapCommentRequestDTO roadmapCommentRequestDTO){
+        roadmapService.comment(roadmapId,userId, roadmapCommentRequestDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

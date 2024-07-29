@@ -1,5 +1,6 @@
 package com.ssafy.itclips.roadmap.service;
 
+import com.ssafy.itclips.roadmap.dto.RoadmapCommentRequestDTO;
 import com.ssafy.itclips.roadmap.dto.RoadmapDTO;
 import com.ssafy.itclips.roadmap.dto.RoadmapInfoDTO;
 import com.ssafy.itclips.roadmap.dto.RoadmapRequestDTO;
@@ -42,4 +43,8 @@ public interface RoadmapService {
     void scrap(Long roadmapId, Long userId) throws RuntimeException;
     //스크랩한 유저 리스트
     List<UserListDTO> scrapUserList(Long roadmapId) throws RuntimeException;
+
+
+    // 로드맵 댓글 달기
+    void comment(Long roadmapId, Long userId, RoadmapCommentRequestDTO roadmapCommentRequestDTO) throws RuntimeException;
 }

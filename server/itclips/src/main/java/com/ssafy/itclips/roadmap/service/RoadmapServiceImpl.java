@@ -370,9 +370,12 @@ public class RoadmapServiceImpl implements RoadmapService {
         RoadmapComment comment = roadmapCommentRepository.findById(commentId)
                 .orElseThrow(() -> new CustomException(ErrorCode.COMMENT_NOT_FOUND));
 
+        if(!comment.getUser().getId().equals(userId)){
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+        }
+
         roadmapCommentRepository.delete(comment);
     }
-
 
 
     ////////////////// get dto /////////////////////

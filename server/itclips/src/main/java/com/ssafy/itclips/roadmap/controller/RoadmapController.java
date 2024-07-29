@@ -61,20 +61,20 @@ public class RoadmapController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    // 로드맵 수정
+    @PutMapping("/{roadmapId}/{userId}")
+    @Operation(summary = "로드맵 수정", description = "로드맵 수정 페이지입니다. ")
+    public ResponseEntity<?> updateRoadmap(@PathVariable("roadmapId") Long roadmapId,@PathVariable("userId") Long userId, @RequestBody RoadmapRequestDTO roadmapRequestDTO){
+        roadmapService.updateRoadmap(roadmapId,userId, roadmapRequestDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     // 로드맵 상세 보기
     @GetMapping("/{roadmapId}")
     @Operation(summary = "로드맵 상세보기", description = "로드맵 상세페이지입니다. ")
     public ResponseEntity<?> roadmapDetail(@PathVariable("roadmapId") Long roadmapId){
         RoadmapDTO roadmapDTO = roadmapService.roadmapDetail(roadmapId);
         return new ResponseEntity<>(roadmapDTO, HttpStatus.OK);
-    }
-
-    // 로드맵 수정
-    @PutMapping("/{roadmapId}")
-    @Operation(summary = "로드맵 수정", description = "로드맵 수정 페이지입니다. ")
-    public ResponseEntity<?> updateRoadmap(@PathVariable("roadmapId") Long roadmapId, @RequestBody RoadmapRequestDTO roadmapRequestDTO){
-        roadmapService.updateRoadmap(roadmapId,roadmapRequestDTO);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     //로드맵 좋아요

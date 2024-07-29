@@ -116,10 +116,12 @@ public class RoadmapServiceImpl implements RoadmapService {
     // 로드맵수정
     @Override
     @Transactional
-    public void updateRoadmap(Long roadmapId, RoadmapRequestDTO roadmapRequestDTO) throws RuntimeException {
+    public void updateRoadmap(Long roadmapId,Long userId,  RoadmapRequestDTO roadmapRequestDTO) throws RuntimeException {
         // 수정할 로드맵 가져오기
         Roadmap roadmap = roadmapRepository.findById(roadmapId)
                 .orElseThrow(() -> new CustomException(ErrorCode.ROADMAP_NOT_FOUND));
+
+        checkUser(roadmap, userId);
 
         // step에 넣을 bookmark list
         List<Long> listIds = roadmapRequestDTO.getStepList();
@@ -215,15 +217,16 @@ public class RoadmapServiceImpl implements RoadmapService {
     @Override
     public void deleteRoadmap(Long roadmapId , Long userId) throws RuntimeException {
         // 작성자 확인
-        checkUser(roadmapId, userId);
+        Roadmap roadmap = roadmapRepository.findById(roadmapId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ROADMAP_NOT_FOUND));
+
+        checkUser(roadmap, userId);
 
         roadmapRepository.deleteById(roadmapId);
     }
 
-    private void checkUser(Long roadmapId, Long userId) {
+    private void checkUser(Roadmap roadmap, Long userId) {
         // 권한 확인
-        Roadmap roadmap = roadmapRepository.findById(roadmapId)
-                .orElseThrow(() -> new CustomException(ErrorCode.ROADMAP_NOT_FOUND));
         if(!roadmap.getUser().getId().equals(userId)){
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }

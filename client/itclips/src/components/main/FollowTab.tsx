@@ -12,23 +12,23 @@ export default function FollowTab() {
   const isDark = darkModeStore((state)=>state.isDark)
   const textColor = (isDark? "text-slate-300" : "text-slate-900")
 
-  // const navigate = useNavigate()
+  const navigate = useNavigate()
 
-  // const BackButton = (): any => {
-  //   return (
-  //     <button className="me-5  " onClick={()=>navigate(-1)}>
-  //       <IoIosArrowBack size="40px"/>{" "}
-  //     </button>
-  //   );
-  // };
+  const BackButton = (): any => {
+    return (
+      <button className="me-5  " onClick={()=>navigate(-1)}>
+        <IoIosArrowBack size="40px"/>{" "}
+      </button>
+    );
+  };
   
 
   return (
     <>
-      {/* <BackButton /> */}
+      <BackButton />
       <div className="flex justify-around">
-      {/* <NavLink to="follower" className={(({isActive}) => isActive? "text-sky-500 font-bold " : textColor + " font-bold")}><div className="flex flex-row"><div className="flex items-center  mx-2"><FaRegBookmark /></div>팔로워</div></NavLink>
-      <NavLink to="following"  className={(({isActive}) => isActive? "text-sky-500 font-bold " : textColor + " font-bold ")}><div  className="flex flex-row"><div className="flex items-center  mx-2"><MdOutlineBookmarks /></div>팔로잉</div></NavLink> */}
+      <NavLink to="follower" className={(({isActive}) => isActive? "text-sky-500 font-bold " : textColor + " font-bold")}><div className="flex flex-row"><div className="flex items-center  mx-2"><FaRegBookmark /></div>팔로워</div></NavLink>
+      <NavLink to="following"  className={(({isActive}) => isActive? "text-sky-500 font-bold " : textColor + " font-bold ")}><div  className="flex flex-row"><div className="flex items-center  mx-2"><MdOutlineBookmarks /></div>팔로잉</div></NavLink>
     </div>
     </>
   );

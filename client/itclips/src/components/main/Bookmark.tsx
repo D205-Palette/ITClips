@@ -36,6 +36,9 @@ const Bookmark : FC<Props> = ({bookmark}) => {
   };
   const isDark = darkModeStore((state) => state.isDark)
   
+  function goExternalUrl (url:string) : void  {
+      window.location.href = url;
+  }
   
   return (
     <>
@@ -43,7 +46,7 @@ const Bookmark : FC<Props> = ({bookmark}) => {
       <div
         className={(isDark? "hover:brightness-150" : "hover:brightness-95") + " card card-side bg-base-100 shadow-xl hover:cursor-pointer h-28"} >
           <>
-            <div className="card-body flex flex-row items-center" onClick={() => {window.open(`https://https://${bookmark.url}`)}}> 
+            <div className="card-body flex flex-row items-center" onClick={() => goExternalUrl(`https://${bookmark.url}`)}> 
               {/* 주소에 https 포함 여부 확인해야할듯 */}
 
               <div className="flex flex-col flex-auto justify-around">

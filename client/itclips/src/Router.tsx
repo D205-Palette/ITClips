@@ -50,6 +50,14 @@ const router = createBrowserRouter([
             {
               path: 'follow',
               element: <FollowView />,
+              children:[
+                // {path:'follower',
+                // element:,
+                // },
+                // {path:'following',
+                //   element:,
+                //   },
+              ]
             }
         ],
       },

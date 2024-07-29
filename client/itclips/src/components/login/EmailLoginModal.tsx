@@ -19,7 +19,7 @@ const EmailLoginModal: React.FC = () => {
   // 이메일 로그인 로직
   const handleEmailLoginSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    navigate('/my')
+    navigate('/user/:user_id')
 
     const formData = new FormData(e.currentTarget);
     const email = formData.get("email") as string;

@@ -19,7 +19,6 @@ import Follower from "./pages/ProfileView/FollowFollower";
 import Following from "./pages/ProfileView/FollowFollowing";
 
 import SocialSignUpView from "./pages/SocialSignUpView";
-import MyView from "./pages/MyView/MyView";
 
 import LoginView from "./pages/LoginView";
 import EmailLoginView from "./pages/EmailLoginView";
@@ -31,81 +30,76 @@ const router = createBrowserRouter([
     children: [
       // 서비스 소개 페이지
       {
-        path: 'user/:user_id',
-        element : <ProfileView />,
+        path: "user/:user_id",
+        element: <ProfileView />,
         children: [
-            {
-              // path: 'bookmarklist',
-              index:true,
-              element : <MyBookmarkList />
-              
-            },
-            {
-              path: 'groupbookmarklist',
-              element : <MyGroupBookmarkList />
+          {
+            // path: 'bookmarklist',
+            index: true,
+            element: <MyBookmarkList />,
+          },
+          {
+            path: "groupbookmarklist",
+            element: <MyGroupBookmarkList />,
+          },
+          {
+            path: "favorites",
+            element: <MyFavorites />,
+          },
+          {
+            path: "roadmap",
+            element: <MyRoadmap />,
+          },
+          {
+            path: "roadmap/:roadmap_id",
+            element: <RoadmapView />,
+          },
+          {
+            path: "follow",
+            element: <FollowView />,
+            children: [
+              {
+                path: "follower",
+                element: <Follower />,
               },
-            {
-              path: 'favorites',
-              element: <MyFavorites />
-            },
-            {
-              path: 'roadmap',
-              element: <MyRoadmap />,
-            },
-            {
-              path: 'roadmap/:roadmap_id',
-              element: <RoadmapView />
-            },
-            {
-              path:'follow',
-              element: <FollowView />,
-              children:[
-                {
-                  path: 'follower',
-                  element: <Follower />
-                },
-                {
-                  path: 'following',
-                  element: <Following />
-                },
-    
-              ]
-            }
-           
+              {
+                path: "following",
+                element: <Following />,
+              },
+            ],
+          },
         ],
       },
       {
-        path: 'bookmarklist/:bookmarklist_id',
-        element: <MyBookmark />
+        path: "bookmarklist/:bookmarklist_id",
+        element: <MyBookmark />,
       },
       // {
       //   path: 'bookmark/:bookmark_id',
       //   element: <SearchView />
       // },
-      
+
       {
-        path: 'search',
-        element: <SearchView />
+        path: "search",
+        element: <SearchView />,
       },
       {
-        path: 'feed',
-        element: <FeedView />
+        path: "feed",
+        element: <FeedView />,
       },
       {
-        path: 'intro',
-        element: <Intro />
+        path: "intro",
+        element: <Intro />,
       },
       {
-        path: 'signup',
-        element: <SignupView />
+        path: "signup",
+        element: <SignupView />,
       },
       {
         path: "login",
-        element: <LoginView/>,        
-      // Email 로그인 페이지
+        element: <LoginView />,
+        // Email 로그인 페이지
       },
-
-      
     ],
   },
 ]);

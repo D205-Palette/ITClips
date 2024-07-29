@@ -2,6 +2,7 @@ package com.ssafy.itclips.roadmap.service;
 
 import com.ssafy.itclips.bookmark.repository.BookmarkRepository;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
+import com.ssafy.itclips.bookmarklist.dto.BookmarkListRoadmapDTO;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
 import com.ssafy.itclips.bookmarklist.repository.BookmarkListRepository;
 import com.ssafy.itclips.bookmarklist.service.BookmarkListService;
@@ -359,7 +360,7 @@ public class RoadmapServiceImpl implements RoadmapService {
 
         for (RoadmapStep roadmapStep : steps) {
             // 북마크 리스트 1개 가져오기
-            BookmarkListResponseDTO bookmarkListResponseDTO = bookmarkListService.getBookmarkListResponseDTO(roadmapStep.getBookmarkList().getId());
+            BookmarkListRoadmapDTO bookmarkListResponseDTO = bookmarkListService.getBookmarkListResponseDTO(roadmapStep.getBookmarkList().getId());
             RoadmapStepResponseDto stepDto = makeRoadmapStepDTO(roadmapId, roadmapStep, bookmarkListResponseDTO);
 
             stepResponseDtoList.add(stepDto);
@@ -385,11 +386,11 @@ public class RoadmapServiceImpl implements RoadmapService {
 
 
     // 로드맵 단계 DTO
-    private static RoadmapStepResponseDto makeRoadmapStepDTO(Long roadmapId, RoadmapStep roadmapStep, BookmarkListResponseDTO bookmarkListResponseDTO) {
+    private static RoadmapStepResponseDto makeRoadmapStepDTO(Long roadmapId, RoadmapStep roadmapStep, BookmarkListRoadmapDTO bookmarkListResponseDTO) {
         return RoadmapStepResponseDto.builder()
                 .id(roadmapStep.getId())
                 .roadmapId(roadmapId)
-                .bookmarkListResponseDTO(bookmarkListResponseDTO)
+                .bookmarkListRoadmapDTO(bookmarkListResponseDTO)
                 .check(roadmapStep.getCheck())
                 .order(roadmapStep.getOrder())
                 .build();

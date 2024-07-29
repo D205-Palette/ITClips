@@ -46,10 +46,10 @@ const Bookmark : FC<Props> = ({bookmark}) => {
       <div
         className={(isDark? "hover:brightness-150" : "hover:brightness-95") + " card card-side bg-base-100 shadow-xl hover:cursor-pointer h-28"} >
           <>
-            <div className="card-body flex flex-row items-center" onClick={() => goExternalUrl(`https://${bookmark.url}`)}> 
+            <div className="card-body flex flex-row items-center" > 
               {/* 주소에 https 포함 여부 확인해야할듯 */}
 
-              <div className="flex flex-col flex-auto justify-around">
+              <div className="flex flex-col flex-auto justify-around" onClick={() => goExternalUrl(`https://${bookmark.url}`)}>
                 <div>
                   {" "}
                   <h2 className="flex-auto card-title">{bookmark.title}</h2>{" "}

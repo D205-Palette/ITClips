@@ -1,6 +1,7 @@
 // ProfileSettingsModal.tsx 는 AsideProfile.tsx 에서 톱니바퀴 모양의 설정 버튼을 눌렀을 때 출력되는 컴포넌트
 
 import React, { useState } from 'react';
+import darkModeStore from '../../../stores/darkModeStore';
 
 // icons
 import { IoCloseOutline } from 'react-icons/io5';
@@ -17,6 +18,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
   const [ interests, setInterests ] = useState<string[]>(["JAVA", "Python"]);
   const [ newInterest, setNewInterest ] = useState<string>("");
   const [ description, setDescription ] = useState<string>("");
+  const isDark = darkModeStore((state) => state.isDark)
 
   // 관심사 정보 추가 함수
   const handleAddInterest = (): void => {
@@ -35,7 +37,8 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white rounded-lg p-6 w-96">
+      {/* <div className={(isDark ? "bg-slate-900" : "bg-white") + " rounded-lg p-6 w-96"}> */}
+      <div className= "bg-white rounded-lg p-6 w-96">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">내 정보 변경</h2>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700">

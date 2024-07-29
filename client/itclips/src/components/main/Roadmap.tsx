@@ -39,7 +39,7 @@ const RoadMap : FC<Props> = (({roadmap}) => {
             : isDark
             ? "hover:brightness-150"
             : "hover:brightness-95") +
-          " card card-side bg-base-100 shadow-xl hover:cursor-pointer h-32"
+          " card card-side bg-base-100 shadow-xl hover:cursor-pointer h-32 my-1"
         }
       >
         <>

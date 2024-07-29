@@ -15,7 +15,8 @@ import FollowView from './pages/ProfileView/FollowView'
 
 // const changeIsFollow = mainTabStore((state) => state.changeIsFollow)
 import RoadMapView from './pages/RoadmapView';
-import Follower from './pages/FollowView';
+import Follower from './pages/ProfileView/FollowFollower';
+import Following from './pages/ProfileView/FollowFollowing';
 
 const router = createBrowserRouter([
   {
@@ -58,7 +59,7 @@ const router = createBrowserRouter([
                 },
                 {
                   path: 'following',
-                  element: <Follower />
+                  element: <Following />
                 },
     
               ]

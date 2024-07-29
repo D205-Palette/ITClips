@@ -33,6 +33,7 @@ const MyFollow = () => {
         >
             팔로우 자리입니다
             <Outlet />
+            
         </div>
       </div>
     </>

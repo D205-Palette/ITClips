@@ -12,9 +12,10 @@ import ProfileView from './pages/ProfileView';
 import MyBookmark from './pages/BookmarkView';
 import RoadmapView from './pages/RoadmapView';
 import FollowView from './pages/ProfileView/FollowView'
-import mainTabStore from './stores/mainTabStore'
 
 // const changeIsFollow = mainTabStore((state) => state.changeIsFollow)
+import RoadMapView from './pages/RoadmapView';
+import Follower from './pages/FollowView';
 
 const router = createBrowserRouter([
   {
@@ -48,17 +49,21 @@ const router = createBrowserRouter([
               element: <RoadmapView />
             },
             {
-              path: 'follow',
+              path:'follow',
               element: <FollowView />,
               children:[
-                // {path:'follower',
-                // element:,
-                // },
-                // {path:'following',
-                //   element:,
-                //   },
+                {
+                  path: 'follower',
+                  element: <Follower />
+                },
+                {
+                  path: 'following',
+                  element: <Follower />
+                },
+    
               ]
             }
+           
         ],
       },
       {

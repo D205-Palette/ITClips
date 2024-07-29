@@ -65,7 +65,6 @@ export const navStore = create<StoreState>()(
       name: "nav-store", // 로컬 스토리지에 저장할 키 이름
       storage: createJSONStorage(() => localStorage), // 로컬 스토리지 사용
       partialize: (state) => ({ isLoggedIn: state.isLoggedIn }), // isLoggedIn만 저장
-   
     }
   )
 );

@@ -1,22 +1,31 @@
 // Tags.tsx 는 AsideBookmarkList.tsx 에서 태그를 출력하는 컴포넌트
 
-interface Tag {
+interface Comment {
+  id: number;
   username: string;
   content: string;
 }
 
-const Tags = () => {
+interface Tag {
+  id: number;
+  content: string;
+}
 
-  // 더미 데이터
-  const data: Tag[] = [
-    { username: "고양양", content: "#태그" },
-    { username: "고양양", content: "#태그2" },
-    { username: "고양양", content: "#태그3" },
-  ]
+interface ItemProps {
+  itemName: string;
+  email: string;
+  description: string;
+  like: number;
+  fav: number;
+  tags: Tag[];
+  comments: Comment[];
+}
+
+const Tags = (data: ItemProps) => {
 
   return (
-    <div className="m-6 flex">
-      {data.map((tag) => (
+    <div className="m-2 flex">
+      {data.tags.map((tag) => (
         <p>{tag.content}&nbsp;</p>
       ))}
     </div>

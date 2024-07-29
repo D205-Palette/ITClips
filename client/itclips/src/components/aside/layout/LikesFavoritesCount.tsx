@@ -3,18 +3,28 @@
 // icons
 import { FaRegHeart, FaRegStar } from "react-icons/fa";
 
-interface LikesFavoritesInfo {
-  likes: number;
-  fav: number;
+interface Comment {
+  id: number;
+  username: string;
+  content: string;
 }
 
-const LikesFavoritesCount = () => {
+interface Tag {
+  id: number;
+  content: string;
+}
 
-  // 더미 데이터
-  const data: LikesFavoritesInfo = {
-    likes: 20,
-    fav: 55,
-  }
+interface ItemProps {
+  itemName: string;
+  email: string;
+  description: string;
+  like: number;
+  fav: number;
+  tags: Tag[];
+  comments: Comment[];
+}
+
+const LikesFavoritesCount = (data: ItemProps) => {
 
   return (
     <div className="grid grid-cols-6">
@@ -23,7 +33,7 @@ const LikesFavoritesCount = () => {
           <FaRegHeart />
         </div>
         <div>
-          <span>{data.likes}</span>
+          <span>{data.like}</span>
         </div>
       </div>
       <div className="col-start-5 flex">

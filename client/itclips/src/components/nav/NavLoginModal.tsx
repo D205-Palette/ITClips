@@ -7,8 +7,6 @@ import axios from "axios";
 
 import FindIdModal from "./FindIdModal";
 import FindPasswordModal from "./FindPasswordModal";
-import FindIdCompleteModal from "./FindIdCompleteModal";
-import FindPasswordCompleteModal from "./FindPasswordCompleteModal";
 
 const LoginModal = () => {
   const navigate = useNavigate();
@@ -17,10 +15,8 @@ const LoginModal = () => {
 
   const {
     isFindIdModalOpen,
-    isFindIdCompleteModalOpen,
     isFindPasswordModalOpen,
     openFindIdModal,
-    openFindIdCompleteModal,
     openFindPasswordModal,
     closeLoginModal,
   } = modalState;
@@ -52,27 +48,29 @@ const LoginModal = () => {
     const formData = new FormData(e.currentTarget);
     const username = formData.get("username") as string;
     const password = formData.get("password") as string;
-
-    axios.post("loginApiUrl위치", {
-      username,
-      password,
-    })
-    .then(response => {
-      if (response.status === 200) {
-        setErrorMessage(""); // 에러 메시지 초기화
-        closeLoginModal();
-      } else {
+    
+    // api 로그인 요청
+    axios
+      .post("loginApiUrl위치", {
+        username,
+        password,
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          setErrorMessage(""); // 에러 메시지 초기화
+          closeLoginModal();
+        } else {
+          setErrorMessage(
+            "아이디 또는 비밀번호가 잘못 되었습니다. 아이디와 비밀번호를 정확히 입력해 주세요."
+          );
+        }
+      })
+      .catch((error) => {
+        // 로그인 실패 시 에러 메시지 설정
         setErrorMessage(
           "아이디 또는 비밀번호가 잘못 되었습니다. 아이디와 비밀번호를 정확히 입력해 주세요."
         );
-      }
-    })
-    .catch(error => {
-      // 로그인 실패 시 에러 메시지 설정
-      setErrorMessage(
-        "아이디 또는 비밀번호가 잘못 되었습니다. 아이디와 비밀번호를 정확히 입력해 주세요."
-      );
-    });
+      });
   };
 
   return (
@@ -158,9 +156,8 @@ const LoginModal = () => {
       </div>
 
       {/* 아이디 찾기, 비밀번호 찾기 모달 */}
-      {isFindIdModalOpen && <FindIdModal />}      
+      {isFindIdModalOpen && <FindIdModal />}
       {isFindPasswordModalOpen && <FindPasswordModal />}
-      
     </div>
   );
 };

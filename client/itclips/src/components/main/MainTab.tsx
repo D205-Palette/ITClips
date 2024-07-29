@@ -1,5 +1,6 @@
 // 버전 1 : 리스트, 공유 리스트, 즐겨찾기, 로드맵
 // 버전 2 : 팔로워, 팔로잉
+import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { FaRegStar, FaStar } from "react-icons/fa";
 import { FaRegBookmark } from "react-icons/fa";

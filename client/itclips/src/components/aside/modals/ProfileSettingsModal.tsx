@@ -13,9 +13,10 @@ interface ProfileSettingsModalProps {
 
 const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onClose }) => {
   // 임시 데이터들
-  const [name, setName] = useState<string>('');
-  const [interests, setInterests] = useState<string[]>(['JAVA', 'Python']);
-  const [newInterest, setNewInterest] = useState<string>('');
+  const [ name, setName ] = useState<string>("");
+  const [ interests, setInterests ] = useState<string[]>(["JAVA", "Python"]);
+  const [ newInterest, setNewInterest ] = useState<string>("");
+  const [ description, setDescription ] = useState<string>("");
 
   // 관심사 정보 추가 함수
   const handleAddInterest = (): void => {
@@ -60,6 +61,16 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
             className="w-full px-3 py-2 border rounded-md"
             placeholder="이름을 입력하세요"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-2">소개글</label>
+          <textarea
+            value={description}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
+            className="w-full px-3 py-2 border rounded-md resize-none"
+            placeholder="자기소개를 입력하세요"
           />
         </div>
 

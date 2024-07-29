@@ -4,9 +4,12 @@
 ### key
 /src/main/resources/application-secret.yml
 
+<<<<<<< HEAD
 ### key
 /src/main/resources/application-secret.properties
 
+=======
+>>>>>>> 82b702778e08265e3c1b30a3578a0213b3d28189
 HELP.md
 .gradle
 build/

@@ -7,8 +7,10 @@ server:
 spring:
   application:
     name: itclips
+
   profiles:
     include: secret
+
 
   config:
     import: optional:classpath:application-secret.yml
@@ -21,6 +23,7 @@ spring:
       password: ${DB_PASSWORD}
 
       pool-name: Hikari Connection Pool
+
       maximum-pool-size: 50
       minimum-idle: 50
       connection-timeout: 5000

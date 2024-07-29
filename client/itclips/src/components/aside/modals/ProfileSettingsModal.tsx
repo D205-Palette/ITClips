@@ -30,7 +30,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
   const isDark = darkModeStore((state) => state.isDark)
 
   const [ jobCategory, setJobCategory ] = useState("직업");
-  const [gender, setGender] = useState(""); // 성별 상태
+  const [ gender, setGender ] = useState(""); // 성별 상태
 
   // 성별 선택 핸들러
   const handleGenderSelect = (
@@ -156,9 +156,10 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
           <JobCategoryDropdown selectCategory={selectCategory} />
         </div>
 
+        {/* 관심사 설정 */}
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-2">관심사 설정</label>
-          <div className="flex flex-wrap gap-2 mb-2">
+          <div className="flex flex-wrap items-center gap-2 p-2 border rounded-md">
             {interests.map((interest, index) => (
               <span key={index} className="bg-gray-200 px-2 py-1 rounded-full text-sm flex items-center">
                 {interest}
@@ -167,17 +168,19 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
                 </button>
               </span>
             ))}
-          </div>
-
-          <div className="flex">
             <input
               type="text"
               value={newInterest}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewInterest(e.target.value)}
-              className="flex-grow px-3 py-2 border rounded-l-md"
-              placeholder="새 관심사 입력"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  handleAddInterest();
+                }
+              }}
+              className="flex-grow min-w-[100px] px-2 py-1 text-sm border-none focus:outline-none"
+              placeholder="새 관심사 입력 후 Enter"
             />
-            <button onClick={handleAddInterest} className="btn btn-primary rounded-l-none">+</button>
           </div>
         </div>
 

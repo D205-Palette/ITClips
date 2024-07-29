@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 interface JobProps {
   selectCategory: (category: string) => void;
@@ -7,6 +7,7 @@ interface JobProps {
 const JobCategoryDropdown: React.FC<JobProps> = ({ selectCategory }) => {
   const [ searchCategory, setSearchCategory ] = useState<string>("프론트엔드 개발자");
   const [ isOpen, setIsOpen ] = useState<boolean>(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const toggleDropdown = (): void => setIsOpen(!isOpen);
 
@@ -38,8 +39,21 @@ const JobCategoryDropdown: React.FC<JobProps> = ({ selectCategory }) => {
     setIsOpen(false);
   }
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="inline-block relative">
+    <div className="inline-block relative" ref={dropdownRef}>
       <button
         id="dropdownDefaultButton"
         onClick={toggleDropdown}

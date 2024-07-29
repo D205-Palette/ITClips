@@ -168,4 +168,9 @@ public class UserServiceImpl implements UserService {
         }
         return UUID.randomUUID().toString() + ext;
     }
+
+    public void updatePassword(User user, String newPassword) {
+        user.setPassword(bCryptPasswordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
 }

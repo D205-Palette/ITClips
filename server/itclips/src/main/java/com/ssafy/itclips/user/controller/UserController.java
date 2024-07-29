@@ -24,7 +24,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadLocalRandom;
 
 @RestController
 @RequiredArgsConstructor
@@ -39,6 +41,7 @@ public class UserController {
 
     private final MailService mailService;
     private final ConcurrentHashMap<String, String> verificationCodes = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, String> passwordResetCodes = new ConcurrentHashMap<>();
 
     private static final String UNAUTHORIZED_MESSAGE = "Unauthorized";
     private static final String PROFILE_IMAGE_UPDATE_SUCCESS = "프로필 이미지가 성공적으로 업데이트 되었습니다.";
@@ -239,7 +242,7 @@ public class UserController {
     }
 
     @PostMapping("/mail/verifyCode")
-    @Operation(summary = "이메일 인증 코드 확인", description = "이메일로 받은 인증 코드를 확인합니다.")
+    @Operation(summary = "이메일 인증 확인", description = "이메일로 받은 인증 코드를 확인합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "인증 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 인증 코드"),
@@ -256,6 +259,75 @@ public class UserController {
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잘못된 인증 코드입니다.");
         }
+    }
+
+    @PostMapping("/pw/sendVerification")
+    @Operation(summary = "비밀번호 찾기 요청", description = "닉네임과 이메일을 통해 비밀번호 찾기 요청을 처리하고, 인증 코드를 이메일로 보냅니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "인증 코드 발송 성공"),
+            @ApiResponse(responseCode = "404", description = "사용자 정보를 찾을 수 없음")
+    })
+    public ResponseEntity<?> sendPasswordResetCode(@RequestParam("nickname") String nickname, @RequestParam("email") String email) {
+        User user = userRepository.findByNicknameAndEmail(nickname, email).get();
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보를 찾을 수 없습니다.");
+        }
+        try {
+            String resetCode = mailService.sendVerificationEmail(email);
+            passwordResetCodes.put(email, resetCode);
+            return ResponseEntity.ok("인증 코드가 발송되었습니다.");
+        } catch (MessagingException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("인증 코드 발송 중 오류가 발생했습니다.");
+        }
+    }
+
+    @PostMapping("/pw/verifyCode")
+    @Operation(summary = "비밀번호 찾기 인증 코드 확인", description = "이메일로 받은 인증 코드를 확인합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "인증 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 인증 코드"),
+            @ApiResponse(responseCode = "404", description = "이메일을 찾을 수 없음")
+    })
+    public ResponseEntity<?> verifyPasswordResetCode(@RequestParam("email") String email, @RequestParam("code") String code) {
+        String storedCode = passwordResetCodes.get(email);
+        if (storedCode == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("이메일을 찾을 수 없습니다.");
+        }
+        if (storedCode.equals(code)) {
+            passwordResetCodes.remove(email);
+            return ResponseEntity.ok("인증 성공");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잘못된 인증 코드입니다.");
+        }
+    }
+
+    @PostMapping("/password/reset")
+    @Operation(summary = "비밀번호 초기화", description = "인증 코드 확인 후 임시 비밀번호를 이메일로 발송합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "임시 비밀번호 발송 성공"),
+            @ApiResponse(responseCode = "404", description = "사용자 정보를 찾을 수 없음"),
+            @ApiResponse(responseCode = "500", description = "임시 비밀번호 발송 중 오류 발생")
+    })
+    public ResponseEntity<?> resetPassword(@RequestParam("email") String email) {
+        User user = userRepository.findByEmail(email).get();
+        try {
+            String temporaryPassword = generateTemporaryPassword();
+            userService.updatePassword(user, temporaryPassword);
+            mailService.sendTemporaryPassword(email, temporaryPassword);
+            return ResponseEntity.ok("임시 비밀번호가 발송되었습니다.");
+        } catch (MessagingException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("임시 비밀번호 발송 중 오류가 발생했습니다.");
+        }
+    }
+
+    private String generateTemporaryPassword() {
+        int length = 10;
+        StringBuilder tempPassword = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            char randomChar = (char) ThreadLocalRandom.current().nextInt(33, 127);
+            tempPassword.append(randomChar);
+        }
+        return tempPassword.toString();
     }
 
     private boolean isAuthenticated() {

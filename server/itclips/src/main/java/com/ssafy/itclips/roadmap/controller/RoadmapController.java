@@ -7,8 +7,11 @@ import com.ssafy.itclips.roadmap.dto.RoadmapRequestDTO;
 import com.ssafy.itclips.roadmap.service.RoadmapService;
 import com.ssafy.itclips.user.dto.UserListDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,10 +54,10 @@ public class RoadmapController {
     }
 
     // 로드맵 삭제
-    @DeleteMapping("/{roadmapId}")
+    @DeleteMapping("/{roadmapId}/{userId}")
     @Operation(summary = "로드맵 삭제", description = "로드맵을 삭제합니다.")
-    public ResponseEntity<?> deleteRoadmap(@PathVariable("roadmapId") Long roadmapId){
-        roadmapService.deleteRoadmap(roadmapId);
+    public ResponseEntity<?> deleteRoadmap(@PathVariable("roadmapId") Long roadmapId, @PathVariable("userId")Long userId){
+        roadmapService.deleteRoadmap(roadmapId,userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

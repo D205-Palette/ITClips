@@ -213,8 +213,20 @@ public class RoadmapServiceImpl implements RoadmapService {
 
     // 로드맵 삭제
     @Override
-    public void deleteRoadmap(Long roadmapId) throws RuntimeException {
+    public void deleteRoadmap(Long roadmapId , Long userId) throws RuntimeException {
+        // 작성자 확인
+        checkUser(roadmapId, userId);
+
         roadmapRepository.deleteById(roadmapId);
+    }
+
+    private void checkUser(Long roadmapId, Long userId) {
+        // 권한 확인
+        Roadmap roadmap = roadmapRepository.findById(roadmapId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ROADMAP_NOT_FOUND));
+        if(!roadmap.getUser().getId().equals(userId)){
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+        }
     }
 
     //로드맵 상세보기

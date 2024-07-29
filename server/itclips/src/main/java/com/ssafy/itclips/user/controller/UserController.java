@@ -7,11 +7,13 @@ import com.ssafy.itclips.user.entity.OauthSignupForm;
 import com.ssafy.itclips.user.entity.SignupForm;
 import com.ssafy.itclips.user.entity.User;
 import com.ssafy.itclips.user.repository.UserRepository;
+import com.ssafy.itclips.user.service.MailService;
 import com.ssafy.itclips.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,6 +36,9 @@ public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
     private final JwtTokenProvider tokenProvider;
+
+    private final MailService mailService;
+    private final ConcurrentHashMap<String, String> verificationCodes = new ConcurrentHashMap<>();
 
     private static final String UNAUTHORIZED_MESSAGE = "Unauthorized";
     private static final String PROFILE_IMAGE_UPDATE_SUCCESS = "프로필 이미지가 성공적으로 업데이트 되었습니다.";
@@ -214,6 +220,42 @@ public class UserController {
 
         // 새로운 토큰 응답
         return ResponseEntity.ok(newJwtToken);
+    }
+
+    @PostMapping("/mail/sendVerification")
+    @Operation(summary = "이메일 인증 요청", description = "이메일로 인증 코드를 보냅니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "인증 이메일 발송 성공"),
+            @ApiResponse(responseCode = "500", description = "이메일 발송 중 오류 발생")
+    })
+    public ResponseEntity<?> sendVerificationEmail(@RequestParam("email") String email) {
+        try {
+            String verificationCode = mailService.sendVerificationEmail(email);
+            verificationCodes.put(email, verificationCode);
+            return ResponseEntity.ok("인증 이메일이 발송되었습니다.");
+        } catch (MessagingException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이메일 발송 중 오류가 발생했습니다.");
+        }
+    }
+
+    @PostMapping("/mail/verifyCode")
+    @Operation(summary = "이메일 인증 코드 확인", description = "이메일로 받은 인증 코드를 확인합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "인증 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 인증 코드"),
+            @ApiResponse(responseCode = "404", description = "이메일을 찾을 수 없음")
+    })
+    public ResponseEntity<?> verifyCode(@RequestParam("email") String email, @RequestParam("code") String code) {
+        String storedCode = verificationCodes.get(email);
+        if (storedCode == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("이메일을 찾을 수 없습니다.");
+        }
+        if (storedCode.equals(code)) {
+            verificationCodes.remove(email);
+            return ResponseEntity.ok("인증 성공");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잘못된 인증 코드입니다.");
+        }
     }
 
     private boolean isAuthenticated() {

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/list")
+@RequestMapping("/api/list")
 @RequiredArgsConstructor
 @Slf4j
 @Tag(name = "BookmarkList Controller", description = "북마크리스트 관련 API") // 표시명 및 설명 설정

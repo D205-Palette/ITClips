@@ -19,7 +19,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -31,22 +32,23 @@ import java.util.Set;
 @Entity
 @Table(name = "user", schema = "itclips")
 public class User {
-    @Id
+
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
     @Size(max = 255)
-    @NotNull
+    @NotNull(message = "Email cannot be null")
     @Column(name = "email", nullable = false)
     private String email;
 
     @Size(max = 511)
-    @NotNull
+    @NotNull(message = "Password cannot be null")
     @Column(name = "password", nullable = false, length = 511)
     private String password;
 
     @Size(max = 50)
-    @NotNull
+    @NotNull(message = "Nickname cannot be null")
     @Column(name = "nickname", nullable = false, length = 50)
     private String nickname;
 
@@ -55,15 +57,15 @@ public class User {
     private String profileImage;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "created_at")
-    private Instant createdAt;
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "updated_at")
-    private Instant updatedAt;
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
 
     @Column(name = "birth")
-    private Instant birth;
+    private LocalDate birth;
 
     @Size(max = 50)
     @Column(name = "job", length = 50)
@@ -77,11 +79,10 @@ public class User {
     private String refreshToken;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false, columnDefinition = "ENUM('USER', 'ADMIN') DEFAULT 'USER'")
+    @Column(nullable = false)
     private Role role;
 
-    @ColumnDefault("0")
-    @Column(name = "dark_mode")
+    @Column(name = "dark_mode", nullable = false)
     private Boolean darkMode;
 
     @Column(name = "provider")
@@ -95,6 +96,13 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private Set<UserTag> userTags = new LinkedHashSet<>();
+
+    public User update(String nickname, String profileImage) {
+        this.nickname = nickname;
+        this.profileImage = profileImage;
+        this.updatedAt = LocalDateTime.now();
+        return this;
+    }
 
     @OneToMany(mappedBy = "user")
     private List<Roadmap> roadmapList = new ArrayList<>();
@@ -133,10 +141,22 @@ public class User {
     }
 
     @Builder
-    public User(String email, String password, String nickname, String profileImage) {
+    public User(Long id, String email, String password, String nickname, String profileImage,
+                LocalDateTime createdAt, LocalDateTime updatedAt, LocalDate birth, String job, Boolean gender,
+                String refreshToken, Role role, Boolean darkMode, String provider) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.profileImage = profileImage;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.birth = birth;
+        this.job = job;
+        this.gender = gender;
+        this.refreshToken = refreshToken;
+        this.role = role;
+        this.darkMode = darkMode;
+        this.provider = provider;
     }
 }

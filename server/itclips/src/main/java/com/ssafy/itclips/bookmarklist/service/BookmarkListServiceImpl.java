@@ -322,7 +322,6 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         categories.forEach(bookmarkList::addCategory);
     }
 
-
     private List<User> getGroupUsers(List<String> emails) {
         return Optional.ofNullable(emails)
                 .filter(e -> !e.isEmpty())

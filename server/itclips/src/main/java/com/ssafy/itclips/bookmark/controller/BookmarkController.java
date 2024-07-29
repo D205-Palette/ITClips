@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/bookmark")
+@RequestMapping("/api/bookmark")
 @RequiredArgsConstructor
 @Slf4j
 @Tag(name = "Bookmark Controller", description = "북마크 관련 API") // 표시명 및 설명 설정

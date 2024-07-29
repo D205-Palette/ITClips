@@ -1,6 +1,9 @@
 ### QClass
 /src/main/generated/
 
+### key
+/src/main/resources/application-secret.yml
+
 HELP.md
 .gradle
 build/

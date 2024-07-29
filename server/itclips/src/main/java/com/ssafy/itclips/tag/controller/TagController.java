@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/tags")
+@RequestMapping("/api/tags")
 @RequiredArgsConstructor
 @Slf4j
 @io.swagger.v3.oas.annotations.tags.Tag(name = "Tag Controller", description = "태그 관련 API") // 표시명 및 설명 설정

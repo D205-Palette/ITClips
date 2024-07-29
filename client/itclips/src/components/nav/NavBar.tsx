@@ -43,10 +43,6 @@ const NavBar = () => {
           {/* 로그인 시에만 보임 */}
           {isLoggedIn && (
             <ul className="flex gap-4 list-none">
-              {/* <Link  to='my'><p onClick={() => changeTab('my')} className={(whatTab==='my'? "text-sky-500" : {textColor}) + ' font-bold'}>MY</p></Link>
-              <Link  to='feed'><p onClick={()=>changeTab('feed')} className={(whatTab==='feed'? "text-sky-500" :{textColor}) + ' font-bold'}>피드</p></Link>
-              <Link  to='search'><p onClick={() => changeTab('search')} className={(whatTab==='search'? "text-sky-500" : {textColor}) + ' font-bold'}>검색</p></Link> */}
-
               <NavLink  to='user/:user_id' className={(({isActive}) => isActive? "text-sky-500 font-bold" : textColor + " font-bold")}>MY</NavLink>
               <NavLink  to='feed' className={(({isActive}) => isActive? "text-sky-500 font-bold" : textColor +" font-bold")}>피드</NavLink>
               <NavLink  to='search' className={(({isActive}) => isActive? "text-sky-500 font-bold" : textColor + " font-bold")}>검색</NavLink>

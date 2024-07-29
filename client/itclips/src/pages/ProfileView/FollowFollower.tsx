@@ -1,13 +1,12 @@
 import SearchBar from "../../components/main/MainSearchBar";
 import MainTab from "../../components/main/MainTab";
-
-const MyFavorites = () => {       
+import FollowerList from '../../components/follow/FollowerList'
+const Follower = () => {       
   return (
     <>
-    <MainTab />
-    <SearchBar whatSearch={'즐겨찾기'} />
+    <FollowerList />
     </>
   );
 };
 
-export default MyFavorites;
+export default Follower;

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,FC } from "react";
 import useStore from "../../stores/mainStore";
 import KebabDropdown from "../common/KebabDropdown";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
@@ -12,9 +12,23 @@ import { useNavigate } from "react-router-dom";
 
 // }
 
-export default function ListItem() {
+interface Props {
+  list: {
+    pk: number;
+    image: string;
+    bookmarks: object[];
+    title: string;
+    bookmark_list_tags: string[];
+    description: string;
+    bookmark_list_like: number;
+  }
+};
+
+const ListItem : FC<Props> = ({list}) => {
+
+
   const navigate = useNavigate();
-  const list = useStore((state) => state.list);
+
   const [isHover, setIsHovering] = useState(false);
   const [isLike, setIsLike] = useState(false);
   const clickHeart = (): void => {
@@ -63,7 +77,7 @@ export default function ListItem() {
               </div>
               <div>
                 <button onClick={clickHeart} className="btn btn-ghost p-1">
-                {isLike ? <FaHeart /> : <FaRegHeart />}
+                {isLike ? <FaHeart color="red"/> : <FaRegHeart />}
                   
                   {list.bookmark_list_like}
                 </button>
@@ -88,4 +102,6 @@ export default function ListItem() {
       </div>
     </>
   );
-}
+};
+
+export default  ListItem;

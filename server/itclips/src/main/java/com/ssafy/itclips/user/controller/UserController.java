@@ -28,7 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 @CrossOrigin("*")
 @Tag(name = "User Controller", description = "유저 관련 API")
 public class UserController {

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/roadmap")
+@RequestMapping("/api/roadmap")
 @RequiredArgsConstructor
 @Slf4j
 @Tag(name = "roadmap Controller", description = "로드맵 관련 API")

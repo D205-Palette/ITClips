@@ -1,12 +1,16 @@
 # application.yml
 server:
   port: 80
-  servlet:
-    context-path: /api
+#  servlet:
+#    context-path: /api
 
 spring:
   application:
     name: itclips
+
+  profiles:
+    include: secret
+
 
   config:
     import: optional:classpath:application-secret.yml
@@ -14,6 +18,9 @@ spring:
   datasource:
     hikari:
       driver-class-name: com.mysql.cj.jdbc.Driver
+#      jdbc-url: jdbc:mysql://${DB_HOST}/${DB_NAME}?serverTimezone=UTC&useUnicode=yes&characterEncoding=UTF-8
+#      username: ${DB_USER}
+#      password: ${DB_PASSWORD}
       jdbc-url: jdbc:mysql://localhost:3306/itclips?serverTimezone=UTC&useUnicode=yes&characterEncoding=UTF-8
       username: root
       password: 1234

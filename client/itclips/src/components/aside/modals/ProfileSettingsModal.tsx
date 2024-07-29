@@ -4,6 +4,14 @@ import React, { useState } from 'react';
 
 // icons
 import { IoCloseOutline } from 'react-icons/io5';
+import {
+  FaTransgender,
+  FaMale,
+  FaFemale,
+} from "react-icons/fa";
+
+// components
+import JobCategoryDropdown from '../ui/JobCategoryDropdown';
 
 // 프로필 모달 상태 props
 interface ProfileSettingsModalProps {
@@ -12,11 +20,29 @@ interface ProfileSettingsModalProps {
 }
 
 const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onClose }) => {
+
   // 임시 데이터들
   const [ name, setName ] = useState<string>("");
   const [ interests, setInterests ] = useState<string[]>(["JAVA", "Python"]);
   const [ newInterest, setNewInterest ] = useState<string>("");
   const [ description, setDescription ] = useState<string>("");
+
+  const [ jobCategory, setJobCategory ] = useState("직업");
+  const [gender, setGender] = useState(""); // 성별 상태
+
+  // 성별 선택 핸들러
+  const handleGenderSelect = (
+    selectedGender: string,
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault(); // 기본 동작 방지
+    setGender(selectedGender); // 성별 상태 업데이트
+  };
+
+  // 카테고리 선택 정보 함수
+  const selectCategory = (category: string) => {
+    setJobCategory(category);
+  };
 
   // 관심사 정보 추가 함수
   const handleAddInterest = (): void => {
@@ -43,25 +69,35 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
           </button>
         </div>
 
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">프로필 이미지</label>
-          <div className="flex items-center space-x-2">
-            {/* 여기에 나중에 프로필 이미지 출력 */}
-            <div className="w-16 h-16 bg-gray-200 rounded-full"></div>
-            {/* 프로필 이미지 변경 버튼 */}
-            <button className="btn btn-outline btn-sm">변경</button>
+        <div className="flex justify-between">
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">프로필 이미지</label>
+            <div className="flex items-center space-x-2">
+              {/* 여기에 나중에 프로필 이미지 출력 */}
+              <div className="w-16 h-16 bg-gray-200 rounded-full"></div>
+              {/* 프로필 이미지 변경 버튼 */}
+              <button className="btn btn-outline btn-sm">변경</button>
+            </div>
           </div>
-        </div>
 
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">이름</label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
-            className="w-full px-3 py-2 border rounded-md"
-            placeholder="이름을 입력하세요"
-          />
+          <div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">닉네임</label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+                className="w-full px-3 py-2 border rounded-md"
+                placeholder="닉네임을 입력하세요"
+              />
+            </div>
+
+
+            <div className="mb-4 space-y-2">
+              <button className="btn btn-outline btn-sm">비밀번호 변경</button>
+              <button className="btn btn-outline btn-sm text-red-500">회원탈퇴</button>
+            </div>
+          </div>
         </div>
 
         <div className="mb-4">
@@ -74,9 +110,47 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
           />
         </div>
 
-        <div className="mb-4 space-y-2">
-          <button className="btn btn-outline btn-sm">비밀번호 변경</button>
-          <button className="btn btn-outline btn-sm text-red-500">회원탈퇴</button>
+        {/* 생년월일 입력칸 */}
+        <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">생년월일</label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+                className="w-full px-3 py-2 border rounded-md"
+                placeholder="생년월일을 입력하세요"
+              />
+            </div>
+        {/* 성별 선택칸 */}
+        {/* 성별 선택 */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">성별</label>
+          <div className="flex items-center gap-3 mb-2">
+            <button
+              className={`btn ${
+                gender === "male" ? "btn-primary" : "btn-outline"
+              } flex-1`}
+              onClick={(event) => handleGenderSelect("male", event)}
+            >
+              <FaMale className="w-6 h-6 mr-1" />
+              남성
+            </button>
+            <button
+              className={`btn ${
+                gender === "female" ? "btn-primary" : "btn-outline"
+              } flex-1`}
+              onClick={(event) => handleGenderSelect("female", event)}
+            >
+              <FaFemale className="w-6 h-6 mr-1" />
+              여성
+            </button>
+          </div>
+        </div>
+
+        {/* 직업 카테고리 선택 */}
+        <div className="mb-2">
+          <label className="block text-sm font-medium text-gray-700 mb-2">직업</label>
+          <JobCategoryDropdown selectCategory={selectCategory} />
         </div>
 
         <div className="mb-4">
@@ -91,6 +165,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
               </span>
             ))}
           </div>
+
           <div className="flex">
             <input
               type="text"

@@ -322,7 +322,6 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         categories.forEach(bookmarkList::addCategory);
     }
 
-
     private List<User> getGroupUsers(List<String> emails) {
         return Optional.ofNullable(emails)
                 .filter(e -> !e.isEmpty())
@@ -351,9 +350,10 @@ public class BookmarkListServiceImpl implements BookmarkListService {
 
     @Override
     public BookmarkListResponseDTO getBookmarkListResponseDTO(Long listId) {
-        BookmarkList bookmarkList = bookmarkListRepository.findById(listId).orElseThrow();
-
-        return convertToBookmarkListResponseDTO(bookmarkList);
+//        BookmarkList bookmarkList = bookmarkListRepository.findById(listId).orElseThrow();
+//
+//        return convertToBookmarkListResponseDTO(bookmarkList);
+        return null;
     }
 
 }

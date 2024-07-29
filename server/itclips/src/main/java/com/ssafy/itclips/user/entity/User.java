@@ -128,6 +128,10 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<BookmarkListReport> bookmarkListReports = new ArrayList<>();
 
+    public String getRoleKey() {
+        return this.role.getKey();
+    }
+
     public void addBookmarkList(BookmarkList bookmarkList) {
         bookmarkLists.add(bookmarkList);
         bookmarkList.setUser(this);

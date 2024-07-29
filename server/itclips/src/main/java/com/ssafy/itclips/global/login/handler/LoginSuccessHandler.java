@@ -1,9 +1,11 @@
 package com.ssafy.itclips.global.login.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.itclips.global.jwt.JwtToken;
 import com.ssafy.itclips.global.jwt.JwtTokenProvider;
 import com.ssafy.itclips.user.entity.User;
 import com.ssafy.itclips.user.repository.UserRepository;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,30 +35,40 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     @Override
     @Transactional
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                        Authentication authentication) {
-        try {
-            String email = extractUsername(authentication);
-            String token = String.valueOf(jwtTokenProvider.generateToken(authentication));
-            User user = userRepository.findByEmail(email).get();
+                                        Authentication authentication) throws IOException {
 
-            // Initialize lazy collections
-            user.getBookmarkLists().size();
+        // Token 생성
+        JwtToken jwtToken = jwtTokenProvider.generateToken(authentication);
 
-            Map<String, Object> tokenMap = new HashMap<>();
-            tokenMap.put("accessToken", token);
-            tokenMap.put("email", email);
-            tokenMap.put("user", user);
+        String email = extractUsername(authentication);
 
-            log.info(token);
-            response.setContentType("application/json;charset=UTF-8");
-            response.getWriter().write(objectMapper.writeValueAsString(tokenMap));
+        // User 정보 조회 및 업데이트
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("No user found with email: " + email));
 
-            log.info("로그인에 성공하였습니다. 이메일 : {}", email);
-            log.info("발급된 AccessToken 만료 기간 : {}", accessTokenExpiration);
+        // Initialize lazy collections
+        user.getBookmarkLists().size();
 
-        } catch (IOException e) {
-            log.error("응답 쓰기 실패", e);
-        }
+        // 리프레시 토큰 저장
+        user.setRefreshToken(jwtToken.getRefreshToken());
+
+        userRepository.save(user);
+
+        // HTTP response 헤더에 Token 설정
+        response.setHeader("Authorization", jwtToken.getGrantType() + " " + jwtToken.getAccessToken());
+        response.setHeader("Authorization-Refresh", jwtToken.getRefreshToken());
+
+        Map<String, Object> tokenMap = new HashMap<>();
+        tokenMap.put("accessToken", jwtToken.getAccessToken());
+        tokenMap.put("refreshToken", jwtToken.getRefreshToken());
+        tokenMap.put("email", email);
+        tokenMap.put("user", user);
+
+        response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().write(objectMapper.writeValueAsString(tokenMap));
+
+        log.info("로그인에 성공하였습니다. 이메일 : {}", email);
+        log.info("발급된 AccessToken 만료 기간 : {}", accessTokenExpiration);
     }
 
     private String extractUsername(Authentication authentication) {

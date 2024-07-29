@@ -52,6 +52,13 @@ public class UserServiceImpl implements UserService {
         String encPwd = bCryptPasswordEncoder.encode(signupForm.getPassword());
         User user = signupForm.toEntity(encPwd);
 
+        // JWT 토큰 생성
+        Authentication authentication = new UsernamePasswordAuthenticationToken(signupForm.getEmail(), signupForm.getPassword());
+        JwtToken jwtToken = jwtTokenProvider.generateToken(authentication);
+
+        // 리프레시 토큰 저장
+        user.setRefreshToken(jwtToken.getRefreshToken());
+
         userRepository.save(user);
         return userRepository.findByEmail(signupForm.getEmail())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found."));
@@ -63,11 +70,16 @@ public class UserServiceImpl implements UserService {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginForm.getEmail(), loginForm.getPassword());
 
-        // 인증 처리
-        Authentication authentication = authenticationManager.authenticate(authenticationToken);
-
         // JWT 토큰 생성 및 반환
-        return jwtTokenProvider.generateToken(authentication);
+        JwtToken jwtToken = jwtTokenProvider.generateToken(authenticationToken);
+
+        // 리프레시 토큰 저장
+        User user = userRepository.findByEmail(loginForm.getEmail())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found."));
+        user.setRefreshToken(jwtToken.getRefreshToken());
+        userRepository.save(user);
+
+        return jwtToken;
     }
 
     @Transactional

@@ -1,14 +1,5 @@
-// SearchMain.tsx 는 검색창 들어가면 제일 처음 나오는 컴포넌트
-
-import { useState } from "react";
-
 // components
 import FollowingItem from "./FollowingItem";
-
-// icons
-import { FaList } from "react-icons/fa";
-import { CiBoxList } from "react-icons/ci";
-import { HiOutlineSquares2X2, HiMiniSquares2X2 } from "react-icons/hi2";
 
 interface User {
   id: number;

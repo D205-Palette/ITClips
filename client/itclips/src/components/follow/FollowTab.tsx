@@ -1,18 +1,20 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { FaRegStar, FaStar } from "react-icons/fa";
+
+// icons
 import { FaRegBookmark } from "react-icons/fa";
-import { FaRegMap } from "react-icons/fa6";
 import { MdOutlineBookmarks } from "react-icons/md";
-import darkModeStore from "../../stores/darkModeStore";
 import { IoIosArrowBack } from "react-icons/io";
 
+// stores
+import darkModeStore from "../../stores/darkModeStore";
 
-export default function FollowTab() {
+
+const FollowTab = () => {
   
-  const isDark = darkModeStore((state)=>state.isDark)
-  const textColor = (isDark? "text-slate-300" : "text-slate-900")
+  const isDark = darkModeStore((state)=>state.isDark);
+  const textColor = (isDark? "text-slate-300" : "text-slate-900");
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const BackButton = (): any => {
     return (
@@ -21,7 +23,6 @@ export default function FollowTab() {
       </button>
     );
   };
-  
 
   return (
     <>
@@ -33,3 +34,5 @@ export default function FollowTab() {
     </>
   );
 }
+
+export default FollowTab;

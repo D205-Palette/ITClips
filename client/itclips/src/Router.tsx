@@ -1,14 +1,22 @@
 import { createBrowserRouter } from 'react-router-dom';
-import MyBookmarkList from './pages/MyView/MyBookmarkList';
-import MyGroupBookmarkList from './pages/MyView/MyGroupBookmarkList';
-import MyFavorites from './pages/MyView/MyFavorites';
-import MyRoadmap from './pages/MyView/MyRoadmap';
+import MyBookmarkList from './pages/ProfileView/MyBookmarkList';
+import MyGroupBookmarkList from './pages/ProfileView/MyGroupBookmarkList';
+import MyFavorites from './pages/ProfileView/MyFavorites';
+import MyRoadmap from './pages/ProfileView/MyRoadmap';
 import FeedView from './pages/FeedView'
 import SearchView from './pages/SearchView'
 import Intro from './pages/Intro';
 import SignupView from './pages/SignUpView'
 import App from './App';
-import MyView from './pages/MyView/MyView';
+import ProfileView from './pages/ProfileView';
+import MyBookmark from './pages/BookmarkView';
+import RoadmapView from './pages/RoadmapView';
+import FollowView from './pages/ProfileView/FollowView'
+
+// const changeIsFollow = mainTabStore((state) => state.changeIsFollow)
+import RoadMapView from './pages/RoadmapView';
+import Follower from './pages/ProfileView/FollowFollower';
+import Following from './pages/ProfileView/FollowFollowing';
 
 const router = createBrowserRouter([
   {
@@ -16,35 +24,73 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: '/my',
-        element : <MyView />,
+        path: 'user/:user_id',
+        element : <ProfileView />,
         children: [
             {
-              path: '',
+              // path: 'bookmarklist',
+              index:true,
+              element : <MyBookmarkList />
+              
             },
             {
-                path: 'groupbookmarklist',
+              path: 'groupbookmarklist',
+              element : <MyGroupBookmarkList />
               },
-              {
-                path: 'favorites',
-              },
-              {
-                path: 'roadmap',
-              },
-
+            {
+              path: 'favorites',
+              element: <MyFavorites />
+            },
+            {
+              path: 'roadmap',
+              element: <MyRoadmap />,
+            },
+            {
+              path: 'roadmap/:roadmap_id',
+              element: <RoadmapView />
+            },
+            {
+              path:'follow',
+              element: <FollowView />,
+              children:[
+                {
+                  path: 'follower',
+                  element: <Follower />
+                },
+                {
+                  path: 'following',
+                  element: <Following />
+                },
+    
+              ]
+            }
+           
         ],
       },
       {
-        path: '/search',
+        path: 'bookmarklist/:bookmarklist_id',
+        element: <MyBookmark />
+      },
+      // {
+      //   path: 'bookmark/:bookmark_id',
+      //   element: <SearchView />
+      // },
+      
+      {
+        path: 'search',
+        element: <SearchView />
       },
       {
-        path: '/feed',
+        path: 'feed',
+        element: <FeedView />
       },
       {
-        path: '/intro',
+        path: 'intro',
+        element: <Intro />
       },
       {
-        path: '/signup',
+        path: 'signup',
+        element: <SignupView />
       },
     ],
   },

@@ -73,7 +73,7 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({ isOpen, onClose }) =>
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            className="w-full px-3 py-2 border rounded-md"
+            className="w-full px-3 py-2 border rounded-md resize-none"
             placeholder="리스트 내용을 입력하세요"
             rows={3}
           />

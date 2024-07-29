@@ -1,10 +1,10 @@
 import SearchBar from "../../components/main/MainSearchBar";
+import MainTab from "../../components/main/MainTab";
 
 const MyGroupBookmarkList = () => {       
   return (
     <>
-    <a href="/SignUpView" className="transition-colors duration-300 hover:text-gray-400"></a>
-
+<MainTab />
     <SearchBar whatSearch={'그룹 북마크 리스트'} />
     </>
   );

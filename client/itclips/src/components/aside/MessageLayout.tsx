@@ -1,8 +1,4 @@
-// MessageLayout은 AsideMessage.tsx, AsideMessageDetail.tsx, AsideStartNewMessage.tsx를 묶어주는 역할
-
 import { useState } from "react";
-
-// components
 import AsideMessage from "./AsideMessage";
 import AsideMessageDetail from "./AsideMessageDetail";
 import AsideStartNewMessage from "./AsideStartNewMessage";

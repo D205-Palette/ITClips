@@ -28,7 +28,7 @@ const FollowerItem: React.FC<Props> = ({ items }) => {
     <div className="space-y-4">
       {items.map((item) => (
         <div key={item.id}>
-          <NavLink to="/user/:user_id" className="flex items-center space-x-4 p-4 bg-white rounded-lg shadow">
+          <NavLink to="/user/:user_id" className="flex items-center space-x-4 p-4 rounded-lg shadow">
             <img src={item.imageUrl} alt={item.username} className="w-20 h-20 object-cover rounded" />
             <div className="flex-grow">
               <h3 className="text-lg font-semibold">{item.username}</h3>

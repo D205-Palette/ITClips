@@ -1,5 +1,6 @@
 // UserActivityInfo.tsx 는 유저의 정보(팔로워, 팔로잉, 리스트 갯수, 북마크 갯수)를 출력하고
 // 팔로워, 팔로잉의 숫자를 누르면 팔로우 관리 창으로 이동하는 컴포넌트
+import { useNavigate } from "react-router-dom";
 
 interface ActivityInfo {
   followers: number;
@@ -9,6 +10,7 @@ interface ActivityInfo {
 }
 
 const UserActivityInfo = () => {
+  const navigate = useNavigate()
 
   // 더미 데이터
   const data: ActivityInfo = {
@@ -22,9 +24,11 @@ const UserActivityInfo = () => {
   const onClick = (event: any) => {
     console.log(event.target.id);
     if (event.target.id === "followers") {
-      alert("팔로워 창으로 이동합니다.");
+      navigate('/user/:user_id/follow/follower')
+      // alert("팔로워 창으로 이동합니다.");
     } else if (event.target.id === "following") {
-      alert("팔로잉 창으로 이동합니다.");
+      navigate('/user/:user_id/follow/following')
+      // alert("팔로잉 창으로 이동합니다.");
     }
   }
 

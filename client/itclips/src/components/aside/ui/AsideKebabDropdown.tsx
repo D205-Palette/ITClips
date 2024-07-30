@@ -1,11 +1,15 @@
-import { useState } from 'react';
+import { useState,FC } from 'react';
 import { VscKebabVertical } from "react-icons/vsc";
 import BookmarkListEditModal from "../modals/BookmarkListEditModal";
 import DeleteBookmarkListModal from "../modals/DeleteBookmarkListModal";
 import UrlCopyModal from "../modals/UrlCopyModal";
 import ReportModal from "../modals/ReportModal";
 
-const AsideKebabDropdown = () => {
+interface Props {
+  isRoadmap : boolean
+}
+
+const AsideKebabDropdown :FC<Props> = (isRoadmap) => {
   const [ isEditModalOpen, setIsEditModalOpen ] = useState<boolean>(false);
   const [ isDeleteModalOpen, setIsDeleteModalOpen ] = useState<boolean>(false);
   const [ isUrlCopyModalOpen, setIsUrlCopyModalOpen ] = useState<boolean>(false);
@@ -15,7 +19,7 @@ const AsideKebabDropdown = () => {
 
   const toggleDropdown = (): void => setIsDropdownOpen(!isDropdownOpen);
 
-  const categories: string[] = ["수정하기", "삭제하기", "url복사", "신고하기"];
+  const categories: string[] = (isRoadmap.isRoadmap? ["수정하기", "삭제하기", "url복사"]: ["수정하기", "삭제하기", "url복사", "신고하기"])
 
   const handleMenu = (menu: string) => {
     if (menu === "수정하기") {

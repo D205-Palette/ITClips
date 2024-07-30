@@ -6,9 +6,9 @@ import { FaRegStar, FaStar } from "react-icons/fa";
 import { FaRegBookmark } from "react-icons/fa";
 import { FaRegMap } from "react-icons/fa6";
 import { MdOutlineBookmarks } from "react-icons/md";
-import tabStore from "../../stores/mainTabStore";
+// import tabStore from "../../stores/mainTabStore";
 import darkModeStore from "../../stores/darkModeStore";
-import mainTabStore from "../../stores/mainTabStore";
+// import mainTabStore from "../../stores/mainTabStore";
 import { BsHeartFill } from "react-icons/bs";
 import { BsFillPeopleFill } from "react-icons/bs";
 

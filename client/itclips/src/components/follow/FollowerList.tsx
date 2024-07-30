@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 // components
-import FollowItems from "./FollowItems";
+import FollowItems from "./FollowItem";
 
 // icons
 import { FaList } from "react-icons/fa";
@@ -55,7 +55,7 @@ const SearchMain = () => {
         <hr />
       </div>
       {/* 추천 결과 */}
-      <FollowItems items={data} viewMode={viewMode} />
+      {/* <FollowItems items={data} viewMode={viewMode} /> */}
     </div>
   );
 };

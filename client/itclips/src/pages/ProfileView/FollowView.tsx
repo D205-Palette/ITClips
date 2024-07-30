@@ -13,29 +13,12 @@ const MyFollow = () => {
 
   return (
     <>
-      <div id="Body" className="grid grid-cols-8 gap-4">
-        {/* aside 자리 */}
-        <div id="aside" className="col-start-2 col-span-2 hidden xl:block ">
-          {/* 메세지 뜨는 위치 */}
-          <div id="aside" className="absolute col-start-2 col-span-2">
-            {isMessageOpen && <MessageLayout />}
-          </div>
-          {/* <AsideProfile /> */}
-
-        </div>
-
         {/* main자리 */}
         <FollowTab />
-    
-        <div
-          id="Main"
-          className="lg:col-start-4 lg:col-span-4 md:col-start-3 md:col-span-5 sm:col-start-2 sm:col-span-6"
-        >
-            팔로우 자리입니다
-            <Outlet />
-            
-        </div>
-      </div>
+
+        <Outlet />
+
+
     </>
   );
 };

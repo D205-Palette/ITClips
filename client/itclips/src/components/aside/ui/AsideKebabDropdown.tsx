@@ -1,8 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+
+// icons
 import { VscKebabVertical } from "react-icons/vsc";
+
+// components
 import BookmarkListEditModal from "../modals/BookmarkListEditModal";
 import DeleteBookmarkListModal from "../modals/DeleteBookmarkListModal";
-import UrlCopyModal from "../modals/UrlCopyModal";
+import UrlCopyModal from "../../common/UrlCopyModal";
 import ReportModal from "../modals/ReportModal";
 
 const AsideKebabDropdown = () => {
@@ -12,13 +16,26 @@ const AsideKebabDropdown = () => {
   const [ isReportModalOpen, setIsReportModalOpen ] = useState<boolean>(false);
   const [ isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const toggleDropdown = (): void => setIsDropdownOpen(!isDropdownOpen);
 
-  // 링크 복사 함수
   const handleCopyClipBoard = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
-      // 복사가 완료되었다는 모달 출력
       setIsUrlCopyModalOpen(true)
     } catch (error) {
       console.log(error);
@@ -33,7 +50,6 @@ const AsideKebabDropdown = () => {
     } else if (menu === "삭제하기") {
       setIsDeleteModalOpen(true);
     } else if (menu === "url복사") {
-      // setIsUrlCopyModalOpen(true);
       handleCopyClipBoard();
     } else if (menu === "신고하기") {
       setIsReportModalOpen(true);
@@ -42,7 +58,7 @@ const AsideKebabDropdown = () => {
   };
 
   return (
-    <div className="self-end flex justify-end relative">
+    <div className="self-end flex justify-end relative" ref={dropdownRef}>
       <button
         id="dropdownDefaultButton"
         onClick={toggleDropdown}
@@ -52,9 +68,8 @@ const AsideKebabDropdown = () => {
         <VscKebabVertical />
       </button>
 
-      {/* 드롭다운 메뉴 추가 */}
       {isDropdownOpen && (
-        <div className="absolute right-0 top-full mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 z-10"> {/* right-0과 top-full 추가 */}
+        <div className="absolute right-0 top-full mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 z-10">
           <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
             {categories.map((category) => (
               <li key={category} onClick={() => handleMenu(category)}>

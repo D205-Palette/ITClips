@@ -4,13 +4,14 @@ import { Outlet } from "react-router-dom";
 
 import NavBar from "./components/nav/NavBar";
 
-const App = () => {  
+const App = () => {
   return (
-    <div className="App">
+    <div className="App relative">
       <header className="App-header">
         <NavBar />
       </header>
-      <main>
+
+      <main className="absolute top-16 w-full ">
         <Outlet />
       </main>
     </div>

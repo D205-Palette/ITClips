@@ -5,13 +5,15 @@ import AsideStartNewMessage from "./AsideStartNewMessage";
 
 // stores
 import darkModeStore from "../../stores/darkModeStore";
+import { asideStore } from "../../stores/asideStore";
 
 const MessageLayout = () => {
 
-  const [ selectedChat, setSelectedChat ] = useState(null);
-  const [ showInvite, setShowInvite ] = useState(null);
-
+  const [showInvite, setShowInvite] = useState(null);
   const isDark = darkModeStore(state => state.isDark);
+  const selectedChat = asideStore(state => state.selectedChat);
+  const isMessageOpen = asideStore(state => state.isMessageOpen);
+  const setSelectedChat = asideStore(state => state.setSelectedChat);
 
   const handleSelectChat = (chatId: any) => {
     setSelectedChat(chatId);
@@ -33,6 +35,10 @@ const MessageLayout = () => {
     handleBackToList();
     setSelectedChat(chatId);
   };
+
+  if (!isMessageOpen) {
+    return null;
+  }
 
   return (
     // selectedChat은 선택된 메세지 창이 있을 때 값이 들어간다

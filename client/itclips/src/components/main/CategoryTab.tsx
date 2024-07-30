@@ -5,7 +5,7 @@ import { FaRegStar, FaStar } from "react-icons/fa";
 import { FaRegBookmark } from "react-icons/fa";
 import { FaRegMap } from "react-icons/fa6";
 import { MdOutlineBookmarks } from "react-icons/md";
-import mainTabStore from "../../stores/mainTabStore";
+// import mainTabStore from "../../stores/mainTabStore";
 import darkModeStore from "../../stores/darkModeStore";
 import CategorySingleTab from "./CategorySingleTab";
 import { useState, useRef } from "react";
@@ -51,6 +51,7 @@ export default function CategoryTab() {
       // 엔터 눌러도 되고 다른 부분 클릭해도 되게할까...?
       addCategory(inputValue);
       modeChange(false); // 추가하면 추가 모드 off
+      
     };
     return (
       <form onSubmit={createCategory}>
@@ -84,14 +85,16 @@ export default function CategoryTab() {
   
   return (
     <>
-      <div className="flex flex-row m-3 items-center whitespace-nowrap  container overflow-x-scroll py-5 " onWheel={handleScroll}>
+    
+      <div className="flex flex-row m-3 items-centerpy-5 " >
         <BackButton />
-        
+        <div className=" flex flex-row  whitespace-nowrap  container overflow-x-scroll " onWheel={handleScroll}>
         {categories.map((category, index) => (
           <CategorySingleTab whatCategory={category} index={index}  />
         ))}
         {/* {categories.map((category)=>  TabButton (whatCategory, category))  } */}
         {createMode ? <CreateCategorySection /> : <PlusButton />}
+        </div>
       </div>
     </>
   );

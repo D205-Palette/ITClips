@@ -71,9 +71,9 @@ export default function FeedView() {
           className="lg:col-start-4 lg:col-span-4 md:col-start-3 md:col-span-5 sm:col-start-2 sm:col-span-6"
         >
           <h1>NEW 북마크리스트</h1>
-          
+          {/* <ListItem /> */}
           <h1>NEW 로드맵</h1>
-          
+          {/* <Roadmap /> */}
         </div>
       </div>
     </>

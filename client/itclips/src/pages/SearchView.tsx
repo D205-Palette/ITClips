@@ -9,6 +9,7 @@ import SearchUser from "../components/search/SearchUser";
 import SearchBookmarkList from "../components/search/SearchBookmarkList";
 import SearchRoadmap from "../components/search/SearchRoadmap.tsx";
 import SearchTag from "../components/search/SearchTag";
+import RealtimeSidebar from "../components/search/layout/RealtimeSidebar";
 
 // stores
 import { asideStore } from "../stores/asideStore";
@@ -59,12 +60,18 @@ const SearchView = () => {
             </div>
           </div>
         </div>
-        {/* 실시간 인기 순위는 검색 메인에서만 */}
-        { whatCategory === "카테고리" && (
-          <div className="w-60 col-start-7">
-            <RealtimeList />
+
+        <div className="col-start-7 col-span-2">
+          <div className="my-6">
+            <RealtimeSidebar />
           </div>
-        )}
+          {/* 실시간 인기 순위는 검색 메인에서만 */}
+          { whatCategory === "카테고리" && (
+            <div className="w-60">
+              <RealtimeList />
+            </div>
+          )}
+        </div>
       </div>
     </>
   );

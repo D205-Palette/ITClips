@@ -11,10 +11,10 @@ spring:
   profiles:
     include: secret
   # Redis Config
-    active: local
+#    active: local
   data:
     redis:
-      host: localhost
+      host: ${DB_HOST}
       port: 6379
 
   config:

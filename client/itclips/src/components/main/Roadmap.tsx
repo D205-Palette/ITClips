@@ -139,11 +139,13 @@ const RoadMap: FC<Props> = ({ roadmapId }) => {
                   : percentage == "100"
                   ? "bg-green-900"
                   : "bg-sky-900") + " h-full absolute z-0 top-0 left-0"
+                  
               }
               style={{ width: `${percentage}%` }}
+              onClick={() => navigate(":roadmap_id")}
             ></div>
-            <div className="flex flex-col justify-around z-20">
-              <div onClick={() => navigate(":roadmap_id")}>
+            <div className="flex flex-col justify-around z-20 " onClick={() => navigate(":roadmap_id")}>
+              <div>
                 <h2 className=" card-title">{roadmap.title}</h2>
               </div>
 

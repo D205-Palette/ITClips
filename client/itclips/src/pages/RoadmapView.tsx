@@ -130,7 +130,7 @@ const RoadmapView = () => {
 
   const BackButton = (): any => {
     return (
-      <button className="me-5  " onClick={() => navigate(-1)}>
+      <button className="me-5  " onClick={() => navigate(`/user/${roadmap.userId}/roadmap/`)}>
         <IoIosArrowBack size="40px" />{" "}
       </button>
     );

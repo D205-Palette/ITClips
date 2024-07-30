@@ -1,4 +1,7 @@
-import React from 'react';
+import React from "react";
+
+// components
+import SearchItemKebabDropdown from "../ui/SearchItemKebabDropdown";
 
 interface RecommandedItem {
   id: number;
@@ -22,7 +25,7 @@ const RecommendedItems: React.FC<Props> = ({ items, viewMode }) => {
     return (
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         {items.map((item) => (
-          <div key={item.id} className="bg-white rounded-lg shadow overflow-hidden">
+          <div key={item.id} className="bg-base-100 rounded-lg shadow overflow-hidden">
             <img src={item.imageUrl} alt={item.title} className="w-full h-40 object-cover" />
             <div className="p-4">
               <h3 className="text-lg font-semibold truncate">{item.title}</h3>
@@ -42,7 +45,7 @@ const RecommendedItems: React.FC<Props> = ({ items, viewMode }) => {
   return (
     <div className="space-y-4">
       {items.map((item) => (
-        <div key={item.id} className="flex items-center space-x-4 p-4 bg-white rounded-lg shadow">
+        <div key={item.id} className="flex items-center space-x-4 p-4 bg-base-100 rounded-lg shadow">
           <img src={item.imageUrl} alt={item.title} className="w-20 h-20 object-cover rounded" />
           <div className="flex-grow">
             <h3 className="text-lg font-semibold">{item.title}</h3>
@@ -53,7 +56,9 @@ const RecommendedItems: React.FC<Props> = ({ items, viewMode }) => {
               <span className="text-sm text-gray-500">{item.createdAt}</span>
             </div>
           </div>
-          <button className="text-gray-400 hover:text-gray-600">•••</button>
+          <div>
+            <SearchItemKebabDropdown />
+          </div>
         </div>
       ))}
     </div>

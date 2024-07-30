@@ -188,7 +188,7 @@ const SignUpView = () => {
           {/* 이메일 입력 및 본인 인증 버튼 */}
           <div className="space-y-4 mb-6">
             <div className="flex items-center gap-3">
-              <div className="flex w-12 h-8">
+              <div className="flex">
                 <CiMail className="w-8 h-8" />
                 <span className="text-red-500 pl-1">*</span>
               </div>
@@ -249,7 +249,7 @@ const SignUpView = () => {
           {/* 비밀번호 입력 및 확인 */}
           <div className="space-y-4 mb-6">
             <div className="relative flex items-center gap-3">
-              <div className="flex w-12 w-8">
+              <div className="flex">
                 <FaKey className="w-8 h-8" />
                 <span className="text-red-500 pl-1">*</span>
               </div>
@@ -295,7 +295,7 @@ const SignUpView = () => {
           {/* 닉네임 입력 및 중복 확인 버튼 */}
           <div className="space-y-4 mb-6">
             <div className="flex items-center gap-3">
-              <div className="flex w-12 h-8">
+              <div className="flex">
                 <FaAddressCard className="w-8 h-8" />
                 <span className="text-red-500 pl-1">*</span>
               </div>

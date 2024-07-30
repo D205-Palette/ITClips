@@ -1,5 +1,6 @@
 package com.ssafy.itclips.roadmap.dto;
 
+import com.ssafy.itclips.roadmap.entity.Roadmap;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -23,12 +24,13 @@ public class RoadmapDTO {
     private List<RoadmapStepResponseDto> stepList; // 단계 리스트 간략 정보
     private List<RoadmapCommentDTO> commentList; // 댓글 리스트
     private Long likeCnt; // 좋아요 수
+    private Long scrapCnt; // 스크랩 수
 
 
     @Builder
     public RoadmapDTO(Long id, Long origin,  Long userId,String userName,  String title, String description, LocalDateTime createdAt,
                       String image, Byte isPublic, List<RoadmapStepResponseDto> stepList, List<RoadmapCommentDTO> commentList,
-                      Long likeCnt) {
+                      Long likeCnt, Long scrapCnt) {
         this.id = id;
         this.origin = origin;
         this.userId = userId;
@@ -41,5 +43,23 @@ public class RoadmapDTO {
         this.stepList = stepList;
         this.commentList = commentList;
         this.likeCnt = likeCnt;
+        this.scrapCnt = scrapCnt;
+    }
+
+    public static RoadmapDTO toDTO(Roadmap roadmap,List<RoadmapStepResponseDto> stepResponseDtoList,List<RoadmapCommentDTO>  roadmapCommentDTOList,Long likeCnt,Long scrapCnt  ) {
+        return RoadmapDTO.builder()
+                .id(roadmap.getId())
+                .userId(roadmap.getUser().getId())
+                .userName(roadmap.getUser().getNickname())
+                .title(roadmap.getTitle())
+                .description(roadmap.getDescription())
+                .createdAt(roadmap.getCreatedAt())
+                .image(roadmap.getImage())
+                .isPublic(roadmap.getIsPublic())
+                .stepList(stepResponseDtoList)
+                .commentList(roadmapCommentDTOList)
+                .likeCnt(likeCnt)
+                .scrapCnt(scrapCnt)
+                .build();
     }
 }

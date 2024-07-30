@@ -2,6 +2,7 @@ package com.ssafy.itclips.roadmap.service;
 
 import com.ssafy.itclips.bookmark.repository.BookmarkRepository;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
+import com.ssafy.itclips.bookmarklist.dto.BookmarkListRoadmapDTO;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
 import com.ssafy.itclips.bookmarklist.repository.BookmarkListRepository;
 import com.ssafy.itclips.bookmarklist.service.BookmarkListService;
@@ -115,10 +116,12 @@ public class RoadmapServiceImpl implements RoadmapService {
     // 로드맵수정
     @Override
     @Transactional
-    public void updateRoadmap(Long roadmapId, RoadmapRequestDTO roadmapRequestDTO) throws RuntimeException {
+    public void updateRoadmap(Long roadmapId,Long userId,  RoadmapRequestDTO roadmapRequestDTO) throws RuntimeException {
         // 수정할 로드맵 가져오기
         Roadmap roadmap = roadmapRepository.findById(roadmapId)
                 .orElseThrow(() -> new CustomException(ErrorCode.ROADMAP_NOT_FOUND));
+
+        checkUser(roadmap, userId);
 
         // step에 넣을 bookmark list
         List<Long> listIds = roadmapRequestDTO.getStepList();
@@ -212,8 +215,21 @@ public class RoadmapServiceImpl implements RoadmapService {
 
     // 로드맵 삭제
     @Override
-    public void deleteRoadmap(Long roadmapId) throws RuntimeException {
+    public void deleteRoadmap(Long roadmapId , Long userId) throws RuntimeException {
+        // 작성자 확인
+        Roadmap roadmap = roadmapRepository.findById(roadmapId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ROADMAP_NOT_FOUND));
+
+        checkUser(roadmap, userId);
+
         roadmapRepository.deleteById(roadmapId);
+    }
+
+    private void checkUser(Roadmap roadmap, Long userId) {
+        // 권한 확인
+        if(!roadmap.getUser().getId().equals(userId)){
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+        }
     }
 
     //로드맵 상세보기
@@ -232,8 +248,11 @@ public class RoadmapServiceImpl implements RoadmapService {
         // 좋아요 수
         Long likeCnt = roadmapLikeRepository.countByRoadmapId(roadmap.getId());
 
+        // 스크랩 수
+        Long scrapCnt = roadmapRepository.countByOrigin(roadmapId);
+
         // dto에 넣기
-        RoadmapDTO roadmapDTO = makeRoadmapDTO(roadmap, stepResponseDtoList, roadmapCommentDTOList, likeCnt);
+        RoadmapDTO roadmapDTO = RoadmapDTO.toDTO(roadmap, stepResponseDtoList, roadmapCommentDTOList, likeCnt, scrapCnt);
 
 
         return roadmapDTO;
@@ -294,20 +313,42 @@ public class RoadmapServiceImpl implements RoadmapService {
         return userListDTOList;
     }
 
-
     // 로드맵 단계 진행 체크
     @Transactional
     @Override
-    public void checkStep(Long stepId) throws RuntimeException {
+    public void checkStep(Long stepId, Long userId) throws RuntimeException {
+
+        // 스탭 가져오기
         RoadmapStep step = roadmapStepRepository.findById(stepId)
                 .orElseThrow(()->new CustomException(ErrorCode.STEP_NOT_FOUND));
+
+        // 권한 확인
+        Roadmap roadmap = step.getRoadmap();
+        checkUser(roadmap, userId);
+
+        // 0 -> 1 1->0
         step.setCheck(!step.getCheck());
 
+        //저장
         roadmapStepRepository.save(step);
 
     }
 
     //단계 삭제
+    @Override
+    public void deleteStep(Long stepId, Long userId) throws RuntimeException {
+        // 스탭
+        RoadmapStep step = roadmapStepRepository.findById(stepId)
+                .orElseThrow(()->new CustomException(ErrorCode.STEP_NOT_FOUND));
+
+        // 권한 확인
+        Roadmap roadmap = step.getRoadmap();
+        checkUser(roadmap, userId);
+
+        // 삭제
+        roadmapStepRepository.deleteById(stepId);
+    }
+
 
 
     // 댓글달기
@@ -332,9 +373,12 @@ public class RoadmapServiceImpl implements RoadmapService {
         RoadmapComment comment = roadmapCommentRepository.findById(commentId)
                 .orElseThrow(() -> new CustomException(ErrorCode.COMMENT_NOT_FOUND));
 
+        if(!comment.getUser().getId().equals(userId)){
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+        }
+
         roadmapCommentRepository.delete(comment);
     }
-
 
 
     ////////////////// get dto /////////////////////
@@ -359,7 +403,7 @@ public class RoadmapServiceImpl implements RoadmapService {
 
         for (RoadmapStep roadmapStep : steps) {
             // 북마크 리스트 1개 가져오기
-            BookmarkListResponseDTO bookmarkListResponseDTO = bookmarkListService.getBookmarkListResponseDTO(roadmapStep.getBookmarkList().getId());
+            BookmarkListRoadmapDTO bookmarkListResponseDTO = bookmarkListService.getBookmarkListResponseDTO(roadmapStep.getBookmarkList().getId());
             RoadmapStepResponseDto stepDto = makeRoadmapStepDTO(roadmapId, roadmapStep, bookmarkListResponseDTO);
 
             stepResponseDtoList.add(stepDto);
@@ -385,11 +429,11 @@ public class RoadmapServiceImpl implements RoadmapService {
 
 
     // 로드맵 단계 DTO
-    private static RoadmapStepResponseDto makeRoadmapStepDTO(Long roadmapId, RoadmapStep roadmapStep, BookmarkListResponseDTO bookmarkListResponseDTO) {
+    private static RoadmapStepResponseDto makeRoadmapStepDTO(Long roadmapId, RoadmapStep roadmapStep, BookmarkListRoadmapDTO bookmarkListResponseDTO) {
         return RoadmapStepResponseDto.builder()
                 .id(roadmapStep.getId())
                 .roadmapId(roadmapId)
-                .bookmarkListResponseDTO(bookmarkListResponseDTO)
+                .bookmarkListRoadmapDTO(bookmarkListResponseDTO)
                 .check(roadmapStep.getCheck())
                 .order(roadmapStep.getOrder())
                 .build();
@@ -407,21 +451,5 @@ public class RoadmapServiceImpl implements RoadmapService {
                 .build();
     }
 
-    // 로드맵 dto
-    private static RoadmapDTO makeRoadmapDTO(Roadmap roadmap, List<RoadmapStepResponseDto> stepResponseDtoList, List<RoadmapCommentDTO> roadmapCommentDTOList, Long likeCnt) {
-        RoadmapDTO roadmapDTO = new RoadmapDTO().builder()
-                .id(roadmap.getId())
-                .userId(roadmap.getUser().getId())
-                .userName(roadmap.getUser().getNickname())
-                .title(roadmap.getTitle())
-                .description(roadmap.getDescription())
-                .createdAt(roadmap.getCreatedAt())
-                .image(roadmap.getImage())
-                .isPublic(roadmap.getIsPublic())
-                .stepList(stepResponseDtoList)
-                .commentList(roadmapCommentDTOList)
-                .likeCnt(likeCnt)
-                .build();
-        return roadmapDTO;
-    }
+
 }

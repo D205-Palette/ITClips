@@ -7,8 +7,11 @@ import com.ssafy.itclips.roadmap.dto.RoadmapRequestDTO;
 import com.ssafy.itclips.roadmap.service.RoadmapService;
 import com.ssafy.itclips.user.dto.UserListDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,10 +54,18 @@ public class RoadmapController {
     }
 
     // 로드맵 삭제
-    @DeleteMapping("/{roadmapId}")
+    @DeleteMapping("/{roadmapId}/{userId}")
     @Operation(summary = "로드맵 삭제", description = "로드맵을 삭제합니다.")
-    public ResponseEntity<?> deleteRoadmap(@PathVariable("roadmapId") Long roadmapId){
-        roadmapService.deleteRoadmap(roadmapId);
+    public ResponseEntity<?> deleteRoadmap(@PathVariable("roadmapId") Long roadmapId, @PathVariable("userId")Long userId){
+        roadmapService.deleteRoadmap(roadmapId,userId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // 로드맵 수정
+    @PutMapping("/{roadmapId}/{userId}")
+    @Operation(summary = "로드맵 수정", description = "로드맵 수정 페이지입니다. ")
+    public ResponseEntity<?> updateRoadmap(@PathVariable("roadmapId") Long roadmapId,@PathVariable("userId") Long userId, @RequestBody RoadmapRequestDTO roadmapRequestDTO){
+        roadmapService.updateRoadmap(roadmapId,userId, roadmapRequestDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -64,14 +75,6 @@ public class RoadmapController {
     public ResponseEntity<?> roadmapDetail(@PathVariable("roadmapId") Long roadmapId){
         RoadmapDTO roadmapDTO = roadmapService.roadmapDetail(roadmapId);
         return new ResponseEntity<>(roadmapDTO, HttpStatus.OK);
-    }
-
-    // 로드맵 수정
-    @PutMapping("/{roadmapId}")
-    @Operation(summary = "로드맵 수정", description = "로드맵 수정 페이지입니다. ")
-    public ResponseEntity<?> updateRoadmap(@PathVariable("roadmapId") Long roadmapId, @RequestBody RoadmapRequestDTO roadmapRequestDTO){
-        roadmapService.updateRoadmap(roadmapId,roadmapRequestDTO);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     //로드맵 좋아요
@@ -100,10 +103,18 @@ public class RoadmapController {
 
 
     // 단계 진행
-    @PutMapping("/step/{stepId}")
+    @PutMapping("/step/{stepId}/{userId}")
     @Operation(summary = "로드맵 단계진행 ", description = "체크된 상태라면 체크 해제, 안되어있으면 체크")
-    public ResponseEntity<?> step(@PathVariable("stepId") Long stepId){
-        roadmapService.checkStep(stepId);
+    public ResponseEntity<?> step(@PathVariable("stepId") Long stepId, @PathVariable("userId")Long userId){
+        roadmapService.checkStep(stepId,userId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // 단계 삭제
+    @DeleteMapping("/step/{stepId}/{userId}")
+    @Operation(summary = "로드맵 단계 삭제 " , description = "로드맵 단계 삭제")
+    public ResponseEntity<?> deleteStep(@PathVariable("stepId") Long stepId, @PathVariable("userId")Long userId){
+        roadmapService.deleteStep(stepId,userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

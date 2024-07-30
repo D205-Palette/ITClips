@@ -20,11 +20,11 @@ public interface RoadmapService {
     // 로드맵 생성
     void createRoadmap(Long userId, RoadmapRequestDTO roadmapRequestDTO) throws RuntimeException;
     // 로드맵 삭제하기
-    void deleteRoadmap(Long roadmapId) throws RuntimeException;
+    void deleteRoadmap(Long roadmapId,Long userId) throws RuntimeException;
     // 로드맵 상세보기
     RoadmapDTO roadmapDetail(Long roadmapId) throws RuntimeException;
     // 로드맵 수정
-    void updateRoadmap(Long roadmapId, RoadmapRequestDTO roadmapRequestDTO) throws RuntimeException;
+    void updateRoadmap(Long roadmapId,Long userId,  RoadmapRequestDTO roadmapRequestDTO) throws RuntimeException;
 
 
     // 로드맵 좋아요
@@ -36,7 +36,8 @@ public interface RoadmapService {
 
 
     // 단계 진행
-    void checkStep(Long stepId) throws RuntimeException;
+    void checkStep(Long stepId, Long userId) throws RuntimeException;
+    void deleteStep(Long stepId, Long userId) throws RuntimeException;
 
 
     //스크랩

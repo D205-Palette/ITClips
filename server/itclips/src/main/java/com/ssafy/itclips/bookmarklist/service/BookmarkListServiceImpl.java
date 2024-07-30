@@ -7,6 +7,7 @@ import com.ssafy.itclips.bookmark.repository.BookmarkRepository;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListDetailDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
+import com.ssafy.itclips.bookmarklist.dto.BookmarkListRoadmapDTO;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkListLike;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkListScrap;
@@ -347,13 +348,38 @@ public class BookmarkListServiceImpl implements BookmarkListService {
                 .build();
     }
 
+    public BookmarkListRoadmapDTO toDto(BookmarkList bookmarkList){
+        List<UserTitleDTO> users = bookmarkList.getGroups().stream()
+                .map(this::convertToUserTitleDTO)
+                .collect(Collectors.toList());
+
+        Set<TagDTO> tags = new HashSet<>(bookmarkList.getTags().stream()
+                .map(this::convertToTagDTO)
+                .collect(Collectors.toMap(
+                        TagDTO::getTitle, // Key: title
+                        tagDTO -> tagDTO, // Value: tagDTO
+                        (existing, replacement) -> existing // Handle duplicates by keeping the existing tagDTO
+                ))
+                .values());
+
+        return BookmarkListRoadmapDTO.builder()
+                .id(bookmarkList.getId())
+                .title(bookmarkList.getTitle())
+                .image(bookmarkList.getImage())
+                .description(bookmarkList.getDescription())
+                .bookmarkCount(bookmarkList.getBookmarks().size())
+                .users(users)
+                .tags(tags)
+                .likeCount(1)  // This seems to be hardcoded, consider fetching the actual like count if possible.
+                .build();
+
+    }
 
     @Override
-    public BookmarkListResponseDTO getBookmarkListResponseDTO(Long listId) {
-//        BookmarkList bookmarkList = bookmarkListRepository.findById(listId).orElseThrow();
-//
-//        return convertToBookmarkListResponseDTO(bookmarkList);
-        return null;
+    public BookmarkListRoadmapDTO getBookmarkListResponseDTO(Long listId) {
+        BookmarkList bookmarkList = bookmarkListRepository.findById(listId).orElseThrow();
+
+        return toDto(bookmarkList);
     }
 
 }

@@ -3,11 +3,15 @@ package com.ssafy.itclips.follow.controller;
 import com.ssafy.itclips.follow.dto.FollowDTO;
 import com.ssafy.itclips.follow.entity.Follow;
 import com.ssafy.itclips.follow.service.FollowService;
+import com.ssafy.itclips.user.entity.User;
+import com.ssafy.itclips.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +28,7 @@ import java.util.stream.Collectors;
 public class FollowController {
 
     private final FollowService followService;
+    private final UserService userService;
 
     @PostMapping("/follow")
     @Operation(summary = "팔로우 하기", description = "특정 사용자를 팔로우합니다.")
@@ -119,5 +124,45 @@ public class FollowController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류 발생");
         }
+    }
+
+    @GetMapping("/count")
+    @Operation(summary = "Follower 및 Following 수 조회", description = "사용자의 팔로워 수와 팔로잉 수를 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "팔로워 및 팔로잉 수 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없음")
+    })
+    public ResponseEntity<?> getFollowCounts(
+            @RequestParam(required = false) @Parameter(description = "사용자 ID") Long userId,
+            @RequestParam(required = false) @Parameter(description = "사용자 이메일") String email,
+            @RequestParam(required = false) @Parameter(description = "사용자 닉네임") String nickname) {
+
+        try {
+            User user;
+
+            if (userId != null) {   // ID로 찾기
+                user = userService.getUserById(userId);
+            } else if (email != null) {     // Email로 찾기
+                user = userService.getUserByEmail(email);
+            } else if (nickname != null) {      // Nickname으로 찾기
+                user = userService.getUserByNickname(nickname);
+            } else {
+                return ResponseEntity.badRequest().body("사용자 ID, 이메일, 또는 닉네임이 필요합니다.");
+            }
+
+            long followerCount = followService.getFollowerCount(user);
+            long followingCount = followService.getFollowingCount(user);
+
+            return ResponseEntity.ok(new UserFollowCounts(followerCount, followingCount));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자를 찾을 수 없습니다.");
+        }
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class UserFollowCounts {
+        private long followerCount;
+        private long followingCount;
     }
 }

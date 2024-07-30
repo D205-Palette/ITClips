@@ -22,7 +22,11 @@ public interface UserService {
 
     Long findIDByEmail(String email);
 
-    User getUserById(Long id);
+    User getUserById(Long userId);
+
+    User getUserByEmail(String email);
+
+    User getUserByNickname(String nickname);
 
     User findUserByEmail(String email);
 

@@ -24,4 +24,10 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
     // 특정 사용자가 특정 사용자를 팔로우하는 Follow 객체 조회
     @Query("SELECT f FROM Follow f WHERE f.from = :fromUser AND f.to = :toUser")
     Optional<Follow> findByFromAndTo(@Param("fromUser") User fromUser, @Param("toUser") User toUser);
+
+    @Query("SELECT COUNT(f) FROM Follow f WHERE f.to = :user")
+    long countByTo(@Param("user") User user);
+
+    @Query("SELECT COUNT(f) FROM Follow f WHERE f.from = :user")
+    long countByFrom(@Param("user") User user);
 }

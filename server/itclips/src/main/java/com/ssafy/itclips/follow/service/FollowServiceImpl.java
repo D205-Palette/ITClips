@@ -63,6 +63,16 @@ public class FollowServiceImpl implements FollowService {
         followRepository.delete(follow);
     }
 
+    @Transactional(readOnly = true)
+    public long getFollowerCount(User user) {
+        return followRepository.countByTo(user);
+    }
+
+    @Transactional(readOnly = true)
+    public long getFollowingCount(User user) {
+        return followRepository.countByFrom(user);
+    }
+
     @Slf4j
     public static class FollowNotFoundException extends RuntimeException {
         public FollowNotFoundException(String message) {

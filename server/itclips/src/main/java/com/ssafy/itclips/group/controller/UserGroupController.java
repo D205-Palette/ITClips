@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/group")
+@RequestMapping("/api/group")
 @Tag(name = "UserGroup Controller", description = "유저 그룹 관련 API") // 표시명 및 설명 설정
 public class UserGroupController {
 

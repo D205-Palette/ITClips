@@ -1,10 +1,18 @@
 package com.ssafy.itclips.bookmarklist.entity;
 
+import com.ssafy.itclips.bookmark.dto.BookmarkDetailDTO;
+import com.ssafy.itclips.bookmarklist.dto.BookmarkListDetailDTO;
+import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
+import com.ssafy.itclips.category.dto.CategoryParamDTO;
+import com.ssafy.itclips.report.entity.BookmarkListReport;
 import com.ssafy.itclips.bookmark.entity.Bookmark;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListDTO;
 import com.ssafy.itclips.category.entity.Category;
+import com.ssafy.itclips.comment.entity.BookmarkListComment;
 import com.ssafy.itclips.group.entity.UserGroup;
+import com.ssafy.itclips.tag.dto.TagDTO;
 import com.ssafy.itclips.tag.entity.BookmarkListTag;
+import com.ssafy.itclips.user.dto.UserTitleDTO;
 import com.ssafy.itclips.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
@@ -17,10 +25,7 @@ import lombok.Setter;
 import org.hibernate.annotations.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
@@ -67,19 +72,31 @@ public class BookmarkList {
     private Boolean isPublic = false;
 
     @OneToMany(mappedBy = "bookmarklist")
-    private Set<Bookmark> bookmarks = new LinkedHashSet<>();
+    private List<Bookmark> bookmarks = new ArrayList<>();
 
     @OneToMany(mappedBy = "bookmarkList")
-    private Set<BookmarkListTag> bookmarkListTags = new LinkedHashSet<>();
+    private List<BookmarkListTag> bookmarkListTags = new ArrayList<>();
 
     @OneToMany(mappedBy = "bookmarklist")
     private List<Category> categories = new ArrayList<>();
 
     @OneToMany(mappedBy = "bookmarkList")
-    private List<UserGroup> groups = new ArrayList<>();
+    private Set<UserGroup> groups = new HashSet<>();
 
     @OneToMany(mappedBy = "bookmarkList")
     private List<BookmarkListTag> tags = new ArrayList<>();
+
+    @OneToMany(mappedBy = "bookmarkList")
+    private List<BookmarkListComment> bookmarkListComments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "bookmarkList")
+    private List<BookmarkListLike> bookmarkListLikes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "bookmarkList")
+    private List<BookmarkListScrap> bookmarkListScraps = new ArrayList<>();
+
+    @OneToMany(mappedBy = "bookmarkList")
+    private List<BookmarkListReport> bookmarkListReports = new ArrayList<>();
 
     @Builder
     private BookmarkList(User user, String title, String description, String image, Boolean isPublic) {
@@ -100,5 +117,39 @@ public class BookmarkList {
         this.description = bookmarkListDto.getDescription();
         this.image = bookmarkListDto.getImage();
         this.isPublic = bookmarkListDto.getIsPublic();
+    }
+
+
+    public BookmarkListResponseDTO makeBookmarkListResponseDTO(Integer bookmarkCount, Integer likeCount, Boolean isLiked,
+                                                               Set<TagDTO> tags, List<UserTitleDTO> users) {
+        return BookmarkListResponseDTO.builder()
+                .id(this.id)
+                .title(this.title)
+                .image(this.image)
+                .description(this.description)
+                .bookmarkCount(bookmarkCount)
+                .users(users)
+                .tags(tags)
+                .isLiked(isLiked)
+                .likeCount(likeCount)
+                .build();
+    }
+
+    public BookmarkListDetailDTO makeBookmarkListDetailDTO(Integer likeCount, Integer scrapCount, Boolean isLiked, Boolean isScraped,
+                                                           List<CategoryParamDTO> categories, Set<TagDTO> tags, List<UserTitleDTO> users, List<BookmarkDetailDTO> bookmarks) {
+        return BookmarkListDetailDTO.builder()
+                .id(this.id)
+                .title(this.title)
+                .description(this.description)
+                .likeCount(likeCount)
+                .scrapCount(scrapCount)
+                .image(this.image)
+                .isLiked(isLiked)
+                .isScraped(isScraped)
+                .categories(categories)
+                .tags(tags)
+                .users(users)
+                .bookmarks(bookmarks)
+                .build();
     }
 }

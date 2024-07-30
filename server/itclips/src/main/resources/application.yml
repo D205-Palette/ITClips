@@ -1,20 +1,36 @@
-# Web ContextRootPath and PortNumber Settings
+# application.yml
 server:
   port: 80
+#  servlet:
+#    context-path: /api
 
 spring:
   application:
     name: itclips
-  # DataBase Settings : hikariCP : https://github.com/brettwooldridge/HikariCP
+
+  profiles:
+    include: secret
+  # Redis Config
+    active: local
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+  config:
+    import: optional:classpath:application-secret.yml
+
   datasource:
     hikari:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: jdbc:mysql://localhost:3306/itclips?serverTimezone=UTC&useUnicode=yes&characterEncoding=UTF-8
-      username: root
-      password: 1234
+      jdbc-url: jdbc:mysql://${DB_HOST}/${DB_NAME}?serverTimezone=UTC&useUnicode=yes&characterEncoding=UTF-8
+      username: ${DB_USER}
+      password: ${DB_PASSWORD}
+#      jdbc-url: jdbc:mysql://localhost:3306/itclips?serverTimezone=UTC&useUnicode=yes&characterEncoding=UTF-8
+#      username: root
+#      password: 1234
       pool-name: Hikari Connection Pool
 
-      # hikariCP property setting
       maximum-pool-size: 50
       minimum-idle: 50
       connection-timeout: 5000
@@ -22,6 +38,7 @@ spring:
       idle-timeout: 600000
       max-lifetime: 1800000
       auto-commit: true
+
   jpa:
     database: mysql
     database-platform: org.hibernate.dialect.MySQLDialect
@@ -32,14 +49,7 @@ spring:
       hibernate:
         format_sql: true
 
-# Redis Config
 
-  profiles:
-    active: local
-  data:
-    redis:
-      host: localhost
-      port: 6379
 
 #spring:
 #  profiles:
@@ -47,3 +57,7 @@ spring:
 #  redis:
 #    host: redis가 설치된 서버 호스트
 #    port: redis가 설치된 서버 포트
+project:
+  profileUploadPath: images/profile
+  defaultProfileImage: images/profile.png
+

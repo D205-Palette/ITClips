@@ -27,6 +27,13 @@ public class Tag {
     @OneToMany(mappedBy = "tag")
     private Set<BookmarkListTag> bookmarkListTags = new LinkedHashSet<>();
 
+    @OneToMany(mappedBy = "tag")
+    private Set<BookmarkTag> bookmarkTags = new LinkedHashSet<>();
+
+    public void setBookmarkTags(Set<BookmarkTag> bookmarkTags) {
+        this.bookmarkTags = bookmarkTags;
+    }
+
 
     @Builder
     public Tag(String title, Boolean isOrigin) {

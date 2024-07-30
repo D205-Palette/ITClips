@@ -6,13 +6,14 @@ import darkModeStore from '../../../stores/darkModeStore';
 // icons
 import { IoCloseOutline } from 'react-icons/io5';
 import {
-  FaTransgender,
   FaMale,
   FaFemale,
 } from "react-icons/fa";
 
 // components
-import JobCategoryDropdown from '../ui/JobCategoryDropdown';
+import JobCategoryDropdown from "../ui/JobCategoryDropdown";
+import PasswordChangeModal from "./PasswordChangeModal";
+import DeleteAccountModal from "./DeleteAccountModal";
 
 // 프로필 모달 상태 props
 interface ProfileSettingsModalProps {
@@ -24,13 +25,16 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
 
   // 임시 데이터들
   const [ name, setName ] = useState<string>("");
+  const [ birth, setBirth ] = useState<string>("");
   const [ interests, setInterests ] = useState<string[]>(["JAVA", "Python"]);
   const [ newInterest, setNewInterest ] = useState<string>("");
   const [ description, setDescription ] = useState<string>("");
-  const isDark = darkModeStore((state) => state.isDark)
 
+  const isDark = darkModeStore((state) => state.isDark)
   const [ jobCategory, setJobCategory ] = useState("직업");
   const [ gender, setGender ] = useState(""); // 성별 상태
+  const [ isPasswordChangeModalOpen, setIsPasswordChangeModalOpen ] = useState<boolean>(false);
+  const [ isDeleteAccountModalOpen, setIsDeleteAccountModalOpen ] = useState<boolean>(false);
 
   // 성별 선택 핸들러
   const handleGenderSelect = (
@@ -59,12 +63,21 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
     setInterests(interests.filter((_, i) => i !== index));
   };
 
+  // 비밀번호 변경 모달 로직
+  const handlePasswordChange = (newPassword: string) => {
+    // api 호출
+  }
+
+  const handleDeleteAccount = () => {
+    console.log('Account deletion confirmed');
+    // 회원 탈퇴 로직 넣기
+  };
+
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      {/* <div className={(isDark ? "bg-slate-900" : "bg-white") + " rounded-lg p-6 w-96"}> */}
-      <div className= "bg-white rounded-lg p-6 w-96">
+      <div className= "bg-base-100 rounded-lg p-6 w-96">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">내 정보 변경</h2>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
@@ -74,7 +87,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
 
         <div className="flex justify-between">
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">프로필 이미지</label>
+            <label className="block text-sm font-medium mb-2">프로필 이미지</label>
             <div className="flex items-center space-x-2">
               {/* 여기에 나중에 프로필 이미지 출력 */}
               <div className="w-16 h-16 bg-gray-200 rounded-full"></div>
@@ -85,49 +98,61 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
 
           <div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">닉네임</label>
+              <label className="block text-sm font-medium mb-2">닉네임</label>
               <input
                 type="text"
                 value={name}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
-                className="w-full px-3 py-2 border rounded-md"
+                className="w-full px-3 py-2 border rounded-md bg-base-100"
                 placeholder="닉네임을 입력하세요"
               />
             </div>
 
 
             <div className="mb-4 space-y-2">
-              <button className="btn btn-outline btn-sm">비밀번호 변경</button>
-              <button className="btn btn-outline btn-sm text-red-500">회원탈퇴</button>
+              <button
+                className="btn btn-outline btn-sm"
+                onClick={() => setIsPasswordChangeModalOpen(true)}
+              >
+                비밀번호 변경
+              </button>
+
+              <button
+                className="btn btn-outline btn-sm text-red-500 ms-2"
+                onClick={() => setIsDeleteAccountModalOpen(true)
+                }  
+              >
+                회원탈퇴
+              </button>
             </div>
           </div>
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">소개글</label>
+          <label className="block text-sm font-medium mb-2">소개글</label>
           <textarea
             value={description}
             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
-            className="w-full px-3 py-2 border rounded-md resize-none"
+            className="w-full px-3 py-2 border rounded-md resize-none bg-base-100"
             placeholder="자기소개를 입력하세요"
           />
         </div>
 
         {/* 생년월일 입력칸 */}
         <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">생년월일</label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
-                className="w-full px-3 py-2 border rounded-md"
-                placeholder="생년월일을 입력하세요"
-              />
-            </div>
+          <label className="block text-sm font-medium mb-2">생년월일</label>
+          <input
+            type="text"
+            value={birth}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBirth(e.target.value)}
+            className="w-full px-3 py-2 border rounded-md bg-base-100"
+            placeholder="생년월일을 입력하세요"
+          />
+        </div>
         {/* 성별 선택칸 */}
         {/* 성별 선택 */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">성별</label>
+          <label className="block text-sm font-medium mb-2">성별</label>
           <div className="flex items-center gap-3 mb-2">
             <button
               className={`btn ${
@@ -152,18 +177,18 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
 
         {/* 직업 카테고리 선택 */}
         <div className="mb-2">
-          <label className="block text-sm font-medium text-gray-700 mb-2">직업</label>
+          <label className="block text-sm font-medium mb-2">직업</label>
           <JobCategoryDropdown selectCategory={selectCategory} />
         </div>
 
         {/* 관심사 설정 */}
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">관심사 설정</label>
+          <label className="block text-sm font-medium mb-2">관심사 설정</label>
           <div className="flex flex-wrap items-center gap-2 p-2 border rounded-md">
             {interests.map((interest, index) => (
-              <span key={index} className="bg-gray-200 px-2 py-1 rounded-full text-sm flex items-center">
+              <span key={index} className="bg-base-300 px-2 py-1 rounded-full text-sm flex items-center">
                 {interest}
-                <button onClick={() => handleRemoveInterest(index)} className="ml-1 text-gray-500 hover:text-gray-700">
+                <button onClick={() => handleRemoveInterest(index)} className="ml-1 hover:text-gray-700">
                   <IoCloseOutline size={16} />
                 </button>
               </span>
@@ -178,7 +203,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
                   handleAddInterest();
                 }
               }}
-              className="flex-grow min-w-[100px] px-2 py-1 text-sm border-none focus:outline-none"
+              className="flex-grow min-w-[100px] px-2 py-1 text-sm border-none focus:outline-none bg-base-100"
               placeholder="새 관심사 입력 후 Enter"
             />
           </div>
@@ -186,6 +211,20 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
 
         <button className="btn btn-primary w-full">변경 완료</button>
       </div>
+
+      {/* 비밀번호 변경 모달 */}
+      <PasswordChangeModal
+        isOpen={isPasswordChangeModalOpen}
+        onClose={() => setIsPasswordChangeModalOpen(false)}
+        onSubmit={handlePasswordChange}
+      />
+
+      {/* 회원 탈퇴 모달 */}
+      <DeleteAccountModal 
+        isOpen={isDeleteAccountModalOpen}
+        onClose={() => setIsDeleteAccountModalOpen(false)}
+        onConfirm={handleDeleteAccount}
+      />
     </div>
   );
 };

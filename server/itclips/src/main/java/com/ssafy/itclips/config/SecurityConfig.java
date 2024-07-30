@@ -88,7 +88,7 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui.html", "/v3/api-docs/**", "/swagger-resources/**", "/swagger-ui/**").permitAll()
                         .requestMatchers("/api/user/signup", "/api/user/oauthSignup").permitAll()   // 회원가입 접근 가능
                         .requestMatchers("/api/user/login", "/api/user/refresh").permitAll()     // 로그인 접근 가능
-                        .requestMatchers("/api/user/logout").permitAll()    // API 개발 중 접근 없이 swagger 테스트 하기 위함
+                        .requestMatchers("/api/user/logout", "/api/follow/**").permitAll()    // API 개발 중 접근 없이 swagger 테스트 하기 위함
                         .anyRequest().authenticated()
                 )
 

@@ -60,7 +60,7 @@ const ProfileCard = () => {
   return (
     <div className={`${ isDark ? "bg-aside-dark" : "bg-aside-light" } rounded-3xl w-80 p-8 flex flex-col items-center`}>
       {/* 더보기 버튼 */}
-      { !isMessageOpen && <AsideKebabDropdown /> }
+      { !isMessageOpen && <AsideKebabDropdown isRoadmap={false}/> }
       {/* 북마크리스트 썸네일 */}
       <ImageContainer />
       {/* 북마크리스트 정보 */}

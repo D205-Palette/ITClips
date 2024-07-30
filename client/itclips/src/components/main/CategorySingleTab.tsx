@@ -29,19 +29,19 @@ const CategorySingleTab: FC<Props> = ({ whatCategory, index }) => {
   const category = mainTabStore((state) => state.whatCategory);
   const changeCategory = mainTabStore((state) => state.changeCategory);
 
+
   const DeleteButton = (): any => {
     return (
       <button
-        onClick={() => deleteCategory(whatCategory)}
+        onClick={() => deleteCategory(whatCategory)
+          // 여기에 진짜 카테고리 삭제할 건지 경고창 띄우기
+        }
         className={isDark ? "text-slate-100" : "text-slate-900 "}
       >
         <IoIosClose size="24px" />
       </button>
     );
   };
-  // function clicker (cat:string):void {
-  //   changeCategory(whatCategory)
-  // }
 
   return (
     <>

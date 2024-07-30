@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 
 interface Props {
   list: {
-    pk: number;
+    id: number;
     image: string;
     bookmarks: object[];
     title: string;
@@ -39,7 +39,7 @@ const ListItem : FC<Props> = ({list}) => {
 
   return (
     <>
-      <div  className={"card w-56 bg-base-100 shadow-xl " +  (isDark? "hover:brightness-150" : "hover:brightness-95")}
+      <div  className={"card w-56 bg-base-100 shadow-xl " +  (isDark? "hover:bg-slate-700" : "hover:bg-slate-100")}
       onMouseOver={() => setIsHovering(true)}
       onMouseOut={() => setIsHovering(false)}
       >
@@ -62,7 +62,7 @@ const ListItem : FC<Props> = ({list}) => {
         
         className="card-body flex flex-col p-6 relative ">
             <div className="absolute top-0 right-0 z-50">
-              <KebabDropdown whatMenu="리스트"/>
+              <KebabDropdown whatMenu="리스트" id={list.id}/>
             </div>
           <div className="flex flex-col flex-auto justify-around hover:cursor-pointer ">
             <div>

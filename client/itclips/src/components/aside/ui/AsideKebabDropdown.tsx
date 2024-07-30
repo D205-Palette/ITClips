@@ -1,11 +1,15 @@
-import { useState } from 'react';
+import { useState,FC } from 'react';
 import { VscKebabVertical } from "react-icons/vsc";
 import BookmarkListEditModal from "../modals/BookmarkListEditModal";
 import DeleteBookmarkListModal from "../modals/DeleteBookmarkListModal";
 import UrlCopyModal from "../modals/UrlCopyModal";
 import ReportModal from "../modals/ReportModal";
 
-const AsideKebabDropdown = () => {
+interface Props {
+  isRoadmap : boolean
+}
+
+const AsideKebabDropdown :FC<Props> = (isRoadmap) => {
   const [ isEditModalOpen, setIsEditModalOpen ] = useState<boolean>(false);
   const [ isDeleteModalOpen, setIsDeleteModalOpen ] = useState<boolean>(false);
   const [ isUrlCopyModalOpen, setIsUrlCopyModalOpen ] = useState<boolean>(false);

@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 
 interface Props {
   bookmark: {
+    id:number;
     title: string;
     url: string;
     description: string;
@@ -44,7 +45,7 @@ const Bookmark : FC<Props> = ({bookmark}) => {
     <>
     
       <div
-        className={(isDark? "hover:brightness-150" : "hover:brightness-95") + " card card-side bg-base-100 shadow-xl hover:cursor-pointer h-28"} >
+        className={(isDark? "hover:bg-slate-700" : "hover:bg-slate-100") + " card card-side bg-base-100 shadow-xl hover:cursor-pointer h-28 my-1"} >
           <>
             <div className="card-body flex flex-row items-center" > 
               {/* 주소에 https 포함 여부 확인해야할듯 */}
@@ -71,7 +72,7 @@ const Bookmark : FC<Props> = ({bookmark}) => {
                   {bookmark.bookmark_like}{" "}
                 </button>
                 <button className="">
-                  <KebabDropdown whatMenu="리스트" />
+                  <KebabDropdown whatMenu="북마크" id={bookmark.id} />
                 </button>
               </div>
             </div>

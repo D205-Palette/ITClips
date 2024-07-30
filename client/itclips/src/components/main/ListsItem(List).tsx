@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 interface Props {
   list: {
-    pk: number;
+    id: number;
     image: string;
     bookmarks: object[];
     title: string;
@@ -31,7 +31,7 @@ const ListItem : FC<Props> = ({list}) => {
   return (
     <>
       <div
-        className={(isDark? "hover:brightness-150" : "hover:brightness-95") + " card card-side bg-base-100 shadow-xl  h-28"} >
+        className={(isDark? "hover:bg-slate-700" : "hover:bg-slate-100") + " card card-side bg-base-100 shadow-xl  h-28"} >
           <>
             <figure onClick={()=>navigate('/bookmarklist/:bookmarklist_id')} className="hover:cursor-pointer">
               <img
@@ -65,7 +65,7 @@ const ListItem : FC<Props> = ({list}) => {
                   {list.bookmark_list_like}
                 </button>
                 <button className="md:block hidden">
-                  <KebabDropdown whatMenu="리스트" />
+                  <KebabDropdown whatMenu="리스트" id={list.id} />
                 </button>
               </div>
             </div>

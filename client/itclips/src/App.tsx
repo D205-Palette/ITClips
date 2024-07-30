@@ -32,10 +32,10 @@ const App = () => {
       <header className="App-header">
         <NavBar />
       </header>
-
+  <div>
       {/* Body단*/}
       <Outlet />    
-
+      </div>
     </div>
   );
 };

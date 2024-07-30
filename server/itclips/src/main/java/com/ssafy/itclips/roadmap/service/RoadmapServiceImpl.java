@@ -88,12 +88,8 @@ public class RoadmapServiceImpl implements RoadmapService {
         for (Roadmap roadmap : roadmapList) {
             // 로드맵 단계 수
             Long stepCnt = roadmapStepRepository.countByRoadmapId(roadmap.getId());
-            Long checkCnt = null;
-            // 자기가 쓴 로드맵이면 진행한 단계수 알수잇
-            if(roadmap.getUser().getId().equals(userId)){
-                checkCnt = roadmapStepRepository.countByRoadmapIdAndCheck(roadmap.getId(), true);
-
-            }
+            // 체크한단계 수
+            Long checkCnt = roadmapStepRepository.countByRoadmapIdAndCheck(roadmap.getId(), true);
             // 좋아요 수
             Long likeCnt = roadmapLikeRepository.countByRoadmapId(roadmap.getId());
 

@@ -1,4 +1,5 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 
 // components
 import SearchItemKebabDropdown from "../ui/SearchItemKebabDropdown";
@@ -20,21 +21,31 @@ interface Props {
 
 const RecommendedItems: React.FC<Props> = ({ items, viewMode }) => {
 
+  const handleKebabClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
   // 앨범 정렬
   if (viewMode === "grid") {
     return (
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         {items.map((item) => (
-          <div key={item.id} className="bg-base-100 rounded-lg shadow overflow-hidden">
-            <img src={item.imageUrl} alt={item.title} className="w-full h-40 object-cover" />
-            <div className="p-4">
-              <h3 className="text-lg font-semibold truncate">{item.title}</h3>
-              <p className="text-sm text-gray-600 truncate">{item.username}</p>
-              <div className="flex justify-between mt-2 text-sm text-gray-500">
-                <span>북마크 {item.bookmarks}</span>
-                <span>❤️ {item.likes}</span>
+          <div key={item.id}>
+            <NavLink
+              to="/user/:user_id"
+              className="bg-base-100 rounded-lg shadow overflow-hidden"
+            >
+              <img src={item.imageUrl} alt={item.title} className="w-full h-40 object-cover" />
+              <div className="p-4">
+                <h3 className="text-lg font-semibold truncate">{item.title}</h3>
+                <p className="text-sm text-gray-600 truncate">{item.username}</p>
+                <div className="flex justify-between mt-2 text-sm text-gray-500">
+                  <span>북마크 {item.bookmarks}</span>
+                  <span>❤️ {item.likes}</span>
+                </div>
               </div>
-            </div>
+            </NavLink>
           </div>
         ))}
       </div>
@@ -46,17 +57,22 @@ const RecommendedItems: React.FC<Props> = ({ items, viewMode }) => {
     <div className="space-y-4">
       {items.map((item) => (
         <div key={item.id} className="flex items-center space-x-4 p-4 bg-base-100 rounded-lg shadow">
-          <img src={item.imageUrl} alt={item.title} className="w-20 h-20 object-cover rounded" />
-          <div className="flex-grow">
-            <h3 className="text-lg font-semibold">{item.title}</h3>
-            <p className="text-sm text-gray-600">{item.username}</p>
-            <div className="flex space-x-4 mt-2">
-              <span className="text-sm text-gray-500">북마크 {item.bookmarks}</span>
-              <span className="text-sm text-gray-500">좋아요 {item.likes}</span>
-              <span className="text-sm text-gray-500">{item.createdAt}</span>
+          <NavLink
+            to="/user/:user_id"
+            className="flex items-center space-x-4 flex-grow"
+          >
+            <img src={item.imageUrl} alt={item.title} className="w-20 h-20 object-cover rounded" />
+            <div className="flex-grow">
+              <h3 className="text-lg font-semibold">{item.title}</h3>
+              <p className="text-sm text-gray-600">{item.username}</p>
+              <div className="flex space-x-4 mt-2">
+                <span className="text-sm text-gray-500">북마크 {item.bookmarks}</span>
+                <span className="text-sm text-gray-500">좋아요 {item.likes}</span>
+                <span className="text-sm text-gray-500">{item.createdAt}</span>
+              </div>
             </div>
-          </div>
-          <div>
+          </NavLink>
+          <div onClick={handleKebabClick}>
             <SearchItemKebabDropdown />
           </div>
         </div>

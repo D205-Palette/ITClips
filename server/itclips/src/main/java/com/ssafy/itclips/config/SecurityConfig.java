@@ -88,7 +88,7 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui.html", "/v3/api-docs/**", "/swagger-resources/**", "/swagger-ui/**").permitAll()
                         .requestMatchers("/api/user/signup", "/api/user/oauthSignup").permitAll()   // 회원가입 접근 가능
                         .requestMatchers("/api/user/login", "/api/user/refresh").permitAll()     // 로그인 접근 가능
-//                        .requestMatchers("/api/user/**").permitAll()    // API 개발 중 접근 없이 swagger 테스트 하기 위함
+                        .requestMatchers("/api/user/logout").permitAll()    // API 개발 중 접근 없이 swagger 테스트 하기 위함
                         .anyRequest().authenticated()
                 )
 
@@ -107,7 +107,6 @@ public class SecurityConfig {
                         .successHandler(oAuth2AuthenticationSuccessHandler)
                         .failureHandler(oAuth2AuthenticationFailureHandler)
                 )
-
                 // 원래 스프링 시큐리티 필터 순서가 LogoutFilter 이후에 로그인 필터 동작
                 // 따라서, LogoutFilter 이후에 우리가 만든 필터 동작하도록 설정
                 // 순서 : LogoutFilter -> JwtAuthenticationProcessingFilter -> CustomJsonUsernamePasswordAuthenticationFilter

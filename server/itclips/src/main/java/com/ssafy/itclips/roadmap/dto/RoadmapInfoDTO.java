@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class RoadmapInfoDTO {
     private Long id;
+    private Long userId;
     private String userName;
     private String title;
     private String description;
@@ -19,8 +20,9 @@ public class RoadmapInfoDTO {
     private LocalDateTime createdAt;
 
     @Builder
-    public RoadmapInfoDTO(Long id, String userName, String title, String description, String image, Byte isPublic, LocalDateTime createdAt) {
+    public RoadmapInfoDTO(Long id,Long userId,  String userName, String title, String description, String image, Byte isPublic, LocalDateTime createdAt) {
         this.id = id;
+        this.userId = userId;
         this.userName = userName;
         this.title = title;
         this.description = description;
@@ -33,6 +35,7 @@ public class RoadmapInfoDTO {
 
         return RoadmapInfoDTO.builder()
                 .id(roadmap.getId())
+                .userId(roadmap.getUser().getId())
                 .userName(roadmap.getUser().getNickname())
                 .title(roadmap.getTitle())
                 .description(roadmap.getDescription())

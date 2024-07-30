@@ -3,8 +3,11 @@ package com.ssafy.itclips.config.handler;
 import com.ssafy.itclips.chat.dto.ChatMessage;
 import com.ssafy.itclips.chat.repository.ChatRoomRepository;
 import com.ssafy.itclips.chat.service.ChatService;
+import com.ssafy.itclips.global.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
@@ -18,14 +21,21 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 @Component
+@Order(Ordered.HIGHEST_PRECEDENCE + 99)
 public class StompHandler implements ChannelInterceptor {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatService chatService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     // websocket을 통해 들어온 요청이 처리 되기전 실행된다.
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
+        log.info("aaaa");
+        if(StompCommand.CONNECT == accessor.getCommand()){
+            log.info("connect");
+            jwtTokenProvider.validateToken(accessor.getFirstNativeHeader("token"));
+        }
 
         if (StompCommand.SUBSCRIBE == accessor.getCommand()) { // 채팅룸 구독요청
             // header정보에서 구독 destination정보를 얻고, roomId를 추출한다.

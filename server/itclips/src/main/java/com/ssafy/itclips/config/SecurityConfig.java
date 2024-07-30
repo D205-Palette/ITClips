@@ -34,6 +34,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import com.ssafy.itclips.global.oauth2.handler.OAuth2AuthenticationSuccessHandler;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 @EnableWebSecurity
 @Configuration
@@ -61,8 +62,10 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
         configuration.addAllowedOrigin("http://localhost:80");  // BE
+        configuration.addAllowedOrigin("http://localhost:5500");  // BE
         configuration.addAllowedOrigin("http://localhost:5173"); // FE
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");

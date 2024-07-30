@@ -1,5 +1,6 @@
 package com.ssafy.itclips.global.oauth2.service;
 
+import com.ssafy.itclips.global.jwt.JwtTokenProvider;
 import com.ssafy.itclips.global.oauth2.dto.OAuthAttributes;
 import com.ssafy.itclips.global.oauth2.userinfo.OAuth2UserInfo;
 import com.ssafy.itclips.user.entity.Role;
@@ -25,6 +26,7 @@ import java.util.Optional;
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
     private final UserRepository userRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {

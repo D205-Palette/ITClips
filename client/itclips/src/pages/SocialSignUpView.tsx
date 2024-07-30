@@ -1,46 +1,59 @@
 import React, { useState } from "react";
-import {
-  FaRegUser,
-  FaKey,
+import {  
   FaAddressCard,
   FaRegCalendarAlt,
   FaTransgender,
   FaMale,
   FaFemale,
 } from "react-icons/fa";
-import { CiMail } from "react-icons/ci";
 import { MdOutlineWorkOutline } from "react-icons/md";
+import { navStore } from "../stores/navStore";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const SignUpView = () => {
+const SocialSignUpView = () => {
+  const { login } = navStore(); 
+  const navigate = useNavigate();
   const [userData, setUserData] = useState({
-    id: "",
-    email: "",
-    password: "",
-    passwordCheck: "",
     nickname: "",
     birthday: "",
     job: "",
   });
 
-  const { id, email, password, passwordCheck, nickname, birthday, job } =
+  const { nickname, birthday, job } =
     userData;
 
   const [gender, setGender] = useState(""); // 성별 상태
   const [verificationCode, setVerificationCode] = useState("");
-  const [isEmailSent, setIsEmailSent] = useState(false);
+  
   const [isVerificationSuccess, setIsVerificationSuccess] = useState<
     boolean | null
   >(null);
   const [isNicknameValid, setIsNicknameValid] = useState<boolean | null>(null);
   const [isPasswordMatch, setIsPasswordMatch] = useState<boolean | null>(null);
 
+   // 개발자 직업 목록 배열
+   const jobOptions = [
+    "풀스택 개발자",
+    "프론트엔드 개발자",
+    "백엔드 개발자",
+    "미들티어 개발자",
+    "데브옵스 엔지니어",
+    "모바일 앱 개발자",
+    "데이터 과학자",
+    "데이터 엔지니어",
+    "인공지능 엔지니어",
+    "게임 개발자",
+    "시스템 소프트웨어 개발자",
+    "임베디드 시스템 개발자",
+    "웹 디자이너",
+    "QA 엔지니어",
+    "기타", // 기타 직업 옵션 추가
+  ];
+
   const isFormValid = () => {
     return (
-      isNicknameValid === true && // 닉네임 중복 체크 완료
-      birthday.trim() !== "" && // 생년월일 입력 완료
-      job.trim() !== "" && // 직업 입력 완료
-      gender.trim() !== "" // 성별 선택 완료
+      isNicknameValid === true // 닉네임 중복 체크 완료      
     );
   };
 
@@ -55,17 +68,16 @@ const SignUpView = () => {
 
   // 닉네임 중복 확인 핸들러
   const handleNicknameCheck = async () => {
-    setIsNicknameValid(true);
-
-    // 닉네임 중복 확인 로직
-    // try {
-    //   const response = await axios.get("/user/nickname", {
-    //     params: { nickname },
-    //   });
-    //   setIsNicknameValid(response.data.isValid);
-    // } catch (error) {
-    //   setIsNicknameValid(false);
-    // }
+    // 닉네임 중복 확인 로직 (예시: 항상 유효)
+    try {
+      // const response = await axios.get("/user/nickname", {
+      //   params: { nickname },
+      // });
+      // setIsNicknameValid(response.data.isValid);
+      setIsNicknameValid(true); // 임시로 유효 처리
+    } catch (error) {
+      setIsNicknameValid(false);
+    }
   };
 
   // 입력 값 변경 핸들러
@@ -75,18 +87,31 @@ const SignUpView = () => {
       ...userData,
       [name]: value,
     });
-    console.log(name, value);
   };
+
+  // 직업 선택 핸들러
+  const handleJobChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setUserData({
+      ...userData,
+      job: e.target.value,
+    });
+  };
+  // 소셜 회원가입 제출
+  const socialSignupSubmit = () => {
+    login()
+    navigate('/user/user:id')
+  }
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-base-100 p-5">
       <div className="w-full max-w-4xl border rounded-lg shadow-lg p-8">
         <h1 className="text-center text-3xl font-bold mb-8">소셜 회원가입</h1>
 
-        <form onSubmit={() => {}}>
+        <form onSubmit={socialSignupSubmit}>
           {/* 닉네임 입력창 */}
-          <div className="flex items-center gap-3">
-            <FaAddressCard className="w-8 h-8 " />
+          <div className="flex items-center gap-3 mb-6">
+            <FaAddressCard className="w-8 h-8" />
+            <span className="text-red-500">*</span>
             <input
               name="nickname"
               type="text"
@@ -95,7 +120,6 @@ const SignUpView = () => {
               onChange={handleInputChange}
               value={nickname}
             />
-
             <button
               type="button"
               className="btn btn-outline btn-primary"
@@ -106,7 +130,7 @@ const SignUpView = () => {
           </div>
           {isNicknameValid !== null && (
             <div
-              className={`mt-2 ${
+              className={`mb-6 ${
                 isNicknameValid ? "text-green-500" : "text-red-500"
               }`}
             >
@@ -117,9 +141,8 @@ const SignUpView = () => {
           )}
 
           {/* 생년월일 입력창 */}
-          <div className="flex items-center gap-3">
-            <FaRegCalendarAlt className="w-8 h-8 " />
-
+          <div className="flex items-center gap-3 mb-6">
+            <FaRegCalendarAlt className="w-8 h-8" />
             <input
               name="birthday"
               type="text"
@@ -130,22 +153,27 @@ const SignUpView = () => {
             />
           </div>
 
-          {/* 직업 입력창 */}
-          <div className="flex items-center gap-3">
-            <MdOutlineWorkOutline className="w-8 h-8 " />
-            <input
+          {/* 직업 선택 */}
+          <div className="flex items-center gap-3 mb-6">
+            <MdOutlineWorkOutline className="w-8 h-8" />
+            <select
               name="job"
-              type="text"
               value={job}
-              className="input input-bordered w-full"
-              placeholder="직업을 입력해주세요."
-              onChange={handleInputChange}
-            />
+              className="select select-bordered w-full"
+              onChange={handleJobChange}
+            >
+              <option value="" disabled>직업을 선택해주세요.</option>
+              {jobOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* 성별 선택 */}
-          <div className="flex items-center gap-3">
-            <FaTransgender className="w-8 h-8 " />
+          <div className="flex items-center gap-3 mb-6">
+            <FaTransgender className="w-8 h-8" />
             <button
               className={`btn ${
                 gender === "male" ? "btn-primary" : "btn-outline"
@@ -182,4 +210,4 @@ const SignUpView = () => {
   );
 };
 
-export default SignUpView;
+export default SocialSignUpView;

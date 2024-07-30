@@ -18,9 +18,12 @@ public class RoadmapInfoDTO {
     private String image;
     private Byte isPublic;
     private LocalDateTime createdAt;
+    private Long stepCnt;
+    private Long checkCnt;
+    private Long likeCnt;
 
     @Builder
-    public RoadmapInfoDTO(Long id,Long userId,  String userName, String title, String description, String image, Byte isPublic, LocalDateTime createdAt) {
+    public RoadmapInfoDTO(Long id, Long userId, String userName, String title, String description, String image, Byte isPublic, LocalDateTime createdAt,Long stepCnt, Long checkCnt , Long likeCnt) {
         this.id = id;
         this.userId = userId;
         this.userName = userName;
@@ -29,9 +32,12 @@ public class RoadmapInfoDTO {
         this.image = image;
         this.isPublic = isPublic;
         this.createdAt = createdAt;
+        this.likeCnt = likeCnt;
+        this.checkCnt = checkCnt;
+        this.stepCnt = stepCnt;
     }
 
-    public static RoadmapInfoDTO toDto(Roadmap roadmap){
+    public static RoadmapInfoDTO toDto(Roadmap roadmap,Long stepCnt,Long checkCnt,Long likeCnt){
 
         return RoadmapInfoDTO.builder()
                 .id(roadmap.getId())
@@ -42,6 +48,9 @@ public class RoadmapInfoDTO {
                 .image(roadmap.getImage())
                 .isPublic(roadmap.getIsPublic())
                 .createdAt(roadmap.getCreatedAt())
+                .stepCnt(stepCnt)
+                .checkCnt(checkCnt)
+                .likeCnt(likeCnt)
                 .build();
     }
 }

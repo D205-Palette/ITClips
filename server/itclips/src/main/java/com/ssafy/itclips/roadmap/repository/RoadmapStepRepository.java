@@ -9,4 +9,6 @@ public interface RoadmapStepRepository extends JpaRepository<RoadmapStep,Long> {
     List<RoadmapStep> findByRoadmapId(Long roadmapId);
     void deleteByRoadmapId(Long roadmapId);
     Boolean existsByRoadmapId(Long roadmapId);
+    Long countByRoadmapId(Long roadmapId);
+    Long countByRoadmapIdAndCheck(Long roadmapId, Boolean check);
 }

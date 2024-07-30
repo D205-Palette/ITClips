@@ -1,6 +1,5 @@
-// CommentsContainer.tsx 는 댓글들을 리스트로 출력하는 컴포넌트
-
-// components
+// CommentsContainer.tsx
+import React from "react";
 import CommentWrite from "../ui/CommentWrite";
 
 interface Comment {
@@ -25,26 +24,23 @@ interface ItemProps {
 }
 
 const CommentsContainer = (data: ItemProps) => {
-
   return (
-    <div className="flex flex-col">
-      <div className="grid grid-cols-8">
-        <div className="col-start-2">
-          <h3 className="text-start font-bold mb-2">댓글</h3>
-        </div>
-      </div>
-      <div className="grid grid-cols-8 w-full">
-        <div className="col-start-2 col-span-6 max-h-20 overflow-y-auto">
+    <div className="flex flex-col px-2">
+      <h3 className="text-start font-bold mb-4 text-lg">댓글</h3>
+      <div className="w-full rounded-lg">
+        <div className="max-h-32 overflow-y-auto p-2 space-y-2">
           {data.comments.map((comment) => (
-            <div key={comment.id} className="flex justify-between items-center mb-2">
+            <div key={comment.id} className="bg-base-100 p-3 rounded-lg shadow-sm flex justify-between">
+              <p className="font-semibold text-sm">{comment.username}</p>
               <p className="text-sm">{comment.content}</p>
-              <p className="text-sm">{comment.username}</p>
             </div>
           ))}
         </div>
       </div>
       {/* 댓글 작성 칸 */}
-      <CommentWrite />
+      <div className="mt-2">
+        <CommentWrite />
+      </div>
     </div>
   );
 };

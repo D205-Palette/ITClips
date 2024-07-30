@@ -1,12 +1,20 @@
 import { FaSignOutAlt } from 'react-icons/fa';
 import { navStore } from '../../stores/navStore';
+import { useNavigate } from 'react-router-dom';
 
 const LogoutButton = () => {
-  const logout = navStore(state => state.logout);
+  const navigate = useNavigate()
+  const { logout } = navStore()
+
+  const logoutButton = () => {
+    logout()
+    navigate('/login')
+  } 
+    
 
   return (
     <button
-      onClick={logout}
+      onClick={logoutButton}
       className="transition-colors duration-300"
       aria-label="Logout"
     >

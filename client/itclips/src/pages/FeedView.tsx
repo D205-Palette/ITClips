@@ -4,8 +4,6 @@ import axios from "axios";
 
 import { asideStore } from "../stores/asideStore";
 import MessageLayout from "../components/aside/MessageLayout";
-import ListItem from "../components/main/ListsItem(List)";
-import Roadmap from "../components/main/Roadmap";
 import AsideProfile from "../components/aside/AsideProfile";
 
 export default function FeedView() {
@@ -72,10 +70,10 @@ export default function FeedView() {
           id="Main"
           className="lg:col-start-4 lg:col-span-4 md:col-start-3 md:col-span-5 sm:col-start-2 sm:col-span-6"
         >
-          {/* <h1>NEW 북마크리스트</h1>
-          <ListItem />
+          <h1>NEW 북마크리스트</h1>
+          
           <h1>NEW 로드맵</h1>
-          <Roadmap /> */}
+          
         </div>
       </div>
     </>

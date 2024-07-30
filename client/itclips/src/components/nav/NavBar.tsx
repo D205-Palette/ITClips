@@ -1,42 +1,25 @@
 import React, { useRef } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { navStore } from "../../stores/navStore";
 import DarkModeToggle from "./DarkModeToggle";
 import NotificationButton from "./NavNotificationButton";
 
-import NavLoginModal from "./NavLoginModal";
-
 import HomeButton from "../nav/NavHomeButton";
 import LogoutButton from "../nav/NavLogoutButton";
 import MessageButton from "../nav/NavMessageButton";
-import tabStore from '../../stores/categoriesStore'
+import tabStore from "../../stores/categoriesStore";
 import darkModeStore from "../../stores/darkModeStore";
 
-
-
 const NavBar = () => {
-  const {
-    login,
-    modalState,
-    isLoggedIn,
-  } = navStore();
-  
-  const {
-    isLoginModalOpen,
-    openLoginModal,    
-  } = modalState;
-
-
+  const { isLoggedIn } = navStore();  
   const messageRef = useRef<HTMLDivElement>(null);
 
-  // const whatTab = tabStore((state) => state.whatNavTab);
-  // const changeTab = tabStore((state) => state.changeNavTab);
   const isDark = darkModeStore((state)=>state.isDark)
   const textColor = (isDark? "text-slate-300" : "text-slate-900")
 
   return (
     <>
-      <nav className="flex justify-between items-center p-4 h-16">
+      <nav className="fixed top-0 left-0 w-full flex justify-between items-center p-4 h-16 bg-base-100 z-50">
         {/* 좌측 네비게이션 링크들 */}
         <div className="flex items-center gap-4">
           <HomeButton />
@@ -57,25 +40,23 @@ const NavBar = () => {
           {/* 로그인 전 */}
           {!isLoggedIn ? (
             <>
-              <button
-                onClick={openLoginModal}
-                className="transition-colors duration-300 hover:text-gray-400"
+              <NavLink
+                to="login"
+                className={({ isActive }) =>
+                  isActive ? "text-sky-500 font-bold" : textColor + " font-bold"
+                }
               >
                 로그인
-              </button>
+              </NavLink>
 
-              <a
-                href="/signup"
-                className="transition-colors duration-300 hover:text-gray-400"
+              <NavLink
+                to="signup"
+                className={({ isActive }) =>
+                  isActive ? "text-sky-500 font-bold" : textColor + " font-bold"
+                }
               >
                 회원가입
-              </a>
-              <button
-                onClick={login}
-                className="transition-colors duration-300 hover:text-gray-400"
-              >
-                임시 로그인 버튼
-              </button>
+              </NavLink>    
             </>
           ) : (
             // 로그인 후
@@ -86,10 +67,7 @@ const NavBar = () => {
             </>
           )}
         </div>
-      </nav>
-
-      {/* 로그인, 아이디찾기, 비밀번호찾기 모달창 */}
-      {isLoginModalOpen && <NavLoginModal />}
+      </nav>      
     </>
   );
 };

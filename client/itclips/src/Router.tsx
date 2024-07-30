@@ -18,11 +18,21 @@ import RoadMapView from "./pages/RoadmapView";
 import Follower from "./pages/ProfileView/FollowFollower";
 import Following from "./pages/ProfileView/FollowFollowing";
 
+import SocialSignUpView from "./pages/SocialSignUpView";
+
+import LoginView from "./pages/LoginView";
+import { Children } from "react";
+import OAuthNaver from "./components/login/oauth/OauthNaver";
+import OauthGoogle from "./components/login/oauth/OauthGoogle";
+import OauthKakao from "./components/login/oauth/OauthKakao";
+import OauthGithub from "./components/login/oauth/OauthGithub";
+
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
+      // 서비스 소개 페이지
       {
         path: "user/:user_id",
         element: <ProfileView />,
@@ -88,6 +98,36 @@ const router = createBrowserRouter([
       {
         path: "signup",
         element: <SignupView />,
+      },
+      {
+        path: "socialsignup",
+        element: <SocialSignUpView />,
+      },
+      {
+        path: "login",
+        element: <LoginView />,
+        // Email 로그인 페이지
+      },
+      {
+        path: "oauth/callback",
+        children:[
+          {
+            path: "naver",
+            element: <OAuthNaver/>            
+          },
+          {
+            path: "google",
+            element: <OauthGoogle/>
+          },
+          {
+            path: "kakao",
+            element: <OauthKakao/>
+          },
+          {
+            path: "github",
+            element: <OauthGithub/>
+          },
+        ] 
       },
     ],
   },

@@ -1,9 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
+
+// icons
 import { VscKebabVertical } from "react-icons/vsc";
 
+// components
+import UrlCopyModal from "../../common/UrlCopyModal";
+import ReportModal from "../../aside/modals/ReportModal";
+
 const SearchItemKebabDropdown = () => {
-  const [ isEditModalOpen, setIsEditModalOpen ] = useState<boolean>(false);
-  const [ isDeleteModalOpen, setIsDeleteModalOpen ] = useState<boolean>(false);
+
   const [ isUrlCopyModalOpen, setIsUrlCopyModalOpen ] = useState<boolean>(false);
   const [ isReportModalOpen, setIsReportModalOpen ] = useState<boolean>(false);
   const [ isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
@@ -25,26 +30,26 @@ const SearchItemKebabDropdown = () => {
     };
   }, []);
 
-  const handleCopyClipBoard = async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      setIsUrlCopyModalOpen(true)
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  // url 로직 구현하기
+  // const handleCopyClipBoard = async () => {
+  //   try {
+  //     await navigator.clipboard.writeText(window.location.href);
+  //     setIsUrlCopyModalOpen(true)
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
 
-  const categories: string[] = ["수정하기", "삭제하기", "url복사", "신고하기"];
+  const categories: string[] = ["url복사", "신고하기", "즐겨찾기"];
 
   const handleMenu = (menu: string) => {
-    if (menu === "수정하기") {
-      setIsEditModalOpen(true);
-    } else if (menu === "삭제하기") {
-      setIsDeleteModalOpen(true);
-    } else if (menu === "url복사") {
-      handleCopyClipBoard();
+    if (menu === "url복사") {
+      // 일단 모달만 띄우기
+      setIsUrlCopyModalOpen(true);
     } else if (menu === "신고하기") {
       setIsReportModalOpen(true);
+    } else if (menu === "즐겨찾기") {
+      // 즐겨찾기 로직 구현하기
     }
     setIsDropdownOpen(false);
   };
@@ -73,7 +78,9 @@ const SearchItemKebabDropdown = () => {
           </ul>
         </div>
       )}
-      {/* 모달 컴포넌트들... */}
+      {/* 모달 컴포넌트들 */}
+      <UrlCopyModal isOpen={isUrlCopyModalOpen} onClose={() => setIsUrlCopyModalOpen(false)} />
+      <ReportModal isOpen={isReportModalOpen} onClose={() => setIsReportModalOpen(false)} />
     </div>
   );
 };

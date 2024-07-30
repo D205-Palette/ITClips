@@ -70,8 +70,11 @@ public class UserServiceImpl implements UserService {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginForm.getEmail(), loginForm.getPassword());
 
-        // JWT 토큰 생성 및 반환
-        JwtToken jwtToken = jwtTokenProvider.generateToken(authenticationToken);
+        // 요청된 User에 대한 실제 검증
+        Authentication authentication = authenticationManager.authenticate(authenticationToken);
+
+        // 인증된 정보를 기반으로 JWT 토큰 생성
+        JwtToken jwtToken = jwtTokenProvider.generateToken(authentication);
 
         // 리프레시 토큰 저장
         User user = userRepository.findByEmail(loginForm.getEmail())

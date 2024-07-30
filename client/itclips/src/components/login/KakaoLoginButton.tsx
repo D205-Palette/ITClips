@@ -1,19 +1,18 @@
 import React from "react";
-import { SiNaver } from "react-icons/si";
 import { SiKakaotalk } from "react-icons/si";
 
 export default function NaverLoginButton() {
-  const NAVER_REDIRECT_URI = "http://localhost:3000/oauth/naver/callback";
-  const NAVER_REST_API_KEY = "AcE2m8Z4e3lg4u4LFGyf";
-  const NAVER_AUTH_URL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${NAVER_REST_API_KEY}&state=randomtext&redirect_uri=${NAVER_REDIRECT_URI}`;
+  const KAKAO_REDIRECT_URI = "http://localhost:3000/oauth/callback/kakao";
+  const KAKAO_REST_API_KEY = "0ffb6325ec02c9bed0743e31418cc885";
+  const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
 
-  const loginWithNaver = () => {
-    window.location.assign(NAVER_AUTH_URL);
+  const loginWithKakao = () => {
+    window.open(KAKAO_AUTH_URL, "_blank", "width=500,height=600");
   };
 
   return (
     <button
-      onClick={loginWithNaver}
+      onClick={loginWithKakao}
       type="button"
       className="btn btn-outline bg-base-100 w-3/4"
     >      

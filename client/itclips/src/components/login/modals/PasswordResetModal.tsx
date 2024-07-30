@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { navStore } from "../../stores/navStore";
+import { navStore } from "../../../stores/navStore";
 import PasswordResetCompleteModal from "./PasswordResetCompleteModal";
 
 const PasswordResetModal: React.FC = () => {

@@ -12,7 +12,7 @@ const OAuthNaver = () => {
   const [nickname, setNickname] = useState("");
 
   function onNaverLogin(code:any) {
-    setIsLogin(true)
+    setIsLogin(true)  
 
     // async function requestNaverLogin(code:any) {       
 

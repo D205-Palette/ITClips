@@ -6,7 +6,7 @@ import { RouterProvider } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google"; // 구글 소셜 로그인 프로바이더
 import router from "./Router";
 
-const GOOGLE_CLIENT_ID="778779010875-k0mt138jtn978grnohhl3ednpf56ih40.apps.googleusercontent.com"
+const GOOGLE_CLIENT_ID="358698199742-jb9ink8airs3359n2n4thueqvokghml3.apps.googleusercontent.com"
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

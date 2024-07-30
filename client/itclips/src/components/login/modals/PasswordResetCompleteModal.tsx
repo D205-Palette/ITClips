@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { navStore } from "../../stores/navStore";
+import { navStore } from "../../../stores/navStore";
 
 const PasswordResetCompleteModal = () => {
   const { setEmailLoginOpen, setPasswordResetOpen } = navStore();

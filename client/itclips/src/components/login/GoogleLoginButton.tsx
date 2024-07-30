@@ -1,5 +1,4 @@
 import { useGoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
 import { FcGoogle } from "react-icons/fc";
 import axios from "axios";
 
@@ -8,7 +7,7 @@ const GoogleLoginButton = () => {
     onSuccess: (tokenResponse) => {
       console.log(tokenResponse);
       const google_access_token = tokenResponse.access_token;
-
+      
       //   accesstoken을 통해 구글에서 유저정보 가져오는 로직
       axios
         .get("https://www.googleapis.com/oauth2/v3/userinfo", {
@@ -19,14 +18,14 @@ const GoogleLoginButton = () => {
         .then((response) => {
           console.log(response.data);
 
-          console.log(response.data.email);
-          console.log(response.data.email_verified);
-          const email = response.data.email;
-          const email_verified = response.data.email_verified;
+          // console.log(response.data.email);
+          // console.log(response.data.email_verified);
+          // const email = response.data.email;
+          // const email_verified = response.data.email_verified;
 
-          window.location.href = `/socialsignup?email=${encodeURIComponent(
-            email
-          )}&email_verified=${email_verified}`;
+          // // window.location.href = `/socialsignup?email=${encodeURIComponent(
+          // //   email
+          // // )}&email_verified=${email_verified}`;
         })
         .catch((error) => {
           console.error("Failed to fetch user info:", error);
@@ -80,25 +79,3 @@ const GoogleLoginButton = () => {
 
 export default GoogleLoginButton;
 
-// import { GoogleLogin } from "@react-oauth/google";
-// import { jwtDecode } from "jwt-decode";
-
-// const GoogleLoginButton = () => {
-//   return (
-//     <button
-//     className="btn w-full">
-//         <GoogleLogin
-
-//           type="icon"
-//           onSuccess={(credentialResponse: any) => {
-//             console.log(credentialResponse);
-//           }}
-//           onError={() => {
-//             console.log("Login Failed");
-//           }}
-//         />
-//     </button>
-//   );
-// };
-
-// export default GoogleLoginButton;

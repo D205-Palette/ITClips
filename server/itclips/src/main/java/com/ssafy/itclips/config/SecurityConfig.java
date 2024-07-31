@@ -65,7 +65,7 @@ public class SecurityConfig {
         configuration.setAllowCredentials(true);
         configuration.addAllowedOrigin("http://localhost:80");  // BE
         configuration.addAllowedOrigin("http://localhost:5173"); // FE
-        configuration.addAllowedOrigin("http://127.0.0.1:5500"); // FE
+        configuration.addAllowedOrigin("http://localhost:5500"); // FE
         configuration.setAllowedOriginPatterns(Arrays.asList("*"));
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");

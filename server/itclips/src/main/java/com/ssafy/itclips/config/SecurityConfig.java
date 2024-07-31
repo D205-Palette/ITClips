@@ -77,7 +77,6 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS 설정 추가
                 .formLogin(formLogin -> formLogin.disable())    // FormLogin 사용 x
                 .httpBasic(httpBasic -> httpBasic.disable())    // httpBasic 사용 x
-                .csrf(csrf -> csrf.disable())   // csrf 보안 사용 x
 
                 // 세션 사용하지 않으므로 STATELESS로 설정
                 .sessionManagement(sessionManager -> sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

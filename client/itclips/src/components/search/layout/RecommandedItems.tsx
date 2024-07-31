@@ -21,6 +21,7 @@ interface Props {
 
 const RecommendedItems: React.FC<Props> = ({ items, viewMode }) => {
 
+  // 더보기 버튼 기능이 NavLink와 안겹치게 설정
   const handleKebabClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -33,7 +34,7 @@ const RecommendedItems: React.FC<Props> = ({ items, viewMode }) => {
         {items.map((item) => (
           <div key={item.id}>
             <NavLink
-              to="/user/:user_id"
+              to={`/bookmarklist/${item.id}`}
               className="bg-base-100 rounded-lg shadow overflow-hidden"
             >
               <img src={item.imageUrl} alt={item.title} className="w-full h-40 object-cover" />
@@ -58,7 +59,7 @@ const RecommendedItems: React.FC<Props> = ({ items, viewMode }) => {
       {items.map((item) => (
         <div key={item.id} className="flex items-center space-x-4 p-4 bg-base-100 rounded-lg shadow">
           <NavLink
-            to="/user/:user_id"
+            to={`/bookmarklist/${item.id}`}
             className="flex items-center space-x-4 flex-grow"
           >
             <img src={item.imageUrl} alt={item.title} className="w-20 h-20 object-cover rounded" />

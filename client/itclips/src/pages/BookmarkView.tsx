@@ -17,10 +17,14 @@ const MyBookmark = () => {
         {/* aside 자리 */}
         <div id="aside" className="lg:col-start-3 lg:col-span-3 hidden lg:block ">
           {/* 메세지 뜨는 위치 */}
-          <div id="aside" className="absolute col-start-3 col-span-3">
-            {isMessageOpen && <MessageLayout />}
+          <div id="aside" className="absolute col-start-3 col-span-3 z-50">
+            <div className="fixed">
+              {isMessageOpen && <MessageLayout />}
+            </div>
           </div>
-          <AsideBookmarkList />
+          <div className="fixed">
+            <AsideBookmarkList />
+          </div>
         </div>
 
         {/* main자리 */}

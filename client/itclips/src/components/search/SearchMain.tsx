@@ -1,5 +1,3 @@
-// SearchMain.tsx 는 검색창 들어가면 제일 처음 나오는 컴포넌트
-
 import { useState } from "react";
 
 // components
@@ -42,17 +40,25 @@ const SearchMain = () => {
 
   return (
     <div className="mt-4">
-      {/* 리스트 & 액자형 탭 */}
-      <div className='flex justify-end'> 
-        <div role="tablist" className="tabs" >
-            { viewMode === "grid" ? <><div onClick={tabList} role="tab" className="tab mx-3"><CiBoxList /></div><div onClick={tabAlbum} role="tab" className="tab tab-active"> <HiMiniSquares2X2 /> </div> </>:
-            <> <div onClick={tabList} role="tab" className="tab tab-active mx-3"><FaList /></div> <div onClick={tabAlbum} role="tab" className="tab"> <HiOutlineSquares2X2 /></div></> }
+      {/* 사용자 맞춤 추천 제목과 탭 */}
+      <div className='flex items-center justify-between mb-4'>
+        <div className="flex items-center flex-grow">
+          <p className="text-lg font-semibold mr-4">사용자 맞춤 추천</p>
+          <div className="flex-grow h-px bg-gray-300"></div>
         </div>
-      </div>
-      <div className="flex">
-        <p>사용자 맞춤 추천</p>
-        {/* 밑줄 */}
-        <hr />
+        <div role="tablist" className="tabs">
+          {viewMode === "grid" ? (
+            <>
+              <div onClick={tabList} role="tab" className="tab mx-3"><CiBoxList /></div>
+              <div onClick={tabAlbum} role="tab" className="tab tab-active"><HiMiniSquares2X2 /></div>
+            </>
+          ) : (
+            <>
+              <div onClick={tabList} role="tab" className="tab tab-active mx-3"><FaList /></div>
+              <div onClick={tabAlbum} role="tab" className="tab"><HiOutlineSquares2X2 /></div>
+            </>
+          )}
+        </div>
       </div>
       {/* 추천 결과 */}
       <RecommandedItems items={data} viewMode={viewMode} />

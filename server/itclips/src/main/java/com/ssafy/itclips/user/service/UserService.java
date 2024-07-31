@@ -22,6 +22,12 @@ public interface UserService {
 
     Long findIDByEmail(String email);
 
+    User getUserById(Long userId);
+
+    User getUserByEmail(String email);
+
+    User getUserByNickname(String nickname);
+
     User findUserByEmail(String email);
 
     User updateUserByEmail(String email, User user);
@@ -29,4 +35,6 @@ public interface UserService {
     boolean deleteUserByEmail(String email);
 
     boolean nicknameCheck(String nickname);
+
+    void updatePassword(User user, String newPassword);
 }

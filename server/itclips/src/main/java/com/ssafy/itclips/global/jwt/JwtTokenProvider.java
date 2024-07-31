@@ -18,6 +18,8 @@ import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -32,6 +34,7 @@ public class JwtTokenProvider {
     private final Key key;
     private final long accessTokenValidityInMilliseconds;
     private final long refreshTokenValidityInMilliseconds;
+    private final Set<String> blacklistedTokens = ConcurrentHashMap.newKeySet();
 
     // 해싱 키 주입
     public JwtTokenProvider(@Value("${jwt.secret}") String secretKey,
@@ -127,6 +130,10 @@ public class JwtTokenProvider {
      * 토큰 유효성 검사
      */
     public boolean validateToken(String token) {
+        if (blacklistedTokens.contains(token)) {
+            log.info("Token is blacklisted");
+            return false;
+        }
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
@@ -140,6 +147,14 @@ public class JwtTokenProvider {
             log.info("JWT claims string is empty", e);
         }
         return false;
+    }
+
+    /**
+     * blacklist에 토큰 추가
+     */
+    public void blacklistToken(String token) {
+        blacklistedTokens.add(token);
+        System.out.println("blacklistedTokens : " + blacklistedTokens.toString());
     }
 
     /**

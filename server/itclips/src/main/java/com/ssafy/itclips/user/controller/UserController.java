@@ -367,7 +367,7 @@ public class UserController {
         }
     }
 
-    @Operation(summary = "관심사 추가", description = "사용자의 관심사 태그를 추가합니다.")
+    @Operation(summary = "나의 관심사 태그 추가", description = "사용자의 관심사 태그를 추가합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "관심사 추가 성공"),
             @ApiResponse(responseCode = "404", description = "사용자 또는 태그를 찾을 수 없음"),
@@ -375,7 +375,6 @@ public class UserController {
     })
     @PostMapping("/{userId}/tags")
     public ResponseEntity<?> addUserTag(@PathVariable Long userId, @RequestParam Long tagId) {
-        // 사용자와 태그를 찾기
         Optional<User> optionalUser = userRepository.findById(userId);
         Optional<com.ssafy.itclips.tag.entity.Tag> optionalTag = tagRepository.findById(tagId);
 
@@ -394,15 +393,41 @@ public class UserController {
         Optional<UserTag> existingUserTag = userTagRepository.findByUserAndTag(user, tag);
         if (existingUserTag.isPresent()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 존재하는 관심사입니다.");
+        } else {
+            UserTag userTag = new UserTag();
+            userTag.setUser(user);
+            userTag.setTag(tag);
+            userTagRepository.save(userTag);
+
+            return ResponseEntity.ok("관심사가 추가되었습니다.");
+        }
+    }
+
+    @DeleteMapping("/{userId}/tags")
+    @Operation(summary = "나의 관심사 태그 삭제", description = "사용자의 관심사 태그를 삭제합니다.")
+    public ResponseEntity<?> deleteUserTag(@PathVariable Long userId, @RequestParam Long tagId) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        Optional<com.ssafy.itclips.tag.entity.Tag> optionalTag = tagRepository.findById(tagId);
+
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자를 찾을 수 없습니다.");
+        }
+        if (optionalTag.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("태그를 찾을 수 없습니다.");
         }
 
-        UserTag userTag = new UserTag();
-        userTag.setUser(user);
-        userTag.setTag(tag);
-        userTagRepository.save(userTag);
+        User user = optionalUser.get();
+        com.ssafy.itclips.tag.entity.Tag tag = optionalTag.get();
 
-        return ResponseEntity.ok("관심사가 추가되었습니다.");
+        Optional<UserTag> existingUserTag = userTagRepository.findByUserAndTag(user, tag);
+        if (existingUserTag.isPresent()) {
+            userTagRepository.delete(existingUserTag.get());
+            return ResponseEntity.ok("관심사가 삭제되었습니다.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 관심사가 존재하지 않습니다.");
+        }
     }
+
 
     private String generateTemporaryPassword() {
         int length = 10;

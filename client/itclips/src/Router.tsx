@@ -27,6 +27,9 @@ import OauthGoogle from "./components/login/oauth/OauthGoogle";
 import OauthKakao from "./components/login/oauth/OauthKakao";
 import OauthGithub from "./components/login/oauth/OauthGithub";
 
+import NewBookmarkLists from "./components/feed/NewBookmarkLists";
+import NewRoadmaps from "./components/feed/NewRoadmaps";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -90,6 +93,16 @@ const router = createBrowserRouter([
       {
         path: "feed",
         element: <FeedView />,
+        children: [
+          {
+            path: "newBookmarkLists",
+            element: <NewBookmarkLists />,
+          },
+          {
+            path: "newRoadmaps",
+            element: <NewRoadmaps />,
+          },
+        ]
       },
       {
         path: "intro",

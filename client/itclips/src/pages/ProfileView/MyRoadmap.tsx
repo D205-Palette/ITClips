@@ -1,3 +1,4 @@
+
 import SearchBar from "../../components/main/MainSearchBar";
 import { FC } from "react";
 import Roadmap from "../../components/main/Roadmap";
@@ -18,6 +19,9 @@ const MyRoadmap: FC = () => {
         image: "https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp",
         isPublic: 1,
         createdAt: "2024-07-24T05:41:26",
+        stepCnt: 3, // 단계수 
+        checkCnt: 1, // 체크된 단계수 
+        likeCnt: 4 // 좋아요 수 
       },
       {
         id: 2,
@@ -27,6 +31,9 @@ const MyRoadmap: FC = () => {
         image: 'https://cdn.pixabay.com/photo/2017/07/31/17/12/water-2559064_1280.jpg',
         isPublic: 1,
         createdAt: "2024-07-24T05:41:26",
+        stepCnt: 4, // 단계수 
+        checkCnt: 4, // 체크된 단계수 
+        likeCnt: 2 // 좋아요 수 
       },
       {
         id: 2,
@@ -36,12 +43,14 @@ const MyRoadmap: FC = () => {
         image: 'https://cdn.pixabay.com/photo/2017/08/27/15/38/surfing-2686450_1280.jpg',
         isPublic: 1,
         createdAt: "2024-07-24T05:41:26",
+        stepCnt: 2, // 단계수 
+        checkCnt: 1, // 체크된 단계수 
+        likeCnt: 17 // 좋아요 수 
       },
     ];
 
   
-  // 유저가 가진 모든 로드맵 id 넘버들 가져와서
-  // 조회 하면서 일일히 진행도 % 계산해서 prop으로 넘겨주기
+  // 유저가 가진 모든 로드맵 
 
   return (
     <>
@@ -51,7 +60,7 @@ const MyRoadmap: FC = () => {
         <br />
       </div>
       {userRoadmaps.map((roadmap) => (
-        <Roadmap roadmapId={roadmap.id} />
+        <Roadmap roadmap={roadmap} />
       ))}
     </>
   );

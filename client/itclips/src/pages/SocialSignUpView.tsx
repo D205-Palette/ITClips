@@ -7,12 +7,12 @@ import {
   FaFemale,
 } from "react-icons/fa";
 import { MdOutlineWorkOutline } from "react-icons/md";
-import { navStore } from "../stores/navStore";
+import { authStore } from "../stores/authStore";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const SocialSignUpView = () => {
-  const { login } = navStore(); 
+  const { login } = authStore(); 
   const navigate = useNavigate();
   const [userData, setUserData] = useState({
     nickname: "",

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { navStore } from "../../../stores/navStore";
+import { authStore } from "../../../stores/authStore";
 import { useNavigate } from "react-router-dom";
 import { emailLogin } from '../../../api/authApi';
 
@@ -7,8 +8,9 @@ const EmailLoginModal: React.FC = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const { setLoginListOpen, setEmailLoginOpen, setPasswordResetOpen, login } =
+  const { setLoginListOpen, setEmailLoginOpen, setPasswordResetOpen, } =
     navStore();
+  const { login } = authStore()
   const [errorMessage, setErrorMessage] = useState("");
 
   const closeEmailLoginModal = () => {
@@ -19,6 +21,7 @@ const EmailLoginModal: React.FC = () => {
   // 이메일 로그인 로직
   const handleEmailLoginSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    login()
     
     emailLogin(email, password)
       .then((response:any) => {

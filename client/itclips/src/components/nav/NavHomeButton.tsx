@@ -1,8 +1,8 @@
 import React from "react";
-import { navStore } from "../../stores/navStore";
+import { authStore } from "../../stores/authStore";
 import { Link } from "react-router-dom";
 export default function HomeButton() {
-  const isLoggedIn = navStore(state => state.isLoggedIn);
+  const isLoggedIn = authStore(state => state.isLoggedIn);
 
   return (
     <div className="font-bold text-xl">

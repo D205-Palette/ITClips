@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { NavLink } from "react-router-dom";
-import { navStore } from "../../stores/navStore";
+import { authStore } from "../../stores/authStore";
 import DarkModeToggle from "./DarkModeToggle";
 import NotificationButton from "./NavNotificationButton";
 
@@ -11,7 +11,7 @@ import tabStore from "../../stores/categoriesStore";
 import darkModeStore from "../../stores/darkModeStore";
 
 const NavBar = () => {
-  const { isLoggedIn } = navStore();  
+  const { isLoggedIn } = authStore();  
   const messageRef = useRef<HTMLDivElement>(null);
 
   const isDark = darkModeStore((state)=>state.isDark)

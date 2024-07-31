@@ -1,10 +1,10 @@
 import { FaSignOutAlt } from 'react-icons/fa';
-import { navStore } from '../../stores/navStore';
+import { authStore } from '../../stores/authStore';
 import { useNavigate } from 'react-router-dom';
 
 const LogoutButton = () => {
   const navigate = useNavigate()
-  const { logout } = navStore()
+  const { logout } = authStore()
 
   const logoutButton = () => {
     logout()

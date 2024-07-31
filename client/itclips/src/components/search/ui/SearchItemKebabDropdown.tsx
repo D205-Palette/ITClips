@@ -6,12 +6,14 @@ import { VscKebabVertical } from "react-icons/vsc";
 // components
 import UrlCopyModal from "../../common/UrlCopyModal";
 import ReportModal from "../../aside/modals/ReportModal";
+import AddToFavorites from "../../common/AddToFavoritesModal";
 
 const SearchItemKebabDropdown = () => {
 
   const [ isUrlCopyModalOpen, setIsUrlCopyModalOpen ] = useState<boolean>(false);
   const [ isReportModalOpen, setIsReportModalOpen ] = useState<boolean>(false);
   const [ isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+  const [ isAddToFavModalOpen, setIsAddToFavModalOpen ] = useState<boolean>(false);
   
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -49,7 +51,7 @@ const SearchItemKebabDropdown = () => {
     } else if (menu === "신고하기") {
       setIsReportModalOpen(true);
     } else if (menu === "즐겨찾기") {
-      // 즐겨찾기 로직 구현하기
+      setIsAddToFavModalOpen(true);
     }
     setIsDropdownOpen(false);
   };
@@ -81,6 +83,7 @@ const SearchItemKebabDropdown = () => {
       {/* 모달 컴포넌트들 */}
       <UrlCopyModal isOpen={isUrlCopyModalOpen} onClose={() => setIsUrlCopyModalOpen(false)} />
       <ReportModal isOpen={isReportModalOpen} onClose={() => setIsReportModalOpen(false)} />
+      <AddToFavorites isOpen={isAddToFavModalOpen} onClose={() => setIsAddToFavModalOpen(false)}/>
     </div>
   );
 };

@@ -15,15 +15,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.ErrorResponse;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,6 +40,7 @@ public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
     private final JwtTokenProvider tokenProvider;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private final MailService mailService;
     private final ConcurrentHashMap<String, String> verificationCodes = new ConcurrentHashMap<>();
@@ -205,8 +204,8 @@ public class UserController {
         }
     }
 
-    @Operation(summary = "닉네임 중복 체크", description = "요청한 닉네임이 중복되었는지 체크합니다.")
     @GetMapping("/nicknameCheck")
+    @Operation(summary = "닉네임 중복 체크", description = "요청한 닉네임이 중복되었는지 체크합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "닉네임 중복 체크 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "409", description = "닉네임 중복", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
@@ -219,8 +218,8 @@ public class UserController {
         return ResponseEntity.ok("닉네임 사용 가능");
     }
 
-    @Operation(summary = "리프레시 토큰으로 새로운 액세스 토큰 발급", description = "리프레시 토큰을 사용하여 새로운 액세스 토큰을 발급합니다.")
     @PostMapping("/refresh")
+    @Operation(summary = "리프레시 토큰으로 새로운 액세스 토큰 발급", description = "리프레시 토큰을 사용하여 새로운 액세스 토큰을 발급합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "토큰 발급 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "400", description = "유효하지 않은 리프레시 토큰", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
@@ -340,6 +339,30 @@ public class UserController {
             return ResponseEntity.ok("임시 비밀번호가 발송되었습니다.");
         } catch (MessagingException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("임시 비밀번호 발송 중 오류가 발생했습니다.");
+        }
+    }
+
+    @PutMapping("/pw/update")
+    @Operation(summary = "비밀번호 변경", description = "본인 계정의 비밀번호를 변경합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "비밀번호 변경 성공"),
+            @ApiResponse(responseCode = "400", description = "기존 비밀번호가 일치하지 않음"),
+            @ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없음")
+    })
+    public ResponseEntity<?> changePassword(@RequestParam("email") String email,
+                                            @RequestParam("oldPassword") String oldPw,
+                                            @RequestParam("newPassword") String newPw) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자를 찾을 수 없습니다.");
+        }
+
+        User user = optionalUser.get();
+        if (bCryptPasswordEncoder.matches(oldPw, user.getPassword())) {
+            userService.updatePassword(user, newPw);
+            return ResponseEntity.ok("비밀번호가 변경되었습니다.");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("기존 비밀번호가 일치하지 않습니다.");
         }
     }
 

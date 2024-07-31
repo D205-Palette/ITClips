@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 
 // components
-import SearchUserItem from "./layout/SearchUserItem";
+import SearchUserItemsContainer from "./layout/SearchUserItemsContainer";
 
 const SearchUser = () => {
 
@@ -19,21 +19,9 @@ const SearchUser = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-4">
-        {users.map((user, index) => (
-          <NavLink to={`/user/${user.id}`}>
-            {/* 유저 검색 결과들 출력 아이템 */}
-            <SearchUserItem
-              key={index}
-              username={user.username}
-              email={user.email}
-              followers={user.followers}
-              following={user.following}
-              listCount={user.listCount}
-              roadmapCount={user.roadmapCount}
-            />
-          </NavLink>
-        ))}
+      <div className="">
+        {/* 유저 검색 결과들 출력 아이템 */}
+        <SearchUserItemsContainer items={users} />
       </div>
     </div>
   );

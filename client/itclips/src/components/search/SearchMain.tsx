@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 // components
-import RecommandedItems from "./layout/RecommandedItems";
+import RecommandedItemsContainer from "./layout/RecommandedItemsContainer";
 
 // icons
 import { FaList } from "react-icons/fa";
@@ -61,7 +61,7 @@ const SearchMain = () => {
         </div>
       </div>
       {/* 추천 결과 */}
-      <RecommandedItems items={data} viewMode={viewMode} />
+      <RecommandedItemsContainer items={data} viewMode={viewMode} />
     </div>
   );
 };

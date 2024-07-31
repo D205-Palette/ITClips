@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 // components
-import SearchBookmarkListItem from "./layout/SearchBookmarkListItem";
+import SearchBookmarkListItemsContainer from "./layout/SearchBookmarkListItemsContainer";
 
 // icons
 import { FaList } from "react-icons/fa";
@@ -12,8 +12,8 @@ interface BookmarkListItem {
   id: number;
   title: string;
   username: string;
-  bookmarkCount: number;
-  likeCount: number;
+  bookmarks: number;
+  likes: number;
   createdAt: string;
   thumbnailUrl: string;
 }
@@ -33,11 +33,11 @@ const SearchBookmarkList = () => {
 
   // 더미 데이터
   const data: BookmarkListItem[] = [
-    { id: 1, title: "북마크 리스트_01", username: "고양양", bookmarkCount: 12, likeCount: 10, createdAt: "2024-01-01", thumbnailUrl: "" },
-    { id: 2, title: "북마크 리스트_02", username: "고양양", bookmarkCount: 12, likeCount: 10, createdAt: "2024-01-01", thumbnailUrl: "" },
-    { id: 3, title: "북마크 리스트_03", username: "고양양", bookmarkCount: 12, likeCount: 10, createdAt: "2024-01-01", thumbnailUrl: "" },
-    { id: 4, title: "북마크 리스트_04", username: "고양양", bookmarkCount: 12, likeCount: 10, createdAt: "2024-01-01", thumbnailUrl: "" },
-    { id: 5, title: "북마크 리스트_05", username: "고양양", bookmarkCount: 12, likeCount: 10, createdAt: "2024-01-01", thumbnailUrl: "" },
+    { id: 1, title: "북마크 리스트_01", username: "고양양", bookmarks: 12, likes: 10, createdAt: "2024-01-01", thumbnailUrl: "" },
+    { id: 2, title: "북마크 리스트_02", username: "고양양", bookmarks: 12, likes: 10, createdAt: "2024-01-01", thumbnailUrl: "" },
+    { id: 3, title: "북마크 리스트_03", username: "고양양", bookmarks: 12, likes: 10, createdAt: "2024-01-01", thumbnailUrl: "" },
+    { id: 4, title: "북마크 리스트_04", username: "고양양", bookmarks: 12, likes: 10, createdAt: "2024-01-01", thumbnailUrl: "" },
+    { id: 5, title: "북마크 리스트_05", username: "고양양", bookmarks: 12, likes: 10, createdAt: "2024-01-01", thumbnailUrl: "" },
   ]
 
   return (
@@ -73,7 +73,7 @@ const SearchBookmarkList = () => {
         </div>
       </div>
       {/* 검색 결과 */}
-      <SearchBookmarkListItem
+      <SearchBookmarkListItemsContainer
         items={data}
         viewMode={viewMode}
       />

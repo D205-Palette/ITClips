@@ -7,6 +7,9 @@ server:
     key-store-password: ${KEY_PASSWORD}
 #  servlet:
 #    context-path: /api
+springdoc:
+  swagger-ui:
+    path: /api/swagger-ui
 
 spring:
   application:

@@ -4,6 +4,9 @@ import { NavLink } from "react-router-dom";
 // components
 import FollowerItemKebabDropdown from "./ui/FollowerItemKebabDropdown";
 
+// images (임시)
+import image from "../../assets/images/profile_image.png";
+
 interface User {
   id: number;
   username: string;
@@ -18,8 +21,8 @@ interface Props {
 
 const FollowerItem: React.FC<Props> = ({ items }) => {
 
-  // 드롭다운 클릭 이벤트 핸들러
-  const handleDropdownClick = (e: React.MouseEvent) => {
+  // 더보기 버튼 기능이 NavLink와 안겹치게 설정
+  const handleNavLink = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
   };
@@ -28,19 +31,24 @@ const FollowerItem: React.FC<Props> = ({ items }) => {
     <div className="space-y-4">
       {items.map((item) => (
         <div key={item.id}>
-          <NavLink to="/user/:user_id" className="flex items-center space-x-4 p-4 rounded-lg shadow">
-            <img src={item.imageUrl} alt={item.username} className="w-20 h-20 object-cover rounded" />
-            <div className="flex-grow">
-              <h3 className="text-lg font-semibold">{item.username}</h3>
-              <p className="text-sm text-gray-600">{item.email}</p>
-              <div className="flex space-x-4 mt-2">
-                <span className="text-sm text-gray-500">{item.tag}</span>
-              </div>
-            </div>
-            <div onClick={handleDropdownClick} className="text-gray-400 hover:text-gray-600">
-              <FollowerItemKebabDropdown />
-            </div>
-          </NavLink>
+          <NavLink
+        to={`/user/${item.id}`}
+        className="flex items-center space-x-4 p-4 rounded-lg shadow"
+      >
+        <img src={image} alt={item.username} className="w-20 h-20 object-cover rounded" />
+        <div className="flex-grow">
+          <h3 className="text-lg font-semibold">{item.username}</h3>
+          <div className="flex space-x-4 mt-2">
+            <p className="text-sm text-gray-400">{item.email}</p>
+          </div>
+        </div>
+
+        <p className="text-gray-500">#관심사1 #관심사2 #관심사3</p>
+
+        <div onClick={handleNavLink}>
+          <FollowerItemKebabDropdown />
+        </div>
+      </NavLink>
         </div>
       ))}
     </div>

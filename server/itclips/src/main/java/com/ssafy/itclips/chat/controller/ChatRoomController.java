@@ -1,6 +1,7 @@
 package com.ssafy.itclips.chat.controller;
 
-import com.ssafy.itclips.chat.dto.ChatRoom;
+import com.ssafy.itclips.chat.dto.ChatRoomDTO;
+import com.ssafy.itclips.chat.entity.ChatRoom;
 import com.ssafy.itclips.chat.repository.ChatRoomJPARepository;
 import com.ssafy.itclips.chat.repository.ChatRoomRepository;
 import com.ssafy.itclips.chat.service.ChatRoomService;
@@ -24,19 +25,19 @@ public class ChatRoomController {
     //채팅 방 만들기
     @PostMapping("/room/{user1Id}/{user2Id}")
     public ResponseEntity<?> createRoom(@PathVariable("user1Id")Long user1Id, @PathVariable("user2Id")Long user2Id) {
-//        chatRoomRepository.createChatRoom(name);
         chatRoomService.createChatRoom(user1Id, user2Id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
+//-------------------------------------------------------------------------------------------------------
     @GetMapping("/room")
     public String rooms(Model model) {
         return "/chat/room";
     }
 
     @GetMapping("/rooms")
-    public List<ChatRoom> room() {
+    public List<ChatRoomDTO> room() {
         return chatRoomRepository.findAllRoom();
     }
 
@@ -52,7 +53,7 @@ public class ChatRoomController {
     }
 
     @GetMapping("/room/{roomId}")
-    public ChatRoom roomInfo(@PathVariable String roomId) {
+    public ChatRoomDTO roomInfo(@PathVariable String roomId) {
         return chatRoomRepository.findRoomById(roomId);
     }
 }

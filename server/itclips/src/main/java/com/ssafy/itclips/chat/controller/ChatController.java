@@ -19,11 +19,11 @@ public class ChatController {
      */
     @MessageMapping("/chat/message")
     public void message(ChatMessage message) {
-        if (ChatMessage.MessageType.ENTER.equals(message.getType())) {
-            chatRoomRepository.enterChatRoom(message.getRoomId());
-            message.setMessage(message.getSender() + "님이 입장하셨습니다.");
-        }
+//        if (ChatMessage.MessageType.ENTER.equals(message.getType())) {
+//            chatRoomRepository.enterChatRoom(message.getRoomId());
+//            message.setMessage(message.getSender() + "님이 입장하셨습니다.");
+//        }
         // Websocket에 발행된 메시지를 redis로 발행한다(publish)
-        redisPublisher.publish(chatRoomRepository.getTopic(message.getRoomId()), message);
+        redisPublisher.publish(chatRoomRepository.getTopic(Long.parseLong(message.getRoomId())), message);
     }
 }

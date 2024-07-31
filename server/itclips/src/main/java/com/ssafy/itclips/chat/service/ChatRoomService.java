@@ -1,5 +1,6 @@
 package com.ssafy.itclips.chat.service;
 
+import com.ssafy.itclips.chat.dto.ChatRoomDTO;
 import com.ssafy.itclips.chat.entity.Chat;
 import com.ssafy.itclips.chat.entity.ChatRoom;
 import com.ssafy.itclips.chat.repository.ChatJPARepository;
@@ -38,6 +39,15 @@ public class ChatRoomService {
         saveChat(savedChatRoom, user1);
         saveChat(savedChatRoom, user2);
 
+        ChatRoomDTO chatRoomDTO = ChatRoomDTO.builder()
+                .name(savedChatRoom.getName())
+                .roomId(savedChatRoom.getId())
+                .build();
+        // 채팅방 레디스 생성
+        chatRoomRepository.createChatRoom(chatRoomDTO);
+
+        //topic생성
+        chatRoomRepository.enterChatRoom(savedChatRoom.getId());
     }
 
     @Transactional

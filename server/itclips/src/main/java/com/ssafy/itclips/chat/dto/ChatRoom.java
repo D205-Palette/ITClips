@@ -1,6 +1,5 @@
 package com.ssafy.itclips.chat.dto;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +14,6 @@ public class ChatRoom implements Serializable {
 
     private String roomId;
     private String name;
-    private long userCount; // 채팅방 인원수
 
     public static ChatRoom create(String name) {
         ChatRoom chatRoom = new ChatRoom();

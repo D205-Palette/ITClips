@@ -1,6 +1,5 @@
 package com.ssafy.itclips.config;
 
-import com.ssafy.itclips.config.handler.StompHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
@@ -12,7 +11,7 @@ import org.springframework.web.socket.config.annotation.*;
 @RequiredArgsConstructor
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer   {
 
-    private final StompHandler stompHandler;
+//    private final StompHandler stompHandler;
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
@@ -29,11 +28,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer   {
         registry.addEndpoint("/api/ws")
                 .setAllowedOriginPatterns("*");
     }
-
-    //인터셉터
-    @Override
-    public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(stompHandler);
-    }
+//
+//    //인터셉터
+//    @Override
+//    public void configureClientInboundChannel(ChannelRegistration registration) {
+//        registration.interceptors(stompHandler);
+//    }
 
 }

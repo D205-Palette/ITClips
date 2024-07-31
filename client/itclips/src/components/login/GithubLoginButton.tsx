@@ -1,12 +1,11 @@
 import { useEffect } from "react";
 import { FaGithub } from "react-icons/fa";
-
-const CLIENT_ID = "Ov23liRxsIr391wl5nHQ";
+import { GITHUB_API_KEY } from '../../config';
 
 const GithubLoginButton = () => {
-  const githubLoginUrl = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}`;
-
-  const loginWithGithub = () => {
+  const githubLoginUrl = `https://github.com/login/oauth/authorize?client_id=${GITHUB_API_KEY}`;
+  
+  const loginWithGithub = () => {    
     window.open(githubLoginUrl, "_blank", "width=500,height=600");
   };
 

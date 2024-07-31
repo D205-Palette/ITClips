@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { navStore } from "../../../stores/navStore";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { emailLogin } from '../../../api/authApi';
 
 const EmailLoginModal: React.FC = () => {
   const navigate = useNavigate();
@@ -18,35 +18,23 @@ const EmailLoginModal: React.FC = () => {
 
   // 이메일 로그인 로직
   const handleEmailLoginSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();    
-    login()
-    navigate("/user/:user_id");
-
-    const formData = new FormData(e.currentTarget);
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-
-    axios({
-      method: "post",
-      url: `http://192.168.100.206:/api/user/login`, // test url
-      data: {
-        email,
-        password,
-      },
-    })
-      .then((response) => {
+    e.preventDefault();
+    
+    emailLogin(email, password)
+      .then((response:any) => {
         if (response.status === 200) {
           setErrorMessage(""); // 에러 메시지 초기화
-          // closeLoginModal();
+          login();
+          navigate("/user/:user_id");
         } else {
           setErrorMessage(
             "아이디 또는 비밀번호가 잘못 되었습니다. 아이디와 비밀번호를 정확히 입력해 주세요."
           );
         }
       })
-      .catch((error) => {
+      .catch((error:any) => {
         // 로그인 실패 시 에러 메시지 설정
-        setErrorMessage("아이디 또는 비밀번호가 잘못 되었습니다.");
+        setErrorMessage(error.message || "아이디 또는 비밀번호가 잘못 되었습니다.");
       });
   };
 
@@ -67,7 +55,7 @@ const EmailLoginModal: React.FC = () => {
           <input
             type="email"
             id="email"
-            name="emial"
+            name="email"
             placeholder="이메일을 입력해주세요."
             className="input input-bordered w-full mb-4"
             value={email}
@@ -99,7 +87,10 @@ const EmailLoginModal: React.FC = () => {
             비밀번호 찾기
           </button>
 
-          <button className="btn bg-base-100" onClick={() => navigate("/signup")}>
+          <button
+            className="btn bg-base-100"
+            onClick={() => navigate("/signup")}
+          >
             회원가입
           </button>
         </div>

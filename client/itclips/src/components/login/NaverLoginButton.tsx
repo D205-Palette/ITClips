@@ -1,10 +1,9 @@
 import React from "react";
 import { SiNaver } from "react-icons/si";
+import { NAVER_API_KEY, NAVER_REDIRECT_URI } from "../../config"
 
-export default function NaverLoginButton() {
-  const NAVER_REDIRECT_URI = "http://localhost:3000/oauth/callback/naver";
-  const NAVER_REST_API_KEY = "AcE2m8Z4e3lg4u4LFGyf";
-  const NAVER_AUTH_URL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${NAVER_REST_API_KEY}&state=randomtext&redirect_uri=${NAVER_REDIRECT_URI}`;
+export default function NaverLoginButton() {  
+  const NAVER_AUTH_URL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${NAVER_API_KEY}&state=randomtext&redirect_uri=${NAVER_REDIRECT_URI}`;
 
   const loginWithNaver = () => {
     window.open(NAVER_AUTH_URL, "_blank", "width=500,height=600");

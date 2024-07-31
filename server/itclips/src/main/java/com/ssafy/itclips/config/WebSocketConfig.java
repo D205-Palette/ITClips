@@ -11,8 +11,6 @@ import org.springframework.web.socket.config.annotation.*;
 @RequiredArgsConstructor
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer   {
 
-//    private final StompHandler stompHandler;
-
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry.enableSimpleBroker("/sub");
@@ -22,7 +20,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer   {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/api/ws")
-//                .setAllowedOriginPatterns("*")
                 .setAllowedOriginPatterns("http://127.0.0.1:5500")
                 .withSockJS();
         registry.addEndpoint("/api/ws")

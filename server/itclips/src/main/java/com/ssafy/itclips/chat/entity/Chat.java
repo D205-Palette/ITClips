@@ -3,7 +3,9 @@ package com.ssafy.itclips.chat.entity;
 import com.ssafy.itclips.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -12,10 +14,11 @@ import org.hibernate.annotations.OnDeleteAction;
 @Setter
 @Entity
 @Table(name = "chat", schema = "itclips")
+@NoArgsConstructor
 public class Chat {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
     private Long id;
 
@@ -46,5 +49,11 @@ public class Chat {
         //삭제 수정해야함
     }
 
+    @Builder
+    public Chat(Long id, User user, ChatRoom room) {
+        this.id = id;
+        this.user = user;
+        this.room = room;
+    }
 
 }

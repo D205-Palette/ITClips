@@ -1,5 +1,6 @@
 package com.ssafy.itclips.global.oauth2.service;
 
+import com.ssafy.itclips.global.jwt.JwtTokenProvider;
 import com.ssafy.itclips.global.oauth2.dto.OAuthAttributes;
 import com.ssafy.itclips.global.oauth2.userinfo.OAuth2UserInfo;
 import com.ssafy.itclips.user.entity.Role;

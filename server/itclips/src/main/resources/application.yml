@@ -1,6 +1,6 @@
 # application.yml
 server:
-  port: 80
+  port: 8084
 #  servlet:
 #    context-path: /api
 

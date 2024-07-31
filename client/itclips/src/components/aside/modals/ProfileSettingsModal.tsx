@@ -1,14 +1,11 @@
 // ProfileSettingsModal.tsx 는 AsideProfile.tsx 에서 톱니바퀴 모양의 설정 버튼을 눌렀을 때 출력되는 컴포넌트
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import darkModeStore from '../../../stores/darkModeStore';
 
 // icons
 import { IoCloseOutline } from 'react-icons/io5';
-import {
-  FaMale,
-  FaFemale,
-} from "react-icons/fa";
+import { FaMale, FaFemale } from "react-icons/fa";
 
 // components
 import JobCategoryDropdown from "../ui/JobCategoryDropdown";
@@ -72,6 +69,21 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
     console.log('Account deletion confirmed');
     // 회원 탈퇴 로직 넣기
   };
+
+  useEffect(() => {
+    if (isOpen) {
+      // 모달이 열릴 때 body에 overflow: hidden 적용
+      document.body.style.overflow = 'hidden';
+    } else {
+      // 모달이 닫힐 때 overflow 스타일 제거
+      document.body.style.overflow = 'unset';
+    }
+
+    // 컴포넌트가 언마운트될 때 overflow 스타일 제거
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
 
   if (!isOpen) return null;
 

@@ -5,7 +5,7 @@ import { NavLink } from "react-router-dom";
 import image from "../../../assets/images/profile_image.png"
 
 // components
-import SearchItemKebabDropdown from "../ui/SearchItemKebabDropdown";
+import SearchItemKebabDropdown from "./SearchItemKebabDropdown";
 
 interface RecommandedItem {
   id: number;

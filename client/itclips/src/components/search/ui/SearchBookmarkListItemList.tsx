@@ -2,12 +2,12 @@ import { NavLink } from "react-router-dom";
 import React from "react";
 
 // components
-import SearchItemKebabDropdown from "../ui/SearchItemKebabDropdown";
+import SearchItemKebabDropdown from "./SearchItemKebabDropdown";
 
 // images (임시)
 import image from "../../../assets/images/profile_image.png";
 
-interface Tag {
+interface BookmarkListItem {
   id: number;
   title: string;
   username: string;
@@ -17,11 +17,11 @@ interface Tag {
   thumbnailUrl: string;
 }
 
-interface TagProps {
-  item: Tag;
+interface BookmarkListItemProps {
+item: BookmarkListItem;
 }
 
-const SearchTagItemList: React.FC<TagProps> = ({ item }) => {
+const SearchBookmarkListItemList: React.FC<BookmarkListItemProps> = ({ item }) => {
 
   // 더보기 버튼 기능이 NavLink와 안겹치게 설정
   const handleNavLink = (e: React.MouseEvent) => {
@@ -56,4 +56,4 @@ const SearchTagItemList: React.FC<TagProps> = ({ item }) => {
   );
 };
 
-export default SearchTagItemList;
+export default SearchBookmarkListItemList;

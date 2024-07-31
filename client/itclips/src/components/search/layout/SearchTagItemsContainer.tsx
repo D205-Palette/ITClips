@@ -1,8 +1,8 @@
 import React from "react";
 
 // components
-import SearchTagItemList from "./SearchTagItemList";
-import SearchTagItemGrid from "./SearchTagItemGrid";
+import SearchTagItemList from "../ui/SearchTagItemList";
+import SearchTagItemGrid from "../ui/SearchTagItemGrid";
 
 interface Tag {
   id: number;

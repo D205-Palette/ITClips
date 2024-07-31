@@ -1,27 +1,27 @@
-import React from "react";
 import { NavLink } from "react-router-dom";
-
-// images (임시)
-import image from "../../../assets/images/profile_image.png"
+import React from "react";
 
 // components
-import SearchItemKebabDropdown from "../ui/SearchItemKebabDropdown";
+import SearchItemKebabDropdown from "./SearchItemKebabDropdown";
 
-interface RecommandedItem {
+// images (임시)
+import image from "../../../assets/images/profile_image.png";
+
+interface Tag {
   id: number;
   title: string;
   username: string;
-  imageUrl: string;
   bookmarks: number;
   likes: number;
   createdAt: string;
+  thumbnailUrl: string;
 }
 
-interface RecommandedItemProps {
-  item: RecommandedItem;
+interface TagProps {
+  item: Tag;
 }
 
-const RecommandedItemList: React.FC<RecommandedItemProps> = ({ item }) => {
+const SearchTagItemList: React.FC<TagProps> = ({ item }) => {
 
   // 더보기 버튼 기능이 NavLink와 안겹치게 설정
   const handleNavLink = (e: React.MouseEvent) => {
@@ -56,4 +56,4 @@ const RecommandedItemList: React.FC<RecommandedItemProps> = ({ item }) => {
   );
 };
 
-export default RecommandedItemList;
+export default SearchTagItemList;

@@ -1,8 +1,8 @@
 import React from "react";
 
 // components
-import SearchRoadmapItemList from "./SearchRoadmapItemList";
-import SearchRoadmapItemGrid from "./SearchRoadmapItemGrid";
+import SearchRoadmapItemList from "../ui/SearchRoadmapItemList";
+import SearchRoadmapItemGrid from "../ui/SearchRoadmapItemGrid";
 
 interface RoadmapItem {
   id: number;

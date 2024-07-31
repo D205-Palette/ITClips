@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import React from "react";
 
 // components
-import SearchItemKebabDropdown from "../ui/SearchItemKebabDropdown";
+import SearchItemKebabDropdown from "./SearchItemKebabDropdown";
 
 // images (임시)
 import image from "../../../assets/images/profile_image.png";

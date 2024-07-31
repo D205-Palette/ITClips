@@ -1,8 +1,8 @@
 import React from "react";
 
 // components
-import SearchBookmarkListItemList from "./SearchBookmarkListItemList";
-import SearchBookmarkListItemGrid from "./SearchBookmarkListItemGrid";
+import SearchBookmarkListItemList from "../ui/SearchBookmarkListItemList";
+import SearchBookmarkListItemGrid from "../ui/SearchBookmarkListItemGrid";
 
 interface BookmarkListItem {
     id: number;

@@ -84,7 +84,7 @@ public class SecurityConfig {
                 //== URL별 권한 관리 옵션 ==//
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/", "/index.html","/css/**", "/images/**").permitAll()  // 기본 페이지, static 하위 폴더에 있는 자료들은 모두 접근 가능
-                        .requestMatchers("/api/swagger-ui.html", "/v3/api-docs/**", "/swagger-resources/**", "/api/swagger-ui/**").permitAll()
+                        .requestMatchers("/api/swagger-ui.html", "/api/v3/api-docs/**", "/swagger-resources/**", "/api/swagger-ui/**").permitAll()
                         .requestMatchers("/api/user/signup", "/api/user/oauthSignup").permitAll()   // 회원가입 접근 가능
                         .requestMatchers("/api/user/login", "/api/user/refresh").permitAll()     // 로그인 접근 가능
                         .requestMatchers("/api/user/**").permitAll()    // API 개발 중 접근 없이 swagger 테스트 하기 위함

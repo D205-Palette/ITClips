@@ -4,7 +4,7 @@ import FollowingList from "../../components/follow/FollowingList";
 const Following = () => {       
   return (
     <>
-        <FollowingList />
+      <FollowingList />
     </>
   );
 };

@@ -1,5 +1,6 @@
 package com.ssafy.itclips.config;
 
+import com.ssafy.itclips.chat.dto.MessageDTO;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -31,5 +32,17 @@ public class RedisConfig {
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(String.class));
         return redisTemplate;
+    }
+
+
+    // Redis 에 메시지 내역을 저장하기 위한 RedisTemplate 을 설정
+    @Bean
+    public RedisTemplate<String, MessageDTO> redisTemplateMessage(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, MessageDTO> redisTemplateMessage = new RedisTemplate<>();
+        redisTemplateMessage.setConnectionFactory(connectionFactory);
+        redisTemplateMessage.setKeySerializer(new StringRedisSerializer());        // Key Serializer
+        redisTemplateMessage.setValueSerializer(new Jackson2JsonRedisSerializer<>(MessageDTO.class));      // Value Serializer
+
+        return redisTemplateMessage;
     }
 }

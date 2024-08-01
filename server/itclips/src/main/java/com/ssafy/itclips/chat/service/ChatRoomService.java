@@ -1,6 +1,6 @@
 package com.ssafy.itclips.chat.service;
 
-import com.ssafy.itclips.chat.dto.ChatMessage;
+import com.ssafy.itclips.chat.dto.MessageDTO;
 import com.ssafy.itclips.chat.dto.ChatRoomDTO;
 import com.ssafy.itclips.chat.entity.Chat;
 import com.ssafy.itclips.chat.entity.ChatRoom;
@@ -16,10 +16,16 @@ import com.ssafy.itclips.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +37,9 @@ public class ChatRoomService {
     private final MessageJPARepository messageJPARepository;
     private final UserRepository userRepository;
     private final RedisPublisher redisPublisher;
+    private final RedisTemplate<String, MessageDTO> redisTemplateMessage;
 
+    //방 생성
     @Transactional
     public void createChatRoom(Long user1Id, Long user2Id) {
         User user1 = userRepository.findById(user1Id).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
@@ -69,26 +77,35 @@ public class ChatRoomService {
 
     //메세지 전송
     @Transactional
-    public void publish(ChatMessage message) {
-
-        //채팅에 속한 유저 찾기
-        List<Chat> chatList = chatJPARepository.findByRoomId(message.getRoomId())
+    public void publish(MessageDTO message) {
+        //topic생성
+        chatRoomRepository.enterChatRoom(message.getRoomId());
+        log.info(message.getSenderId()+" "+message.getRoomId());
+        //보낸사람 ,방 찾기
+        Chat chat = chatJPARepository.findByUserIdAndRoomId(message.getSenderId(), message.getRoomId())
                 .orElseThrow(()-> new CustomException(ErrorCode.CHAT_NOT_FOUND));
-        // TODO: errorcode 만들기
 
         // mysql 메세지 저장
-        for(Chat chat : chatList) {
-            Message saveMessage = message.toEntity(chat);
-            messageJPARepository.save(saveMessage);
-        }
+        Message saveMessage = message.toEntity(chat);
+        messageJPARepository.save(saveMessage);
+
+        // 레디스 저장
+        //직렬화
+        redisTemplateMessage.setValueSerializer(new Jackson2JsonRedisSerializer<>(MessageDTO.class));
+        redisTemplateMessage.opsForList().rightPush(message.getRoomId().toString(), message);
+        // 3. expire 을 이용해서, Key 를 만료시킬 수 있음
+        redisTemplateMessage.expire(message.getRoomId().toString(), 1, TimeUnit.MINUTES);
 
         // 레디스 메세지 보내깅
         redisPublisher.publish(chatRoomRepository.getTopic(message.getRoomId()), message);
+
+
     }
 
     //유저가 속한 채팅방 리스트
     @Transactional
     public List<ChatRoomDTO> getChatRooms(Long userId) {
+
         // 특정 유저가 속한 채팅 가져오기
         List<Chat> chatRoomList = chatJPARepository.findByUserId(userId)
                 .orElseThrow(()->new CustomException(ErrorCode.CHAT_NOT_FOUND));
@@ -109,5 +126,33 @@ public class ChatRoomService {
         }
 
         return chatRoomDTOList;
+    }
+
+    @Transactional
+    //채팅방 메세지 찾기
+    public List<MessageDTO> getMessages(Long roomId){
+
+        List<MessageDTO> messageList = new ArrayList<>();
+
+        // 레디스에서 메세지 가져오기
+        List<MessageDTO> redisMessageList = redisTemplateMessage.opsForList().range(roomId.toString(), 0, 99);
+
+        // 레디스에 없으면 db에서 읽어오기
+        if(redisMessageList == null|| redisMessageList.isEmpty()) {
+            // 최신순 100개
+            Pageable pageable = PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "createdAt"));
+            List<Message> DBMessageList = messageJPARepository.findMessagesByRoomId(roomId);
+
+            for(Message message : DBMessageList) {
+                Chat chat = chatJPARepository.findById(message.getChat().getId())
+                        .orElseThrow(()->new CustomException(ErrorCode.CHAT_NOT_FOUND));
+                MessageDTO messageDTO = MessageDTO.toDTO(message,chat);
+                messageList.add(messageDTO);
+                //레디스에 저장
+                redisTemplateMessage.setValueSerializer(new Jackson2JsonRedisSerializer<>(Message.class));      // 직렬화
+                redisTemplateMessage.opsForList().rightPush(roomId.toString(), messageDTO);
+            }
+        }
+        return messageList;
     }
 }

@@ -1,14 +1,11 @@
 package com.ssafy.itclips.chat.controller;
 
-import com.ssafy.itclips.chat.dto.ChatMessage;
-import com.ssafy.itclips.chat.repository.ChatRoomRepository;
+import com.ssafy.itclips.chat.dto.MessageDTO;
 import com.ssafy.itclips.chat.service.ChatRoomService;
-import com.ssafy.itclips.chat.service.RedisPublisher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @RequiredArgsConstructor
 @Controller
@@ -23,7 +20,7 @@ public class ChatController {
      */
     // 메세지 보내기
     @MessageMapping("/chat/message")
-    public void message(ChatMessage message) {
+    public void message(MessageDTO message) {
         chatRoomService.publish(message);
     }
 }

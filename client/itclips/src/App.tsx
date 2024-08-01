@@ -11,7 +11,7 @@ const App = () => {
         <NavBar />
       </header>
 
-      <main className="absolute top-16 w-full ">
+      <main className="absolute top-16 w-full">
         <Outlet />
       </main>
     </div>

@@ -1,16 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { navStore } from "../../../stores/navStore";
 import { authStore } from "../../../stores/authStore";
 import { useNavigate } from "react-router-dom";
-import { emailLogin } from '../../../api/authApi';
+import { emailLogin, checkUserInfo } from "../../../api/authApi";
 
 const EmailLoginModal: React.FC = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const { setLoginListOpen, setEmailLoginOpen, setPasswordResetOpen, } =
+  const { setLoginListOpen, setEmailLoginOpen, setPasswordResetOpen } =
     navStore();
-  const { login } = authStore()
+  const { login, userInfo, fetchUserInfo, fetchUserToken } = authStore();
   const [errorMessage, setErrorMessage] = useState("");
 
   const closeEmailLoginModal = () => {
@@ -21,23 +21,30 @@ const EmailLoginModal: React.FC = () => {
   // 이메일 로그인 로직
   const handleEmailLoginSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    login()
-    
+
     emailLogin(email, password)
-      .then((response:any) => {
+      .then((response: any) => {
+        console.log(response);
         if (response.status === 200) {
           setErrorMessage(""); // 에러 메시지 초기화
-          login();
-          navigate("/user/:user_id");
-        } else {
-          setErrorMessage(
-            "아이디 또는 비밀번호가 잘못 되었습니다. 아이디와 비밀번호를 정확히 입력해 주세요."
-          );
+          fetchUserToken(response.data.accessToken); // 로컬 스토리지에 유저 토큰 업데이트
+          login(); // 로그인 상태 업데이트
+
+          const userId = response.headers.userid;
+
+          // 유저 정보 가져오기
+          return checkUserInfo(email);
         }
+        throw new Error("로그인에 실패했습니다.");
       })
-      .catch((error:any) => {
-        // 로그인 실패 시 에러 메시지 설정
-        setErrorMessage(error.message || "아이디 또는 비밀번호가 잘못 되었습니다.");
+      .then((userInfoResponse) => {
+        fetchUserInfo(userInfoResponse.data); // 로컬 스토리지에 유저 정보 업데이트
+        window.alert(`환영합니다 ${userInfoResponse.data.nickname}님!`);
+        navigate(`/user/${userInfoResponse.data.id}`); // 로그인 후 페이지 이동
+      })
+      .catch((error: any) => {
+        console.error(error);
+        setErrorMessage("아이디 또는 비밀번호가 잘못되었습니다.");
       });
   };
 

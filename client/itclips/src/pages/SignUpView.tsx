@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { authStore } from "../stores/authStore";
-import axios from "axios";
-import { API_BASE_URL } from "../config";
-
 import {
   emailLogin,
+  checkUserInfo,
+  checkEmail,
   sendVerificationCode,
   verifyVerificationCode,
   checkNickname,
@@ -22,11 +20,13 @@ import {
 } from "react-icons/fa";
 import { CiMail } from "react-icons/ci";
 import { MdOutlineWorkOutline } from "react-icons/md";
+import { authStore } from "../stores/authStore";
 import { useNavigate } from "react-router-dom";
 
-const SignUpView = () => {
-  const navigate = useNavigate();
-  const { login } = authStore();
+
+const SignUpView = () => {  
+  const { login, userInfo, fetchUserInfo, fetchUserToken } = authStore();
+  const navigate = useNavigate()
 
   // 사용자 입력 데이터 상태
   const [userData, setUserData] = useState({
@@ -132,28 +132,41 @@ const SignUpView = () => {
     ); // 선택된 성별이 현재 성별과 같으면 비우고, 그렇지 않으면 업데이트
   };
 
-  // 이메일 제출 핸들러
+  // // 이메일 제출 핸들러
   const handleEmailSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-
-    // 이메일 인증번호 발송 api 호출
-    sendVerificationCode(email)
+    // 이메일 중복 체크
+    checkEmail(email)
       .then((response) => {
         if (response.status === 200) {
-          // 이메일 발송 성공 시 상태 업데이트
-          window.alert("이메일로 인증번호를 발송하였습니다.");
-          setIsEmailSent(true);
-          setIsVerificationSuccess(null); // 인증 성공 상태 초기화
-          setVerificationMessage(""); // 인증 메시지 초기화
+          // 이메일 인증번호 발송 api 호출
+          sendVerificationCode(email)
+            .then((response) => {
+              if (response.status === 200) {
+                // 이메일 발송 성공 시 상태 업데이트
+                window.alert("이메일로 인증번호를 발송하였습니다.");
+                setIsEmailSent(true);
+                setIsVerificationSuccess(null); // 인증 성공 상태 초기화
+                setVerificationMessage(""); // 인증 메시지 초기화
+              } else {
+                window.alert("인증번호 발송을 실패하였습니다.");
+                setVerificationMessage("인증번호 발송을 실패하였습니다.");
+              }
+            })
+            .catch((error) => {
+              // 이메일 발송 실패 시 상태 업데이트
+              setIsEmailSent(false);
+              setVerificationMessage("인증번호 발송을 실패하였습니다.");
+            });
         } else {
-          window.alert("인증번호 발송을 실패하였습니다.");
-          setVerificationMessage("인증번호 발송을 실패하였습니다.");
+          // 이메일 중복 되었을 경우
+          setVerificationMessage(
+            "이메일이 중복 되었습니다. 다른 이메일을 입력해주세요."
+          );
         }
       })
       .catch((error) => {
-        // 이메일 발송 실패 시 상태 업데이트
-        setIsEmailSent(false);
-        setVerificationMessage("인증번호 발송을 실패하였습니다.");
+        window.alert("이메일이 중복 되었습니다. 다른 이메일을 입력해주세요.");
       });
   };
 
@@ -193,39 +206,54 @@ const SignUpView = () => {
   };
 
   // 회원 가입 제출
-  const signup = () => {
+  const handleSignupSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     const userDataToSend = {
       email,
       password,
       nickname,
       birth: birthday,
       job,
-      gender: isMale
+      gender: isMale,
     };
 
-    // signup(userDataToSend)
-
-    // 회원 가입 api 호출
-    axios({
-      method: "post",
-      url: `${API_BASE_URL}/api/user/signup`,
-      params: {
-        email: email,
-        password: password,
-        nickname: nickname,
-        birth: birthday,
-        job: job,
-        gender: isMale,
-      },
-    })
-      .then((response) => {
+    signup(userDataToSend)
+      .then((response: any) => {
         if (response.status === 200) {
           window.alert("회원가입을 완료하였습니다.");
-          login();
+
+          emailLogin(email, password)
+            .then((response: any) => {
+              if (response.status === 200) {
+                
+                console.log(response);
+                fetchUserToken(response.data.accessToken); // 로컬 스토리지에 유저 토큰 업데이트
+                login(); // 로그인 상태 업데이트
+                const userId = response.headers.userid;
+
+                checkUserInfo("kdj4355@naver.com") // 테스트 아이디 유저정보 불러오기
+                  .then((response) => {
+                    fetchUserInfo(response.data); // 로컬 스토리지에 유저 정보 업데이트
+                  });
+                console.log(userInfo.id);
+                window.alert(`환영합니다 ${userInfo.nickname}님!`);
+                navigate(`/user/${userInfo.id}`); // 로그인 후 페이지 이동
+              }
+            })
+            .catch((error: any) => {
+              console.log(error)              
+            });
+            
+        } else {
+          return Promise.reject(
+            new Error("회원가입에 실패했습니다. 다시 시도해 주세요.")
+          );
         }
       })
-      .catch((error) => {
-        setIsNicknameValid(false);
+      .catch((error: any) => {
+        // 에러 처리        
+        window.alert("회원가입에 실패하였습니다.");
       });
   };
 
@@ -240,13 +268,12 @@ const SignUpView = () => {
     });
   };
 
-
   return (
     <div className="flex justify-center items-center bg-base-100 mt-5">
       <div className="w-full max-w-4xl border rounded-lg shadow-lg p-8 bg-base-100">
         <h1 className="text-center text-3xl font-bold mb-8">회원가입</h1>
 
-        <form onSubmit={signup}>
+        <form onSubmit={handleSignupSubmit}>
           {/* 이메일 입력 및 본인 인증 버튼 */}
           <div className="space-y-4 mb-6">
             <div className="flex items-center gap-3">

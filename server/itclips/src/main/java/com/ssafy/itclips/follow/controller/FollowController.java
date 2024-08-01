@@ -1,6 +1,7 @@
 package com.ssafy.itclips.follow.controller;
 
 import com.ssafy.itclips.follow.dto.FollowDTO;
+import com.ssafy.itclips.follow.dto.FollowDetailDTO;
 import com.ssafy.itclips.follow.entity.Follow;
 import com.ssafy.itclips.follow.service.FollowService;
 import com.ssafy.itclips.user.entity.User;
@@ -56,12 +57,9 @@ public class FollowController {
             @ApiResponse(responseCode = "200", description = "팔로잉 목록 조회 성공"),
             @ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없음")
     })
-    public ResponseEntity<List<FollowDTO>> getFollowing(@RequestParam @Parameter(description = "팔로잉 목록을 조회할 사용자 ID") Long userId) {
+    public ResponseEntity<List<FollowDetailDTO>> getFollowing(@RequestParam @Parameter(description = "팔로잉 목록을 조회할 사용자 ID") Long userId) {
         try {
-            List<Follow> followingList = followService.getFollowing(userId);
-            List<FollowDTO> followDTOs = followingList.stream()
-                    .map(follow -> new FollowDTO(follow.getId(), follow.getFrom().getId(), follow.getTo().getId()))
-                    .collect(Collectors.toList());
+            List<FollowDetailDTO> followDTOs = followService.getFollowing(userId);
             return ResponseEntity.ok(followDTOs);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -94,12 +92,9 @@ public class FollowController {
             @ApiResponse(responseCode = "200", description = "팔로워 목록 조회 성공"),
             @ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없음")
     })
-    public ResponseEntity<List<FollowDTO>> getFollowers(@RequestParam @Parameter(description = "팔로워 목록을 조회할 사용자 ID") Long userId) {
+    public ResponseEntity<List<FollowDetailDTO>> getFollowers(@RequestParam @Parameter(description = "팔로워 목록을 조회할 사용자 ID") Long userId) {
         try {
-            List<Follow> followersList = followService.getFollowers(userId);
-            List<FollowDTO> followDTOs = followersList.stream()
-                    .map(follow -> new FollowDTO(follow.getId(), follow.getFrom().getId(), follow.getTo().getId()))
-                    .collect(Collectors.toList());
+            List<FollowDetailDTO> followDTOs = followService.getFollowers(userId);
             return ResponseEntity.ok(followDTOs);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);

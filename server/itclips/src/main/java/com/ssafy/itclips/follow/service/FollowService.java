@@ -1,5 +1,6 @@
 package com.ssafy.itclips.follow.service;
 
+import com.ssafy.itclips.follow.dto.FollowDetailDTO;
 import com.ssafy.itclips.follow.entity.Follow;
 import com.ssafy.itclips.user.entity.User;
 
@@ -9,11 +10,11 @@ public interface FollowService {
 
     Follow followUser(Long fromUserId, Long toUserId);
 
-    List<Follow> getFollowing(Long userId);
+    List<FollowDetailDTO> getFollowing(Long userId);
 
     void unfollowUser(Long fromUserId, Long toUserId);
 
-    List<Follow> getFollowers(Long userId);
+    List<FollowDetailDTO> getFollowers(Long userId);
 
     void deleteFollower(Long fromUserId, Long toUserId);
 

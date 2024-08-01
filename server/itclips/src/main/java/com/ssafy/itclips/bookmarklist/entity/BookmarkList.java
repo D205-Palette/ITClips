@@ -53,7 +53,6 @@ public class BookmarkList {
     @Column(name = "description")
     private String description;
 
-    @NotNull
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;

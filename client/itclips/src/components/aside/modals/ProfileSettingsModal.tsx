@@ -1,5 +1,3 @@
-// ProfileSettingsModal.tsx 는 AsideProfile.tsx 에서 톱니바퀴 모양의 설정 버튼을 눌렀을 때 출력되는 컴포넌트
-
 import React, { useState, useEffect } from 'react';
 import darkModeStore from '../../../stores/darkModeStore';
 
@@ -23,15 +21,18 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
   // 임시 데이터들
   const [ name, setName ] = useState<string>("");
   const [ birth, setBirth ] = useState<string>("");
-  const [ interests, setInterests ] = useState<string[]>(["JAVA", "Python"]);
+  const [ interests, setInterests ] = useState<string[]>([ "JAVA", "Python" ]);
   const [ newInterest, setNewInterest ] = useState<string>("");
   const [ description, setDescription ] = useState<string>("");
 
-  const isDark = darkModeStore((state) => state.isDark)
+  const isDark = darkModeStore(state => state.isDark)
   const [ jobCategory, setJobCategory ] = useState("직업");
   const [ gender, setGender ] = useState(""); // 성별 상태
   const [ isPasswordChangeModalOpen, setIsPasswordChangeModalOpen ] = useState<boolean>(false);
   const [ isDeleteAccountModalOpen, setIsDeleteAccountModalOpen ] = useState<boolean>(false);
+
+  // 프로필 이미지 상태
+  const [profileImage, setProfileImage] = useState<string | null>(null);
 
   // 성별 선택 핸들러
   const handleGenderSelect = (
@@ -85,11 +86,23 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
     };
   }, [isOpen]);
 
+  // 프로필 이미지 변경 핸들러
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className= "bg-base-100 rounded-lg p-6 w-96">
+      <div className="bg-base-100 rounded-lg p-6 w-96">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">내 정보 변경</h2>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
@@ -101,10 +114,22 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
           <div className="mb-4">
             <label className="block text-sm font-medium mb-2">프로필 이미지</label>
             <div className="flex items-center space-x-2">
-              {/* 여기에 나중에 프로필 이미지 출력 */}
-              <div className="w-16 h-16 bg-gray-200 rounded-full"></div>
-              {/* 프로필 이미지 변경 버튼 */}
-              <button className="btn btn-outline btn-sm">변경</button>
+              <div className="w-16 h-16 bg-gray-200 rounded-full overflow-hidden">
+                {profileImage ? (
+                  <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full bg-gray-200"></div>
+                )}
+              </div>
+              <label className="btn btn-outline btn-sm">
+                변경
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                />
+              </label>
             </div>
           </div>
 
@@ -120,7 +145,6 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
               />
             </div>
 
-
             <div className="mb-4 space-y-2">
               <button
                 className="btn btn-outline btn-sm"
@@ -131,8 +155,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
 
               <button
                 className="btn btn-outline btn-sm text-red-500 ms-2"
-                onClick={() => setIsDeleteAccountModalOpen(true)
-                }  
+                onClick={() => setIsDeleteAccountModalOpen(true)}
               >
                 회원탈퇴
               </button>

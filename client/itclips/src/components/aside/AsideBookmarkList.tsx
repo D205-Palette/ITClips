@@ -24,7 +24,7 @@ interface Tag {
 }
 
 interface ItemProps {
-  itemName: string;
+  title: string;
   email: string;
   description: string;
   like: number;
@@ -37,7 +37,7 @@ const ProfileCard = () => {
 
   // 더미 데이터
   const bookmarkInfo: ItemProps = {
-    itemName: "북마크리스트",
+    title: "북마크리스트",
     email: "abc@gmail.com",
     description: "인기 북마크 리스트",
     like: 200,

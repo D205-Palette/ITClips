@@ -5,6 +5,7 @@ import com.ssafy.itclips.global.jwt.JwtTokenProvider;
 import com.ssafy.itclips.tag.dto.TagDTO;
 import com.ssafy.itclips.tag.repository.TagRepository;
 import com.ssafy.itclips.tag.repository.UserTagRepository;
+import com.ssafy.itclips.user.dto.UserInfoDTO;
 import com.ssafy.itclips.user.entity.*;
 import com.ssafy.itclips.user.repository.UserRepository;
 import com.ssafy.itclips.user.service.MailService;
@@ -146,23 +147,32 @@ public class UserController {
         }
     }
 
-    @GetMapping("/profile")
+    @GetMapping("/profile/{userId}")
     @Operation(summary = "회원 정보 조회", description = "사용자의 프로필 정보를 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 정보 조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "회원 정보 없음", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
     })
-    public ResponseEntity<?> getProfile(@RequestParam("email") String email) {
+    public ResponseEntity<?> getProfile(@PathVariable("userId") Long userId) {
         if (!isAuthenticated()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(UNAUTHORIZED_MESSAGE);
         }
 
-        User user = userService.findUserByEmail(email);
+        User user = userService.getUserById(userId);
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(USER_NOT_FOUND_MESSAGE);
         }
-        return ResponseEntity.ok(user);
+
+        UserInfoDTO userInfoDTO = UserInfoDTO.builder()
+                .nickname(user.getNickname())
+                .birth(user.getBirth())
+                .job(user.getJob())
+                .gender(user.getGender())
+                .bio(user.getBio())
+                .build();
+
+        return ResponseEntity.ok(userInfoDTO);
     }
 
     @PutMapping("/profile")

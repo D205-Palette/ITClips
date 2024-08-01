@@ -33,6 +33,34 @@ SSAFY 11기 공통 PJT / 구미 2반 5조 웹디자인
 
 ✔ [회의록](https://roomy-wing-ac0.notion.site/c26765682d60418c97b15fa0d8c71262?pvs=4)
 
+## 아키텍처
+
+
+## 8/02 중간점검
+
+✔ [Itclips FE](https://i11d205.p.ssafy.io/)
+```
+😁 테스트 계정(이메일 로그인)
+
+  - id : kdj4355@naver.com
+  - pwd : 1234
+```
+✔ [Itclips BE(API)](https://i11d205.p.ssafy.io/api/swagger-ui/index.html)
+
+### 👀 진행도 & 남은 일정
+
+#### BE
+- API 개발 70% 완료
+- 채팅, 협업필터링, 알림 진행 계획
+
+#### FE
+- API 연동 개발 중
+- 세부 디자인 구성 중
+
+#### Infra
+- CI/CD 완료
+- S3 연동 진행중
+
 ## 📌 Commit Convention
 ```
 [FEAT] 새로운 기능 구현

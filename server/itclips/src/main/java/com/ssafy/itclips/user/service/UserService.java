@@ -34,6 +34,8 @@ public interface UserService {
 
     boolean deleteUserByEmail(String email);
 
+    boolean deleteUserById(Long userId);
+
     boolean nicknameCheck(String nickname);
 
     void updatePassword(User user, String newPassword);

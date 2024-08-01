@@ -210,6 +210,16 @@ public class UserServiceImpl implements UserService {
         return !userRepository.existsByEmail(email);
     }
 
+    @Transactional
+    @Override
+    public boolean deleteUserById(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."));
+
+        userRepository.delete(user);
+        return !userRepository.existsById(userId);
+    }
+
     @Override
     public boolean nicknameCheck(String nickname) {
         return userRepository.existsByNickname(nickname);

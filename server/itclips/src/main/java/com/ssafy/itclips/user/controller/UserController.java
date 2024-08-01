@@ -195,20 +195,20 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/profile")
+    @DeleteMapping("/profile/{userId}")
     @Operation(summary = "회원 탈퇴", description = "사용자의 계정을 삭제합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 탈퇴 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "회원 정보 없음", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
     })
-    public ResponseEntity<?> deleteUser(@RequestParam("email") String email) {
+    public ResponseEntity<?> deleteUser(@PathVariable("userId") Long userId) {
         if (!isAuthenticated()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(UNAUTHORIZED_MESSAGE);
         }
 
         try {
-            boolean isDeleted = userService.deleteUserByEmail(email);
+            boolean isDeleted = userService.deleteUserById(userId);
             if (!isDeleted) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(USER_DELETE_FAIL);
             }

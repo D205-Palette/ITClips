@@ -11,6 +11,7 @@ import mainStore from "../../stores/mainStore";
 
 export default function MyView() {
   const [isList, setTab] = useState(true);
+  const [filterText, changeFilterText] = useState("")
   function tabList(): void {
     setTab(true);
   }
@@ -23,7 +24,7 @@ export default function MyView() {
     <>
       <MainTab />
       {/* 상단 검색바 */}
-      <SearchBar whatSearch={"북마크 리스트"} />
+      <SearchBar whatSearch={"북마크 리스트"} filterText={filterText} changeFilterText={changeFilterText}/>
 
       {/* 리스트 & 액자형 탭 */}
       <div className="flex justify-end">

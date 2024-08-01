@@ -10,11 +10,11 @@ import SignupView from "./pages/SignUpView";
 import App from "./App";
 import ProfileView from "./pages/ProfileView";
 import MyBookmark from "./pages/BookmarkView";
-import RoadmapView from "./pages/RoadmapView";
+import RoadmapView from "./pages/RoadmapDetailView";
 import FollowView from "./pages/ProfileView/FollowView";
 
 // const changeIsFollow = mainTabStore((state) => state.changeIsFollow)
-import RoadMapView from "./pages/RoadmapView";
+import RoadMapView from "./pages/RoadmapDetailView";
 import Follower from "./pages/ProfileView/FollowFollower";
 import Following from "./pages/ProfileView/FollowFollowing";
 
@@ -55,10 +55,6 @@ const router = createBrowserRouter([
             element: <MyRoadmap />,
           },
           {
-            path: "roadmap/:roadmap_id",
-            element: <RoadmapView />,
-          },
-          {
             path: "follow",
             element: <FollowView />,
             children: [
@@ -73,6 +69,10 @@ const router = createBrowserRouter([
             ],
           },
         ],
+      },
+      {
+        path: "roadmap/:roadmap_id",
+        element: <RoadmapView />,
       },
       {
         path: "bookmarklist/:bookmarklist_id",

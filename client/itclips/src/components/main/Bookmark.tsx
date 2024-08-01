@@ -15,14 +15,18 @@ import { useNavigate } from "react-router-dom";
 //   }
 
 interface Props {
-  bookmark: {
-    id:number;
+  bookmark:{
+    id: number;
+    category: string;
     title: string;
     url: string;
-    description: string;
-    bookmark_like: number;
-    category: string;
-    tags: string[];
+    tags: {
+      title: string;
+    }[];
+    content: string;
+    isLiked: boolean;
+    likeCount: number;
+  
   }
 };
 
@@ -61,15 +65,15 @@ const Bookmark : FC<Props> = ({bookmark}) => {
               </div>
 
               <div className="hidden items-center md:inline-flex ">
-                {bookmark.tags.map((tag: string) => (
-                    <span className='ms-1'>{" # " + tag }</span>
+                {bookmark.tags.map((tag) => (
+                    <span className='ms-1'>{" # " + tag.title }</span>
                   ))}{" "}
               </div>
 
               <div className="card-actions justify-end flex items-center">
                 <button onClick={clickHeart} className="btn btn-ghost">
                   {isLike ? <FaHeart color="red"/> : <FaRegHeart />}
-                  {bookmark.bookmark_like}{" "}
+                  {bookmark.likeCount}{" "}
                 </button>
                 <button className="">
                   <KebabDropdown whatMenu="북마크" id={bookmark.id} />

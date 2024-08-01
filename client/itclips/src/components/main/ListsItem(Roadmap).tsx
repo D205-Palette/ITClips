@@ -63,29 +63,26 @@ const ListItem: FC<Props> = ({ list,changeCount }) => {
         <>
           <figure
             onClick={() => navigate("/bookmarklist/:bookmarklist_id")}
-            className="hover:cursor-pointer"
+            className="hover:cursor-pointer hidden lg:inline "
           >
             <img
               src="https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp"
               alt="Movie"
-              className="size-28"
+              className="size-28 hidden lg:inline"
             />
           </figure>
 
-          <div className="card-body flex flex-row">
-            <div className="flex flex-col flex-auto justify-around ">
-              <div onClick={() => navigate("/bookmarklist/:bookmarklist_id")}>
-                {" "}
-                <h4 className="flex-auto card-title hover:cursor-pointer">
+          <div className="card-body flex flex-row justify-between">
+            <div className="flex flex-row items-center " onClick={() => navigate("/bookmarklist/:bookmarklist_id")}>
+                <h4 className="card-title hover:cursor-pointer text-sm md:text-md lg:text-xl">
                   {list.bookmarkListResponseDTO.title}
                 </h4>
-              </div>
             </div>
             {/* 체크박스 */}
             <div className="form-control flex flex-row items-center">
               <input
                 type="checkbox"
-                defaultChecked={list.check===1?true : false}
+                defaultChecked={list.check===1? true : false}
                 onClick={() => toggleCheck(list.check)}
                 className="checkbox checkbox-info  [--chkfg:white]"
               />

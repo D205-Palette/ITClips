@@ -12,9 +12,9 @@ interface Props {
     image: string;
     bookmarks: object[];
     title: string;
-    bookmark_list_tags: string[];
+    tags: string[];
     description: string;
-    bookmark_list_like: number;
+    likeCount: number;
   };
 }
 
@@ -33,36 +33,38 @@ const ListItem : FC<Props> = ({list}) => {
       <div
         className={(isDark? "hover:bg-slate-700" : "hover:bg-slate-100") + " card card-side bg-base-100 shadow-xl  h-28"} >
           <>
-            <figure onClick={()=>navigate('/bookmarklist/:bookmarklist_id')} className="hover:cursor-pointer">
+            <figure onClick={()=>navigate('/bookmarklist/:bookmarklist_id')} className="hover:cursor-pointer w-1/6">
               <img
                 src="https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp"
                 alt="Movie"
-                className="size-28"
+                className="size-28 object-cover"
               />
             </figure>
 
-            <div className="card-body flex flex-row">
-              <div className="flex flex-col flex-auto justify-around ">
+            <div className="card-body flex flex-row w-5/6">
+              <div className="flex flex-col flex-auto justify-around w-8/12">
                 <div onClick={()=>navigate('/bookmarklist/:bookmarklist_id')}>
                   {" "}
                   <h4 className="flex-auto card-title hover:cursor-pointer">{list.title}</h4>{" "}
                 </div>
                 <div>
                   {" "}
-                  {list.bookmark_list_tags.map((tag: string) => (
+                  {list.tags.map((tag: string) => (
                     <span>{" # " + tag}</span>
                   ))}{" "}
                 </div>
-              </div>
+              </div>  
 
-              <div className=" items-center hidden xl:flex ">
+              {/* 너무 많아져서 설명은 안에만 넣어도 될듯..? */}
+
+              {/* <div className=" items-center hidden xl:flex ">
                 <p>{list.description}</p>
-              </div>
+              </div> */}
 
-              <div className="card-actions justify-end flex items-center">
+              <div className="card-actions justify-between flex items-center w-3/12">
                 <button onClick={clickHeart} className="btn btn-ghost hidden sm:inline-flex">
                   {isLike ? <FaHeart color="red"/> : <FaRegHeart />}
-                  {list.bookmark_list_like}
+                  {list.likeCount}
                 </button>
                 <button className="md:block hidden">
                   <KebabDropdown whatMenu="리스트" id={list.id} />

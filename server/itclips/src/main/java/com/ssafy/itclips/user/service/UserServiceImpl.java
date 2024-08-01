@@ -2,10 +2,7 @@ package com.ssafy.itclips.user.service;
 
 import com.ssafy.itclips.global.jwt.JwtToken;
 import com.ssafy.itclips.global.jwt.JwtTokenProvider;
-import com.ssafy.itclips.user.entity.LoginForm;
-import com.ssafy.itclips.user.entity.OauthSignupForm;
-import com.ssafy.itclips.user.entity.SignupForm;
-import com.ssafy.itclips.user.entity.User;
+import com.ssafy.itclips.user.entity.*;
 import com.ssafy.itclips.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -65,7 +62,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public JwtToken login(LoginForm loginForm) {
+    public LoginResponse login(LoginForm loginForm) {
         // 인증 객체 생성
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginForm.getEmail(), loginForm.getPassword());
@@ -82,7 +79,8 @@ public class UserServiceImpl implements UserService {
         user.setRefreshToken(jwtToken.getRefreshToken());
         userRepository.save(user);
 
-        return jwtToken;
+        // JWT 토큰과 userId를 포함한 응답 객체 생성
+        return new LoginResponse(jwtToken.getAccessToken(), jwtToken.getRefreshToken(), user.getId());
     }
 
     @Transactional

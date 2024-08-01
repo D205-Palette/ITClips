@@ -237,12 +237,10 @@ export default function FeedView() {
           className="xl:col-start-2 xl:col-span-3 hidden xl:block"
         >
           {/* aside 자리 */}
-          <div className="fixed">
-            <AsideProfile />
-          </div>
+          <AsideProfile />
           {/* 여기에 프로필이나 메세지일때 넣기 */}
           <div id="aside" className="absolute col-start-2 col-span-2">
-            <div className="fixed">{isMessageOpen && <MessageLayout />}</div>
+            {isMessageOpen && <MessageLayout />}
           </div>
         </div>
 

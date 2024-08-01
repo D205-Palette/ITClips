@@ -28,7 +28,7 @@ public class FollowServiceImpl implements FollowService {
 
     @Transactional
     @Override
-    public Follow followUser(Long fromUserId, Long toUserId) {
+    public Follow followUser(Long fromUserId, Long toUserId) throws RuntimeException {
         if (fromUserId == null || toUserId == null) {
             throw new CustomException(ErrorCode.INVALID_FOLLOW_REQUEST);
         }
@@ -51,7 +51,7 @@ public class FollowServiceImpl implements FollowService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<FollowDetailDTO> getFollowing(Long userId) {
+    public List<FollowDetailDTO> getFollowing(Long userId) throws RuntimeException {
         List<Follow> followingList = followRepository.findByFromId(userId);
 
         return followingList.stream().map(follow -> {
@@ -69,7 +69,7 @@ public class FollowServiceImpl implements FollowService {
 
     @Transactional
     @Override
-    public void unfollowUser(Long fromUserId, Long toUserId) {
+    public void unfollowUser(Long fromUserId, Long toUserId) throws RuntimeException {
         Follow follow = followRepository.findByFromAndTo(
                         userService.getUserById(fromUserId),
                         userService.getUserById(toUserId))
@@ -80,7 +80,7 @@ public class FollowServiceImpl implements FollowService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<FollowDetailDTO> getFollowers(Long userId) {
+    public List<FollowDetailDTO> getFollowers(Long userId) throws RuntimeException {
         List<Follow> followersList = followRepository.findByToId(userId);
 
         return followersList.stream().map(follow -> {
@@ -98,7 +98,7 @@ public class FollowServiceImpl implements FollowService {
 
     @Transactional
     @Override
-    public void deleteFollower(Long fromUserId, Long toUserId) {
+    public void deleteFollower(Long fromUserId, Long toUserId) throws RuntimeException {
         Follow follow = followRepository.findByFromAndTo(
                         userService.getUserById(fromUserId),
                         userService.getUserById(toUserId))
@@ -109,7 +109,7 @@ public class FollowServiceImpl implements FollowService {
 
     @Transactional(readOnly = true)
     @Override
-    public long getFollowerCount(User user) {
+    public long getFollowerCount(User user) throws RuntimeException {
         if (user == null) {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
@@ -118,7 +118,7 @@ public class FollowServiceImpl implements FollowService {
 
     @Transactional(readOnly = true)
     @Override
-    public long getFollowingCount(User user) {
+    public long getFollowingCount(User user) throws RuntimeException {
         if (user == null) {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }

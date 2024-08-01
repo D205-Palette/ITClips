@@ -222,6 +222,20 @@ public class UserController {
         return ResponseEntity.ok("닉네임 사용 가능");
     }
 
+    @GetMapping("/emailCheck")
+    @Operation(summary = "이메일 중복 체크", description = "요청한 이메일이 중복되었는지 체크합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "이메일 중복 체크 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "409", description = "이메일 중복", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+    })
+    public ResponseEntity<?> emailCheck(@RequestParam("email") String email) {
+        boolean isDuplicated = userService.checkEmailExists(email);
+        if (isDuplicated) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("이메일이 중복되었습니다.");
+        }
+        return ResponseEntity.ok("이메일 사용 가능");
+    }
+
     @PostMapping("/refresh")
     @Operation(summary = "리프레시 토큰으로 새로운 액세스 토큰 발급", description = "리프레시 토큰을 사용하여 새로운 액세스 토큰을 발급합니다.")
     @ApiResponses(value = {

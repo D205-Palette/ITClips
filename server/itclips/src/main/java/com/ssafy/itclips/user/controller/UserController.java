@@ -175,20 +175,20 @@ public class UserController {
         return ResponseEntity.ok(userInfoDTO);
     }
 
-    @PutMapping("/profile")
+    @PutMapping("/profile/{userId}")
     @Operation(summary = "회원 정보 수정", description = "사용자의 프로필 정보를 수정합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 정보 수정 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "회원 정보 없음", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
     })
-    public ResponseEntity<?> updateProfile(@RequestParam("email") String email, @RequestBody User updatedUser) {
+    public ResponseEntity<?> updateProfile(@PathVariable("userId") Long userId, @RequestBody UserInfoDTO updatedUser) {
         if (!isAuthenticated()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(UNAUTHORIZED_MESSAGE);
         }
 
         try {
-            User user = userService.updateUserByEmail(email, updatedUser);
+            UserInfoDTO userInfo = userService.updateUserById(userId, updatedUser);
             return ResponseEntity.ok(USER_UPDATE_SUCCESS);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(USER_UPDATE_FAIL);
@@ -419,7 +419,6 @@ public class UserController {
 
         return ResponseEntity.ok(tagDTOs);
     }
-
 
     @Operation(summary = "나의 관심사 태그 추가", description = "사용자의 관심사 태그를 추가합니다.")
     @ApiResponses({

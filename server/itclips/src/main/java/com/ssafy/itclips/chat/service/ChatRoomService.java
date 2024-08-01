@@ -17,6 +17,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -71,7 +73,8 @@ public class ChatRoomService {
 
         //채팅에 속한 유저 찾기
         List<Chat> chatList = chatJPARepository.findByRoomId(message.getRoomId())
-                .orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+                .orElseThrow(()-> new CustomException(ErrorCode.CHAT_NOT_FOUND));
+        // TODO: errorcode 만들기
 
         // mysql 메세지 저장
         for(Chat chat : chatList) {
@@ -81,5 +84,30 @@ public class ChatRoomService {
 
         // 레디스 메세지 보내깅
         redisPublisher.publish(chatRoomRepository.getTopic(message.getRoomId()), message);
+    }
+
+    //유저가 속한 채팅방 리스트
+    @Transactional
+    public List<ChatRoomDTO> getChatRooms(Long userId) {
+        // 특정 유저가 속한 채팅 가져오기
+        List<Chat> chatRoomList = chatJPARepository.findByUserId(userId)
+                .orElseThrow(()->new CustomException(ErrorCode.CHAT_NOT_FOUND));
+
+        List<ChatRoomDTO> chatRoomDTOList = new ArrayList<>();
+        for(Chat chat : chatRoomList) {
+            // 레디스에서 방 찾기
+            ChatRoomDTO chatRoomDTO = chatRoomRepository.findRoomById(chat.getRoom().getId());
+            // 레디스에 없으면
+            if(chatRoomDTO == null) {
+                ChatRoom chatRoom = chatRoomJPARepository.findById(chat.getRoom().getId())
+                        .orElseThrow(()->new CustomException(ErrorCode.CHAT_ROOM_NOT_FOUND));
+                chatRoomDTO = ChatRoomDTO.toDto(chatRoom);
+                //레디스 저장
+                chatRoomRepository.createChatRoom(chatRoomDTO);
+            }
+            chatRoomDTOList.add(chatRoomDTO);
+        }
+
+        return chatRoomDTOList;
     }
 }

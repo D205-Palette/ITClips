@@ -11,4 +11,6 @@ import java.util.List;
 @Repository
 public interface ChatJPARepository extends JpaRepository<Chat,Long> {
     Optional<List<Chat>> findByRoomId(Long roomId);
+    Optional<List<Chat>> findByUserId(Long userId);
+
 }

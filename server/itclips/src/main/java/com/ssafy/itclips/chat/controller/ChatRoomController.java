@@ -29,12 +29,18 @@ public class ChatRoomController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    // 내가 속한 채팅방 리스트
+    @GetMapping("/rooms/{userId}")
+    public ResponseEntity<?> getRooms(@PathVariable("userId")Long userId) {
+        List<ChatRoomDTO> chatRooms = chatRoomService.getChatRooms(userId);
+        return new ResponseEntity<>(chatRooms, HttpStatus.OK);
+    }
 
 //-------------------------------------------------------------------------------------------------------
-    @GetMapping("/room")
-    public String rooms(Model model) {
-        return "/chat/room";
-    }
+//    @GetMapping("/room")
+//    public String rooms(Model model) {
+//        return "/chat/room";
+//    }
 
     @GetMapping("/rooms")
     public List<ChatRoomDTO> room() {
@@ -53,7 +59,7 @@ public class ChatRoomController {
     }
 
     @GetMapping("/room/{roomId}")
-    public ChatRoomDTO roomInfo(@PathVariable String roomId) {
+    public ChatRoomDTO roomInfo(@PathVariable Long roomId) {
         return chatRoomRepository.findRoomById(roomId);
     }
 }

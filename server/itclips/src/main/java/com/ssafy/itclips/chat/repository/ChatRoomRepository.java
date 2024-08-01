@@ -43,7 +43,7 @@ public class ChatRoomRepository {
         return opsHashChatRoom.values(CHAT_ROOMS);
     }
 
-    public ChatRoomDTO findRoomById(String id) {
+    public ChatRoomDTO findRoomById(Long id) {
         return opsHashChatRoom.get(CHAT_ROOMS, id);
     }
 

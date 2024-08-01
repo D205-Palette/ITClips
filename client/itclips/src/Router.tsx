@@ -15,8 +15,8 @@ import FollowView from "./pages/ProfileView/FollowView";
 
 // const changeIsFollow = mainTabStore((state) => state.changeIsFollow)
 import RoadMapView from "./pages/RoadmapDetailView";
-import Follower from "./pages/ProfileView/FollowFollower";
-import Following from "./pages/ProfileView/FollowFollowing";
+import Follower from "./components/follow/FollowerList";
+import Following from "./components/follow/FollowingList";
 
 import SocialSignUpView from "./pages/SocialSignUpView";
 

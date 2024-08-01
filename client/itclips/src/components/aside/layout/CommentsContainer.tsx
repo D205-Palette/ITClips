@@ -15,8 +15,8 @@ interface Tag {
   content: string;
 }
 
-interface ItemProps {
-  itemName: string;
+interface Item {
+  title: string;
   email: string;
   description: string;
   like: number;
@@ -25,7 +25,7 @@ interface ItemProps {
   comments: Comment[];
 }
 
-const CommentsContainer = (data: ItemProps) => {
+const CommentsContainer = (data: Item) => {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editContent, setEditContent] = useState("");
 

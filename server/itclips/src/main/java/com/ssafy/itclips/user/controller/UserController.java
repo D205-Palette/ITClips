@@ -147,7 +147,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/profile/{userId}")
+    @GetMapping("/{userId}/profile")
     @Operation(summary = "회원 정보 조회", description = "사용자의 프로필 정보를 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 정보 조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
@@ -175,7 +175,7 @@ public class UserController {
         return ResponseEntity.ok(userInfoDTO);
     }
 
-    @PutMapping("/profile/{userId}")
+    @PutMapping("/{userId}/profile")
     @Operation(summary = "회원 정보 수정", description = "사용자의 프로필 정보를 수정합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 정보 수정 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
@@ -195,7 +195,7 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/profile/{userId}")
+    @DeleteMapping("/{userId}/profile")
     @Operation(summary = "회원 탈퇴", description = "사용자의 계정을 삭제합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 탈퇴 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),

@@ -160,4 +160,20 @@ public class ChatRoomService {
     public void deleteRoom(Long roomId, Long userId){
         chatJPARepository.deleteByRoomIdAndUserId(roomId,userId);
     }
+
+    @Transactional
+    public void inviteUser(Long roomId, Long userId){
+        if(!chatJPARepository.existsByUserIdAndRoomId(userId, roomId)){
+            User user = userRepository.findById(userId)
+                    .orElseThrow(()->new CustomException(ErrorCode.USER_NOT_FOUND));
+            ChatRoom room = chatRoomJPARepository.findById(roomId)
+                    .orElseThrow(()->new CustomException(ErrorCode.CHAT_ROOM_NOT_FOUND));
+
+            Chat chat = Chat.builder()
+                    .user(user)
+                    .room(room)
+                    .build();
+            chatJPARepository.save(chat);
+        }
+    }
 }

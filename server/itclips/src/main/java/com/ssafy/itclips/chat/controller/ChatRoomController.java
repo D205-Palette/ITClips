@@ -55,4 +55,12 @@ public class ChatRoomController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    //채팅방 초대
+    @PostMapping("/room/{roomId}/{userId}")
+    @Operation(summary = "채팅방 나가기", description = "채팅방 나가기")
+    public ResponseEntity<?> inviteUser(@PathVariable("roomId")Long roomId,@PathVariable("userId")Long userId) {
+        chatRoomService.inviteUser(roomId,userId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

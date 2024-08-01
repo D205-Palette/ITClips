@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public User signup(SignupForm signupForm) throws IOException {
+    public User signup(SignupForm signupForm) throws RuntimeException {
         if (checkEmailExists(signupForm.getEmail())) {
             throw new IllegalArgumentException("이미 존재하는 유저입니다.");
         }

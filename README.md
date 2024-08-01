@@ -34,7 +34,7 @@ SSAFY 11기 공통 PJT / 구미 2반 5조 웹디자인
 ✔ [회의록](https://roomy-wing-ac0.notion.site/c26765682d60418c97b15fa0d8c71262?pvs=4)
 
 ## 아키텍처
-
+<img src="./resources/arch.PNG">
 
 ## 8/02 중간점검
 

@@ -7,18 +7,24 @@ import darkModeStore from "../../stores/darkModeStore";
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 
+
 interface Props {
   roadmap: {
-    image: string;
+    id: number;
+    userName: string;
     title: string;
     description: string;
-    roadmap_like: number;
-    percentage: number;
+    image: string;
+    isPublic: number;
+    createdAt: string;
+    stepCnt: number; // 단계수
+    checkCnt: number; // 체크된 단계수
+    likeCnt: number; // 좋아요 수
   };
 }
 
-const RoadMap : FC<Props> = (({roadmap}) => {
 
+const RoadMap: FC<Props> = ({ roadmap }) => {
   const [isLike, setIsLike] = useState(false);
   const clickHeart = (): void => {
     setIsLike(!isLike);
@@ -26,49 +32,48 @@ const RoadMap : FC<Props> = (({roadmap}) => {
   };
 
   const isDark = darkModeStore((state) => state.isDark);
-  const [isKebab, setIsKebab] = useState(false);
-  const [isDropDown, setIsDropDown] = useState(false);
-  const navigate = useNavigate()
+
+  const percentage = ((roadmap.checkCnt * 100) / roadmap.stepCnt).toFixed(1);
+
+  const navigate = useNavigate();
 
   return (
     <>
       <div
         className={
-          (isKebab
-            ? ""
-            : isDark
-            ? "hover:brightness-150"
-            : "hover:brightness-95") +
+          (isDark ? "hover:bg-slate-700" : "hover:bg-slate-100") +
           " card card-side bg-base-100 shadow-xl hover:cursor-pointer h-32 my-1"
         }
       >
         <>
-          <figure className="w-28  z-20">
-            <img src={roadmap.image} alt="Movie" className="h-full" />
-          </figure>
+          <div className="w-28 z-20  hidden lg:inline rounded-s-2xl">
+            <img src={roadmap.image} alt="Movie" className="h-full w-full hidden lg:inline  rounded-s-2xl" />
+          </div>
 
           <div className="card-body flex flex-row justify-between h-full relative">
             <div
               className={
                 (!isDark
-                  ? roadmap.percentage == 100
-                    ? "bg-green-300"
+                  ? percentage == "100.0"
+                    ? "bg-green-200"
                     : "bg-sky-100"
-                  : roadmap.percentage == 100
+                  : percentage == "100.0"
                   ? "bg-green-900"
-                  : "bg-sky-900") + " h-full absolute z-0 top-0 left-0"
+                  : "bg-sky-900") + " h-full absolute z-0 top-0 left-0 rounded-e-2xl lg:rounded-s-none rounded-s-2xl"
               }
-              style={{ width: `${roadmap.percentage}%` }}
+              style={{ width: `${percentage}%` }}
+              onClick={() => navigate("/roadmap/:roadmap_id")}
             ></div>
-            <div className="flex flex-col justify-around z-20">
-              <div  onClick={()=>navigate(':roadmap_id')}>
+            <div
+              className="flex flex-col justify-around z-20 "
+              onClick={() => navigate("/roadmap/:roadmap_id")}
+            >
+              <div>
                 <h2 className=" card-title">{roadmap.title}</h2>
               </div>
 
               <div>
-                <p>
-                  {roadmap.description} {isKebab}
-                </p>
+                <p>{roadmap.description}</p>
               </div>
             </div>
 
@@ -76,28 +81,25 @@ const RoadMap : FC<Props> = (({roadmap}) => {
               <p
                 className={
                   !isDark
-                    ? roadmap.percentage == 100
+                    ? percentage == "100.0"
                       ? "text-green-500"
                       : "text-blue-400"
-                    : roadmap.percentage == 100
+                    : percentage == "100.0"
                     ? "text-green-200"
                     : "text-blue-200"
                 }
               >
-                {roadmap.percentage + "%"}
+                {percentage + "%"}
               </p>
             </div>
 
             <div className="card-actions justify-end flex items-center">
               <button onClick={clickHeart} className="btn btn-ghost z-0 ">
                 {isLike ? <FaHeart /> : <FaRegHeart />}
-                {roadmap.roadmap_like}{" "}
+                {roadmap.likeCnt}{" "}
               </button>
-              <button
-                onClick={() => setIsKebab(true)}
-                className="hidden md:inline"
-              >
-                <KebabDropdown whatMenu="로드맵" />
+              <button className="hidden md:inline">
+                <KebabDropdown whatMenu="로드맵" id={roadmap.id} />
               </button>
             </div>
           </div>
@@ -105,7 +107,6 @@ const RoadMap : FC<Props> = (({roadmap}) => {
       </div>
     </>
   );
-}
-)
+};
 
 export default RoadMap;

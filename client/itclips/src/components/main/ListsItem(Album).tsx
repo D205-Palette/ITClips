@@ -14,13 +14,13 @@ import { useNavigate } from "react-router-dom";
 
 interface Props {
   list: {
-    pk: number;
+    id: number;
     image: string;
     bookmarks: object[];
     title: string;
-    bookmark_list_tags: string[];
+    tags: string[];
     description: string;
-    bookmark_list_like: number;
+    likeCount: number;
   }
 };
 
@@ -39,7 +39,7 @@ const ListItem : FC<Props> = ({list}) => {
 
   return (
     <>
-      <div  className={"card w-56 bg-base-100 shadow-xl " +  (isDark? "hover:brightness-150" : "hover:brightness-95")}
+      <div  className={"card w-56 bg-base-100 shadow-xl " +  (isDark? "hover:bg-slate-700" : "hover:bg-slate-100")}
       onMouseOver={() => setIsHovering(true)}
       onMouseOut={() => setIsHovering(false)}
       >
@@ -62,7 +62,7 @@ const ListItem : FC<Props> = ({list}) => {
         
         className="card-body flex flex-col p-6 relative ">
             <div className="absolute top-0 right-0 z-50">
-              <KebabDropdown whatMenu="리스트"/>
+              <KebabDropdown whatMenu="리스트" id={list.id}/>
             </div>
           <div className="flex flex-col flex-auto justify-around hover:cursor-pointer ">
             <div>
@@ -71,7 +71,7 @@ const ListItem : FC<Props> = ({list}) => {
 
             <div className="flex justify-between">
               <div className="flex flex-col">
-                {list.bookmark_list_tags.map((tag: string) => (
+                {list.tags.map((tag: string) => (
                   <span>{" # " + tag}</span>
                 ))}
               </div>
@@ -79,7 +79,7 @@ const ListItem : FC<Props> = ({list}) => {
                 <button onClick={clickHeart} className="btn btn-ghost p-1">
                 {isLike ? <FaHeart color="red"/> : <FaRegHeart />}
                   
-                  {list.bookmark_list_like}
+                  {list.likeCount}
                 </button>
               </div>
             </div>

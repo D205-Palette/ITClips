@@ -13,7 +13,10 @@ import { FaPlus } from "react-icons/fa6";
 import categoriesStore from "../../stores/categoriesStore";
 
 interface Props {
-  whatCategory: string;
+  whatCategory: {
+    categoryId: number;
+    categoryName: string;
+}
   index: number;
 }
 
@@ -29,31 +32,32 @@ const CategorySingleTab: FC<Props> = ({ whatCategory, index }) => {
   const category = mainTabStore((state) => state.whatCategory);
   const changeCategory = mainTabStore((state) => state.changeCategory);
 
+
   const DeleteButton = (): any => {
     return (
       <button
-        onClick={() => deleteCategory(whatCategory)}
+        onClick={() => deleteCategory(whatCategory.categoryName)
+          // 여기에 진짜 카테고리 삭제할 건지 경고창 띄우기
+          // api로 카테고리 삭제ㅋ
+        }
         className={isDark ? "text-slate-100" : "text-slate-900 "}
       >
         <IoIosClose size="24px" />
       </button>
     );
   };
-  // function clicker (cat:string):void {
-  //   changeCategory(whatCategory)
-  // }
 
   return (
     <>
       <button
         className={
-          (category === whatCategory
+          (category === whatCategory.categoryName
             ? "bg-sky-500 text-slate-100 border-solid border-sky-500 border-2 p-1"
             : color) + " rounded-2xl mx-2 ps-3"
         }
       >
         <div className="flex flex-row items-center">
-          <div onClick={() => changeCategory(whatCategory)}>{whatCategory}</div>{" "}
+          <div onClick={() => changeCategory(whatCategory.categoryName)}>{whatCategory.categoryName}</div>{" "}
           <DeleteButton />
         </div>
       </button>

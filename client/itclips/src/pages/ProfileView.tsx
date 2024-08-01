@@ -23,7 +23,7 @@ export default function MyView() {
       <div id='Body' className="grid grid-cols-12 gap-4">
 
         {/* aside 자리 */}
-        <div id="aside" className="lg:col-start-3 lg:col-span-3 hidden lg:block ">
+        <div id="aside" className="xl:col-start-2 xl:col-span-3 hidden xl:block ">
           {/* 메세지 뜨는 위치 */}
           <div id="aside" className="absolute col-start-3 col-span-2 z-50 ">
             { isMessageOpen && <MessageLayout /> }
@@ -33,7 +33,7 @@ export default function MyView() {
        
 
         {/* main자리 */}
-        <div id="Main" className="lg:col-start-6 lg:col-span-6 col-start-3 col-span-8 gap-4">
+        <div id="Main" className="xl:col-start-5 xl:col-span-7 col-start-3 col-span-8 gap-4">
           {/* <MainTab /> */}
           
           <Outlet />

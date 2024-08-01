@@ -10,8 +10,29 @@ module.exports = {
         "message-content": "#a8a8a8",
       },
     },
+    extend: {
+      keyframes: {
+        fadeInUp: {
+          "0%": { opacity: "0", transform: "translateY(20px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        fadeInRight: {
+          "0%": { opacity: "0", transform: "translateX(50px)" },
+          "100%": { opacity: "1", transform: "translateX(0)" },
+        },
+        fadeInLeft: {
+          "0%": { opacity: "0", transform: "translateX(-50px)" },
+          "100%": { opacity: "1", transform: "translateX(0)" },
+        },
+      },
+      animation: {
+        fadeInUp: 'fadeInUp 1s ease-out',
+        fadeInRight: "fadeInRight 1s ease-out",
+        fadeInLeft: "fadeInLeft 1s ease-out",
+      },
+    },
   },
-  plugins: [require('daisyui')],
+  plugins: [require("daisyui")],
   daisyui: {
     themes: ["light", "dark"],
   },

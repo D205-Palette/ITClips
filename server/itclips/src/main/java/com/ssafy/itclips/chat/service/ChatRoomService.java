@@ -1,11 +1,14 @@
 package com.ssafy.itclips.chat.service;
 
+import com.ssafy.itclips.chat.dto.ChatMessage;
 import com.ssafy.itclips.chat.dto.ChatRoomDTO;
 import com.ssafy.itclips.chat.entity.Chat;
 import com.ssafy.itclips.chat.entity.ChatRoom;
+import com.ssafy.itclips.chat.entity.Message;
 import com.ssafy.itclips.chat.repository.ChatJPARepository;
 import com.ssafy.itclips.chat.repository.ChatRoomJPARepository;
 import com.ssafy.itclips.chat.repository.ChatRoomRepository;
+import com.ssafy.itclips.chat.repository.MessageJPARepository;
 import com.ssafy.itclips.error.CustomException;
 import com.ssafy.itclips.error.ErrorCode;
 import com.ssafy.itclips.user.entity.User;
@@ -14,6 +17,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +26,9 @@ public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatRoomJPARepository chatRoomJPARepository;
     private final ChatJPARepository chatJPARepository;
+    private final MessageJPARepository messageJPARepository;
     private final UserRepository userRepository;
+    private final RedisPublisher redisPublisher;
 
     @Transactional
     public void createChatRoom(Long user1Id, Long user2Id) {
@@ -57,5 +63,23 @@ public class ChatRoomService {
                 .user(user1)
                 .build();
         chatJPARepository.save(chat1);
+    }
+
+    //메세지 전송
+    @Transactional
+    public void publish(ChatMessage message) {
+
+        //채팅에 속한 유저 찾기
+        List<Chat> chatList = chatJPARepository.findByRoomId(message.getRoomId())
+                .orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        // mysql 메세지 저장
+        for(Chat chat : chatList) {
+            Message saveMessage = message.toEntity(chat);
+            messageJPARepository.save(saveMessage);
+        }
+
+        // 레디스 메세지 보내깅
+        redisPublisher.publish(chatRoomRepository.getTopic(message.getRoomId()), message);
     }
 }

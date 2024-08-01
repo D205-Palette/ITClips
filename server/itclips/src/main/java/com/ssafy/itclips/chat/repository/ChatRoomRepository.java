@@ -58,13 +58,14 @@ public class ChatRoomRepository {
     /**
      * 채팅방 입장 : redis에 topic을 만들고 pub/sub 통신을 하기 위해 리스너를 설정한다.
      */
-    public void enterChatRoom(Long roomId) {
+    public ChannelTopic enterChatRoom(Long roomId) {
         ChannelTopic topic = topics.get(roomId);
         if (topic == null)
             topic = new ChannelTopic(roomId.toString());
         redisMessageListener.addMessageListener(redisSubscriber, topic);
         topics.put(roomId, topic);
         log.info(getTopic(roomId).toString());
+        return topic;
     }
 
     public ChannelTopic getTopic(Long roomId) {

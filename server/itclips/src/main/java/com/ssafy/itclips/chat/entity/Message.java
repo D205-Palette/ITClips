@@ -2,7 +2,9 @@ package com.ssafy.itclips.chat.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -17,6 +19,7 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "message", schema = "itclips")
+@NoArgsConstructor
 public class Message {
 
     @Id
@@ -46,4 +49,12 @@ public class Message {
     private Chat chat;
 
 
+    @Builder
+    public Message(String message, Boolean read, LocalDateTime createdAt, Chat chat) {
+        this.message = message;
+        this.read = read;
+        this.createdAt = createdAt;
+        this.chat = chat;
+        this.createdAt = LocalDateTime.now();
+    }
 }

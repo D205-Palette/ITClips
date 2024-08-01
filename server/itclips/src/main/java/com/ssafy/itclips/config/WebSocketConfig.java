@@ -20,10 +20,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer   {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/api/ws")
-                .setAllowedOriginPatterns("http://127.0.0.1:5500")
+                .setAllowedOrigins("http://127.0.0.1:5500")
                 .withSockJS();
         registry.addEndpoint("/api/ws")
-                .setAllowedOriginPatterns("*");
+                .setAllowedOrigins("http://127.0.0.1:5500");
+//                .setAllowedOriginPatterns("*");
     }
 //
 //    //인터셉터

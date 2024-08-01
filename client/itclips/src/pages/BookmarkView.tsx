@@ -135,9 +135,6 @@ const MyBookmark = () => {
           <div id="aside" className="absolute col-start-3 col-span-3 z-50">
             {isMessageOpen && <MessageLayout />}
           </div>
-          <div className="fixed">
-            <AsideBookmarkList />
-          </div>
           {/* 여기에 listId prop으로 내려줘야되나?? */}
           <AsideBookmarkList />
         </div>

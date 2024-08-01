@@ -14,23 +14,24 @@ import BookmarkEdit from "../components/main/Bookmark(Edit)";
 import MoveBookmarkModal from "../components/aside/modals/MoveBookmarkModal";
 import axios from "axios";
 import AddBookmarkModal from '../components/aside/modals/AddBookmarkListModal'
+import type { BookmarkType } from "../types/BookmarkType";
 /// params로 listId 받아온걸로 axios 호출해서 리스트 상세정보 받아오기. 거기서 북마크들만
-interface BookmarkType {
+// interface BookmarkType {
 
-    id: number;
-    category: string;
-    title: string;
-    url: string;
-    tags: {
-      title: string;
-    }[];
+//     id: number;
+//     category: string;
+//     title: string;
+//     url: string;
+//     tags: {
+//       title: string;
+//     }[];
 
-    content: string;
-    isLiked: boolean;
-    likeCount: number;
+//     content: string;
+//     isLiked: boolean;
+//     likeCount: number;
   
-}
-interface BookmarksType extends Array<BookmarkType> {}
+// }
+// interface BookmarksType extends Array<BookmarkType> {}
 
 const MyBookmark = () => {
   const isMessageOpen = asideStore((state) => state.isMessageOpen);
@@ -38,14 +39,14 @@ const MyBookmark = () => {
 
   const [editMode, toggleMode] = useState(false);
 
-  const [editBookmarks, changeEditBookmarks] = useState<BookmarksType>([]);
+  const [editBookmarks, changeEditBookmarks] = useState<BookmarkType[]>([]);
   const [editBookmarksIndex, changeEditBookmarksIndex] = useState<number[]>([]);
   const [isEditModal, tabEditModal] = useState(false);
   
   const [isAddModal, tabAddModal] = useState(false);
 
   // 임시 북마크들
-  const bookmarks: BookmarksType = [
+  const bookmarks: BookmarkType[] = [
     {
       id: 1,
       category: "카테고리1",

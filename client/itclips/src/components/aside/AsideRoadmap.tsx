@@ -33,8 +33,12 @@ interface Item {
   tags: Tag[];
   comments: Comment[];
 }
+interface Props{
+  roadmap:any
+}
 
-const AsideRoadmap = () => {
+
+const AsideRoadmap :  React.FC<Props> = (roadmap) => {
 
   // 더미 데이터
   const roadmapInfo: Item = {

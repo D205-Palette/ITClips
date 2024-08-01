@@ -1,7 +1,7 @@
 import SearchBar from "../../components/main/MainSearchBar";
 import MainTab from "../../components/main/MainTab";
 import FollowItem from "../../components/follow/FollowItem";
-
+import FollowingList from '../../components/follow/FollowingList'
 const users = [
     {
         pk: 1,
@@ -35,6 +35,7 @@ const users = [
 const Following = () => {       
   return (
     <>
+        {/* {users.map((user) =><FollowItem user={user} isFollower={false} /> )} */}
       <FollowingList />
     </>
   );

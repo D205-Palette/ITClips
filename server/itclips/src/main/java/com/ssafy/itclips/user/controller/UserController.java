@@ -81,8 +81,8 @@ public class UserController {
     })
     public ResponseEntity<?> login(@RequestBody LoginForm loginForm) {
         try {
-            JwtToken jwtToken = userService.login(loginForm);
-            return ResponseEntity.ok(jwtToken);
+            LoginResponse loginResponse = userService.login(loginForm);
+            return ResponseEntity.ok(loginResponse);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 실패! 이메일 또는 비밀번호가 올바르지 않습니다.");
         }

@@ -3,26 +3,25 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 import useStore from "../../stores/mainStore";
-import KebabDropdown from "../common/KebabDropdown";
+import KebabDropdown from "./KebabDropdown(Feed)";
 import darkModeStore from "../../stores/darkModeStore";
 import profile_img from "../../assets/images/profile_image.png";
 
 interface Props {
-  roadmap: {
+  list: {
     id: number;
-    userName: string;
+    user: string;
     title: string;
     description: string;
-    image: string;
-    isPublic: number;
     createdAt: string;
-    stepCnt: number; // 단계수
-    checkCnt: number; // 체크된 단계수
-    likeCnt: number; // 좋아요 수
+    image: string;
+    bookmarks: object[];
+    bookmark_list_tags: string[];
+    bookmark_list_like: number;
   };
 }
 
-const RoadMap: FC<Props> = ({ roadmap }) => {
+const ListItem: FC<Props> = ({ list }) => {
   const [isLike, setIsLike] = useState(false);
   const clickHeart = (event: React.MouseEvent<HTMLButtonElement>): void => {
     event.stopPropagation();
@@ -34,7 +33,7 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
   const navigate = useNavigate();
 
   const handleCardClick = (): void => {
-    navigate(`/roadmap/${roadmap.id}`);
+    navigate(`/bookmarklist/${list.id}`);
   };
 
   const handleDropdownClick = (
@@ -42,9 +41,7 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
   ) => {
     event.stopPropagation();
   };
-  // const handleUserInfoClick = (
-  //   navigate(`/user/${roadmap.id}`)
-  // )
+
   const getRelativeTime = (createdAt: string) => {
     const now = new Date();
     const createdDate = new Date(createdAt);
@@ -72,12 +69,14 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
       onClick={handleCardClick}
     >
       <div
-        id="cardHaeder"
+        id="cardHeader"
         className="flex justify-between items-center mx-3"
         onClick={handleDropdownClick}
       >
-        <div id="userInfo" className="m-3 flex items-center gap-2"
-        // onClick={handleUserInfoClick}
+        <div
+          id="userInfo"
+          className="m-3 flex items-center gap-2"
+          // onClick={handleUserInfoClick}
         >
           <div className="w-10 h-10 border rounded-full overflow-hidden">
             <img
@@ -86,27 +85,33 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
               alt=""
             />
           </div>
-          <h2>{roadmap.userName}</h2>
+          <h2>{list.user}</h2>
           <div className="badge badge-secondary">
-            {getRelativeTime(roadmap.createdAt)}
+            {getRelativeTime(list.createdAt)}
           </div>
         </div>
         <button className="hidden md:inline z-20" onClick={handleDropdownClick}>
-          <KebabDropdown whatMenu="로드맵" id={roadmap.id} />
+          <KebabDropdown whatMenu="리스트" id={list.id} />
         </button>
       </div>
 
-      <figure>
-        <img src={roadmap.image} alt="RoadmapImg" />
+      <figure className="border rounded-xl mx-5 overflow-hidden">
+        <img
+          src={list.image}
+          alt="listImg"
+          className="w-full"
+          style={{ maxHeight: '300px', objectFit: 'cover' }} // 최대 높이와 비율 유지
+        />
       </figure>
-      <div className="card-body">
-        <h2 className="card-title">{roadmap.title}</h2>
-        <p>{roadmap.description}</p>
 
-        <div className="card-actions justify-end flex items-center relative">
+      <div className="card-body p-4">
+        <h2 className="card-title text-lg md:text-xl">{list.title}</h2>
+        <p className="text-sm md:text-base">{list.description}</p>
+
+        <div className="card-actions justify-end flex items-center relative mt-2">
           <button onClick={clickHeart} className="btn btn-ghost z-0">
             {isLike ? <FaHeart /> : <FaRegHeart />}
-            {roadmap.likeCnt}
+            {list.bookmark_list_like}
           </button>
         </div>
       </div>
@@ -114,4 +119,4 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
   );
 };
 
-export default RoadMap;
+export default ListItem;

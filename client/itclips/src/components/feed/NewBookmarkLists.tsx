@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { feedStore } from "../../stores/feedStore";
-import ListsItem from "../main/ListsItem(List)";
+import ListsItem from "./ListsItem(Feed)";
 
 const NewBookmarkLists = () => {
   const { axiosResult } = feedStore();

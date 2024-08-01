@@ -1,6 +1,6 @@
 import React from "react";
 import { feedStore } from "../../stores/feedStore";
-import Roadmap from "../main/Roadmap(Feed)"
+import Roadmap from "./Roadmap(Feed)"
 
 export default function newRoadmaps() {
     const { axiosResult } = feedStore();

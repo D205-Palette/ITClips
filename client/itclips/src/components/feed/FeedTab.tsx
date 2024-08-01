@@ -11,11 +11,9 @@ const FollowTab = () => {
   const isDark = darkModeStore((state) => state.isDark);
   const textColor = isDark ? "text-slate-300" : "text-slate-900";
 
-  
-
   return (
     <>
-      <div className="flex justify-evenly">
+      <div className="flex justify-around">
         <div className="grow flex flex-row justify-around items-center">
           <NavLink
             to="newbookmarklists"

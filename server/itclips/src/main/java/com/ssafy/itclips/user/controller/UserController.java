@@ -386,6 +386,11 @@ public class UserController {
 
     @Operation(summary = "나의 관심사 태그 목록 보기", description = "사용자의 관심사 태그 목록을 확인합니다.")
     @GetMapping("/{userId}/tags")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "관심사 태그 목록 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없음"),
+            @ApiResponse(responseCode = "500", description = "서버 오류로 인해 요청 실패")
+    })
     public ResponseEntity<?> getUserTag(@PathVariable Long userId) {
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isEmpty()) {
@@ -444,6 +449,12 @@ public class UserController {
 
     @DeleteMapping("/{userId}/tags")
     @Operation(summary = "나의 관심사 태그 삭제", description = "사용자의 관심사 태그를 삭제합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "관심사 삭제 성공"),
+            @ApiResponse(responseCode = "404", description = "사용자 또는 태그를 찾을 수 없음"),
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 관심사"),
+            @ApiResponse(responseCode = "500", description = "서버 오류로 인해 요청 실패")
+    })
     public ResponseEntity<?> deleteUserTag(@PathVariable Long userId, @RequestParam Long tagId) {
         Optional<User> optionalUser = userRepository.findById(userId);
         Optional<com.ssafy.itclips.tag.entity.Tag> optionalTag = tagRepository.findById(tagId);
@@ -466,7 +477,6 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 관심사가 존재하지 않습니다.");
         }
     }
-
 
     private String generateTemporaryPassword() {
         int length = 10;

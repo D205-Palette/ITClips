@@ -31,9 +31,9 @@ spring:
       jdbc-url: jdbc:mysql://${DB_HOST}/${DB_NAME}?serverTimezone=UTC&useUnicode=yes&characterEncoding=UTF-8
       username: ${DB_USER}
       password: ${DB_PASSWORD}
-#      jdbc-url: jdbc:mysql://localhost:3306/itclips?serverTimezone=UTC&useUnicode=yes&characterEncoding=UTF-8
-#      username: root
-#      password: 1234
+      #      jdbc-url: jdbc:mysql://localhost:3306/itclips?serverTimezone=UTC&useUnicode=yes&characterEncoding=UTF-8
+      #      username: root
+      #      password: 1234
       pool-name: Hikari Connection Pool
 
       maximum-pool-size: 50

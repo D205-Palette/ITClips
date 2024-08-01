@@ -4,22 +4,28 @@ import BookmarkListEditModal from "../modals/BookmarkListEditModal";
 import DeleteBookmarkListModal from "../modals/DeleteBookmarkListModal";
 import UrlCopyModal from "../modals/UrlCopyModal";
 import ReportModal from "../modals/ReportModal";
+import FavoriteConfirmationModal from '../modals/FavoriteConfirmModal';
+import ScrapConfirmationModal from '../modals/ScrapComfirmModal';
 
 interface Props {
   isRoadmap : boolean
+  id:number;
 }
 
-const AsideKebabDropdown :FC<Props> = (isRoadmap) => {
+const AsideKebabDropdown :FC<Props> = (isRoadmap, id) => {
   const [ isEditModalOpen, setIsEditModalOpen ] = useState<boolean>(false);
   const [ isDeleteModalOpen, setIsDeleteModalOpen ] = useState<boolean>(false);
   const [ isUrlCopyModalOpen, setIsUrlCopyModalOpen ] = useState<boolean>(false);
   const [ isReportModalOpen, setIsReportModalOpen ] = useState<boolean>(false);
+  const [ isFavoriteModalOpen, setIsFavoriteModalOpen ] = useState<boolean>(false);
+  const [ isScrapModalOpen, setIsScrapModalOpen ] = useState<boolean>(false);
 
   const [ isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 
   const toggleDropdown = (): void => setIsDropdownOpen(!isDropdownOpen);
 
-  const categories: string[] = (isRoadmap.isRoadmap? ["수정하기", "삭제하기", "url복사"]: ["수정하기", "삭제하기", "url복사", "신고하기"])
+  // 로드맵 or 북마크리스트
+  const categories: string[] = (isRoadmap.isRoadmap? ["수정하기", "삭제하기", "url복사", '스크랩']: ["수정하기", "삭제하기", "url복사",'즐겨찾기', "신고하기"])
 
   const handleMenu = (menu: string) => {
     if (menu === "수정하기") {
@@ -30,6 +36,10 @@ const AsideKebabDropdown :FC<Props> = (isRoadmap) => {
       setIsUrlCopyModalOpen(true);
     } else if (menu === "신고하기") {
       setIsReportModalOpen(true);
+    } else if (menu === '즐겨찾기'){
+      setIsFavoriteModalOpen(true)
+    } else if (menu === '스크랩'){
+      setIsScrapModalOpen(true)
     }
     setIsDropdownOpen(false);
   };
@@ -63,6 +73,8 @@ const AsideKebabDropdown :FC<Props> = (isRoadmap) => {
       <DeleteBookmarkListModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} />
       <UrlCopyModal isOpen={isUrlCopyModalOpen} onClose={() => setIsUrlCopyModalOpen(false)} />
       <ReportModal isOpen={isReportModalOpen} onClose={() => setIsReportModalOpen(false)} />
+      <FavoriteConfirmationModal isOpen={isFavoriteModalOpen} onClose={() => setIsFavoriteModalOpen(false)}/>
+      <ScrapConfirmationModal isOpen={isScrapModalOpen} onClose={() => setIsScrapModalOpen(false)}/>
     </div>
   );
 };

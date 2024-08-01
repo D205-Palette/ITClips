@@ -5,6 +5,7 @@ import KebabDropdown from "../common/KebabDropdown";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import darkModeStore from '../../stores/darkModeStore'
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 interface Props {
   list: {
@@ -22,10 +23,16 @@ const ListItem : FC<Props> = ({list}) => {
 
   const navigate = useNavigate()
   const [isLike, setIsLike] = useState(false);
+
   const clickHeart = (): void => {
+    if(isLike){
+      // axios.delete(`i11d205.p.ssafy.io/api/list/like/${userId}/${listId}/`)
+    } else {
+      // axios.get(`i11d205.p.ssafy.io/api/list/like/${userId}/${listId}/`)
+    }
     setIsLike(!isLike);
-    //여기에 좋아요 api호출
-  };
+  }
+
   const isDark = darkModeStore((state) => state.isDark)
   
   return (
@@ -55,9 +62,8 @@ const ListItem : FC<Props> = ({list}) => {
                 </div>
               </div>  
 
-              {/* 너무 많아져서 설명은 안에만 넣어도 될듯..? */}
-
-              {/* <div className=" items-center hidden xl:flex ">
+              {/* 너무 많아져서 설명은 안에만 넣어도 될듯..?
+              <div className=" items-center hidden xl:flex ">
                 <p>{list.description}</p>
               </div> */}
 

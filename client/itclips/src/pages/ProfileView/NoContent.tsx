@@ -5,6 +5,7 @@ import darkModeStore from "../../stores/darkModeStore";
 import FollowTab from "../../components/main/FollowTab";
 import { Outlet } from "react-router-dom";
 import MainTab from "../../components/main/MainTab";
+import { IoIosWarning } from "react-icons/io";
 
 const NoContent = () => {
   const isMessageOpen = asideStore((state) => state.isMessageOpen);
@@ -15,7 +16,7 @@ const NoContent = () => {
     <>
         {/* main자리 */}
         <MainTab />
-
+        <IoIosWarning color="skyblue"/>
         컨텐츠가 없습니다! + 버튼을 눌러 추가해주세요
 
 

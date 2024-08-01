@@ -1,3 +1,5 @@
+import { useParams } from "react-router-dom";
+
 // components
 import FollowerItem from "./FollowerItem";
 
@@ -10,6 +12,8 @@ interface User {
 }
 
 const FollowerList = () => {
+
+  const params = useParams();
 
   // 더미 데이터
   const data: User[] = [

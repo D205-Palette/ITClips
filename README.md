@@ -39,13 +39,14 @@ SSAFY 11기 공통 PJT / 구미 2반 5조 웹디자인
 ## 8/02 중간점검
 
 ✔ [Itclips FE](https://i11d205.p.ssafy.io/)
+
+✔ [Itclips BE(API)](https://i11d205.p.ssafy.io/api/swagger-ui/index.html)
 ```
 😁 테스트 계정(이메일 로그인)
-
   - id : kdj4355@naver.com
   - pwd : 1234
 ```
-✔ [Itclips BE(API)](https://i11d205.p.ssafy.io/api/swagger-ui/index.html)
+
 
 ### 👀 진행도 & 남은 일정
 

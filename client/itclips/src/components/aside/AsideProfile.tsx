@@ -22,7 +22,7 @@ interface User {
   starCount: number;
 }
 
-const AsideProfile: React.FC = () => {
+const AsideProfile = () => {
 
   // 더미 데이터
   const UserInfo: User = {

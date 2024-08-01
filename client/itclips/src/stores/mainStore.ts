@@ -7,9 +7,9 @@ interface Article {
     image: string;
     bookmarks: object[];
     title: string;
-    bookmark_list_tags: string[];
+    tags: string[];
     description: string;
-    bookmark_list_like: number;
+    likeCount: number;
     isCompleted:boolean;  // 이거 로드맵일때만 사용
   }[];
   bookmarks : {
@@ -35,32 +35,32 @@ interface Article {
 const mainStore = create<Article>((set) => ({
   lists: [{
     id: 1,
-    image: "이미지 주소",
+    image: "https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp",
     bookmarks: [{ url: "www.naver.com" }, { url: "www.google.com" }],
     title: "생성된 리스트_01",
-    bookmark_list_tags: ["JAVA", "FE"],
+    tags: ["JAVA", "FE"],
     description: "리스트에 관한 설명",
-    bookmark_list_like: 5,
+    likeCount: 5,
     isCompleted:true
   },
   {
-    id: 1,
-    image: "이미지 주소",
+    id: 2,
+    image: "https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp",
     bookmarks: [{ url: "www.naver.com" }, { url: "www.google.com" }],
-    title: "생성된 리스트_01",
-    bookmark_list_tags: ["JAVA", "FE"],
+    title: "생성된 리스트_02",
+    tags: ["JAVA", "FE"],
     description: "리스트에 관한 설명",
-    bookmark_list_like: 5,
+    likeCount:7,
     isCompleted:true,
   },
   {
-    id: 1,
-    image: "이미지 주소",
+    id: 3,
+    image: "https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp",
     bookmarks: [{ url: "www.naver.com" }, { url: "www.google.com" }],
-    title: "생성된 리스트_01",
-    bookmark_list_tags: ["JAVA", "FE"],
+    title: "생성된 리스트_03이긴 한데 긴 제목을 위해 트_03이긴 한데 긴 제목을 위해",
+    tags: ["JAVA", "FE"],
     description: "리스트에 관한 설명",
-    bookmark_list_like: 5,
+    likeCount: 111,
     isCompleted:false
   },],
   bookmarks : [

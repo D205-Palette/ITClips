@@ -22,18 +22,6 @@ const UserActivityInfo = () => {
     bookmarkCount: 10,
   }
 
-  // 팔로워, 팔로잉 숫자를 눌렀을 때 이동
-  const onClick = (event: any) => {
-    console.log(event.target.id);
-    if (event.target.id === "followers") {
-      navigate('/user/:user_id/follow/follower')
-      // alert("팔로워 창으로 이동합니다.");
-    } else if (event.target.id === "following") {
-      navigate('/user/:user_id/follow/following')
-      // alert("팔로잉 창으로 이동합니다.");
-    }
-  }
-
   return (
     <div className="w-full grid grid-cols-1 gap-y-4 mt-6">
       <div className="grid grid-cols-12">

@@ -11,6 +11,8 @@ import { IoIosArrowBack } from "react-icons/io";
 import ListItem from "../components/main/ListsItem(Roadmap)";
 import { useEffect, useState } from "react";
 import darkModeStore from "../stores/darkModeStore";
+import AsideRoadmap from '../components/aside/AsideRoadmap'
+
 interface Props {
   roadmapId: number;
 }
@@ -66,7 +68,7 @@ const roadmap = {
       roadmapId: 1,
       bookmarkListResponseDTO: {
         id: 3,
-        title: "UserOne Second Bookmark List",
+        title: "Happy for UserOne Third Bookmark List",
         description: "This is a description for UserOne's second bookmark list",
         bookmarkCount: 0,
         likeCount: 1,
@@ -98,23 +100,13 @@ const roadmap = {
     },
   ],
   likeCnt: 2,
+  scrapCnt : 4,
 };
 
 const bookmarkLists = roadmap.stepList;
 
 const checkedList = bookmarkLists.filter((list) => list.check);
 
-// useEffect(() => {
-
-// const bookmarkLists = roadmap.stepList;
-
-// const checkedList = bookmarkLists.filter((list) => list.check);
-
-// const percentage = ((checkedList.length * 100) / bookmarkLists.length).toFixed(1);
-//   // return () => {
-//   //   connection.disconnect();
-//   // };
-// }, [bookmarkLists]);
 
 const RoadmapView = () => {
   const bookmarks = mainStore((state) => state.bookmarks);
@@ -130,7 +122,7 @@ const RoadmapView = () => {
 
   const BackButton = (): any => {
     return (
-      <button className="me-5  " onClick={() => navigate(-1)}>
+      <button className="me-5  " onClick={() => navigate(`/user/${roadmap.userId}/roadmap/`)}>
         <IoIosArrowBack size="40px" />{" "}
       </button>
     );
@@ -138,7 +130,22 @@ const RoadmapView = () => {
 
   return (
     <>
-      <div className="grid  grid-cols-7">
+<div id='Body' className="grid grid-cols-12 gap-4">
+
+{/* aside 자리 */}
+<div id="aside" className="xl:col-start-3 xl:col-span-3 hidden xl:block ">
+  {/* 메세지 뜨는 위치 */}
+  <div id="aside" className="absolute col-start-3 col-span-2 z-50 ">
+  { isMessageOpen && <MessageLayout /> }
+  </div>
+  <AsideRoadmap roadmap={roadmap} />
+</div>                                        
+
+
+{/* main자리 */}
+<div id="Main" className="xl:col-start-6 xl:col-span-6 col-start-3 col-span-8 gap-4">
+  {/* <MainTab /> */}
+  <div className="grid  grid-cols-7 ">
         <div className="col-span-7">
           <MainTab />
         </div>
@@ -166,7 +173,20 @@ const RoadmapView = () => {
         {roadmap.stepList.map((list) => (
           <ListItem list={list} changeCount={changeCount} />
         ))}
+    
       </div>
+ 
+
+</div>
+</div>
+
+
+
+
+
+
+
+      
     </>
   );
 };

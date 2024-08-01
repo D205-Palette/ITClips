@@ -4,7 +4,9 @@ import FollowerList from '../../components/follow/FollowerList'
 const Follower = () => {       
   return (
     <>
-    <FollowerList />
+    {/* {users.map((user) =><FollowItem user={user} isFollower={true} /> )} */}
+    
+      <FollowerList />
     </>
   );
 };

@@ -28,8 +28,8 @@ const RealtimeList = () => {
   const sortedItems = trendingItems.sort((a, b) => b[sortBy] - a[sortBy]);
 
   return (
-    <div className="bg-white p-4 max-w-md mx-auto">
-      <h2 className="text-lg font-semibold mb-3 text-gray-800">실시간 인기순위</h2>
+    <div className="bg-base-100 p-4 max-w-md mx-auto">
+      <h2 className="text-lg font-semibold mb-3">실시간 인기순위</h2>
       <div className="flex mb-3 border-b">
         <button 
           className={`mr-4 pb-2 text-sm ${
@@ -68,10 +68,10 @@ const RealtimeList = () => {
             key={item.id} 
             className="flex items-center py-2"
           >
-            <span className="w-6 mr-3 text-gray-400 text-sm">
+            <span className="w-6 mr-3 text-sm">
               {index + 1}
             </span>
-            <div className="text-gray-700 hover:text-blue-500 text-sm">
+            <div className="hover:text-blue-500 text-sm">
               {item.title}
             </div>
           </li>

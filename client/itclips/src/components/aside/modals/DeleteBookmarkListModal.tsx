@@ -7,7 +7,7 @@ interface DeleteConfirmModalProps {
   onClose: () => void;
 }
 
-const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({ isOpen, onClose }) => {
+const DeleteBookmarkListModal: React.FC<DeleteConfirmModalProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
@@ -26,4 +26,4 @@ const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({ isOpen, onClose
   );
 };
 
-export default DeleteConfirmModal;
+export default DeleteBookmarkListModal;

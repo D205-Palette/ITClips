@@ -1,12 +1,13 @@
 
 import SearchBar from "../../components/main/MainSearchBar";
-import { FC } from "react";
+import { FC,useState } from "react";
 import Roadmap from "../../components/main/Roadmap";
 import MainTab from "../../components/main/MainTab";
 import mainStore from "../../stores/mainStore";
 
 const MyRoadmap: FC = () => {
   const roadmaps = mainStore((state) => state.roadmaps);
+  const [filterText, changeFilterText] = useState("")
 
   const userRoadmaps =
     // axios 해서 유저가 가진 모든 로드맵 정보들 가져온것
@@ -55,7 +56,7 @@ const MyRoadmap: FC = () => {
   return (
     <>
       <MainTab />
-      <SearchBar whatSearch={"로드맵"} />
+      <SearchBar whatSearch={"로드맵"} filterText={filterText} changeFilterText={changeFilterText}/>
       <div className="mb-2">
         <br />
       </div>

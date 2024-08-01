@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 // components
-import SearchRoadmapItem from "./layout/SearchRoadmapItem";
+import SearchRoadmapItemsContainer from "./layout/SearchRoadmapItemsContainer";
 
 // icons
 import { FaList } from "react-icons/fa";
@@ -12,8 +12,8 @@ interface RoadmapItem {
   id: number;
   title: string;
   username: string;
-  bookmarkCount: number;
-  likeCount: number;
+  bookmarks: number;
+  likes: number;
   createdAt: string;
   thumbnailUrl: string;
 }
@@ -33,11 +33,11 @@ const SearchRoadmap = () => {
 
   // 더미 데이터
   const data: RoadmapItem[] = [
-    { id: 1, title: "로드맵_01", username: "고양양", bookmarkCount: 12, likeCount: 10, createdAt: "2024-01-01", thumbnailUrl: "" },
-    { id: 2, title: "로드맵_02", username: "고양양", bookmarkCount: 12, likeCount: 10, createdAt: "2024-01-01", thumbnailUrl: "" },
-    { id: 3, title: "로드맵_03", username: "고양양", bookmarkCount: 12, likeCount: 10, createdAt: "2024-01-01", thumbnailUrl: "" },
-    { id: 4, title: "로드맵_04", username: "고양양", bookmarkCount: 12, likeCount: 10, createdAt: "2024-01-01", thumbnailUrl: "" },
-    { id: 5, title: "로드맵_05", username: "고양양", bookmarkCount: 12, likeCount: 10, createdAt: "2024-01-01", thumbnailUrl: "" },
+    { id: 1, title: "로드맵_01", username: "고양양", bookmarks: 12, likes: 10, createdAt: "2024-01-01", thumbnailUrl: "" },
+    { id: 2, title: "로드맵_02", username: "고양양", bookmarks: 12, likes: 10, createdAt: "2024-01-01", thumbnailUrl: "" },
+    { id: 3, title: "로드맵_03", username: "고양양", bookmarks: 12, likes: 10, createdAt: "2024-01-01", thumbnailUrl: "" },
+    { id: 4, title: "로드맵_04", username: "고양양", bookmarks: 12, likes: 10, createdAt: "2024-01-01", thumbnailUrl: "" },
+    { id: 5, title: "로드맵_05", username: "고양양", bookmarks: 12, likes: 10, createdAt: "2024-01-01", thumbnailUrl: "" },
   ]
 
   return (
@@ -73,7 +73,7 @@ const SearchRoadmap = () => {
         </div>
       </div>
       {/* 검색 결과 */}
-      <SearchRoadmapItem
+      <SearchRoadmapItemsContainer
         items={data}
         viewMode={viewMode}
       />

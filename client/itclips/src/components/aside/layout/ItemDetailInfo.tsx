@@ -13,8 +13,8 @@ interface Tag {
   content: string;
 }
 
-interface ItemProps {
-  itemName: string;
+interface Item {
+  title: string;
   email: string;
   description: string;
   like: number;
@@ -23,15 +23,15 @@ interface ItemProps {
   comments: Comment[];
 }
 
-const DetailInfo = (data: ItemProps) => {
+const ItemDetailInfo = (data: Item) => {
 
   return (
     <div className="text-center">
-      <h2 className="text-xl font-bold mb-1">{data.itemName}</h2>
+      <h2 className="text-xl font-bold mb-1">{data.title}</h2>
       <p className="text-gray-500 mb-2">{data.email}</p>
       <p className="text-center text-sm mb-6">{data.description}</p>
     </div>
   );
 };
 
-export default DetailInfo;
+export default ItemDetailInfo;

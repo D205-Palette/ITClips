@@ -46,9 +46,9 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
         }
       >
         <>
-          <figure className="w-28  z-20">
-            <img src={roadmap.image} alt="Movie" className="h-full" />
-          </figure>
+          <div className="w-28 z-20  hidden lg:inline rounded-s-2xl">
+            <img src={roadmap.image} alt="Movie" className="h-full w-full hidden lg:inline  rounded-s-2xl" />
+          </div>
 
           <div className="card-body flex flex-row justify-between h-full relative">
             <div
@@ -59,7 +59,7 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
                     : "bg-sky-100"
                   : percentage == "100.0"
                   ? "bg-green-900"
-                  : "bg-sky-900") + " h-full absolute z-0 top-0 left-0 rounded-e-2xl"
+                  : "bg-sky-900") + " h-full absolute z-0 top-0 left-0 rounded-e-2xl lg:rounded-s-none rounded-s-2xl"
               }
               style={{ width: `${percentage}%` }}
               onClick={() => navigate("/roadmap/:roadmap_id")}

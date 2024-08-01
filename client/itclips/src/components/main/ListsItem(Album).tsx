@@ -18,9 +18,9 @@ interface Props {
     image: string;
     bookmarks: object[];
     title: string;
-    bookmark_list_tags: string[];
+    tags: string[];
     description: string;
-    bookmark_list_like: number;
+    likeCount: number;
   }
 };
 
@@ -71,7 +71,7 @@ const ListItem : FC<Props> = ({list}) => {
 
             <div className="flex justify-between">
               <div className="flex flex-col">
-                {list.bookmark_list_tags.map((tag: string) => (
+                {list.tags.map((tag: string) => (
                   <span>{" # " + tag}</span>
                 ))}
               </div>
@@ -79,7 +79,7 @@ const ListItem : FC<Props> = ({list}) => {
                 <button onClick={clickHeart} className="btn btn-ghost p-1">
                 {isLike ? <FaHeart color="red"/> : <FaRegHeart />}
                   
-                  {list.bookmark_list_like}
+                  {list.likeCount}
                 </button>
               </div>
             </div>

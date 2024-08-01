@@ -24,7 +24,8 @@ interface Tag {
 }
 
 interface ItemProps {
-  itemName: string;
+  id:number;
+  title: string;
   email: string;
   description: string;
   like: number;
@@ -33,11 +34,12 @@ interface ItemProps {
   comments: Comment[];
 }
 
-const ProfileCard = () => {
+const AsideBookmarkList = () => {
 
   // 더미 데이터
   const bookmarkInfo: ItemProps = {
-    itemName: "북마크리스트",
+    id:1,
+    title: "북마크리스트",
     email: "abc@gmail.com",
     description: "인기 북마크 리스트",
     like: 200,
@@ -60,7 +62,7 @@ const ProfileCard = () => {
   return (
     <div className={`${ isDark ? "bg-aside-dark" : "bg-aside-light" } rounded-3xl w-80 p-8 flex flex-col items-center`}>
       {/* 더보기 버튼 */}
-      { !isMessageOpen && <AsideKebabDropdown isRoadmap={false}/> }
+      { !isMessageOpen && <AsideKebabDropdown isRoadmap={false} id={bookmarkInfo.id}/> }
       {/* 북마크리스트 썸네일 */}
       <ImageContainer />
       {/* 북마크리스트 정보 */}
@@ -75,4 +77,4 @@ const ProfileCard = () => {
   );
 };
 
-export default ProfileCard;
+export default AsideBookmarkList;

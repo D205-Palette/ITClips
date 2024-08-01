@@ -15,25 +15,15 @@ import MoveBookmarkModal from "../components/aside/modals/MoveBookmarkModal";
 import axios from "axios";
 import AddBookmarkModal from '../components/aside/modals/AddBookmarkListModal'
 import type { BookmarkType } from "../types/BookmarkType";
-/// params로 listId 받아온걸로 axios 호출해서 리스트 상세정보 받아오기. 거기서 북마크들만
-// interface BookmarkType {
+import type { CategoryType } from "../types/BookmarkListType";
+import { useParams } from "react-router-dom";
 
-//     id: number;
-//     category: string;
-//     title: string;
-//     url: string;
-//     tags: {
-//       title: string;
-//     }[];
+/// params.bookmarklist_id로 axios 호출해서 리스트 상세정보 받아오기. 거기서 북마크들만
 
-//     content: string;
-//     isLiked: boolean;
-//     likeCount: number;
-  
-// }
-// interface BookmarksType extends Array<BookmarkType> {}
 
 const MyBookmark = () => {
+  const params = useParams()
+
   const isMessageOpen = asideStore((state) => state.isMessageOpen);
   const whatCategory = mainTabStore((state) => state.whatCategory);
 
@@ -99,6 +89,7 @@ const MyBookmark = () => {
       likeCount: 10,
     },
   ];
+  
   //보여줄 필터링 된 북마크들
   const filteredBookmarks =
     whatCategory === ""
@@ -106,7 +97,7 @@ const MyBookmark = () => {
       : bookmarks.filter((bookmark) => bookmark.category === whatCategory);
 
   // 임시 카테고리들
-  const categories = [
+  const categories:CategoryType[] = [
     {
       categoryId: 1,
       categoryName: "카테고리1",
@@ -121,7 +112,6 @@ const MyBookmark = () => {
     },
   ];
 
-  
 
   return (
     <>

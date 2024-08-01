@@ -3,16 +3,18 @@ import { FC,useState } from "react";
 import Roadmap from "../../components/main/Roadmap";
 import MainTab from "../../components/main/MainTab";
 import mainStore from "../../stores/mainStore";
-
+import type { RoadmapSumType } from "../../types/RoadmapType";
 const MyRoadmap: FC = () => {
   const roadmaps = mainStore((state) => state.roadmaps);
   const [filterText, changeFilterText] = useState("")
-
-  const userRoadmaps =
-    // axios 해서 유저가 가진 모든 로드맵 정보들 가져온것
+  
+ // axios 해서 유저가 가진 모든 로드맵 정보들 가져온것
+  const userRoadmaps:RoadmapSumType[] =
+   
     [
       {
         id: 1,
+        userId:1,
         userName: "UserOne",
         title: "First Roadmap",
         description: "This is the description for the first roadmap",
@@ -25,6 +27,7 @@ const MyRoadmap: FC = () => {
       },
       {
         id: 2,
+        userId:2,
         userName: "UserOne",
         title: "First Roadmap",
         description: "This is the description for the first roadmap",
@@ -37,6 +40,7 @@ const MyRoadmap: FC = () => {
       },
       {
         id: 2,
+        userId:2,
         userName: "UserOne",
         title: "First Roadmap",
         description: "This is the description for the first roadmap",

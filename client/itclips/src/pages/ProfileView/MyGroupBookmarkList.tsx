@@ -2,6 +2,7 @@ import SearchBar from "../../components/main/MainSearchBar";
 import MainTab from "../../components/main/MainTab";
 import { useState } from "react";
 import mainStore from "../../stores/mainStore";
+import type { BookmarkListsSumType } from "../../types/BookmarkListType";
 
 const MyGroupBookmarkList = () => {      
   

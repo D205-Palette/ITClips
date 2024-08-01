@@ -10,7 +10,7 @@ import MainTab from "../../components/main/MainTab";
 import mainStore from "../../stores/mainStore";
 import { IoIosWarning } from "react-icons/io";
 import axios from "axios";
-
+import type { BookmarkListsSumType } from "../../types/BookmarkListType";
 
 export default function MyView() {
   const [isList, setTab] = useState(true);
@@ -22,6 +22,7 @@ export default function MyView() {
     setTab(false);
   }
 
+  // 나중에 api로 받아올때는 타입 BookmarkListsSumType으로
   const lists = mainStore((state) => state.lists);
 
 // 북마크 리스트
@@ -103,8 +104,7 @@ export default function MyView() {
         </div>
       </div>
 
-      {/* 리스트형으로 보여줄지 액자형으로 보여줄지 */}
-     
+      {/* 북마크 리스트들*/}
       {!isList ? (
          <div className="flex justify-around">
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2">

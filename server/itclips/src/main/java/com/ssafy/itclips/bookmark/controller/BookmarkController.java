@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/bookmark")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 @Slf4j
 @Tag(name = "Bookmark Controller", description = "북마크 관련 API") // 표시명 및 설명 설정
 public class BookmarkController {

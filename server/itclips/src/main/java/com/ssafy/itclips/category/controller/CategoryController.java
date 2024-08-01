@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/category")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 @Tag(name = "Category Controller", description = "카테고리 관련 API") // 표시명 및 설명 설정
 public class CategoryController {
 

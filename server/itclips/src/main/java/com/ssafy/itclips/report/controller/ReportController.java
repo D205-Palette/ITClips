@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/report")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 @Tag(name = "Report Controller", description = "신고 관련 API") // 표시명 및 설명 설정
 public class ReportController {
     private final ReportService reportService;

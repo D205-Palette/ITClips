@@ -25,7 +25,14 @@ public enum ErrorCode {
     LIKE_USER_NOT_FOUND(HttpStatus.NOT_FOUND,"LUNF-001","좋아요한 사용자가 없습니다."),
     STEP_NOT_FOUND(HttpStatus.NOT_FOUND,"SNF-001","해당 로드맵 단계를 찾을 수 없습니다."),
     COMMENT_NOT_ALLOWED(HttpStatus.UNAUTHORIZED,"CM-002","댓글에 접근할 권한이 없습니다."),
-    REPORT_ALREADY_EXIST(HttpStatus.BAD_REQUEST,"RP-001","이미 신고한 정보입니다");
+    REPORT_ALREADY_EXIST(HttpStatus.BAD_REQUEST,"RP-001","이미 신고한 정보입니다"),
+
+    // Follow
+    FOLLOW_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "FOLLOW-001", "이미 팔로우 중인 사용자입니다."),
+    FOLLOW_NOT_FOUND(HttpStatus.NOT_FOUND, "FOLLOW-002", "팔로우 관계를 찾을 수 없습니다."),
+    UNFOLLOW_NOT_FOUND(HttpStatus.NOT_FOUND, "UNFOLLOW-001", "언팔로우할 팔로우 관계를 찾을 수 없습니다."),
+    INVALID_FOLLOW_REQUEST(HttpStatus.BAD_REQUEST, "FOLLOW-003", "잘못된 팔로우 요청입니다.");
+
     ;
 
     private final HttpStatus httpStatus;

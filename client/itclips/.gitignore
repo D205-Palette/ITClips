@@ -25,3 +25,5 @@ yarn-error.log*
 .env
 server.crt
 server.key
+cert.pem
+privkey.pem

@@ -2,6 +2,7 @@ package com.ssafy.itclips.user.controller;
 
 import com.ssafy.itclips.global.jwt.JwtToken;
 import com.ssafy.itclips.global.jwt.JwtTokenProvider;
+import com.ssafy.itclips.tag.dto.TagDTO;
 import com.ssafy.itclips.tag.repository.TagRepository;
 import com.ssafy.itclips.tag.repository.UserTagRepository;
 import com.ssafy.itclips.user.entity.*;
@@ -25,9 +26,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -366,6 +369,28 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("기존 비밀번호가 일치하지 않습니다.");
         }
     }
+
+    @Operation(summary = "나의 관심사 태그 목록 보기", description = "사용자의 관심사 태그 목록을 확인합니다.")
+    @GetMapping("/{userId}/tags")
+    public ResponseEntity<?> getUserTag(@PathVariable Long userId) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자를 찾을 수 없습니다.");
+        }
+
+        User user = optionalUser.get();
+        List<UserTag> userTags = userTagRepository.findByUser(user);
+        if (userTags.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("관심사 태그가 존재하지 않습니다.");
+        }
+
+        List<TagDTO> tagDTOs = userTags.stream()
+                .map(userTag -> new TagDTO(userTag.getTag().getId(), userTag.getTag().getTitle()))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(tagDTOs);
+    }
+
 
     @Operation(summary = "나의 관심사 태그 추가", description = "사용자의 관심사 태그를 추가합니다.")
     @ApiResponses({

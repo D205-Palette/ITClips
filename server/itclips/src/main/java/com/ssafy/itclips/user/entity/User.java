@@ -2,6 +2,7 @@ package com.ssafy.itclips.user.entity;
 
 import com.ssafy.itclips.chat.entity.Chat;
 import com.ssafy.itclips.bookmark.entity.BookmarkLike;
+import com.ssafy.itclips.follow.entity.Follow;
 import com.ssafy.itclips.report.entity.BookmarkListReport;
 import com.ssafy.itclips.report.entity.BookmarkReport;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkListScrap;
@@ -134,6 +135,16 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<BookmarkListReport> bookmarkListReports = new ArrayList<>();
+
+    @OneToMany(mappedBy = "from", fetch = FetchType.LAZY)
+    private List<Follow> followings;
+
+    @OneToMany(mappedBy = "to", fetch = FetchType.LAZY)
+    private List<Follow> followers;
+
+    public String getRoleKey() {
+        return this.role.getKey();
+    }
 
     public void addBookmarkList(BookmarkList bookmarkList) {
         bookmarkLists.add(bookmarkList);

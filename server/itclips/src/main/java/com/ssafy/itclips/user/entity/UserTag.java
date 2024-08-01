@@ -13,7 +13,8 @@ import org.hibernate.annotations.OnDeleteAction;
 @Entity
 @Table(name = "user_tag", schema = "itclips")
 public class UserTag {
-    @Id
+
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 

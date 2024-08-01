@@ -62,7 +62,12 @@ public class RoadmapServiceImpl implements RoadmapService {
         List<RoadmapInfoDTO> roadmapInfoDTOList = new ArrayList<>();
 
         for (Roadmap roadmap : roadmapList) {
-            RoadmapInfoDTO roadmapInfoDTO = RoadmapInfoDTO.toDto(roadmap);
+            // 로드맵 단계 수
+            Long stepCnt = roadmapStepRepository.countByRoadmapId(roadmap.getId());
+
+            // 좋아요 수
+            Long likeCnt = roadmapLikeRepository.countByRoadmapId(roadmap.getId());
+            RoadmapInfoDTO roadmapInfoDTO = RoadmapInfoDTO.toDto(roadmap,stepCnt,null,likeCnt);
             roadmapInfoDTOList.add(roadmapInfoDTO);
         }
 
@@ -81,7 +86,14 @@ public class RoadmapServiceImpl implements RoadmapService {
 
         // 로드맵 -> 로드맵 출력용으로 바꿈
         for (Roadmap roadmap : roadmapList) {
-            RoadmapInfoDTO roadmapInfoDTO = RoadmapInfoDTO.toDto(roadmap);
+            // 로드맵 단계 수
+            Long stepCnt = roadmapStepRepository.countByRoadmapId(roadmap.getId());
+            // 체크한단계 수
+            Long checkCnt = roadmapStepRepository.countByRoadmapIdAndCheck(roadmap.getId(), true);
+            // 좋아요 수
+            Long likeCnt = roadmapLikeRepository.countByRoadmapId(roadmap.getId());
+
+            RoadmapInfoDTO roadmapInfoDTO = RoadmapInfoDTO.toDto(roadmap,stepCnt,checkCnt,likeCnt);
             roadmapInfoDTOList.add(roadmapInfoDTO);
         }
 
@@ -248,8 +260,11 @@ public class RoadmapServiceImpl implements RoadmapService {
         // 좋아요 수
         Long likeCnt = roadmapLikeRepository.countByRoadmapId(roadmap.getId());
 
+        // 스크랩 수
+        Long scrapCnt = roadmapRepository.countByOrigin(roadmapId);
+
         // dto에 넣기
-        RoadmapDTO roadmapDTO = makeRoadmapDTO(roadmap, stepResponseDtoList, roadmapCommentDTOList, likeCnt);
+        RoadmapDTO roadmapDTO = RoadmapDTO.toDTO(roadmap, stepResponseDtoList, roadmapCommentDTOList, likeCnt, scrapCnt);
 
 
         return roadmapDTO;
@@ -448,21 +463,5 @@ public class RoadmapServiceImpl implements RoadmapService {
                 .build();
     }
 
-    // 로드맵 dto
-    private static RoadmapDTO makeRoadmapDTO(Roadmap roadmap, List<RoadmapStepResponseDto> stepResponseDtoList, List<RoadmapCommentDTO> roadmapCommentDTOList, Long likeCnt) {
-        RoadmapDTO roadmapDTO = new RoadmapDTO().builder()
-                .id(roadmap.getId())
-                .userId(roadmap.getUser().getId())
-                .userName(roadmap.getUser().getNickname())
-                .title(roadmap.getTitle())
-                .description(roadmap.getDescription())
-                .createdAt(roadmap.getCreatedAt())
-                .image(roadmap.getImage())
-                .isPublic(roadmap.getIsPublic())
-                .stepList(stepResponseDtoList)
-                .commentList(roadmapCommentDTOList)
-                .likeCnt(likeCnt)
-                .build();
-        return roadmapDTO;
-    }
+
 }

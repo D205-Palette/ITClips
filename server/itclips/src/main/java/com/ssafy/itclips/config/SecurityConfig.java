@@ -34,7 +34,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import com.ssafy.itclips.global.oauth2.handler.OAuth2AuthenticationSuccessHandler;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 @EnableWebSecurity
 @Configuration
@@ -63,10 +62,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
-        configuration.addAllowedOrigin("http://localhost:80");  // BE
-        configuration.addAllowedOrigin("http://localhost:5173"); // FE
-        configuration.addAllowedOrigin("http://localhost:5500"); // FE
-        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+        configuration.addAllowedOrigin("*");  // BE
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -80,7 +76,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS 설정 추가
                 .formLogin(formLogin -> formLogin.disable())    // FormLogin 사용 x
                 .httpBasic(httpBasic -> httpBasic.disable())    // httpBasic 사용 x
-                .csrf(csrf -> csrf.disable())   // csrf 보안 사용 x
+                .csrf(csrf -> csrf.disable())
 
                 // 세션 사용하지 않으므로 STATELESS로 설정
                 .sessionManagement(sessionManager -> sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -88,7 +84,7 @@ public class SecurityConfig {
                 //== URL별 권한 관리 옵션 ==//
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/", "/index.html","/css/**", "/images/**").permitAll()  // 기본 페이지, static 하위 폴더에 있는 자료들은 모두 접근 가능
-                        .requestMatchers("/swagger-ui.html", "/v3/api-docs/**", "/swagger-resources/**", "/swagger-ui/**").permitAll()
+                        .requestMatchers("/api/swagger-ui.html", "/api/v3/api-docs/**", "/swagger-resources/**", "/api/swagger-ui/**").permitAll()
                         .requestMatchers("/api/user/signup", "/api/user/oauthSignup").permitAll()   // 회원가입 접근 가능
                         .requestMatchers("/api/user/login", "/api/user/refresh").permitAll()     // 로그인 접근 가능
                         .requestMatchers("/api/user/**").permitAll()    // API 개발 중 접근 없이 swagger 테스트 하기 위함
@@ -112,7 +108,6 @@ public class SecurityConfig {
                         .successHandler(oAuth2AuthenticationSuccessHandler)
                         .failureHandler(oAuth2AuthenticationFailureHandler)
                 )
-
                 // 원래 스프링 시큐리티 필터 순서가 LogoutFilter 이후에 로그인 필터 동작
                 // 따라서, LogoutFilter 이후에 우리가 만든 필터 동작하도록 설정
                 // 순서 : LogoutFilter -> JwtAuthenticationProcessingFilter -> CustomJsonUsernamePasswordAuthenticationFilter

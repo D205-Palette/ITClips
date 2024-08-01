@@ -7,7 +7,7 @@ interface ReportConfirmationModalProps {
   onClose: () => void;
 }
 
-const ReportConfirmationModal: React.FC<ReportConfirmationModalProps> = ({ isOpen, onClose }) => {
+const ReportConfirmModal: React.FC<ReportConfirmationModalProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
@@ -22,4 +22,4 @@ const ReportConfirmationModal: React.FC<ReportConfirmationModalProps> = ({ isOpe
   );
 };
 
-export default ReportConfirmationModal;
+export default ReportConfirmModal;

@@ -7,7 +7,7 @@ interface AccountDeletedModalProps {
   onDeletedModalClose: () => void;
 }
 
-const AccountDeletedModal: React.FC<AccountDeletedModalProps> = ({ isOpen, onDeleteModalClose, onDeletedModalClose }) => {
+const DeletedAccountModal: React.FC<AccountDeletedModalProps> = ({ isOpen, onDeleteModalClose, onDeletedModalClose }) => {
   
     const navigete = useNavigate();
 
@@ -46,4 +46,4 @@ const AccountDeletedModal: React.FC<AccountDeletedModalProps> = ({ isOpen, onDel
   );
 };
 
-export default AccountDeletedModal;
+export default DeletedAccountModal;

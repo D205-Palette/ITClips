@@ -10,7 +10,7 @@ interface UserProps {
   starCount: number;
 }
 
-const DetailInfo = (data: UserProps) => {
+const UserDetailInfo = (data: UserProps) => {
 
   return (
     <div className="text-center">
@@ -21,4 +21,4 @@ const DetailInfo = (data: UserProps) => {
   );
 };
 
-export default DetailInfo;
+export default UserDetailInfo;

@@ -23,7 +23,7 @@ interface Item {
   comments: Comment[];
 }
 
-const DetailInfo = (data: Item) => {
+const ItemDetailInfo = (data: Item) => {
 
   return (
     <div className="text-center">
@@ -34,4 +34,4 @@ const DetailInfo = (data: Item) => {
   );
 };
 
-export default DetailInfo;
+export default ItemDetailInfo;

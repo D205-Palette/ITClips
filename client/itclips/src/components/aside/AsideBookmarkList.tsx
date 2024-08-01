@@ -33,7 +33,7 @@ interface ItemProps {
   comments: Comment[];
 }
 
-const ProfileCard = () => {
+const AsideBookmarkList = () => {
 
   // 더미 데이터
   const bookmarkInfo: ItemProps = {
@@ -75,4 +75,4 @@ const ProfileCard = () => {
   );
 };
 
-export default ProfileCard;
+export default AsideBookmarkList;

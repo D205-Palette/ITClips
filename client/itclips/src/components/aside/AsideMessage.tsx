@@ -11,7 +11,7 @@ interface MessageListProps {
   onShowInvite: (state: number) => void;
 }
 
-const MessageList: React.FC<MessageListProps> = ({ onSelectChat, onShowInvite }) => {
+const AsideMessage: React.FC<MessageListProps> = ({ onSelectChat, onShowInvite }) => {
 
   // 더미 데이터
   const [ data ] = useState([
@@ -50,4 +50,4 @@ const MessageList: React.FC<MessageListProps> = ({ onSelectChat, onShowInvite })
   );
 };
 
-export default MessageList;
+export default AsideMessage;

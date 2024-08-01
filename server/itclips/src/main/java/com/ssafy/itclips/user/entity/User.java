@@ -89,6 +89,9 @@ public class User {
     @Column(name = "provider")
     private String provider;
 
+    @Column(name = "bio")
+    private String bio;
+
     @OneToMany(mappedBy = "user")
     private List<BookmarkList> bookmarkLists = new ArrayList<>();
 

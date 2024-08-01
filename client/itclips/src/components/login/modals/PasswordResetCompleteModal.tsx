@@ -10,7 +10,7 @@ const PasswordResetCompleteModal = () => {
     setEmailLoginOpen(true);
   };
   return (
-    <div className="flex items-center justify-center min-h-screen bg-base-100">
+    <div className="flex items-center justify-center bg-base-100">
       <div className="text-center bg-base-100 p-8 rounded-lg shadow-md w-full max-w-md border">
         <h1 className="text-2xl font-semibold mb-6 text-center">
           임시비밀번호 받기 성공

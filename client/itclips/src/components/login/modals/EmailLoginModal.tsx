@@ -1,51 +1,65 @@
-import React, { useEffect, useState } from "react";
-import { navStore } from "../../../stores/navStore";
-import { authStore } from "../../../stores/authStore";
-import { useNavigate } from "react-router-dom";
-import { emailLogin, checkUserInfo } from "../../../api/authApi";
+import React from 'react';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import { navStore } from '../../../stores/navStore';
+import { authStore } from '../../../stores/authStore';
+import { useNavigate } from 'react-router-dom';
+import { emailLogin, checkUserInfo } from '../../../api/authApi';
 
 const EmailLoginModal: React.FC = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const { setLoginListOpen, setEmailLoginOpen, setPasswordResetOpen } =
-    navStore();
-  const { login, userInfo, fetchUserInfo, fetchUserToken } = authStore();
-  const [errorMessage, setErrorMessage] = useState("");
+  const { setLoginListOpen, setEmailLoginOpen, setPasswordResetOpen } = navStore();
+  const { login, fetchUserInfo, fetchUserToken } = authStore();
+  const [errorMessage, setErrorMessage] = React.useState<string>('');
+  const [loading, setLoading] = React.useState<boolean>(false);
 
-  const closeEmailLoginModal = () => {
-    setEmailLoginOpen(false);
-    setLoginListOpen(true);
-  };
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
+    },
+    validationSchema: Yup.object({
+      email: Yup.string().email('유효한 이메일 주소를 입력하세요.').required('이메일을 입력하세요.'),
+      password: Yup.string().required('비밀번호를 입력하세요.'),
+    }),
+    onSubmit: async (values) => {
+      setLoading(true);
+      setErrorMessage('');
 
-  // 이메일 로그인 로직
-  const handleEmailLoginSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+      try {
+        const response = await emailLogin(values.email, values.password);
 
-    emailLogin(email, password)
-      .then((response: any) => {
-        console.log(response);
         if (response.status === 200) {
-          setErrorMessage(""); // 에러 메시지 초기화
           fetchUserToken(response.data.accessToken); // 로컬 스토리지에 유저 토큰 업데이트
           login(); // 로그인 상태 업데이트
 
           const userId = response.headers.userid;
+          const userInfoResponse = await checkUserInfo(values.email);
 
-          // 유저 정보 가져오기
-          return checkUserInfo(email);
+          fetchUserInfo(userInfoResponse.data); // 로컬 스토리지에 유저 정보 업데이트
+          window.alert(`환영합니다 ${userInfoResponse.data.nickname}님!`);
+          navigate(`/user/${userInfoResponse.data.id}`); // 로그인 후 페이지 이동
+        } else {
+          throw new Error('로그인에 실패했습니다.');
         }
-        throw new Error("로그인에 실패했습니다.");
-      })
-      .then((userInfoResponse) => {
-        fetchUserInfo(userInfoResponse.data); // 로컬 스토리지에 유저 정보 업데이트
-        window.alert(`환영합니다 ${userInfoResponse.data.nickname}님!`);
-        navigate(`/user/${userInfoResponse.data.id}`); // 로그인 후 페이지 이동
-      })
-      .catch((error: any) => {
+      } catch (error) {
         console.error(error);
-        setErrorMessage("아이디 또는 비밀번호가 잘못되었습니다.");
-      });
+        setErrorMessage('아이디 또는 비밀번호가 잘못되었습니다.');
+      } finally {
+        setLoading(false);
+      }
+    },
+  });
+
+  // This function resets the error message when input values change
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setErrorMessage('');
+    formik.handleChange(e);
+  };
+
+  const closeEmailLoginModal = () => {
+    setEmailLoginOpen(false);
+    setLoginListOpen(true);
   };
 
   const openPasswordResetModal = () => {
@@ -54,12 +68,12 @@ const EmailLoginModal: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center bg-base-100">
+    <div className="flex flex-col items-center justify-center bg-base-100" >
       <div className="border bg-base-100 p-6 rounded-lg shadow-lg w-full max-w-sm">
         <h2 className="text-xl text-center font-bold mb-4">이메일 로그인</h2>
 
-        <form onSubmit={handleEmailLoginSubmit}>
-          <label id="email" htmlFor="email" className="label">
+        <form onSubmit={formik.handleSubmit}>
+          <label htmlFor="email" className="label">
             <span className="label-text">아이디</span>
           </label>
           <input
@@ -68,27 +82,38 @@ const EmailLoginModal: React.FC = () => {
             name="email"
             placeholder="이메일을 입력해주세요."
             className="input input-bordered w-full mb-4"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={formik.values.email}
+            onChange={handleInputChange}
+            onBlur={formik.handleBlur}
           />
-          <label htmlFor="">
+          {formik.touched.email && formik.errors.email ? (
+            <div className="text-red-500">{formik.errors.email}</div>
+          ) : null}
+
+          <label htmlFor="password" className="label">
             <span className="label-text">비밀번호</span>
           </label>
           <input
             type="password"
+            id="password"
+            name="password"
             placeholder="비밀번호를 입력해주세요."
             className="input input-bordered w-full mb-4"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={formik.values.password}
+            onChange={handleInputChange}
+            onBlur={formik.handleBlur}
           />
+          {formik.touched.password && formik.errors.password ? (
+            <div className="text-red-500">{formik.errors.password}</div>
+          ) : null}
 
           {/* 로그인 실패 시 에러 메시지 표시 */}
           {errorMessage && (
             <p className="text-red-500 text-center">{errorMessage}</p>
           )}
 
-          <button className="btn btn-primary w-full mb-2" type="submit">
-            이메일 로그인
+          <button className="btn btn-primary w-full mb-2 text-white" type="submit" disabled={loading}>
+            {loading ? '로그인중...' : '이메일 로그인'}
           </button>
         </form>
 
@@ -99,7 +124,7 @@ const EmailLoginModal: React.FC = () => {
 
           <button
             className="btn bg-base-100"
-            onClick={() => navigate("/signup")}
+            onClick={() => navigate('/signup')}
           >
             회원가입
           </button>

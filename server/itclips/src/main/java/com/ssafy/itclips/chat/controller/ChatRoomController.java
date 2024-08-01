@@ -38,6 +38,7 @@ public class ChatRoomController {
         return new ResponseEntity<>(chatRooms, HttpStatus.OK);
     }
 
+    //채팅방 메세지 목록
     @GetMapping("messages/{roomId}")
     @Operation(summary = "채팅방 메세지 목록", description = "채팅방에 존재하는 모든 메세지 목록입니다.")
     public ResponseEntity<?> getMessages(@PathVariable("roomId")Long roomId) {
@@ -46,23 +47,12 @@ public class ChatRoomController {
         return new ResponseEntity<>(messageDTOS, HttpStatus.OK);
     }
 
-    //-------------------------------------------------
+    //채팅방 나가기
+    @DeleteMapping("/room/{roomId}/{userId}")
+    @Operation(summary = "채팅방 나가기", description = "채팅방 나가기")
+    public ResponseEntity<?> deleteRoom(@PathVariable("roomId")Long roomId,@PathVariable("userId")Long userId) {
+        chatRoomService.deleteRoom(roomId,userId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
-
-//    @GetMapping("/rooms")
-//    public List<ChatRoomDTO> room() {
-//        return chatRoomRepository.findAllRoom();
-//    }
-//
-//
-//    @GetMapping("/room/enter/{roomId}")
-//    public String roomDetail(Model model, @PathVariable String roomId) {
-//        model.addAttribute("roomId", roomId);
-//        return "/chat/roomdetail";
-//    }
-//
-//    @GetMapping("/room/{roomId}")
-//    public ChatRoomDTO roomInfo(@PathVariable Long roomId) {
-//        return chatRoomRepository.findRoomById(roomId);
-//    }
 }

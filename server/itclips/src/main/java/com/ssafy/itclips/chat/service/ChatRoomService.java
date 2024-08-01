@@ -155,4 +155,9 @@ public class ChatRoomService {
         }
         return messageList;
     }
+
+    @Transactional
+    public void deleteRoom(Long roomId, Long userId){
+        chatJPARepository.deleteByRoomIdAndUserId(roomId,userId);
+    }
 }

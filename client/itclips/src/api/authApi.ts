@@ -10,8 +10,7 @@ export const emailLogin = (email: string, password: string) => {
       email,
       password,
     },
-  })
-    
+  });
 };
 
 // 로그아웃 api 호출
@@ -20,8 +19,29 @@ export const logoutApi = (token: string) => {
     method: "post",
     url: `${API_BASE_URL}/api/user/logout`,
     headers: {
-      Authorization: `Bearer ${token}`
-    }
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+// 비밀번호 찾기 인증번호 발송
+export const sendVerificationPassword = (nickname: string, email: string) => {
+  return axios({
+    method: "post",
+    url: `${API_BASE_URL}/api/user/pw/sendVerification`,
+    params: {
+      email,
+      nickname,
+    },
+  });
+};
+
+// 비밀번호 찾기 인증번호 확인
+export const checkCodePassword = (email:string, code:string) => {
+  return axios({
+    method: "post",
+    url: `${API_BASE_URL}/api/user/pw/verifyCode/`,
+    params: { email, code }
   })
 }
 
@@ -30,9 +50,9 @@ export const checkUserInfo = (email: string) => {
   return axios({
     method: "get",
     url: `${API_BASE_URL}/api/user/profile`,
-    params: { email }
-  })
-}
+    params: { email },
+  });
+};
 
 // 이메일 중복 체크
 export const checkEmail = (email: string) => {
@@ -40,8 +60,8 @@ export const checkEmail = (email: string) => {
     method: "get",
     url: `${API_BASE_URL}/api/user/emailCheck`,
     params: { email },
-  })
-}
+  });
+};
 
 // 이메일 인증번호 발송
 export const sendVerificationCode = (email: string) => {
@@ -75,6 +95,15 @@ export const signup = (userData: any) => {
   return axios({
     method: "post",
     url: `${API_BASE_URL}/api/user/signup`,
+    data: userData,
+  });
+};
+
+// 소셜 회원 가입
+export const socialSignup = (userData: any) => {
+  return axios({
+    method: "post",
+    url: `${API_BASE_URL}/api/user/oauthSignup`,
     data: userData,
   });
 };

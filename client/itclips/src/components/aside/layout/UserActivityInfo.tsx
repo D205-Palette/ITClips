@@ -2,6 +2,8 @@
 // 팔로워, 팔로잉의 숫자를 누르면 팔로우 관리 창으로 이동하는 컴포넌트
 import { useNavigate } from "react-router-dom";
 
+import { NavLink } from "react-router-dom";
+
 interface ActivityInfo {
   followers: number;
   following: number;
@@ -20,30 +22,22 @@ const UserActivityInfo = () => {
     bookmarkCount: 10,
   }
 
-  // 팔로워, 팔로잉 숫자를 눌렀을 때 이동
-  const onClick = (event: any) => {
-    console.log(event.target.id);
-    if (event.target.id === "followers") {
-      navigate('/user/:user_id/follow/follower')
-      // alert("팔로워 창으로 이동합니다.");
-    } else if (event.target.id === "following") {
-      navigate('/user/:user_id/follow/following')
-      // alert("팔로잉 창으로 이동합니다.");
-    }
-  }
-
   return (
     <div className="w-full grid grid-cols-1 gap-y-4 mt-6">
       <div className="grid grid-cols-12">
         <div className="col-start-3 col-span-5 text-start text-gray-500">팔로워</div>
         <div className="col-start-9">
-          <button id="followers" className="text-start font-bold hover:bg-sky-100 hover:rounded" onClick={onClick}>{data.followers}</button>
+          <NavLink to="/user/:user_id/follow/follower">
+            <button id="followers" className="text-start font-bold hover:bg-sky-100 hover:rounded">{data.followers}</button>
+          </NavLink>
         </div>
       </div>
       <div className="grid grid-cols-12">
         <div className="col-start-3 col-span-5 text-start text-gray-500">팔로잉</div>
         <div className="col-start-9">
-          <button id="following" className="text-start font-bold hover:bg-sky-100 hover:rounded" onClick={onClick}>{data.following}</button>
+          <NavLink to="/user/:user_id/follow/following">
+            <button id="following" className="text-start font-bold hover:bg-sky-100 hover:rounded">{data.following}</button>
+          </NavLink>
         </div>
       </div>
       <div className="grid grid-cols-12">

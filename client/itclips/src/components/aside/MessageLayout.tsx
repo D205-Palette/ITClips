@@ -5,13 +5,15 @@ import AsideStartNewMessage from "./AsideStartNewMessage";
 
 // stores
 import darkModeStore from "../../stores/darkModeStore";
+import { asideStore } from "../../stores/asideStore";
 
 const MessageLayout = () => {
 
-  const [ selectedChat, setSelectedChat ] = useState(null);
-  const [ showInvite, setShowInvite ] = useState(null);
-
+  const [showInvite, setShowInvite] = useState(null);
   const isDark = darkModeStore(state => state.isDark);
+  const selectedChat = asideStore(state => state.selectedChat);
+  const isMessageOpen = asideStore(state => state.isMessageOpen);
+  const setSelectedChat = asideStore(state => state.setSelectedChat);
 
   const handleSelectChat = (chatId: any) => {
     setSelectedChat(chatId);
@@ -34,12 +36,11 @@ const MessageLayout = () => {
     setSelectedChat(chatId);
   };
 
+  if (!isMessageOpen) {
+    return null;
+  }
+
   return (
-    // selectedChat은 선택된 메세지 창이 있을 때 값이 들어간다
-    // showInvite는 메세지 목록 화면에서 + 버튼을 눌렀을 때 값이 들어간다
-    // 아래 조건은 아무것도 안했을 때 채팅목록을
-    // 채팅 목록 중 하나를 클릭했을때 채팅 상세 페이지로
-    // 채팅 목록에서 + 버튼을 눌렀을 때 새 채팅 화면으로 이동하도록 조건
     <div className={`${ isDark ? "bg-aside-dark" : "bg-aside-light" } rounded-3xl w-80 h-[35rem]`}>
       {selectedChat === null && showInvite === null && (
         <AsideMessage onSelectChat={handleSelectChat} onShowInvite={handleNewChat} />

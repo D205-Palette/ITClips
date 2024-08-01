@@ -35,7 +35,7 @@ const users = [
 const Following = () => {       
   return (
     <>
-        {users.map((user) =><FollowItem user={user} isFollower={false} /> )}
+      <FollowingList />
     </>
   );
 };

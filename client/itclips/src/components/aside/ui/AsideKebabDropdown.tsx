@@ -1,8 +1,12 @@
-import { useState,FC } from 'react';
+import { FC, useState, useEffect, useRef } from 'react';
+
+// icons
 import { VscKebabVertical } from "react-icons/vsc";
+
+// components
 import BookmarkListEditModal from "../modals/BookmarkListEditModal";
 import DeleteBookmarkListModal from "../modals/DeleteBookmarkListModal";
-import UrlCopyModal from "../modals/UrlCopyModal";
+import UrlCopyModal from "../../common/UrlCopyModal";
 import ReportModal from "../modals/ReportModal";
 import FavoriteConfirmationModal from '../modals/FavoriteConfirmModal';
 import ScrapConfirmationModal from '../modals/ScrapComfirmModal';
@@ -22,10 +26,34 @@ const AsideKebabDropdown :FC<Props> = (isRoadmap, id) => {
 
   const [ isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const toggleDropdown = (): void => setIsDropdownOpen(!isDropdownOpen);
 
   // 로드맵 or 북마크리스트
   const categories: string[] = (isRoadmap.isRoadmap? ["수정하기", "삭제하기", "url복사", '스크랩']: ["수정하기", "삭제하기", "url복사",'즐겨찾기', "신고하기"])
+  const handleCopyClipBoard = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setIsUrlCopyModalOpen(true)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
 
   const handleMenu = (menu: string) => {
     if (menu === "수정하기") {
@@ -33,7 +61,7 @@ const AsideKebabDropdown :FC<Props> = (isRoadmap, id) => {
     } else if (menu === "삭제하기") {
       setIsDeleteModalOpen(true);
     } else if (menu === "url복사") {
-      setIsUrlCopyModalOpen(true);
+      handleCopyClipBoard();
     } else if (menu === "신고하기") {
       setIsReportModalOpen(true);
     } else if (menu === '즐겨찾기'){
@@ -45,7 +73,7 @@ const AsideKebabDropdown :FC<Props> = (isRoadmap, id) => {
   };
 
   return (
-    <div className="self-end flex justify-end relative">
+    <div className="self-end flex justify-end relative" ref={dropdownRef}>
       <button
         id="dropdownDefaultButton"
         onClick={toggleDropdown}
@@ -55,15 +83,14 @@ const AsideKebabDropdown :FC<Props> = (isRoadmap, id) => {
         <VscKebabVertical />
       </button>
 
-      {/* 드롭다운 메뉴 추가 */}
       {isDropdownOpen && (
-        <div className="absolute right-0 top-full mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 z-10"> {/* right-0과 top-full 추가 */}
+        <div className="absolute right-0 top-full mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 z-10">
           <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
             {categories.map((category) => (
               <li key={category} onClick={() => handleMenu(category)}>
-                <a href="#" className="text-center block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                <div className="text-center block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                   {category}
-                </a>
+                </div>
               </li>
             ))}
           </ul>

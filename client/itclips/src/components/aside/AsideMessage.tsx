@@ -11,7 +11,7 @@ interface MessageListProps {
   onShowInvite: (state: number) => void;
 }
 
-const MessageList: React.FC<MessageListProps> = ({ onSelectChat, onShowInvite }) => {
+const AsideMessage: React.FC<MessageListProps> = ({ onSelectChat, onShowInvite }) => {
 
   // 더미 데이터
   const [ data ] = useState([
@@ -38,7 +38,7 @@ const MessageList: React.FC<MessageListProps> = ({ onSelectChat, onShowInvite })
   }
 
   return (
-    <div className="rounded-3xl w-80 p-8 flex flex-col">
+    <div className="p-4 max-w-sm mx-auto h-[35rem] flex flex-col">
       {/* 메세지 헤더 영역 */}
       <MessageHeader onClickInvite = { onClickInvite } />
       {/* 받은 메세지 영역 */}
@@ -50,4 +50,4 @@ const MessageList: React.FC<MessageListProps> = ({ onSelectChat, onShowInvite })
   );
 };
 
-export default MessageList;
+export default AsideMessage;

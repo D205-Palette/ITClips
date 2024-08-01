@@ -6,103 +6,75 @@ import ImageContainer from "./layout/ImageContainer";
 import ItemDetailInfo from "./layout/ItemDetailInfo";
 import LikesFavoritesCount from "./layout/LikesFavoritesCount";
 import Tags from "./layout/Tags";
-import CommentsContainer from "./layout/CommentsContainer(Roadmap)";
-import { FaRegHeart, FaRegStar } from "react-icons/fa";
-import { FC } from "react";
+import CommentsContainer from "./layout/CommentsContainer";
 
 // stores
 import darkModeStore from "../../stores/darkModeStore";
 import { asideStore } from "../../stores/asideStore";
 
-interface ItemProps {
-  roadmap: {
-    id: number;
-    userId: number;
-    userName: string;
-    title: string;
-    description: string;
-    createdAt: string;
-    image: string;
-    isPublic: number;
-    stepList: {
-      id: number;
-      roadmapId: number;
-      bookmarkListResponseDTO: {
-        id: number;
-        title: string;
-        description: string;
-        bookmarkCount: number;
-        likeCount: number;
-        image: string;
-        tags: {
-          title: string;
-        }[];
-        users: {
-          id: number;
-          nickName: string;
-        }[];
-      };
-      check: number;
-      order: number;
-    }[];
-
-    commentList: {
-      id: number;
-      comment: string;
-      userId: number;
-      userName: string;
-      createdAt: string;
-      roadmapId: number;
-    }[];
-    likeCnt: number;
-    scrapCnt: number;
-  };
+interface Comment {
+  id: number;
+  username: string;
+  content: string;
 }
 
-const ProfileCard: FC<ItemProps> = ({ roadmap }) => {
+interface Tag {
+  id: number;
+  content: string;
+}
 
-  const isDark = darkModeStore((state) => state.isDark);
-  const isMessageOpen = asideStore((state) => state.isMessageOpen);
+interface Item {
+  id:number;
+  title: string;
+  email: string;
+  description: string;
+  like: number;
+  fav: number;
+  tags: Tag[];
+  comments: Comment[];
+}
+
+const AsideRoadmap = () => {
+
+  // 더미 데이터
+  const roadmapInfo: Item = {
+    id:1,
+    title: "로드맵_01",
+    email: "abc@gmail.com",
+    description: "인기 로드맵",
+    like: 200,
+    fav: 300,
+    tags: [
+      { id: 1, content: "#태그" },
+      { id: 2, content: "#태그2" },
+    ],
+    comments: [
+      { id: 1, username: "고양양", content: "좋아요~1" },
+      { id: 2, username: "고양양", content: "좋아요~2" },
+      { id: 2, username: "고양양", content: "좋아요~3" },
+      { id: 2, username: "고양양", content: "좋아요~4" },
+    ]
+  }
+
+  const isDark = darkModeStore(state => state.isDark);
+  const isMessageOpen = asideStore(state => state.isMessageOpen);
 
   return (
-    <div
-      className={`${
-        isDark ? "bg-aside-dark" : "bg-aside-light"
-      } rounded-3xl w-80 p-8 flex flex-col items-center`}
-    >
+    <div className={`${ isDark ? "bg-aside-dark" : "bg-aside-light" } rounded-3xl w-80 p-8 flex flex-col items-center`}>
       {/* 더보기 버튼 */}
-      {!isMessageOpen && <AsideKebabDropdown isRoadmap={true} />}
+      { !isMessageOpen && <AsideKebabDropdown isRoadmap={true} id={roadmapInfo.id}/> }
       {/* 북마크리스트 썸네일 */}
       <ImageContainer />
       {/* 북마크리스트 정보 */}
-      <div className="text-center">
-        <h2 className="text-xl font-bold mb-1">{roadmap.title}</h2>
-        <p className="text-center text-sm mb-6">{roadmap.description}</p>
-      </div>
+      <ItemDetailInfo {...roadmapInfo} />
       {/* 좋아요, 즐겨찾기 칸 */}
-      <div className="grid grid-cols-6">
-        <div className="col-start-2 flex">
-          <div>
-            <FaRegHeart />
-          </div>
-          <div>
-            <span>{roadmap.likeCnt}</span>
-          </div>
-        </div>
-        <div className="col-start-5 flex">
-          <div>
-            <FaRegStar />
-          </div>
-          <div>
-            <span>{roadmap.scrapCnt}</span>
-          </div>
-        </div>
-      </div>
-
+      <LikesFavoritesCount {...roadmapInfo} />
+      {/* 태그 창 */}
+      <Tags {...roadmapInfo} />
       {/* 댓글 창 */}
-      <CommentsContainer commentList={roadmap.commentList} />
+      <CommentsContainer {...roadmapInfo} />
     </div>
   );
 };
 
-export default ProfileCard;
+export default AsideRoadmap;

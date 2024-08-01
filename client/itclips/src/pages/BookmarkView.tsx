@@ -131,8 +131,13 @@ const MyBookmark = () => {
           className="xl:col-start-3 xl:col-span-3 hidden xl:block "
         >
           {/* 메세지 뜨는 위치 */}
-          <div id="aside" className="absolute col-start-3 col-span-3">
-            {isMessageOpen && <MessageLayout />}
+          <div id="aside" className="absolute col-start-3 col-span-3 z-50">
+            <div className="fixed">
+              {isMessageOpen && <MessageLayout />}
+            </div>
+          </div>
+          <div className="fixed">
+            <AsideBookmarkList />
           </div>
           {/* 여기에 listId prop으로 내려줘야되나?? */}
           <AsideBookmarkList />

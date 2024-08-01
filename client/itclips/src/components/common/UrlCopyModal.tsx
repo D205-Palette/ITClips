@@ -1,4 +1,6 @@
-// UrlCopyModal.tsx 는 AsideBookmarkList.tsx 에서 더보기 메뉴의 'url복사' 버튼을 눌렀을 때 출려되는 컴포넌트
+// UrlCopyModal.tsx 는 케밥 더보기 메뉴의 'url복사' 버튼을 눌렀을 때 출력되는 컴포넌트
+// 기능 구현은 상위 컴포넌트에서 하시요
+// 요건 안내 메세지 띄우는 용도로만
 
 import React from 'react';
 

@@ -14,7 +14,7 @@ public interface FollowService {
 
     void unfollowUser(Long fromUserId, Long toUserId);
 
-    List<Follow> getFollowers(Long userId);
+    List<FollowDetailDTO> getFollowers(Long userId);
 
     void deleteFollower(Long fromUserId, Long toUserId);
 

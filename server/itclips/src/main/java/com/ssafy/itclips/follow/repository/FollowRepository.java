@@ -32,4 +32,7 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
     long countByFrom(@Param("user") User user);
 
     List<Follow> findByFromId(Long userId);
+
+    List<Follow> findByToId(Long userId);
+
 }

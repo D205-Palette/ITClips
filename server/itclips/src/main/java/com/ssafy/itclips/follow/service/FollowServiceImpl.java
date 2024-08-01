@@ -63,9 +63,20 @@ public class FollowServiceImpl implements FollowService {
     }
 
     @Transactional(readOnly = true)
-    public List<Follow> getFollowers(Long userId) {
-        User user = userService.getUserById(userId);
-        return followRepository.findByTo(user);
+    public List<FollowDetailDTO> getFollowers(Long userId) {
+        List<Follow> followersList = followRepository.findByToId(userId);
+
+        return followersList.stream().map(follow -> {
+            User followerUser = userRepository.findById(follow.getFrom().getId()).orElse(null);
+            return new FollowDetailDTO(
+                    follow.getId(),
+                    follow.getFrom().getId(),
+                    follow.getTo().getId(),
+                    followerUser != null ? followerUser.getNickname() : null,
+                    followerUser != null ? followerUser.getProfileImage() : null,
+                    followerUser != null ? followerUser.getEmail() : null
+            );
+        }).collect(Collectors.toList());
     }
 
     @Transactional

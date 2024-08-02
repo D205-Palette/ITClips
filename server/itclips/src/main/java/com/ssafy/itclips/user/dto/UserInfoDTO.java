@@ -11,6 +11,8 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 public class UserInfoDTO {
+    private Long id;
+    private String email;
     private String nickname;
     private LocalDate birth;
     private String job;
@@ -19,7 +21,9 @@ public class UserInfoDTO {
     private String bio;
 
     @Builder
-    public UserInfoDTO(String nickname, LocalDate birth, String job, Boolean gender, Boolean darkMode, String bio) {
+    public UserInfoDTO(Long id, String email, String nickname, LocalDate birth, String job, Boolean gender, Boolean darkMode, String bio) {
+        this.id = id;
+        this.email = email;
         this.nickname = nickname;
         this.birth = birth;
         this.job = job;

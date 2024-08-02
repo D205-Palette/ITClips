@@ -30,7 +30,7 @@ const FollowerList = () => {
     const fetchFollowingList = async () => {
       if (user_id) {
         try {
-          const response = await getFollowingList(parseInt(user_id, 10), token);
+          const response = await getFollowingList(parseInt(user_id, 10));
           setFollowingList(response.data);
           console.log(response);
         } catch (error) {

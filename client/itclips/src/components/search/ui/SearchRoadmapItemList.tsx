@@ -49,7 +49,7 @@ const SearchRoadmapItemList: React.FC<RoadmapProps> = ({ item }) => {
         <button className="btn btn-ghost btn-xs text-sm" onClick={handleNavLink}>❤️ {item.likes}</button>
 
         <div onClick={handleNavLink}>
-          <SearchItemKebabDropdown />
+          <SearchItemKebabDropdown id={item.id} whatContent="로드맵"/>
         </div>
       </NavLink>
     </div>

@@ -49,7 +49,7 @@ const SearchBookmarkListItemList: React.FC<BookmarkListItemProps> = ({ item }) =
         <button className="btn btn-ghost btn-xs text-sm" onClick={handleNavLink}>❤️ {item.likes}</button>
 
         <div onClick={handleNavLink}>
-          <SearchItemKebabDropdown />
+          <SearchItemKebabDropdown id={item.id} whatContent='리스트'/>
         </div>
       </NavLink>
     </div>

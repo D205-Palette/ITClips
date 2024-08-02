@@ -27,49 +27,26 @@ export default function MyView() {
 
   // 나중에 api로 받아올때는 타입 BookmarkListsSumType으로
   const lists = mainStore((state) => state.lists);
+  const userId = sessionStorage.getItem('id')
+  // 북마크 리스트  
+  axios({
+    method: 'get',
+    url: `i11d205.p.ssafy.io/api/list/personal/${userId}/`,
+    // params: {
+    //   userId: 1, 
 
-  // 북마크 리스트
-  // axios({
-  //   method: 'get',
-  //   url: `i11d205.p.ssafy.io/api/list/personal/${userId}/`,
-  //   // params: {
-  //   //   userId: 1,
+    // },
+    // headers: {
+    //   Authorization: 'Bearer YourAccessToken'
+    // }
+  })
+  .then((res) => {
+    console.log(res.data);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
 
-  //   // },
-  //   // headers: {
-  //   //   Authorization: 'Bearer YourAccessToken'
-  //   // }
-  // })
-  // .then((res) => {
-  //   console.log(res.data);
-  // })
-  // .catch((err) => {
-  //   console.error(err);
-  // });
-
-  // 받아오는 형식 (개인 북마크 리스트)
-  // [
-  //   {
-  //     "id": 57,
-  //     "title": "string",
-  //     "description": "string",
-  //     "bookmarkCount": 0,
-  //     "likeCount": 1,
-  //     "image": "string",
-  //     "isLiked" : true,
-  //     "tags": [
-  //       {
-  //         "title": "String"
-  //       }
-  //     ],
-  //     "users": [
-  //       {
-  //         "id": 1,
-  //         "nickName": "진규"
-  //       }
-  //     ]
-  //   }
-  // ]
 
   const filterdLists = lists.filter(
     (list) => list.title.includes(filterText) || list.tags.includes(filterText)

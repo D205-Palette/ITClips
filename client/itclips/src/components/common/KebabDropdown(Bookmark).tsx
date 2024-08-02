@@ -4,7 +4,7 @@ import MoveBookmarkModal from "../aside/modals/MoveBookmarkModal";
 import type { BookmarkType } from "../../types/BookmarkType";
 import FavoriteConfirmationModal from "../aside/modals/FavoriteConfirmModal";
 import ReportModal from "../aside/modals/ReportModal";
-import DeleteBookmarkListModal from "../aside/modals/DeleteBookmarkListModal";
+import DeleteBookmarkListModal from "../aside/modals/DeleteContentModal";
 import UrlCopyModal from "./UrlCopyModal";
 import ScrapConfirmationModal from "../aside/modals/ScrapComfirmModal";
 
@@ -98,6 +98,8 @@ const KebabDropdown: FC<Props> = ({
         <DeleteBookmarkListModal
           isOpen={isDeleteModalOpen}
           onClose={() => setIsDeleteModalOpen(false)}
+          whatContent={"북마크"}
+          id={bookmark.id}
         />
       )}
       {isUrlCopyModalOpen && (
@@ -110,6 +112,8 @@ const KebabDropdown: FC<Props> = ({
         <ReportModal
           isOpen={isReportModalOpen}
           onClose={() => setIsReportModalOpen(false)}
+          whatContent="북마크"
+          id={bookmark.id}
         />
       )}
       {isFavoriteModalOpen && (

@@ -28,7 +28,7 @@ const FollowerList = () => {
   // 팔로우 목록 조회
   useEffect(() => {
     const fetchFollowingList = async () => {
-      if (user_id) {
+      if (user_id && token) {
         try {
           const response = await getFollowingList(parseInt(user_id, 10));
           setFollowingList(response.data);

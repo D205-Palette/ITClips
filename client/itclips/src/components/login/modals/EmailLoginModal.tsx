@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { navStore } from "../../../stores/navStore";
+import { authStore } from "../../../stores/authStore";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { emailLogin, checkUserInfo } from "../../../api/authApi";
 
 const EmailLoginModal: React.FC = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const { setLoginListOpen, setEmailLoginOpen, setPasswordResetOpen, login } =
+  const { setLoginListOpen, setEmailLoginOpen, setPasswordResetOpen } =
     navStore();
+  const { login, userInfo, fetchUserInfo, fetchUserToken } = authStore();
   const [errorMessage, setErrorMessage] = useState("");
 
   const closeEmailLoginModal = () => {
@@ -18,35 +20,31 @@ const EmailLoginModal: React.FC = () => {
 
   // 이메일 로그인 로직
   const handleEmailLoginSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();    
-    login()
-    navigate("/user/:user_id");
+    e.preventDefault();
 
-    const formData = new FormData(e.currentTarget);
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-
-    axios({
-      method: "post",
-      url: `http://192.168.100.206:/api/user/login`, // test url
-      data: {
-        email,
-        password,
-      },
-    })
-      .then((response) => {
+    emailLogin(email, password)
+      .then((response: any) => {
+        console.log(response);
         if (response.status === 200) {
           setErrorMessage(""); // 에러 메시지 초기화
-          // closeLoginModal();
-        } else {
-          setErrorMessage(
-            "아이디 또는 비밀번호가 잘못 되었습니다. 아이디와 비밀번호를 정확히 입력해 주세요."
-          );
+          fetchUserToken(response.data.accessToken); // 로컬 스토리지에 유저 토큰 업데이트
+          login(); // 로그인 상태 업데이트
+
+          const userId = response.headers.userid;
+
+          // 유저 정보 가져오기
+          return checkUserInfo(email);
         }
+        throw new Error("로그인에 실패했습니다.");
       })
-      .catch((error) => {
-        // 로그인 실패 시 에러 메시지 설정
-        setErrorMessage("아이디 또는 비밀번호가 잘못 되었습니다.");
+      .then((userInfoResponse) => {
+        fetchUserInfo(userInfoResponse.data); // 로컬 스토리지에 유저 정보 업데이트
+        window.alert(`환영합니다 ${userInfoResponse.data.nickname}님!`);
+        navigate(`/user/${userInfoResponse.data.id}`); // 로그인 후 페이지 이동
+      })
+      .catch((error: any) => {
+        console.error(error);
+        setErrorMessage("아이디 또는 비밀번호가 잘못되었습니다.");
       });
   };
 
@@ -67,7 +65,7 @@ const EmailLoginModal: React.FC = () => {
           <input
             type="email"
             id="email"
-            name="emial"
+            name="email"
             placeholder="이메일을 입력해주세요."
             className="input input-bordered w-full mb-4"
             value={email}
@@ -99,7 +97,10 @@ const EmailLoginModal: React.FC = () => {
             비밀번호 찾기
           </button>
 
-          <button className="btn bg-base-100" onClick={() => navigate("/signup")}>
+          <button
+            className="btn bg-base-100"
+            onClick={() => navigate("/signup")}
+          >
             회원가입
           </button>
         </div>

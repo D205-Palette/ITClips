@@ -1,12 +1,14 @@
 import React from "react";
 import { SiKakaotalk } from "react-icons/si";
+import { KAKAO_API_KEY, KAKAO_REDIRECT_URI } from "../../config"
+import { useNavigate } from "react-router-dom";
 
-export default function NaverLoginButton() {
-  const KAKAO_REDIRECT_URI = "http://localhost:3000/oauth/callback/kakao";
-  const KAKAO_REST_API_KEY = "0ffb6325ec02c9bed0743e31418cc885";
-  const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
+export default function NaverLoginButton() {  
+  const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_API_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
+  const navigate = useNavigate()
 
   const loginWithKakao = () => {
+    // navigate('https://i11d205.p.ssafy.io/oauth2/authorize/kakao')
     window.open(KAKAO_AUTH_URL, "_blank", "width=500,height=600");
   };
 

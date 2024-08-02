@@ -1,3 +1,4 @@
+
 import SearchBar from "../../components/main/MainSearchBar";
 import { FC, useState } from "react";
 import Roadmap from "../../components/main/Roadmap";

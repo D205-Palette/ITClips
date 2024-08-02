@@ -2,7 +2,7 @@ import { FcGoogle } from "react-icons/fc";
 import { API_BASE_URL } from '../../config';
 
 const GoogleLoginButton = () => {
-  const googleLoginUrl = `${API_BASE_URL}/oauth2/authorize/google`;
+  const googleLoginUrl = `${API_BASE_URL}:8084/oauth2/authorize/google`;
   
   const loginWithGoogle = () => {    
     window.open(googleLoginUrl, "_blank", "width=500,height=600");

@@ -75,8 +75,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         // target URl, redirect 설정
         clearAuthenticationAttributes(request, response);
-        String targetUrl = determineTargetUrl(request, response);
-        getRedirectStrategy().sendRedirect(request, response, targetUrl);
+//        String targetUrl = determineTargetUrl(request, response);
+//        getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response) {

@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.mapping.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -67,6 +68,7 @@ public class SecurityConfig {
         configuration.addAllowedOrigin("http://127.0.0.1:5500");
         configuration.addAllowedOrigin("https://i11d205.p.ssafy.io");  // 추가된 출처
         configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod(HttpMethod.OPTIONS);
         configuration.addAllowedMethod("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

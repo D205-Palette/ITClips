@@ -29,7 +29,7 @@ const UserActivityInfo = () => {
         <div className="col-start-3 col-span-5 text-start text-gray-500">팔로워</div>
         <div className="col-start-9">
           <NavLink to={`/user/${params.user_id}/follow/follower`}>
-            <button id="followers" className="text-start font-bold hover:bg-sky-100 hover:rounded">{data.followers}</button>
+            <button id="followers" className="text-start font-bold hover:bg-sky-200 hover:rounded">{data.followers}</button>
           </NavLink>
         </div>
       </div>
@@ -37,7 +37,7 @@ const UserActivityInfo = () => {
         <div className="col-start-3 col-span-5 text-start text-gray-500">팔로잉</div>
         <div className="col-start-9">
           <NavLink to={`/user/${params.user_id}/follow/following`}>
-            <button id="following" className="text-start font-bold hover:bg-sky-100 hover:rounded">{data.following}</button>
+            <button id="following" className="text-start font-bold hover:bg-sky-200 hover:rounded">{data.following}</button>
           </NavLink>
         </div>
       </div>

@@ -23,12 +23,11 @@ const FollowerList = () => {
 
   const [ followingList, setFollowingList ] = useState<Follower[]>([]);
   const { user_id } = useParams<{ user_id: string }>();
-  const token = authStore(state => state.token);
 
   // 팔로우 목록 조회
   useEffect(() => {
     const fetchFollowingList = async () => {
-      if (user_id && token) {
+      if (user_id) {
         try {
           const response = await getFollowingList(parseInt(user_id, 10));
           setFollowingList(response.data);
@@ -39,7 +38,7 @@ const FollowerList = () => {
       }
     };
     fetchFollowingList();
-  }, [user_id, token]);
+  }, [user_id]);
 
   return (
     <div className="mt-4">

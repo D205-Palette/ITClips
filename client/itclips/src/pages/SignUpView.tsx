@@ -24,7 +24,7 @@
   import { useNavigate } from "react-router-dom";
 
   const SignUpView = () => {
-    const { login, userInfo, fetchUserInfo, fetchUserToken } = authStore();
+    const { login, userInfo, fetchUserInfo, fetchUserToken, fetchUserId } = authStore();
     const navigate = useNavigate();
 
     // 사용자 입력 데이터 상태
@@ -228,17 +228,14 @@
 
             emailLogin(email, password)
               .then((response: any) => {
-                if (response.status === 200) {
-                  console.log(response);
+                if (response.status === 200) {                  
                   fetchUserToken(response.data.accessToken); // 로컬 스토리지에 유저 토큰 업데이트
-                  login(); // 로그인 상태 업데이트
-                  const userId = response.headers.userid;
-
-                  checkUserInfo("kdj4355@naver.com") // 테스트 아이디 유저정보 불러오기
-                    .then((response) => {
-                      fetchUserInfo(response.data); // 로컬 스토리지에 유저 정보 업데이트
-                    });
-                  console.log(userInfo.id);
+                  fetchUserId(response.data.userId) // 로컬 스토리지에 유저 아이디 업데이트
+                  checkUserInfo(response.data.userId) // 테스트 아이디 유저정보 불러오기
+                  .then((response) => {
+                    fetchUserInfo(response.data); // 로컬 스토리지에 유저 정보 업데이트
+                  });
+                  login(); // 로그인 상태 업데이트                          
                   window.alert(`환영합니다 ${userInfo.nickname}님!`);
                   navigate(`/user/${userInfo.id}`); // 로그인 후 페이지 이동
                 }

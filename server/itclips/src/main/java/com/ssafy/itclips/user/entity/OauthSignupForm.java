@@ -8,17 +8,17 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class OauthSignupForm {
-    private String email;
-    private Boolean gender;
+    private String nickname;
     private LocalDate birth;
-    private String profileImage;
+    private Boolean gender;
+    private String job;
 
     public User toEntity() {
         User user = new User();
-        user.setEmail(this.email);
-        user.setGender(this.gender);
+        user.setNickname(nickname);
         user.setBirth(this.birth);
-        user.setProfileImage(this.profileImage);
+        user.setGender(this.gender);
+        user.setJob(this.job);
         return user;
     }
 }

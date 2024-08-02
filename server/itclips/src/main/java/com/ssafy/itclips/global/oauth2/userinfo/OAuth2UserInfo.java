@@ -12,7 +12,7 @@ public abstract class OAuth2UserInfo {
 
     public abstract String getId(); //소셜 식별 값
 
-    public abstract String getNickname();
+//    public abstract String getNickname();
 
     public abstract String getImageUrl();
 

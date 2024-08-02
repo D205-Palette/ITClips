@@ -12,7 +12,9 @@ public interface UserService {
 
     LoginResponse login(LoginForm loginForm) throws IOException;
 
-    User oauthSignup(OauthSignupForm form, MultipartFile profileImage) throws IOException;
+//    User oauthSignup(OauthSignupForm form, MultipartFile profileImage) throws IOException;
+
+    User oauthSignup(Long userId, OauthSignupForm form) throws IOException;
 
     boolean checkEmailExists(String email);
 

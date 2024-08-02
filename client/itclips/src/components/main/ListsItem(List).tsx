@@ -38,7 +38,7 @@ const ListItem : FC<Props> = ({list}) => {
   return (
     <>
       <div
-        className={(isDark? "hover:bg-slate-700" : "hover:bg-slate-100") + " card card-side bg-base-100 shadow-xl  h-28"} >
+        className={(isDark? "hover:bg-slate-700" : "hover:bg-slate-100") + " card card-side bg-base-100   h-28"} >
           <>
             <figure onClick={()=>navigate('/bookmarklist/:bookmarklist_id')} className="hover:cursor-pointer w-1/6">
               <img
@@ -62,8 +62,9 @@ const ListItem : FC<Props> = ({list}) => {
                 </div>
               </div>  
 
-              {/* 너무 많아져서 설명은 안에만 넣어도 될듯..?
-              <div className=" items-center hidden xl:flex ">
+              {/* 너무 많아져서 설명은 안에만 넣어도 될듯..? */}
+
+              {/* <div className=" items-center hidden xl:flex ">
                 <p>{list.description}</p>
               </div> */}
 

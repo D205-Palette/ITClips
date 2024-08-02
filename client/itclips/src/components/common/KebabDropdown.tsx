@@ -1,6 +1,6 @@
 import { VscKebabVertical } from "react-icons/vsc";
-import { FC } from "react";
-
+import { FC,useState } from "react";
+import BookmarkListEditModal from '../../components/aside/modals/BookmarkListEditModal'
 
 // 무슨 탭에서 눌렀는지 받는 인자
 // 리스트, 즐겨찾기, 로드맵, 북마크 4가지로 받을예정. 그룹 리스트랑 그냥 리스트는 차이 없음
@@ -11,6 +11,7 @@ interface Props {
 }
 
 const KebabDropdown : FC<Props> = ({whatMenu, id}) => {
+  const [ isEditModalOpen, setIsEditModalOpen ] = useState<boolean>(false);
   return (
     <>
       <div className="dropdown dropdown-bottom dropdown-end ">
@@ -18,7 +19,7 @@ const KebabDropdown : FC<Props> = ({whatMenu, id}) => {
           <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box w-52 p-2 shadow z-30">
             
             {/* 이구간은 내꺼 남꺼일때& 즐겨찾기일떄 유무 */}
-            <li className={whatMenu==="즐겨찾기"? "hidden" : ''}>
+            <li className={whatMenu==="즐겨찾기"? "hidden" : ''} onClick={()=>setIsEditModalOpen(true)}>
               <a>수정하기</a>
             </li>
             <li>
@@ -48,6 +49,7 @@ const KebabDropdown : FC<Props> = ({whatMenu, id}) => {
             
           </ul>
       </div>
+      <BookmarkListEditModal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} />
     </>
   );
 }

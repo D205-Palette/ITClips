@@ -7,6 +7,7 @@ import darkModeStore from "../../stores/darkModeStore";
 import mainStore from "../../stores/mainStore";
 import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa6";
+import type { BookmarkType } from "../../types/BookmarkType";
 // const bookmarks = {
 //     title: string,
 //     url: string,
@@ -16,27 +17,29 @@ import { FaPlus } from "react-icons/fa6";
 //   }
 
 interface Props {
-  bookmark: {
-    id: number;
-    category: string;
-    title: string;
-    url: string;
-    tags: {
-      title: string;
-    }[];
-    content: string;
-    isLiked: boolean;
-    likeCount: number;
-  };
+  bookmark: BookmarkType;
+  editBookmarks: BookmarkType[];
+  changeEditBookmarks: React.Dispatch<React.SetStateAction<BookmarkType[]>>;
+  editBookmarksIndex: number[];
+  changeEditBookmarksIndex: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
-const Bookmark: FC<Props> = ({ bookmark }) => {
+const Bookmark: FC<Props> = ({
+  bookmark,
+  editBookmarks,
+  changeEditBookmarks,
+  editBookmarksIndex,
+  changeEditBookmarksIndex,
+}) => {
   const navigate = useNavigate();
 
   const [isLike, toggleLike] = useState(bookmark.isLiked);
 
   const [isEdit, toggleEdit] = useState(false);
   const [isTagEdit, toggleTagEdit] = useState(false);
+  const [editModal, tabEditModal] = useState(false)
+  // 그냥 더미. 있긴해야됨
+  const [nothingMode, tabNothing] = useState(false)
 
   const [tempBookmark, editTempBookmark] = useState(bookmark);
   const [tempTitle, editTempTitle] = useState(bookmark.title);
@@ -50,23 +53,22 @@ const Bookmark: FC<Props> = ({ bookmark }) => {
   const isDark = darkModeStore((state) => state.isDark);
 
   function goExternalUrl(url: string): void {
-    window.location.href = url;
+    window.open(url);
   }
-  
+
   // 태그 수정
   function submitTag(): void {
     // tempBookmark를 formData로 해서 put 요청
     editTempTags([...tempTags, { title: tempTag }]);
-    editTempTag('')
+    editTempTag("");
     toggleTagEdit(false);
   }
 
-  function completeEdit():void {
-    toggleEdit(false)
-    editTempBookmark({...tempBookmark, title:tempTitle, tags:tempTags})
+  function completeEdit(): void {
+    toggleEdit(false);
+    editTempBookmark({ ...tempBookmark, title: tempTitle, tags: tempTags });
     // 최종 수정
     //  /bookmark /update/{bookmarkId} 로 put요청
-
   }
 
   return (
@@ -89,17 +91,19 @@ const Bookmark: FC<Props> = ({ bookmark }) => {
             >
               <div>
                 {isEdit ? (
-                    <input
-                      type='text'
-                      value={tempTitle}
-                      onChange={(e) => editTempTitle(e.target.value)}
-                      className="text-xl font-bold border-slate-400 border rounded-md"
-                    />
+                  <input
+                    type="text"
+                    value={tempTitle}
+                    onChange={(e) => editTempTitle(e.target.value)}
+                    className="text-xl font-bold border-slate-400 border rounded-md"
+                  />
                 ) : (
                   <h2 className="flex-auto card-title">{tempBookmark.title}</h2>
                 )}
               </div>
-              <div className="underline underline-offset-1">{tempBookmark.url}</div>
+              <div className="underline underline-offset-1">
+                {tempBookmark.url}
+              </div>
             </div>
 
             <div className="hidden items-center md:inline-flex ">
@@ -109,8 +113,8 @@ const Bookmark: FC<Props> = ({ bookmark }) => {
             </div>
 
             <div className="card-actions justify-end flex items-center">
-              {isEdit ? 
-                (isTagEdit ? (
+              {isEdit ? (
+                isTagEdit ? (
                   <form onSubmit={() => submitTag()} className="w-1/3">
                     <input
                       type="text"
@@ -121,8 +125,8 @@ const Bookmark: FC<Props> = ({ bookmark }) => {
                   </form>
                 ) : (
                   <FaPlus onClick={() => toggleTagEdit(true)} />
-                ))
-               : (
+                )
+              ) : (
                 <button onClick={clickHeart} className="btn btn-ghost">
                   {isLike ? <FaHeart color="red" /> : <FaRegHeart />}
                   {bookmark.likeCount}{" "}
@@ -130,17 +134,24 @@ const Bookmark: FC<Props> = ({ bookmark }) => {
               )}
 
               {isEdit ? (
-                <button className="bg-sky-500 rounded-xl text-white py-2 px-3 hover:bg-sky-600"
-                onClick={completeEdit}>
+                <button
+                  className="bg-sky-500 rounded-xl text-white py-2 px-3 hover:bg-sky-600"
+                  onClick={completeEdit}
+                >
                   수정
                 </button>
               ) : (
                 <KebabDropdown
                   whatMenu="북마크"
-                  id={bookmark.id}
-                  url={bookmark.url}
+                  bookmark={bookmark}
                   isEdit={isEdit}
                   toggleEdit={toggleEdit}
+                  editBookmarks={editBookmarks}
+                  changeEditBookmarks={changeEditBookmarks}
+                  tabModal={tabEditModal}
+                  toggleMode={tabNothing}
+                  editBookmarksIndex={editBookmarksIndex}
+                  changeEditBookmarksIndex={changeEditBookmarksIndex}
                 />
               )}
             </div>

@@ -23,20 +23,19 @@ interface BookmarksType extends Array<BookmarkType> {}
 
 interface Move {
   editBookmarks: BookmarksType;
-  changeEditBookmarks: React.Dispatch<React.SetStateAction<BookmarksType>>;
-  editBookmarksIndex: number[];
   changeEditBookmarksIndex: React.Dispatch<React.SetStateAction<number[]>>;
   tabModal: React.Dispatch<React.SetStateAction<boolean>>;
   toggleMode: React.Dispatch<React.SetStateAction<boolean>>;
+  // 이동 or 추가로 북마크 삭제까지 할지말지 결정
+  whatMenu: string;
 }
 
 const MoveBookmarkModal: FC<Move> = ({
   editBookmarks,
-  changeEditBookmarks,
-  editBookmarksIndex,
   changeEditBookmarksIndex,
   tabModal,
   toggleMode,
+  whatMenu,
 }) => {
   // 편의상 하나만 했지만, 나중에 내 북리, 그룹 북리 다 가져와서 선택해서 넣게
   interface CategoryType {
@@ -51,6 +50,7 @@ const MoveBookmarkModal: FC<Move> = ({
 
   /// 최종적으로 북마크들 이동시킬 카테고리
   const [selectCategory, setSelectCategory] = useState<number>(0);
+  const [selectListId, setSelectListId] = useState<number>();
 
   function endMoving(): any {
     if (selectCategory === 0) {
@@ -64,6 +64,15 @@ const MoveBookmarkModal: FC<Move> = ({
     ///여기에 api호출로 이동
     /// 추가하고 삭제하던 or 복사해서 추가만 하던 그때그때마다
     /// 옮길 북마크들은 editbookmarks에 있고, 옮길 리스트id 랑 selectCategory로 post
+    editBookmarks.map((editBookmark) =>
+      axios.post(`${}/bookmark/add/${selectListId}/${selectCategory}`, editBookmark)
+    );
+
+    if (whatMenu === "이동") {
+      editBookmarks.map((editBookmark) =>
+        axios.delete(`/bookmark/delete/${editBookmark.id}`)
+      );
+    }
   }
 
   //임시값
@@ -109,14 +118,9 @@ const MoveBookmarkModal: FC<Move> = ({
     );
 
     const clickEvent = async (listId: number): Promise<void> => {
-      // 여기에 /list/{listId} 북마크리스트 상세보기 리스트 조회해서 카테고리들 받아오기
       // 임시 카테고리들
+      setSelectListId(listId);
 
-    //   axios
-    //     .get("https://jsonplaceholder.typicode.com/todos/1")
-    //     .then((response) => {
-    //       // 지금은 위에 카테고리들 임시값 넣어놨지만 추후에 api 연결해서 값 갱신해주는 식으로 ㄱㄱ
-    //     });
       changeClickedIndex(listId);
       if (clickedIndex === listId) {
         toggleOpen(!isOpen);
@@ -180,9 +184,9 @@ const MoveBookmarkModal: FC<Move> = ({
             <IoClose size={20} />
           </button>
         </div>
-
+        {/* 모달 타이틀 */}
         <h3 className="font-bold text-xl flex flex-row justify-center">
-          이동할 위치 선택
+          {whatMenu === "추가" ? "추가할 위치 선택" : "이동할 위치 선택"}
         </h3>
 
         <div className="flex flex-col justify-start items-start overflow-y-scroll h-72 mt-5">

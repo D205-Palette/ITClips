@@ -42,7 +42,7 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
       <div
         className={
           (isDark ? "hover:bg-slate-700" : "hover:bg-slate-100") +
-          " card card-side bg-base-100 shadow-xl hover:cursor-pointer h-32 my-1"
+          " card card-side bg-base-100 hover:cursor-pointer h-32 my-1"
         }
       >
         <>

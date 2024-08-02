@@ -8,6 +8,7 @@ import UrlCopyModal from "./UrlCopyModal";
 import ScrapConfirmationModal from "../aside/modals/ScrapComfirmModal";
 import { API_BASE_URL } from "../../config";
 import axios from "axios";
+import { authStore } from "../../stores/authStore";
 
 // 무슨 탭에서 눌렀는지 받는 인자
 // 리스트, 즐겨찾기, 로드맵  3가지로 받을예정. 그룹 리스트랑 그냥 리스트는 차이 없음
@@ -26,9 +27,22 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
   const [isScrapModalOpen, setIsScrapModalOpen] = useState<boolean>(false);
 
   // 유저 아이디 임시값. 나중엔 스토리지서 받아오면됨
-  const userId = 1
+  const {userId, token} = authStore()
+  // 리스트 즐겨찾기
   function addFavorite ():void {
-    axios.post(`${API_BASE_URL}/api/list/scrap/${userId}/${id}`)
+    axios.post(`${API_BASE_URL}/api/list/scrap/${userId}/${id}`,
+      {headers: {
+        Authorization: `Bearer ${token}`,
+      },}
+    )
+  }
+  // 로드맵 스크랩
+  function addScrap ():void {
+    axios.post(`${API_BASE_URL}/api/roadmap/scrap/${id}/${userId}`,
+      {headers: {
+        Authorization: `Bearer ${token}`,
+      },}
+    )
   }
 
   function copyUrl () :void {
@@ -72,7 +86,7 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
             <a>즐겨찾기</a>
           </li>
           <li className={whatMenu === "로드맵" ? "" : "hidden"}
-          onClick={() => setIsScrapModalOpen(true)}>
+          onClick={() => {setIsScrapModalOpen(true); addScrap() }}>
             <a>스크랩</a>
           </li>
           <li className={whatMenu === "로드맵" ? "hidden" : ""}

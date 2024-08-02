@@ -112,7 +112,6 @@ const MyBookmark = () => {
     },
   ];
 
-
   return (
     <>
       <div id="Body" className="grid grid-cols-12 gap-5">

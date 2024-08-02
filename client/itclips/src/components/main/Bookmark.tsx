@@ -12,6 +12,9 @@ import HoverTag from "./Bookmark(EditTag)";
 import AISummary from "./BookmarkAISummary";
 import { RiRobot3Line } from "react-icons/ri";
 import { IoIosArrowUp } from "react-icons/io";
+import axios from "axios";
+import { authStore } from "../../stores/authStore";
+import { API_BASE_URL } from "../../config";
 
 // const bookmarks = {
 //     title: string,
@@ -39,13 +42,13 @@ const Bookmark: FC<Props> = ({
   const navigate = useNavigate();
 
   const [isLike, toggleLike] = useState(bookmark.isLiked);
-
+const [likeCount, setLikeCount] = useState(bookmark.likeCount)
   const [isEdit, toggleEdit] = useState(false);
   const [isTagEdit, toggleTagEdit] = useState(false);
   const [editModal, tabEditModal] = useState(false);
   const [isHoverTag, setHoverTag] = useState(false);
   const [isAiOpen, setIsAIOpen] = useState(false);
-  // 그냥 더미. 있긴해야됨
+  // 그냥 더미. 있어야됨. 삭제 ㄴㄴ
   const [nothingMode, tabNothing] = useState(false);
 
   const [tempBookmark, editTempBookmark] = useState(bookmark);
@@ -53,10 +56,28 @@ const Bookmark: FC<Props> = ({
   const [tempTags, editTempTags] = useState(bookmark.tags);
   const [tempTag, editTempTag] = useState("");
 
+  const {userId, token} = authStore()
+
   const clickHeart = (): void => {
-    toggleLike(!isLike);
-    //여기에 좋아요 api호출
+    
+    if(isLike){
+    axios.delete(`${API_BASE_URL}/api/bookmark/like/${userId}/${bookmark.id}`,
+      {headers: {
+        Authorization: `Bearer ${token}`,
+      },}
+    )
+    setLikeCount(likeCount - 1)
+  } else{
+    axios.post(`${API_BASE_URL}/api/bookmark/like/${userId}/${bookmark.id}`,
+      {headers: {
+        Authorization: `Bearer ${token}`,
+      },}
+    )
+    setLikeCount(likeCount + 1)
+  }
+  toggleLike(!isLike);
   };
+  
   const isDark = darkModeStore((state) => state.isDark);
 
   function goExternalUrl(url: string): void {
@@ -138,7 +159,7 @@ const Bookmark: FC<Props> = ({
               ) : (
                 <button onClick={clickHeart} className="btn btn-ghost">
                   {isLike ? <FaHeart color="red" /> : <FaRegHeart />}
-                  {bookmark.likeCount}{" "}
+                  {likeCount}{" "}
                 </button>
               )}
 

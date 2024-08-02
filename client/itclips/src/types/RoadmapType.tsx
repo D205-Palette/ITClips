@@ -50,6 +50,7 @@ type RoadmapSumType =
     stepCnt: number
     checkCnt: number
     likeCnt:number
+    isLiked:boolean
   }
 
 export type { RoadmapDetailType,RoadmapSumType };

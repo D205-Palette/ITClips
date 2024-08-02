@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import ReportConfirmModal from "./ReportConfirmModal";
 import axios from "axios";
 import { API_BASE_URL } from "../../../config";
+import { authStore } from "../../../stores/authStore";
 interface ReportModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -26,14 +27,34 @@ const ReportModal: React.FC<ReportModalProps> = ({
 
   if (!isOpen) return null;
 
-  // 임시값이고 나중에 스토리지에서 받아와야됨
-  const userId = 1;
+  const {userId, token} = authStore()
+
   const handleReport = () => {
     // 신고 처리 API
     if (whatContent === "북마크") {
-      axios.post(`${API_BASE_URL}/api/report/bookmark/${userId}/${id}`);
+      axios.post(`${API_BASE_URL}/api/report/bookmark/${userId}/${id}`,
+        {headers: {
+          Authorization: `Bearer ${token}`,
+        },},
+        {
+          data:{
+            category:{reportType},
+            reason:{reportContent},
+          },
+        }
+      );
     } else {
-      axios.post(`${API_BASE_URL}/api/report/list/${userId}/${id}`);
+      axios.post(`${API_BASE_URL}/api/report/list/${userId}/${id}`,
+        {headers: {
+          Authorization: `Bearer ${token}`,
+        },},
+        {
+          data:{
+            category:{reportType},
+            reason:{reportContent},
+          },
+        }
+      );
     }
 
     // 신고 처리 후 확인 모달

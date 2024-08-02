@@ -1,35 +1,52 @@
 import MyBookmarkList from "../../components/main/ListsItem(List)";
 import MyBookmarkListAlbum from "../../components/main/ListsItem(Album)";
-import { Link } from "react-router-dom";
 import { FaList } from "react-icons/fa";
 import { HiOutlineSquares2X2, HiMiniSquares2X2 } from "react-icons/hi2";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { CiBoxList } from "react-icons/ci";
 import SearchBar from "../../components/main/MainSearchBar";
 import MainTab from "../../components/main/MainTab";
-import mainStore from "../../stores/mainStore";
-import { IoIosWarning } from "react-icons/io";
 import axios from "axios";
-import type { BookmarkListsSumType } from "../../types/BookmarkListType";
+import { BookmarkListSumType } from "../../types/BookmarkListType";
 import NoContent from "./NoContent";
+import { authStore } from "../../stores/authStore";
+import { API_BASE_URL } from "../../config";
 
 const MyGroupBookmarkList = () => {      
   
   const [filterText, changeFilterText] = useState("")
   const [isList, setTab] = useState(true);
+  const[lists, setLists] = useState<BookmarkListSumType[]>([])
+  const filterdLists = lists.filter((list) => list.title.includes(filterText)) //||list.tags.includes({title:filterText}))
+  const { token, userId } = authStore()
+
   function tabList(): void {
     setTab(true);
   }
   function tabAlbum(): void {
     setTab(false);
   }
-
-  // 나중에 api로 받아올때는 타입 BookmarkListsSumType으로
-  const lists = mainStore((state) => state.lists);
+  
+  useEffect(() => {
+    async function fetchData() {
+      axios({
+        method: "get",
+        url: `${API_BASE_URL}/api/list/group/${userId}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => {
+          setLists(res.data);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+    fetchData();
+  }, []);
 
   
-  const filterdLists = lists.filter((list) => list.title.includes(filterText)||list.tags.includes(filterText))
-
   return (
     <>
     <div className="fixed z-10 w-7/12">
@@ -75,24 +92,12 @@ const MyGroupBookmarkList = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2">
               {filterdLists.map((list) => (
                 <MyBookmarkListAlbum list={list} />
-              ))}{filterdLists.map((list) => (
-                <MyBookmarkListAlbum list={list} />
-              ))}{filterdLists.map((list) => (
-                <MyBookmarkListAlbum list={list} />
               ))}
             </div>
           </div>
         ) : (
           <>
             {filterdLists.map((list) => (
-              <div className="my-1">
-                <MyBookmarkList list={list} />
-              </div>
-            ))}{filterdLists.map((list) => (
-              <div className="my-1">
-                <MyBookmarkList list={list} />
-              </div>
-            ))}{filterdLists.map((list) => (
               <div className="my-1">
                 <MyBookmarkList list={list} />
               </div>

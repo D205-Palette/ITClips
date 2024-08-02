@@ -1,6 +1,6 @@
 // BookmarkListEditModal.tsx 는 AsideBookmarkList.tsx 에서 더보기 메뉴의 '수정하기' 버튼을 눌렀을 때 출력되는 컴포넌트
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 
 // icons
 import { IoCloseOutline } from 'react-icons/io5';
@@ -11,10 +11,12 @@ interface EditModalProps {
 }
 
 const BookmarkListEditModal: React.FC<EditModalProps> = ({ isOpen, onClose }) => {
-  const [title, setTitle] = useState<string>('');
-  const [content, setContent] = useState<string>('');
-  const [category, setCategory] = useState<string[]>([]);
-  const [newCategory, setNewCategory] = useState<string>('');
+  const [ title, setTitle ] = useState<string>('');
+  const [ content, setContent ] = useState<string>('');
+  const [ category, setCategory ] = useState<string[]>([]);
+  const [ newCategory, setNewCategory ] = useState<string>('');
+  const [ imageUrl, setImageUrl ] = useState<string>('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleAddCategory = () => {
     if (newCategory.trim() !== '') {
@@ -25,6 +27,21 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({ isOpen, onClose }) =>
 
   const handleRemoveCategory = (index: number) => {
     setCategory(category.filter((_, i) => i !== index));
+  };
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleImageClick = () => {
+    fileInputRef.current?.click();
   };
 
   if (!isOpen) return null;
@@ -40,10 +57,24 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({ isOpen, onClose }) =>
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">이미지</label>
+          <label className="block text-sm font-medium mb-2">이미지</label>
           <div className="flex items-center space-x-2">
-            <div className="w-16 h-16 bg-gray-200 rounded-md"></div>
-            <button className="btn btn-outline btn-sm">찾아보기</button>
+            <div className="w-16 h-16 bg-gray-200 rounded-full overflow-hidden">
+              {imageUrl ? (
+                <img src={imageUrl} alt="Profile" className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full bg-gray-200"></div>
+              )}
+            </div>
+            <label className="btn btn-outline btn-sm">
+              변경
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="hidden"
+              />
+            </label>
           </div>
         </div>
 

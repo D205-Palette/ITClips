@@ -8,7 +8,7 @@ import EmailLoginButton from "../EmailLoginButton";
 import EmailLoginModal from "./EmailLoginModal";
 import PasswordResetModal from "./PasswordResetModal";
 
-const LoginPage: React.FC = () => {
+const LoginListModal: React.FC = () => {
   const { isEmailLoginOpen, isPasswordResetOpen } = navStore();
 
   return (
@@ -24,11 +24,9 @@ const LoginPage: React.FC = () => {
             <EmailLoginButton />
           </div>
         </div>
-        {isEmailLoginOpen && <EmailLoginModal />}
-        {isPasswordResetOpen && <PasswordResetModal />}
       </div>
     </>
   );
 };
 
-export default LoginPage;
+export default LoginListModal;

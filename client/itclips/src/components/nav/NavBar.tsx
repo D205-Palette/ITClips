@@ -11,7 +11,7 @@ import tabStore from "../../stores/categoriesStore";
 import darkModeStore from "../../stores/darkModeStore";
 
 const NavBar = () => {
-  const { isLoggedIn, userInfo } = authStore();
+  const { isLoggedIn, userInfo, userId } = authStore();
   const messageRef = useRef<HTMLDivElement>(null);
 
   const isDark = darkModeStore((state) => state.isDark);
@@ -27,7 +27,7 @@ const NavBar = () => {
           {isLoggedIn && (
             <ul className="flex gap-4 list-none">
               <NavLink
-                to={userInfo ? `/user/${userInfo.id}` : "/login"}
+                to={userId ? `/user/${userId}` : "/login"}
                 className={({ isActive }) =>
                   isActive ? "text-sky-500 font-bold" : textColor + " font-bold"
                 }

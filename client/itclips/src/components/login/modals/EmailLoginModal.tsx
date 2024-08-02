@@ -30,10 +30,9 @@ const EmailLoginModal: React.FC = () => {
         const response = await emailLogin(values.email, values.password);
 
         if (response.status === 200) {
-          fetchUserToken(response.data.accessToken); // 로컬 스토리지에 유저 토큰 업데이트
-          login(); // 로그인 상태 업데이트
-
-          const userId = response.headers.userid;
+          console.log(response)
+          fetchUserToken(response.data.accesstoken); // 로컬 스토리지에 유저 토큰 업데이트
+          login(); // 로그인 상태 업데이트          
           const userInfoResponse = await checkUserInfo(values.email);
 
           fetchUserInfo(userInfoResponse.data); // 로컬 스토리지에 유저 정보 업데이트

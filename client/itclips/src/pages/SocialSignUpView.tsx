@@ -9,7 +9,6 @@ import {
 import { MdOutlineWorkOutline } from "react-icons/md";
 import { authStore } from "../stores/authStore";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 
 const SocialSignUpView = () => {
   const { login } = authStore(); 

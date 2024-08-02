@@ -56,7 +56,8 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         private User saveOrUpdate(OAuth2UserInfo oAuth2UserInfo, String provider) {
             Optional<User> userOptional = userRepository.findByEmail(oAuth2UserInfo.getEmail());
             User user = userOptional
-                    .map(entity -> entity.update(oAuth2UserInfo.getNickname(), oAuth2UserInfo.getImageUrl()))
+//                    .map(entity -> entity.update(oAuth2UserInfo.getNickname(), oAuth2UserInfo.getImageUrl()))
+                    .map(entity -> entity.update(oAuth2UserInfo.getImageUrl()))
                     .orElseGet(() -> createUser(oAuth2UserInfo, provider));
 
             return userRepository.save(user);
@@ -66,7 +67,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         return User.builder()
                 .email(oAuth2UserInfo.getEmail())
                 .password(oAuth2UserInfo.getPassword())
-                .nickname(oAuth2UserInfo.getNickname())
+//                .nickname(oAuth2UserInfo.getNickname())
                 .profileImage(oAuth2UserInfo.getImageUrl())
                 .provider(provider)
                 .role(Role.USER)

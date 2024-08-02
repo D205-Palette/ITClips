@@ -81,7 +81,7 @@ public class OAuthAttributes {
         return User.builder()
                 .provider(provider)
                 .email(oauth2UserInfo.getEmail())
-                .nickname(oauth2UserInfo.getNickname())
+//                .nickname(oauth2UserInfo.getNickname())
                 .profileImage(oauth2UserInfo.getImageUrl())
                 .password(oauth2UserInfo.getPassword())
                 .role(Role.USER)

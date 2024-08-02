@@ -89,14 +89,14 @@ public class UserController {
         }
     }
 
-    @PostMapping("/oauthSignup")
-    @Operation(summary = "OAuth 회원 가입", description = "OAuth를 통해 가입한 회원을 등록합니다.")
+    @PutMapping("/{userId}/oauthSignup")
+    @Operation(summary = "OAuth 회원 가입 (추가 정보 등록)", description = "OAuth를 통해 가입한 회원의 추가 정보를 등록합니다.")
     @ApiResponses(value = @ApiResponse(responseCode = "200", description = "회원 가입 성공"))
-    public ResponseEntity<?> oauthSignUp(@RequestPart("user") OauthSignupForm oauthSignupForm,
-                                         @RequestPart(value = "profileImage", required = false) MultipartFile profileImage) throws IOException {
+    public ResponseEntity<?> oauthSignUp(@PathVariable("userId") Long userId,
+                                         @RequestBody OauthSignupForm oauthSignupForm) throws IOException {
         try {
-            User user = userService.oauthSignup(oauthSignupForm, profileImage);
-            return ResponseEntity.ok(user);
+            User user = userService.oauthSignup(userId, oauthSignupForm);
+            return ResponseEntity.ok(userId);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 업로드 중 오류가 발생했습니다.");
         }

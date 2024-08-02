@@ -52,8 +52,8 @@ export const signup = (userData: any) => {
 };
 
 // 소셜 회원 가입
-export const socialSignup = (userData: any) => {
-  return request("post", "/user/oauthSignup", userData);
+export const socialSignup = (userId: number, userData: any) => {
+  return request("put", `/user/${userId}/oauthSignup`, userData, { userId });
 };
 
 

@@ -63,7 +63,7 @@ const ListItem: FC<Props> = ({ list }) => {
 
   return (
     <div
-      className={`border card bg-base-100 w-full shadow-xl hover:cursor-pointer ${
+      className={`border card bg-base-100 w-full hover:cursor-pointer ${
         isDark ? "hover:bg-slate-700" : "hover:bg-slate-100"
       }`}
       onClick={handleCardClick}
@@ -90,23 +90,22 @@ const ListItem: FC<Props> = ({ list }) => {
             {getRelativeTime(list.createdAt)}
           </div>
         </div>
-        <button className="hidden md:inline z-20" onClick={handleDropdownClick}>
+        <button className="hidden md:inline" onClick={handleDropdownClick}>
           <KebabDropdown whatMenu="리스트" id={list.id} />
         </button>
       </div>
 
-      <figure className="border rounded-xl mx-5 overflow-hidden">
+      <figure className="border rounded-xl mx-5 overflow-hidden h-64">
         <img
+          className="w-full h-full object-contain"
           src={list.image}
           alt="listImg"
-          className="w-full"
-          style={{ maxHeight: '300px', objectFit: 'cover' }} // 최대 높이와 비율 유지
         />
       </figure>
 
-      <div className="card-body p-4">
-        <h2 className="card-title text-lg md:text-xl">{list.title}</h2>
-        <p className="text-sm md:text-base">{list.description}</p>
+      <div className="card-body">
+        <h2 className="card-title ">{list.title}</h2>
+        <p className="text-sm md:text-base line-clamp-3">{list.description}</p>
 
         <div className="card-actions justify-end flex items-center relative mt-2">
           <button onClick={clickHeart} className="btn btn-ghost z-0">

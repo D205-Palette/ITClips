@@ -13,7 +13,7 @@ const FollowTab = () => {
 
   return (
     <>
-      <div className="flex justify-around">
+      <div className="flex justify-around mb-3">
         <div className="grow flex flex-row justify-around items-center">
           <NavLink
             to="newbookmarklists"

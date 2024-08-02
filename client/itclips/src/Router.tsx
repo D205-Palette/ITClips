@@ -22,10 +22,7 @@ import RoadmapView from "./pages/RoadmapDetailView";
 
 // Components
 import App from "./App";
-import OAuthNaver from "./components/login/oauth/OauthNaver";
-import OauthGoogle from "./components/login/oauth/OauthGoogle";
-import OauthKakao from "./components/login/oauth/OauthKakao";
-import OauthGithub from "./components/login/oauth/OauthGithub";
+import Oauth2 from "./components/login/oauth/Oauth2";
 import NewBookmarkLists from "./components/feed/NewBookmarkLists";
 import NewRoadmaps from "./components/feed/NewRoadmaps";
 
@@ -134,24 +131,7 @@ const router = createBrowserRouter([
       // 소셜 로그인 리다이렉트 페이지
       {
         path: "oauth/callback",
-        children: [
-          {
-            path: "naver",
-            element: <OAuthNaver />,
-          },
-          {
-            path: "google",
-            element: <OauthGoogle />,
-          },
-          {
-            path: "kakao",
-            element: <OauthKakao />,
-          },
-          {
-            path: "github",
-            element: <OauthGithub />,
-          },
-        ],
+        element: <Oauth2 />,
       },
     ],
   },

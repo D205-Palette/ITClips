@@ -2,7 +2,6 @@ import { useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
-import useStore from "../../stores/mainStore";
 import KebabDropdown from "./KebabDropdown(Feed)";
 import darkModeStore from "../../stores/darkModeStore";
 import profile_img from "../../assets/images/profile_image.png";
@@ -98,15 +97,19 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
         </button>
       </div>
 
-      <figure className="border rounded-xl mx-5 overflow-hidden">
-        <img className="" src={roadmap.image} alt="RoadmapImg" />
+      <figure className="border rounded-xl mx-5 overflow-hidden h-64">
+        <img
+          className="w-full h-full object-contain"
+          src={roadmap.image}
+          alt="RoadmapImg"
+        />
       </figure>
 
       <div className="card-body">
         <h2 className="card-title">{roadmap.title}</h2>
-        <p>{roadmap.description}</p>
+        <p className="text-sm md:text-base line-clamp-3"> {roadmap.description}</p>
 
-        <div className="card-actions justify-end flex items-center relative">
+        <div className="card-actions justify-end flex items-center relative mt-2">
           <button onClick={clickHeart} className="btn btn-ghost z-0">
             {isLike ? <FaHeart /> : <FaRegHeart />}
             {roadmap.likeCnt}

@@ -1,46 +1,20 @@
 import axios from "axios";
 import { API_BASE_URL } from "../config";
+import { authenticatedRequest } from "./apiUtils";
 
 // 팔로잉 목록 조회
-export const getFollowingList = (userId: number, token: string) => {
-  return axios({
-    method: "get",
-    url: `${API_BASE_URL}/api/follow/following`,
-    params: {
-      userId
-    },
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  })
-}
+export const getFollowingList = (userId: number) => {
+  return authenticatedRequest("get", "/follow/following", undefined, { userId });
+};
 
 // 팔로워 목록 조회
-export const getFollowerList = (userId: number, token: string) => {
-  return axios({
-    method: "get",
-    url: `${API_BASE_URL}/api/follow/followers`,
-    params: {
-      userId
-    },
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  })
-}
+export const getFollowerList = (userId: number) => {
+  return authenticatedRequest("get", "/follow/followers", undefined, { userId });
+};
 
 // 팔로워 및 팔로잉 수 조회
-export const getFollowCounts = (userId: number, token: string) => {
-  return axios({
-    method: "get",
-    url: `${API_BASE_URL}/api/follow/count`,
-    params: {
-      userId
-    },
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  })
+export const getFollowCounts = (userId: number) => {
+  return authenticatedRequest("get", "/follow/count", undefined, { userId })
 }
 
 // 팔로우 (팔로잉 추가) - 수정필요

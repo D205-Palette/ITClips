@@ -11,11 +11,11 @@ import tabStore from "../../stores/categoriesStore";
 import darkModeStore from "../../stores/darkModeStore";
 
 const NavBar = () => {
-  const { isLoggedIn } = authStore();  
+  const { isLoggedIn, userInfo } = authStore();
   const messageRef = useRef<HTMLDivElement>(null);
 
-  const isDark = darkModeStore((state)=>state.isDark)
-  const textColor = (isDark? "text-slate-300" : "text-slate-900")
+  const isDark = darkModeStore((state) => state.isDark);
+  const textColor = isDark ? "text-slate-300" : "text-slate-900";
 
   return (
     <>
@@ -26,9 +26,30 @@ const NavBar = () => {
           {/* 로그인 시에만 보임 */}
           {isLoggedIn && (
             <ul className="flex gap-4 list-none">
-              <NavLink  to='user/:user_id' className={(({isActive}) => isActive? "text-sky-500 font-bold" : textColor + " font-bold")}>MY</NavLink>
-              <NavLink  to='feed' className={(({isActive}) => isActive? "text-sky-500 font-bold" : textColor +" font-bold")}>피드</NavLink>
-              <NavLink  to='search' className={(({isActive}) => isActive? "text-sky-500 font-bold" : textColor + " font-bold")}>검색</NavLink>
+              <NavLink
+                to={userInfo ? `/user/${userInfo.id}` : "/login"}
+                className={({ isActive }) =>
+                  isActive ? "text-sky-500 font-bold" : textColor + " font-bold"
+                }
+              >
+                MY
+              </NavLink>
+              <NavLink
+                to="feed"
+                className={({ isActive }) =>
+                  isActive ? "text-sky-500 font-bold" : textColor + " font-bold"
+                }
+              >
+                피드
+              </NavLink>
+              <NavLink
+                to="search"
+                className={({ isActive }) =>
+                  isActive ? "text-sky-500 font-bold" : textColor + " font-bold"
+                }
+              >
+                검색
+              </NavLink>
             </ul>
           )}
         </div>
@@ -56,7 +77,7 @@ const NavBar = () => {
                 }
               >
                 회원가입
-              </NavLink>    
+              </NavLink>
             </>
           ) : (
             // 로그인 후
@@ -67,7 +88,7 @@ const NavBar = () => {
             </>
           )}
         </div>
-      </nav>      
+      </nav>
     </>
   );
 };

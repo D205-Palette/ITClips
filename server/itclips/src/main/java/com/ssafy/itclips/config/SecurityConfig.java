@@ -66,6 +66,7 @@ public class SecurityConfig {
         configuration.addAllowedOrigin("https://localhost:3000");
         configuration.addAllowedOrigin("http://localhost:5500");
         configuration.addAllowedOrigin("https://localhost");
+        configuration.addAllowedOrigin("https://i11d205.p.ssafy.io");  // 추가된 출처
 //        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");

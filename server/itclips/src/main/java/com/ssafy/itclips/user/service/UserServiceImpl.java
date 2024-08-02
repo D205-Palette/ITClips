@@ -2,10 +2,8 @@ package com.ssafy.itclips.user.service;
 
 import com.ssafy.itclips.global.jwt.JwtToken;
 import com.ssafy.itclips.global.jwt.JwtTokenProvider;
-import com.ssafy.itclips.user.entity.LoginForm;
-import com.ssafy.itclips.user.entity.OauthSignupForm;
-import com.ssafy.itclips.user.entity.SignupForm;
-import com.ssafy.itclips.user.entity.User;
+import com.ssafy.itclips.user.dto.UserInfoDTO;
+import com.ssafy.itclips.user.entity.*;
 import com.ssafy.itclips.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +42,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public User signup(SignupForm signupForm) throws IOException {
+    public User signup(SignupForm signupForm) throws RuntimeException {
         if (checkEmailExists(signupForm.getEmail())) {
             throw new IllegalArgumentException("이미 존재하는 유저입니다.");
         }
@@ -65,7 +63,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public JwtToken login(LoginForm loginForm) {
+    public LoginResponse login(LoginForm loginForm) {
         // 인증 객체 생성
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginForm.getEmail(), loginForm.getPassword());
@@ -82,7 +80,8 @@ public class UserServiceImpl implements UserService {
         user.setRefreshToken(jwtToken.getRefreshToken());
         userRepository.save(user);
 
-        return jwtToken;
+        // JWT 토큰과 userId를 포함한 응답 객체 생성
+        return new LoginResponse(jwtToken.getAccessToken(), jwtToken.getRefreshToken(), user.getId());
     }
 
     @Transactional
@@ -179,12 +178,46 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
+    public UserInfoDTO updateUserById(Long userId, UserInfoDTO updatedUser) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."));
+
+        user.setNickname(updatedUser.getNickname());
+        user.setBirth(updatedUser.getBirth());
+        user.setJob(updatedUser.getJob());
+        user.setGender(updatedUser.getGender());
+        user.setDarkMode(updatedUser.getDarkMode());
+        user.setBio(updatedUser.getBio());
+
+        User savedUser = userRepository.save(user);
+
+        return UserInfoDTO.builder()
+                .nickname(savedUser.getNickname())
+                .birth(savedUser.getBirth())
+                .job(savedUser.getJob())
+                .gender(savedUser.getGender())
+                .bio(savedUser.getBio())
+                .build();
+    }
+
+    @Transactional
+    @Override
     public boolean deleteUserByEmail(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."));
 
         userRepository.delete(user);
         return !userRepository.existsByEmail(email);
+    }
+
+    @Transactional
+    @Override
+    public boolean deleteUserById(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."));
+
+        userRepository.delete(user);
+        return !userRepository.existsById(userId);
     }
 
     @Override

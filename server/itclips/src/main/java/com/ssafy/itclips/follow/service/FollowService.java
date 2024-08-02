@@ -1,5 +1,6 @@
 package com.ssafy.itclips.follow.service;
 
+import com.ssafy.itclips.follow.dto.FollowDetailDTO;
 import com.ssafy.itclips.follow.entity.Follow;
 import com.ssafy.itclips.user.entity.User;
 
@@ -7,18 +8,18 @@ import java.util.List;
 
 public interface FollowService {
 
-    Follow followUser(Long fromUserId, Long toUserId);
+    Follow followUser(Long fromUserId, Long toUserId) throws RuntimeException;
 
-    List<Follow> getFollowing(Long userId);
+    List<FollowDetailDTO> getFollowing(Long userId) throws RuntimeException;
 
-    void unfollowUser(Long fromUserId, Long toUserId);
+    void unfollowUser(Long fromUserId, Long toUserId) throws RuntimeException;
 
-    List<Follow> getFollowers(Long userId);
+    List<FollowDetailDTO> getFollowers(Long userId) throws RuntimeException;
 
-    void deleteFollower(Long fromUserId, Long toUserId);
+    void deleteFollower(Long fromUserId, Long toUserId) throws RuntimeException;
 
-    long getFollowerCount(User user);
+    long getFollowerCount(User user) throws RuntimeException;
 
-    long getFollowingCount(User user);
+    long getFollowingCount(User user) throws RuntimeException;
 
 }

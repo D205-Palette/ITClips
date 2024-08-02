@@ -20,6 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/list")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 @Slf4j
 @Tag(name = "BookmarkList Controller", description = "북마크리스트 관련 API") // 표시명 및 설명 설정
 public class BookmarkListController {

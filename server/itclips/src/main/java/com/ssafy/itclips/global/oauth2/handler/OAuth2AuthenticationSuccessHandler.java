@@ -69,6 +69,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         // HTTP response 헤더에 Token 설정
         response.setHeader("Authorization", jwtToken.getGrantType() + " " + jwtToken.getAccessToken());
         response.setHeader("Authorization-Refresh", jwtToken.getRefreshToken());
+        response.setHeader("userId", String.valueOf(findUser.getId()));
+//        response.sendRedirect("oauth2/sign-up"); // 프론트의 회원가입 추가 정보 입력 폼으로 리다이렉트
         response.sendRedirect("oauth/callback/kakao"); // 프론트의 회원가입 추가 정보 입력 폼으로 리다이렉트
 
         // target URl, redirect 설정

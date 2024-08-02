@@ -1,0 +1,28 @@
+.container {
+    height: 2rem;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .searchTerms {
+    position: relative;
+    height: 100%;
+  }
+  
+  .term {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  
+  .term.active {
+    transform: translateY(0);
+    opacity: 1;
+  }

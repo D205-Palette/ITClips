@@ -1,10 +1,8 @@
 package com.ssafy.itclips.user.service;
 
 import com.ssafy.itclips.global.jwt.JwtToken;
-import com.ssafy.itclips.user.entity.LoginForm;
-import com.ssafy.itclips.user.entity.OauthSignupForm;
-import com.ssafy.itclips.user.entity.SignupForm;
-import com.ssafy.itclips.user.entity.User;
+import com.ssafy.itclips.user.dto.UserInfoDTO;
+import com.ssafy.itclips.user.entity.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -12,7 +10,7 @@ import java.io.IOException;
 public interface UserService {
     User signup(SignupForm signupForm) throws IOException;
 
-    JwtToken login(LoginForm loginForm) throws IOException;
+    LoginResponse login(LoginForm loginForm) throws IOException;
 
     User oauthSignup(OauthSignupForm form, MultipartFile profileImage) throws IOException;
 
@@ -32,7 +30,11 @@ public interface UserService {
 
     User updateUserByEmail(String email, User user);
 
+    UserInfoDTO updateUserById(Long userId, UserInfoDTO user);
+
     boolean deleteUserByEmail(String email);
+
+    boolean deleteUserById(Long userId);
 
     boolean nicknameCheck(String nickname);
 

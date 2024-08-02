@@ -21,6 +21,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/roadmap")
+@CrossOrigin("*")
 @RequiredArgsConstructor
 @Slf4j
 @Tag(name = "roadmap Controller", description = "로드맵 관련 API")

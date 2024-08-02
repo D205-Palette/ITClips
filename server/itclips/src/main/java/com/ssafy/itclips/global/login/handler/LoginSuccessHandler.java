@@ -57,6 +57,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         // HTTP response 헤더에 Token 설정
         response.setHeader("Authorization", jwtToken.getGrantType() + " " + jwtToken.getAccessToken());
         response.setHeader("Authorization-Refresh", jwtToken.getRefreshToken());
+        response.setHeader("userId", String.valueOf(user.getId()));
 
         Map<String, Object> tokenMap = new HashMap<>();
         tokenMap.put("accessToken", jwtToken.getAccessToken());

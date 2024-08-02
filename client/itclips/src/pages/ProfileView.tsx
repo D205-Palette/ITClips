@@ -33,7 +33,6 @@ export default function MyView() {
           <div className="fixed z-20">
             <AsideProfile />
           </div>
-          <AsideProfile />
         </div>
        
 

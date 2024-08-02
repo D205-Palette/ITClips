@@ -8,6 +8,11 @@ import mainStore from "../../stores/mainStore";
 import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa6";
 import type { BookmarkType } from "../../types/BookmarkType";
+import HoverTag from "./Bookmark(EditTag)";
+import AISummary from "./BookmarkAISummary";
+import { RiRobot3Line } from "react-icons/ri";
+import { IoIosArrowUp } from "react-icons/io";
+
 // const bookmarks = {
 //     title: string,
 //     url: string,
@@ -37,9 +42,11 @@ const Bookmark: FC<Props> = ({
 
   const [isEdit, toggleEdit] = useState(false);
   const [isTagEdit, toggleTagEdit] = useState(false);
-  const [editModal, tabEditModal] = useState(false)
+  const [editModal, tabEditModal] = useState(false);
+  const [isHoverTag, setHoverTag] = useState(false);
+  const [isAiOpen, setIsAIOpen] = useState(false);
   // 그냥 더미. 있긴해야됨
-  const [nothingMode, tabNothing] = useState(false)
+  const [nothingMode, tabNothing] = useState(false);
 
   const [tempBookmark, editTempBookmark] = useState(bookmark);
   const [tempTitle, editTempTitle] = useState(bookmark.title);
@@ -76,7 +83,7 @@ const Bookmark: FC<Props> = ({
       <div
         className={
           (isDark ? "hover:bg-slate-700" : "hover:bg-slate-100") +
-          " card card-side bg-base-100 shadow-xl hover:cursor-pointer h-28 my-1"
+          " card card-side bg-base-100 shadow-sm hover:cursor-pointer h-28 my-1"
         }
       >
         <>
@@ -106,12 +113,14 @@ const Bookmark: FC<Props> = ({
               </div>
             </div>
 
+            {/* 태그들 */}
             <div className="hidden items-center md:inline-flex ">
               {tempTags.map((tag) => (
                 <span className="ms-1">{" # " + tag.title}</span>
               ))}{" "}
             </div>
 
+            {/* 태그 추가 위치 */}
             <div className="card-actions justify-end flex items-center">
               {isEdit ? (
                 isTagEdit ? (
@@ -152,11 +161,27 @@ const Bookmark: FC<Props> = ({
                   toggleMode={tabNothing}
                   editBookmarksIndex={editBookmarksIndex}
                   changeEditBookmarksIndex={changeEditBookmarksIndex}
+                  setIsAIOpen={setIsAIOpen}
                 />
               )}
             </div>
           </div>
         </>
+      </div>
+
+      {/* AI요약 탭 열리는 위치 */}
+      <div className="ps-8 pe-12 mt-3 bg-sky-100">
+        {isAiOpen ? (
+          <>
+          <div className="flex flex-row justify-between">
+            <RiRobot3Line size={24} />
+            <IoIosArrowUp />
+            </div>
+            <p>AI 요약입니다ㅏㅏㅏ</p>
+          </>
+        ) : (
+          <></>
+        )}
       </div>
     </>
   );

@@ -5,6 +5,7 @@ import { FC, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import mainStore from "../../../stores/mainStore";
 import axios from "axios";
+import { API_BASE_URL } from "../../../config";
 
 interface BookmarkType {
   id: number;
@@ -65,12 +66,12 @@ const MoveBookmarkModal: FC<Move> = ({
     /// 추가하고 삭제하던 or 복사해서 추가만 하던 그때그때마다
     /// 옮길 북마크들은 editbookmarks에 있고, 옮길 리스트id 랑 selectCategory로 post
     editBookmarks.map((editBookmark) =>
-      axios.post(`${}/bookmark/add/${selectListId}/${selectCategory}`, editBookmark)
+      axios.post(`${API_BASE_URL}/api/bookmark/add/${selectListId}/${selectCategory}`, editBookmark)
     );
 
     if (whatMenu === "이동") {
       editBookmarks.map((editBookmark) =>
-        axios.delete(`/bookmark/delete/${editBookmark.id}`)
+        axios.delete(`${API_BASE_URL}/api/bookmark/delete/${editBookmark.id}`)
       );
     }
   }

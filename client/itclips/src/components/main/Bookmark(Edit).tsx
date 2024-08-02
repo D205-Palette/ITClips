@@ -48,6 +48,8 @@ const Bookmark: FC<Props> = ({
   const navigate = useNavigate();
 
   const [isLike, setIsLike] = useState(false);
+
+  
   const clickHeart = (): void => {
     setIsLike(!isLike);
     //여기에 좋아요 api호출

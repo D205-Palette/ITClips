@@ -1,5 +1,6 @@
 package com.ssafy.itclips.chat.controller;
 
+import com.ssafy.itclips.chat.dto.GroupRoomDTO;
 import com.ssafy.itclips.chat.dto.MessageDTO;
 import com.ssafy.itclips.chat.dto.ChatRoomDTO;
 import com.ssafy.itclips.chat.repository.ChatRoomRepository;
@@ -27,6 +28,13 @@ public class ChatRoomController {
     @PostMapping("/room/{user1Id}/{user2Id}")
     public ResponseEntity<?> createRoom(@PathVariable("user1Id")Long user1Id, @PathVariable("user2Id")Long user2Id) {
         chatRoomService.createChatRoom(user1Id, user2Id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    // 그룹 채팅 방 만들기
+    @Operation(summary = "그룹 채팅방 만들기" , description = "그룹 채팅방을 만듭니다.")
+    @PostMapping("/room")
+    public ResponseEntity<?> createGroupRoom(@RequestBody GroupRoomDTO groupRoomDTO) {
+        chatRoomService.chatGroupRoom(groupRoomDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

@@ -79,7 +79,7 @@ public class RoadmapController {
     }
 
     //로드맵 좋아요
-    @GetMapping("/like/{roadmapId}/{userId}")
+    @PostMapping("/like/{roadmapId}/{userId}")
     @Operation(summary = "로드맵 좋아요" ,description = "누르면 좋아요")
     public ResponseEntity<?> likeRoadmap(@PathVariable("roadmapId") Long roadmapId,@PathVariable("userId") Long userId){
         roadmapService.likeRoadmap(roadmapId, userId);

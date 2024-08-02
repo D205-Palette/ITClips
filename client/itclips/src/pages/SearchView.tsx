@@ -38,9 +38,7 @@ const SearchView = () => {
         <div id="aside" className="col-start-2 col-span-2 hidden xl:block z-40">
           {/* aside 자리 */}
           <div id="aside" className="absolute col-start-2 col-span-2 z-50">
-            <div className="fixed">
-              {isMessageOpen && <MessageLayout />}
-            </div>
+            {isMessageOpen && <MessageLayout />}
           </div>
         </div>
 

@@ -1,32 +1,31 @@
+// React Router
 import { createBrowserRouter } from "react-router-dom";
+
+// Views
+import Intro from "./pages/Intro";
+import SignupView from "./pages/SignUpView";
+import LoginView from "./pages/LoginView";
+import SocialSignUpView from "./pages/SocialSignUpView";
+import HomeView from "./pages/HomeView";
+import FeedView from "./pages/FeedView";
+import SearchView from "./pages/SearchView";
+import ProfileView from "./pages/ProfileView";
 import MyBookmarkList from "./pages/ProfileView/MyBookmarkList";
 import MyGroupBookmarkList from "./pages/ProfileView/MyGroupBookmarkList";
 import MyFavorites from "./pages/ProfileView/MyFavorites";
 import MyRoadmap from "./pages/ProfileView/MyRoadmap";
-import FeedView from "./pages/FeedView";
-import SearchView from "./pages/SearchView";
-import Intro from "./pages/Intro";
-import SignupView from "./pages/SignUpView";
-import App from "./App";
-import ProfileView from "./pages/ProfileView";
-import MyBookmark from "./pages/BookmarkView";
-import RoadmapView from "./pages/RoadmapDetailView";
 import FollowView from "./pages/ProfileView/FollowView";
-
-// const changeIsFollow = mainTabStore((state) => state.changeIsFollow)
-import RoadMapView from "./pages/RoadmapDetailView";
 import Follower from "./pages/ProfileView/FollowFollower";
 import Following from "./pages/ProfileView/FollowFollowing";
+import MyBookmark from "./pages/BookmarkView";
+import RoadmapView from "./pages/RoadmapDetailView";
 
-import SocialSignUpView from "./pages/SocialSignUpView";
-
-import LoginView from "./pages/LoginView";
-import { Children } from "react";
+// Components
+import App from "./App";
 import OAuthNaver from "./components/login/oauth/OauthNaver";
 import OauthGoogle from "./components/login/oauth/OauthGoogle";
 import OauthKakao from "./components/login/oauth/OauthKakao";
 import OauthGithub from "./components/login/oauth/OauthGithub";
-
 import NewBookmarkLists from "./components/feed/NewBookmarkLists";
 import NewRoadmaps from "./components/feed/NewRoadmaps";
 
@@ -35,7 +34,17 @@ const router = createBrowserRouter([
     path: "/",
     element: <App />,
     children: [
+      // 홈페이지
+      {
+        path: "",
+        element: <HomeView />,
+      },
       // 서비스 소개 페이지
+      {
+        path: "/intro",
+        element: <Intro />,
+      },
+      // 로그인 후 홈페이지(MY)
       {
         path: "user/:user_id",
         element: <ProfileView />,
@@ -73,27 +82,25 @@ const router = createBrowserRouter([
           },
         ],
       },
+      // 로드맵 상세 페이지
       {
         path: "roadmap/:roadmap_id",
         element: <RoadmapView />,
       },
+      // 북마크리스트 상세 페이지
       {
         path: "bookmarklist/:bookmarklist_id",
         element: <MyBookmark />,
       },
-      // {
-      //   path: 'bookmark/:bookmark_id',
-      //   element: <SearchView />
-      // },
-
-      {
-        path: "search",
-        element: <SearchView />,
-      },
+      // 피드 페이지
       {
         path: "feed",
         element: <FeedView />,
         children: [
+          {
+            path: "",
+            element: <NewBookmarkLists />,
+          },
           {
             path: "newBookmarkLists",
             element: <NewBookmarkLists />,
@@ -102,45 +109,49 @@ const router = createBrowserRouter([
             path: "newRoadmaps",
             element: <NewRoadmaps />,
           },
-        ]
+        ],
       },
+      // 검색 페이지
       {
-        path: "intro",
-        element: <Intro />,
+        path: "search",
+        element: <SearchView />,
       },
+      // 일반 회원가입 페이지
       {
         path: "signup",
         element: <SignupView />,
       },
+      // 소셜 회원가입 페이지
       {
         path: "socialsignup",
         element: <SocialSignUpView />,
       },
+      // 로그인 페이지
       {
         path: "login",
         element: <LoginView />,
-        // Email 로그인 페이지
       },
+      // 소셜 로그인 리다이렉트 페이지
       {
         path: "oauth/callback",
-        children:[
+        children: [
           {
             path: "naver",
-            element: <OAuthNaver/>            
+            element: <OAuthNaver />,
           },
           {
             path: "google",
-            element: <OauthGoogle/>
+            element: <OauthGoogle />,
           },
           {
             path: "kakao",
-            element: <OauthKakao/>
+            element: <OauthKakao />,
           },
           {
             path: "github",
-            element: <OauthGithub/>
+            element: <OauthGithub />,
           },
-        ] 
+        ],
       },
     ],
   },

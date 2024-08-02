@@ -14,11 +14,11 @@ export default function LoginView() {
   }, [setLoginListOpen, setEmailLoginOpen, setPasswordResetOpen]);
 
   return (
-    <>
+    <div className="mt-16">
       {isLoginListOpen && <LoginListModal/>}          
       {isEmailLoginOpen && <EmailLoginModal/>}
       {isPasswordResetOpen && <PasswordResetModal/>}
-    </>
+    </div>
   )
 }
 

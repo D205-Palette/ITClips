@@ -2,6 +2,7 @@ package com.ssafy.itclips.user.service;
 
 import com.ssafy.itclips.global.jwt.JwtToken;
 import com.ssafy.itclips.global.jwt.JwtTokenProvider;
+import com.ssafy.itclips.user.dto.UserInfoDTO;
 import com.ssafy.itclips.user.entity.*;
 import com.ssafy.itclips.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -177,12 +178,46 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
+    public UserInfoDTO updateUserById(Long userId, UserInfoDTO updatedUser) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."));
+
+        user.setNickname(updatedUser.getNickname());
+        user.setBirth(updatedUser.getBirth());
+        user.setJob(updatedUser.getJob());
+        user.setGender(updatedUser.getGender());
+        user.setDarkMode(updatedUser.getDarkMode());
+        user.setBio(updatedUser.getBio());
+
+        User savedUser = userRepository.save(user);
+
+        return UserInfoDTO.builder()
+                .nickname(savedUser.getNickname())
+                .birth(savedUser.getBirth())
+                .job(savedUser.getJob())
+                .gender(savedUser.getGender())
+                .bio(savedUser.getBio())
+                .build();
+    }
+
+    @Transactional
+    @Override
     public boolean deleteUserByEmail(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."));
 
         userRepository.delete(user);
         return !userRepository.existsByEmail(email);
+    }
+
+    @Transactional
+    @Override
+    public boolean deleteUserById(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."));
+
+        userRepository.delete(user);
+        return !userRepository.existsById(userId);
     }
 
     @Override

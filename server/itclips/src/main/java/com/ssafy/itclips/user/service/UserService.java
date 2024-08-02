@@ -1,6 +1,7 @@
 package com.ssafy.itclips.user.service;
 
 import com.ssafy.itclips.global.jwt.JwtToken;
+import com.ssafy.itclips.user.dto.UserInfoDTO;
 import com.ssafy.itclips.user.entity.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,7 +30,11 @@ public interface UserService {
 
     User updateUserByEmail(String email, User user);
 
+    UserInfoDTO updateUserById(Long userId, UserInfoDTO user);
+
     boolean deleteUserByEmail(String email);
+
+    boolean deleteUserById(Long userId);
 
     boolean nicknameCheck(String nickname);
 

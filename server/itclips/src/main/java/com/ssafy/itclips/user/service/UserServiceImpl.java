@@ -84,16 +84,31 @@ public class UserServiceImpl implements UserService {
         return new LoginResponse(jwtToken.getAccessToken(), jwtToken.getRefreshToken(), user.getId());
     }
 
+//    @Transactional
+//    @Override
+//    public User oauthSignup(OauthSignupForm form) throws IOException {
+//        User user = userRepository.findByEmail(form.getEmail())
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."));
+//
+//        user.setGender(form.getGender());
+//        user.setBirth(form.getBirth());
+//
+//        setImageUrl(profileImage, user);
+//
+//        userRepository.save(user);
+//        return user;
+//    }
+
     @Transactional
     @Override
-    public User oauthSignup(OauthSignupForm form, MultipartFile profileImage) throws IOException {
-        User user = userRepository.findByEmail(form.getEmail())
+    public User oauthSignup(Long userId, OauthSignupForm form) throws IOException {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."));
 
-        user.setGender(form.getGender());
+        user.setNickname(form.getNickname());
         user.setBirth(form.getBirth());
-
-        setImageUrl(profileImage, user);
+        user.setGender(form.getGender());
+        user.setJob(form.getJob());
 
         userRepository.save(user);
         return user;

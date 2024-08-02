@@ -7,16 +7,17 @@ import FollowerItemKebabDropdown from "./ui/FollowerItemKebabDropdown";
 // images (임시)
 import image from "../../assets/images/profile_image.png";
 
-interface User {
+interface Follower {
   id: number;
-  username: string;
-  imageUrl: string;
+  fromUserId: number;
+  toUserId: number;
+  nickname: string;
+  profileImage: string;
   email: string;
-  tag: string;
 }
 
 interface Props {
-  items: User[];
+  items: Follower[];
 }
 
 const FollowerItem: React.FC<Props> = ({ items }) => {
@@ -35,9 +36,9 @@ const FollowerItem: React.FC<Props> = ({ items }) => {
         to={`/user/${item.id}`}
         className="flex items-center space-x-4 p-4 rounded-lg shadow"
       >
-        <img src={image} alt={item.username} className="w-20 h-20 object-cover rounded" />
+        <img src={image} alt={item.nickname} className="w-20 h-20 object-cover rounded" />
         <div className="flex-grow">
-          <h3 className="text-lg font-semibold">{item.username}</h3>
+          <h3 className="text-lg font-semibold">{item.nickname}</h3>
           <div className="flex space-x-4 mt-2">
             <p className="text-sm text-gray-400">{item.email}</p>
           </div>

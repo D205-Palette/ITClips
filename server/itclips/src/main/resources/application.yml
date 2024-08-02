@@ -61,13 +61,15 @@ spring:
 # s3
 cloud:
   aws:
-    s3:
-      bucket: itclipsbucket
-    stack.auto: false
-    region.static: ap-northeast-2
+    stack:
+      auto: false
     credentials:
-      accessKey: AKIAU6GD2OQ5EMXR6LW4
-      secretKey: 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
+      accessKey: ${S3_ACCESS}
+      secretKey: ${S3_PRIVATE}
+    region:
+      static: ap-northeast-2
+  s3:
+    bucket: ${S3_BUCKET}
 
 #spring:
 #  profiles:

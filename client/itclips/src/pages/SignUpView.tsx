@@ -237,7 +237,7 @@
                   });
                   login(); // 로그인 상태 업데이트                          
                   window.alert(`환영합니다 ${userInfo.nickname}님!`);
-                  navigate(`/user/${userInfo.id}`); // 로그인 후 페이지 이동
+                  navigate(`/user/${response.data.userId}`); // 로그인 후 페이지 이동
                 }
               })
               .catch((error: any) => {

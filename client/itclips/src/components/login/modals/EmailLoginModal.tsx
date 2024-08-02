@@ -29,7 +29,7 @@ const EmailLoginModal: React.FC = () => {
       try {
         const response = await emailLogin(values.email, values.password);
 
-        if (response.status === 200) {          
+        if (response.status === 200) {      
           fetchUserToken(response.data.accessToken); // 로컬 스토리지에 유저 토큰 업데이트
           fetchUserId(response.data.userId) // 로컬 스토리지에 유저 아이디 업데이트
           const userInfoResponse = await checkUserInfo(response.data.userId);          

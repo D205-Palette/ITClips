@@ -1,8 +1,5 @@
 // apiUtils.ts
 import api from "./api";
-import { authStore } from "../stores/authStore";
-
-const getToken = () => authStore.getState().token;
 
 // 인증된 요청을 위한 유틸리티 함수
 export const authenticatedRequest = (method: string, url: string, data?: any, params?: any) => {
@@ -14,10 +11,6 @@ export const authenticatedRequest = (method: string, url: string, data?: any, pa
     url,
     data,
     params,
-    // headers,
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
   });
 };
 

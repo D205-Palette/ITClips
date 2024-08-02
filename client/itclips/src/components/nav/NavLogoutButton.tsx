@@ -8,10 +8,10 @@ const LogoutButton = () => {
   const { logout, token } = authStore();
 
   const logoutButton = () => {
-    logout(); // 로그인 현재 상태 로그아웃으로 변경
     logoutApi()
       .then((response) => {
         window.alert("로그아웃 완료");
+        logout(); // 로그인 현재 상태 로그아웃으로 변경
       })
       .catch((error) => {
         window.alert("로그아웃 실패");

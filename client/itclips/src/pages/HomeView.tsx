@@ -5,15 +5,15 @@ import Intro from "./Intro";
 import { authStore } from "../stores/authStore";
 
 export default function HomeView() {
-  const { isLoggedIn, userInfo } = authStore(); // Zustand 상태에서 사용자 정보 가져오기
+  const { isLoggedIn, userInfo, userId } = authStore(); // Zustand 상태에서 사용자 정보 가져오기
   const navigate = useNavigate(); // useNavigate 훅 선언
 
   useEffect(() => {
-    if (isLoggedIn && userInfo) {
+    if (isLoggedIn && userInfo && userId ) {
       // 로그인 상태일 때 사용자 페이지로 리다이렉트
-      navigate(`/user/${userInfo.id}`);
+      navigate(`/user/${userId}`);
     }
-  }, [isLoggedIn, userInfo, navigate]); // 로그인 상태 변경 시 useEffect 실행
+  }, [isLoggedIn, userInfo, userId, navigate]); // 로그인 상태 변경 시 useEffect 실행
 
   return (
     <>

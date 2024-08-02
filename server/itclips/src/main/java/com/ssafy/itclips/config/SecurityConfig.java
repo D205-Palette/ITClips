@@ -64,10 +64,8 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
         configuration.addAllowedOrigin("https://localhost:3000");
-        configuration.addAllowedOrigin("http://localhost:5500");
-        configuration.addAllowedOrigin("https://localhost");
+        configuration.addAllowedOrigin("http://127.0.0.1:5500");
         configuration.addAllowedOrigin("https://i11d205.p.ssafy.io");  // 추가된 출처
-//        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

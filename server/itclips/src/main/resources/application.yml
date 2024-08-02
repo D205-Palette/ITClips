@@ -71,3 +71,6 @@ project:
   profileUploadPath: images/profile
   defaultProfileImage: images/profile.png
 
+logging:
+  level:
+      org.springframework.web.cors.DefaultCorsProcessor: TRACE

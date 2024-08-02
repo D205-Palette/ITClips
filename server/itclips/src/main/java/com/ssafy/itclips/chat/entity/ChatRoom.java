@@ -3,7 +3,9 @@ package com.ssafy.itclips.chat.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -13,10 +15,11 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "chat_room", schema = "itclips")
+@NoArgsConstructor
 public class ChatRoom {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
     private Long id;
 
@@ -30,6 +33,12 @@ public class ChatRoom {
     //chat
     @OneToMany(mappedBy = "room")
     private List<Chat> chatList = new ArrayList<Chat>();
+
+    @Builder
+    public ChatRoom(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
 }
 

@@ -14,6 +14,7 @@ import com.ssafy.itclips.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.mapping.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,7 +33,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import com.ssafy.itclips.global.oauth2.handler.OAuth2AuthenticationSuccessHandler;
-
+import java.util.*;
 import java.io.IOException;
 
 @EnableWebSecurity
@@ -63,6 +64,8 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
         configuration.addAllowedOrigin("https://localhost:3000");
+        configuration.addAllowedOrigin("http://localhost:5500");
+        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -89,7 +92,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/user/login", "/api/user/refresh").permitAll()     // 로그인 접근 가능
                         .requestMatchers("/api/user/**").permitAll()    // API 개발 중 접근 없이 swagger 테스트 하기 위함
                         .requestMatchers("/api/roadmap/**").permitAll()    // API 개발 중 접근 없이 swagger 테스트 하기 위함
-                        .requestMatchers("/api/chat/**", "/ws/**").permitAll()    // API 개발 중 접근 없이 swagger 테스트 하기 위함
+                        .requestMatchers("/api/chat/**", "/api/ws/**").permitAll()    // API 개발 중 접근 없이 swagger 테스트 하기 위함
                         .anyRequest().authenticated()
                 )
 

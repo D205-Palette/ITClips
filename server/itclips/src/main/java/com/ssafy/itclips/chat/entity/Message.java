@@ -2,23 +2,28 @@ package com.ssafy.itclips.chat.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "message", schema = "itclips")
+@NoArgsConstructor
 public class Message {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
     private Long id;
 
@@ -33,9 +38,9 @@ public class Message {
     private Boolean read = false;
 
     @NotNull
-    @ColumnDefault("CURRENT_TIMESTAMP")
+    @CreationTimestamp
     @Column(name = "created_at", nullable = false)
-    private Instant createdAt;
+    private LocalDateTime createdAt;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -44,4 +49,12 @@ public class Message {
     private Chat chat;
 
 
+    @Builder
+    public Message(String message, Boolean read, LocalDateTime createdAt, Chat chat) {
+        this.message = message;
+        this.read = read;
+        this.createdAt = createdAt;
+        this.chat = chat;
+        this.createdAt = LocalDateTime.now();
+    }
 }

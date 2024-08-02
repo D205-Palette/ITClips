@@ -1,47 +1,25 @@
 package com.ssafy.itclips.config;
 
-import com.ssafy.itclips.chat.service.RedisSubscriber;
-import lombok.RequiredArgsConstructor;
+import com.ssafy.itclips.chat.dto.MessageDTO;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
-import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-@RequiredArgsConstructor
 @Configuration
 public class RedisConfig {
-    /**
-     * 단일 Topic 사용을 위한 Bean 설정
-     */
-    @Bean
-    public ChannelTopic channelTopic() {
-        return new ChannelTopic("chatroom");
-    }
 
     /**
-     * redis에 발행(publish)된 메시지 처리를 위한 리스너 설정
+     * redis pub/sub 메시지를 처리하는 listener 설정
      */
     @Bean
-    public RedisMessageListenerContainer redisMessageListener(RedisConnectionFactory connectionFactory,
-                                                              MessageListenerAdapter listenerAdapter,
-                                                              ChannelTopic channelTopic) {
+    public RedisMessageListenerContainer redisMessageListener(RedisConnectionFactory connectionFactory) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.addMessageListener(listenerAdapter, channelTopic);
         return container;
-    }
-
-    /**
-     * 실제 메시지를 처리하는 subscriber 설정 추가
-     */
-    @Bean
-    public MessageListenerAdapter listenerAdapter(RedisSubscriber subscriber) {
-        return new MessageListenerAdapter(subscriber, "sendMessage");
     }
 
     /**
@@ -54,5 +32,17 @@ public class RedisConfig {
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(String.class));
         return redisTemplate;
+    }
+
+
+    // Redis 에 메시지 내역을 저장하기 위한 RedisTemplate 을 설정
+    @Bean
+    public RedisTemplate<String, MessageDTO> redisTemplateMessage(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, MessageDTO> redisTemplateMessage = new RedisTemplate<>();
+        redisTemplateMessage.setConnectionFactory(connectionFactory);
+        redisTemplateMessage.setKeySerializer(new StringRedisSerializer());        // Key Serializer
+        redisTemplateMessage.setValueSerializer(new Jackson2JsonRedisSerializer<>(MessageDTO.class));      // Value Serializer
+
+        return redisTemplateMessage;
     }
 }

@@ -29,13 +29,12 @@ const EmailLoginModal: React.FC = () => {
       try {
         const response = await emailLogin(values.email, values.password);
 
-        if (response.status === 200) {
-          console.log(response)
+        if (response.status === 200) {          
           fetchUserToken(response.data.accessToken); // 로컬 스토리지에 유저 토큰 업데이트
-          login(); // 로그인 상태 업데이트          
-          const userInfoResponse = await checkUserInfo(values.email);          
+          const userInfoResponse = await checkUserInfo(response.data.userId);          
           fetchUserInfo(userInfoResponse.data); // 로컬 스토리지에 유저 정보 업데이트
           window.alert(`환영합니다 ${userInfoResponse.data.nickname}님!`);
+          login(); // 로그인 상태 업데이트          
           navigate(`/user/${userInfoResponse.data.id}`); // 로그인 후 페이지 이동
         } else {
           throw new Error('로그인에 실패했습니다.');

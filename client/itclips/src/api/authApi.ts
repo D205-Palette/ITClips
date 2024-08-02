@@ -22,8 +22,8 @@ export const checkCodePassword = (email: string, code: string) => {
 };
 
 // 회원 정보 조회
-export const checkUserInfo = (email: string) => {
-  return request("get", "/user/profile", undefined, { email });
+export const checkUserInfo = (userId: number) => {
+  return request("get", `/user/${userId}/profile`, undefined, { userId });
 };
 
 // 이메일 중복 체크

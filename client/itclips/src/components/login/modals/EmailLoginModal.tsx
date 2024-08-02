@@ -27,7 +27,7 @@ const EmailLoginModal: React.FC = () => {
         console.log(response);
         if (response.status === 200) {
           setErrorMessage(""); // 에러 메시지 초기화
-          fetchUserToken(response.data.accessToken); // 로컬 스토리지에 유저 토큰 업데이트
+          fetchUserToken(response.data.accesstoken); // 로컬 스토리지에 유저 토큰 업데이트
           login(); // 로그인 상태 업데이트
 
           const userId = response.headers.userid;

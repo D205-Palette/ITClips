@@ -49,7 +49,6 @@ public class User {
     private String password;
 
     @Size(max = 50)
-    @NotNull(message = "Nickname cannot be null")
     @Column(name = "nickname", nullable = false, length = 50)
     private String nickname;
 
@@ -101,8 +100,14 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<UserTag> userTags = new LinkedHashSet<>();
 
-    public User update(String nickname, String profileImage) {
-        this.nickname = nickname;
+//    public User update(String nickname, String profileImage) {
+//        this.nickname = nickname;
+//        this.profileImage = profileImage;
+//        this.updatedAt = LocalDateTime.now();
+//        return this;
+//    }
+
+    public User update(String profileImage) {
         this.profileImage = profileImage;
         this.updatedAt = LocalDateTime.now();
         return this;

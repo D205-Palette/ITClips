@@ -13,10 +13,10 @@ public class GithubOAuth2UserInfo extends OAuth2UserInfo {
         return (String) attributes.get("id");
     }
 
-    @Override
-    public String getNickname() {
-        return (String) attributes.get("login");
-    }
+//    @Override
+//    public String getNickname() {
+//        return (String) attributes.get("login");
+//    }
 
     @Override
     public String getImageUrl() {

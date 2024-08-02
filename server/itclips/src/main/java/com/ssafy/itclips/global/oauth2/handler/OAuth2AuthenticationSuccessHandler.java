@@ -70,8 +70,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         response.setHeader("Authorization", jwtToken.getGrantType() + " " + jwtToken.getAccessToken());
         response.setHeader("Authorization-Refresh", jwtToken.getRefreshToken());
         response.setHeader("userId", String.valueOf(findUser.getId()));
-//        response.sendRedirect("oauth2/sign-up"); // 프론트의 회원가입 추가 정보 입력 폼으로 리다이렉트
-        response.sendRedirect("/"); // 프론트의 회원가입 추가 정보 입력 폼으로 리다이렉트
+        response.sendRedirect("https://localhost:3000/oauth2/callback"); // 프론트의 회원가입 추가 정보 입력 폼으로 리다이렉트
+//        response.sendRedirect("/"); // 프론트의 회원가입 추가 정보 입력 폼으로 리다이렉트
 
         // target URl, redirect 설정
         clearAuthenticationAttributes(request, response);

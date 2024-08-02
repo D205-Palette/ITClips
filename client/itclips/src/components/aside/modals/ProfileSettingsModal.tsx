@@ -9,6 +9,7 @@ import { FaMale, FaFemale } from "react-icons/fa";
 import JobCategoryDropdown from "../ui/JobCategoryDropdown";
 import PasswordChangeModal from "./PasswordChangeModal";
 import DeleteAccountModal from "./DeleteAccountModal";
+import InterestCategoryDropdown from "../ui/InterestCategoryDropdown";
 
 // 프로필 모달 상태 props
 interface ProfileSettingsModalProps {
@@ -30,6 +31,15 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
   const [ gender, setGender ] = useState(""); // 성별 상태
   const [ isPasswordChangeModalOpen, setIsPasswordChangeModalOpen ] = useState<boolean>(false);
   const [ isDeleteAccountModalOpen, setIsDeleteAccountModalOpen ] = useState<boolean>(false);
+  const [ selectedInterest, setSelectedInterest ] = useState<string>("");
+
+  // 관심사 추가 함수
+  const handleAddInterest = (): void => {
+    if (selectedInterest && !interests.includes(selectedInterest)) {
+      setInterests([...interests, selectedInterest]);
+      setSelectedInterest('');
+    }
+  };
 
   // 프로필 이미지 상태
   const [profileImage, setProfileImage] = useState<string | null>(null);
@@ -46,14 +56,6 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
   // 카테고리 선택 정보 함수
   const selectCategory = (category: string) => {
     setJobCategory(category);
-  };
-
-  // 관심사 정보 추가 함수
-  const handleAddInterest = (): void => {
-    if (newInterest.trim() !== '') {
-      setInterests([...interests, newInterest.trim()]);
-      setNewInterest('');
-    }
   };
 
   // 관심사 제거 함수
@@ -96,6 +98,11 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const validateOldPassword = async (password: string) => {
+    // 비밀번호 비교 로직 추가
+    return true;
   };
 
   if (!isOpen) return null;
@@ -184,7 +191,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
             placeholder="생년월일을 입력하세요"
           />
         </div>
-        {/* 성별 선택칸 */}
+
         {/* 성별 선택 */}
         <div>
           <label className="block text-sm font-medium mb-2">성별</label>
@@ -219,28 +226,28 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
         {/* 관심사 설정 */}
         <div className="mb-4">
           <label className="block text-sm font-medium mb-2">관심사 설정</label>
-          <div className="flex flex-wrap items-center gap-2 p-2 border rounded-md">
-            {interests.map((interest, index) => (
-              <span key={index} className="bg-base-300 px-2 py-1 rounded-full text-sm flex items-center">
-                {interest}
-                <button onClick={() => handleRemoveInterest(index)} className="ml-1 hover:text-gray-700">
-                  <IoCloseOutline size={16} />
-                </button>
-              </span>
-            ))}
-            <input
-              type="text"
-              value={newInterest}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewInterest(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                  handleAddInterest();
-                }
-              }}
-              className="flex-grow min-w-[100px] px-2 py-1 text-sm border-none focus:outline-none bg-base-100"
-              placeholder="새 관심사 입력 후 Enter"
-            />
+          <div className="flex w-full">
+            <InterestCategoryDropdown selectCategory={setSelectedInterest} />
+            <button 
+              onClick={handleAddInterest}
+              className="btn btn-primary px-4"
+            >
+              +
+            </button>
+          </div>
+          <div className="flex flex-wrap items-center gap-2 mt-2 p-2 border rounded-md min-h-[40px]">
+            {interests.length > 0 ? (
+              interests.map((interest, index) => (
+                <span key={index} className="bg-base-300 px-2 py-1 rounded-full text-sm flex items-center">
+                  {interest}
+                  <button onClick={() => handleRemoveInterest(index)} className="ml-1 hover:text-gray-700">
+                    <IoCloseOutline size={16} />
+                  </button>
+                </span>
+              ))
+            ) : (
+              <span className="text-gray-500 text-sm">관심사를 추가해주세요.</span>
+            )}
           </div>
         </div>
 
@@ -252,6 +259,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
         isOpen={isPasswordChangeModalOpen}
         onClose={() => setIsPasswordChangeModalOpen(false)}
         onSubmit={handlePasswordChange}
+        validateOldPassword={validateOldPassword}
       />
 
       {/* 회원 탈퇴 모달 */}

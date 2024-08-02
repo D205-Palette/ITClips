@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -18,19 +19,22 @@ public class ChatRoomDTO implements Serializable {
     private Long id;
     private String name;
     private String lastMessage;
+    private LocalDateTime lastModified;
 
     @Builder
-    public ChatRoomDTO(Long roomId, String name,String lastMessage) {
+    public ChatRoomDTO(Long roomId, String name,String lastMessage,LocalDateTime lastModified) {
         this.id = roomId;
         this.name = name;
         this.lastMessage = lastMessage;
+        this.lastModified = lastModified;
     }
 
     public static ChatRoomDTO toDto(ChatRoom chatRoom) {
         return ChatRoomDTO.builder()
                 .roomId(chatRoom.getId())
                 .name(chatRoom.getName())
-                .lastMessage("마지막 메시지 메시지 전송할때 레디스에 넣기")
+                .lastMessage(chatRoom.getLastMessage())
+                .lastModified(chatRoom.getLastModified())
                 .build();
     }
 }

@@ -231,13 +231,13 @@
                 if (response.status === 200) {                  
                   fetchUserToken(response.data.accessToken); // 로컬 스토리지에 유저 토큰 업데이트
                   fetchUserId(response.data.userId) // 로컬 스토리지에 유저 아이디 업데이트
-                  checkUserInfo(response.data.userId) // 테스트 아이디 유저정보 불러오기
+                  checkUserInfo(response.data.userId) // 유저 정보 불러 오기
                   .then((response) => {
                     fetchUserInfo(response.data); // 로컬 스토리지에 유저 정보 업데이트
                   });
                   login(); // 로그인 상태 업데이트                          
                   window.alert(`환영합니다 ${userInfo.nickname}님!`);
-                  navigate(`/user/${userInfo.id}`); // 로그인 후 페이지 이동
+                  navigate(`/user/${response.data.userId}`); // 로그인 후 페이지 이동
                 }
               })
               .catch((error: any) => {

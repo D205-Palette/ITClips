@@ -3,10 +3,10 @@ import { SiKakaotalk } from "react-icons/si";
 import { API_BASE_URL } from "../../config";
 
 const KakaoLoginButton = () => {
-  const KAKAO_AUTH_URL = `${API_BASE_URL}/oauth2/authorize/kakao`;
+  const KAKAO_AUTH_URL = `${API_BASE_URL}:8084/oauth2/authorize/kakao`;
 
   const loginWithKakao = () => {
-    window.open(KAKAO_AUTH_URL, "_blank", "width=500,height=600");
+    window.location.href = KAKAO_AUTH_URL;
   };
 
   return (

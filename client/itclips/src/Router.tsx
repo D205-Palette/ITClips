@@ -130,7 +130,7 @@ const router = createBrowserRouter([
       },
       // 소셜 로그인 리다이렉트 페이지
       {
-        path: "oauth/callback",
+        path: "oauth2/callback",
         element: <Oauth2 />,
       },
     ],

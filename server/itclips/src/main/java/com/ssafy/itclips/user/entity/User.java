@@ -1,5 +1,6 @@
 package com.ssafy.itclips.user.entity;
 
+import com.ssafy.itclips.chat.entity.Chat;
 import com.ssafy.itclips.bookmark.entity.BookmarkLike;
 import com.ssafy.itclips.follow.entity.Follow;
 import com.ssafy.itclips.report.entity.BookmarkListReport;
@@ -85,6 +86,12 @@ public class User {
 
     @Column(name = "dark_mode", nullable = false)
     private Boolean darkMode;
+
+
+    //chat
+    //역방향 user가 속한 chatroom을 알기 위함
+    @OneToMany(mappedBy = "user")
+    private List<Chat> chatList = new ArrayList<Chat>();
 
     @Column(name = "provider")
     private String provider;

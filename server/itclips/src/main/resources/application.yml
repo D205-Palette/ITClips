@@ -20,7 +20,12 @@ spring:
 
   profiles:
     include: secret
-
+  # Redis Config
+#    active: local
+  data:
+    redis:
+      host: ${DB_HOST}
+      port: 6379
 
   config:
     import: optional:classpath:application-secret.yml
@@ -54,6 +59,14 @@ spring:
       hibernate:
         format_sql: true
 
+
+
+#spring:
+#  profiles:
+#    active: alpha
+#  redis:
+#    host: redis가 설치된 서버 호스트
+#    port: redis가 설치된 서버 포트
 project:
   profileUploadPath: images/profile
   defaultProfileImage: images/profile.png

@@ -143,7 +143,6 @@ public class ChatRoomService {
         for(Chat chat : chatRoomList) {
             // 레디스에서 방 찾기
             ChatRoomDTO chatRoomDTO = chatRoomRepository.findRoomById(chat.getRoom().getId());
-            log.info(chatRoomDTO.toString());
             // 레디스에 없으면
             if(chatRoomDTO == null) {
                 ChatRoom chatRoom = chatRoomJPARepository.findById(chat.getRoom().getId())
@@ -167,27 +166,23 @@ public class ChatRoomService {
 
         // 레디스에서 메세지 가져오기
         messageList = redisTemplateMessage.opsForList().range(roomId.toString(), 0, 99);
-        log.info("Redis에서 가져온 메시지 리스트: {}", messageList);
 
         // 레디스에 없으면 db에서 읽어오기
         if(messageList == null|| messageList.isEmpty()) {
             // 최신순 100개
             Pageable pageable = PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "createdAt"));
             List<Message> DBMessageList = messageJPARepository.findMessagesByRoomId(roomId);
-            log.info("DB에서 가져온 메시지 리스트: {}", DBMessageList);
 
             for(Message message : DBMessageList) {
                 Chat chat = chatJPARepository.findById(message.getChat().getId())
                         .orElseThrow(()->new CustomException(ErrorCode.CHAT_NOT_FOUND));
                 MessageDTO messageDTO = MessageDTO.toDTO(message,chat);
                 messageList.add(messageDTO);
-                log.info("메시지 DTO 변환 후: {}", messageDTO);
                 //레디스에 저장
                 redisTemplateMessage.setValueSerializer(new Jackson2JsonRedisSerializer<>(MessageDTO.class));      // 직렬화
                 redisTemplateMessage.opsForList().rightPush(roomId.toString(), messageDTO);
             }
         }
-        log.info("최종 메시지 리스트: {}", messageList);
         return messageList;
     }
 

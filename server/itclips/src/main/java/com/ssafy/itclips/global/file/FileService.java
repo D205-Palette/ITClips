@@ -23,18 +23,32 @@ public class FileService {
 
     private final AmazonS3 amazonS3;
 
-    public Map<String, String> getPresignedUrl(String prefix, String fileName) {
+    public Map<String, String> getPresignedUrl(String prefix, String fileName, Boolean type) {
         if (!prefix.isEmpty()) {
             fileName = createPath(prefix, fileName);
         }
 
-        GeneratePresignedUrlRequest generatePresignedUrlRequest = getGeneratePresignedUrlRequest(bucket, fileName);
+        GeneratePresignedUrlRequest generatePresignedUrlRequest = type ? getGeneratePresignedUrlForUpload(bucket, fileName) :
+                getGeneratePresignedUrlForDownload(bucket, fileName);
         URL url = amazonS3.generatePresignedUrl(generatePresignedUrlRequest);
 
         return Map.of("url", url.toString());
     }
 
-    private GeneratePresignedUrlRequest getGeneratePresignedUrlRequest(String bucket, String fileName) {
+    private GeneratePresignedUrlRequest getGeneratePresignedUrlForDownload(String bucket, String fileName) {
+        GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucket, fileName)
+                .withMethod(HttpMethod.GET)
+                .withExpiration(getPresignedUrlExpiration());
+
+        generatePresignedUrlRequest.addRequestParameter(
+                Headers.S3_CANNED_ACL,
+                CannedAccessControlList.PublicRead.toString()
+        );
+
+        return generatePresignedUrlRequest;
+    }
+
+    private GeneratePresignedUrlRequest getGeneratePresignedUrlForUpload(String bucket, String fileName) {
         GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucket, fileName)
                 .withMethod(HttpMethod.PUT)
                 .withExpiration(getPresignedUrlExpiration());
@@ -50,7 +64,7 @@ public class FileService {
     private Date getPresignedUrlExpiration() {
         Date expiration = new Date();
         long expTimeMillis = expiration.getTime();
-        expTimeMillis += 1000 * 60 * 2;
+        expTimeMillis += 1000 * 60 * 10;
         expiration.setTime(expTimeMillis);
 
         return expiration;

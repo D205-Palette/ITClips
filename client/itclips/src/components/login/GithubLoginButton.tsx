@@ -2,10 +2,10 @@ import { FaGithub } from "react-icons/fa";
 import { API_BASE_URL } from '../../config';
 
 const GithubLoginButton = () => {
-  const githubLoginUrl = `${API_BASE_URL}:8084/oauth2/authorize/github`;
+  const GITHUB_AUTH_URL = `${API_BASE_URL}:8084/oauth2/authorize/github`;
   
   const loginWithGithub = () => {    
-    window.open(githubLoginUrl, "_blank", "width=500,height=600");
+    window.location.href = GITHUB_AUTH_URL;
   };
 
   return (

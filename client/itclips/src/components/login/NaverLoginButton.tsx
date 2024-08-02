@@ -6,7 +6,7 @@ export default function NaverLoginButton() {
   const NAVER_AUTH_URL = `${API_BASE_URL}:8084/oauth2/authorize/naver`
 
   const loginWithNaver = () => {
-    window.open(NAVER_AUTH_URL, "_blank", "width=500,height=600");
+    window.location.href = NAVER_AUTH_URL;
   };
 
   return (

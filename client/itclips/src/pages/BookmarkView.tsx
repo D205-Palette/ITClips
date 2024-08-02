@@ -15,25 +15,15 @@ import MoveBookmarkModal from "../components/aside/modals/MoveBookmarkModal";
 import axios from "axios";
 import AddBookmarkModal from '../components/aside/modals/AddBookmarkListModal'
 import type { BookmarkType } from "../types/BookmarkType";
-/// params로 listId 받아온걸로 axios 호출해서 리스트 상세정보 받아오기. 거기서 북마크들만
-// interface BookmarkType {
+import type { CategoryType } from "../types/BookmarkListType";
+import { useParams } from "react-router-dom";
 
-//     id: number;
-//     category: string;
-//     title: string;
-//     url: string;
-//     tags: {
-//       title: string;
-//     }[];
+/// params.bookmarklist_id로 axios 호출해서 리스트 상세정보 받아오기. 거기서 북마크들만
 
-//     content: string;
-//     isLiked: boolean;
-//     likeCount: number;
-  
-// }
-// interface BookmarksType extends Array<BookmarkType> {}
 
 const MyBookmark = () => {
+  const params = useParams()
+
   const isMessageOpen = asideStore((state) => state.isMessageOpen);
   const whatCategory = mainTabStore((state) => state.whatCategory);
 
@@ -99,6 +89,7 @@ const MyBookmark = () => {
       likeCount: 10,
     },
   ];
+
   //보여줄 필터링 된 북마크들
   const filteredBookmarks =
     whatCategory === ""
@@ -106,7 +97,7 @@ const MyBookmark = () => {
       : bookmarks.filter((bookmark) => bookmark.category === whatCategory);
 
   // 임시 카테고리들
-  const categories = [
+  const categories:CategoryType[] = [
     {
       categoryId: 1,
       categoryName: "카테고리1",
@@ -121,19 +112,22 @@ const MyBookmark = () => {
     },
   ];
 
-  
-
   return (
     <>
       <div id="Body" className="grid grid-cols-12 gap-5">
         {/* aside 자리 */}
         <div
           id="aside"
-          className="xl:col-start-3 xl:col-span-3 hidden xl:block "
+          className="xl:col-start-2 xl:col-span-3 hidden xl:block "
         >
           {/* 메세지 뜨는 위치 */}
-          <div id="aside" className="absolute col-start-3 col-span-3 z-50">
-            {isMessageOpen && <MessageLayout />}
+          <div id="aside" className="absolute col-start-2 col-span-3 z-50">
+            <div className="fixed">
+              {isMessageOpen && <MessageLayout />}
+            </div>
+          </div>
+          <div className="fixed">
+            <AsideBookmarkList />
           </div>
           {/* 여기에 listId prop으로 내려줘야되나?? */}
           <AsideBookmarkList />
@@ -142,7 +136,7 @@ const MyBookmark = () => {
         {/* main자리 */}
         <div
           id="Main"
-          className="xl:col-start-6 xl:col-span-6 col-start-3 col-span-8 gap-4"
+          className="xl:col-start-5 xl:col-span-7 col-start-3 col-span-8 gap-4"
         >
           {/* 상단바 */}
           {editMode ? (
@@ -169,7 +163,11 @@ const MyBookmark = () => {
                 changeEditBookmarksIndex={changeEditBookmarksIndex}
               />
             ) : (
-              <Bookmark bookmark={bookmark} />
+              <Bookmark bookmark={bookmark} 
+              editBookmarks={editBookmarks}
+                changeEditBookmarks={changeEditBookmarks}
+                editBookmarksIndex={editBookmarksIndex}
+                changeEditBookmarksIndex={changeEditBookmarksIndex}/>
             )
           )}
 
@@ -202,11 +200,10 @@ const MyBookmark = () => {
       {isEditModal && (
         <MoveBookmarkModal
           editBookmarks={editBookmarks}
-          changeEditBookmarks={changeEditBookmarks}
           tabModal={tabEditModal}
           toggleMode={toggleMode}
-          editBookmarksIndex={editBookmarksIndex}
           changeEditBookmarksIndex={changeEditBookmarksIndex}
+          whatMenu={"이동"}
         />
       )}
       {isAddModal && (

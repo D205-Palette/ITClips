@@ -43,7 +43,7 @@ const router = createBrowserRouter([
       },
       // 로그인 후 홈페이지(MY)
       {
-        path: "user/:user_id",
+        path: "user/:userId",
         element: <ProfileView />,
         children: [
           {

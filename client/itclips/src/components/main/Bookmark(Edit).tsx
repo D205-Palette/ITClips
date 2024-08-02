@@ -8,29 +8,30 @@ import mainStore from "../../stores/mainStore";
 import { useNavigate } from "react-router-dom";
 import { LuChevronsUpDown } from "react-icons/lu";
 import MoveBookmarkModal from "../aside/modals/MoveBookmarkModal";
-interface BookmarkType {
+import type { BookmarkType } from "../../types/BookmarkType";
+// interface BookmarkType {
 
-  id: number;
-  category: string;
-  title: string;
-  url: string;
-  tags: {
-    title: string;
-  }[];
+//   id: number;
+//   category: string;
+//   title: string;
+//   url: string;
+//   tags: {
+//     title: string;
+//   }[];
 
-  content: string;
-  isLiked: boolean;
-  likeCount: number;
+//   content: string;
+//   isLiked: boolean;
+//   likeCount: number;
 
-}
+// }
 
-interface BookmarksType extends Array<BookmarkType> {}
+// interface BookmarksType extends Array<BookmarkType> {}
 
 interface Props {
 
   bookmark: BookmarkType
-  editBookmarks: BookmarksType;
-  changeEditBookmarks: React.Dispatch<React.SetStateAction<BookmarksType>>;
+  editBookmarks: BookmarkType[];
+  changeEditBookmarks: React.Dispatch<React.SetStateAction<BookmarkType[]>>;
   editBookmarksIndex : number[]
   changeEditBookmarksIndex :React.Dispatch<React.SetStateAction<number[]>>;
 }
@@ -47,6 +48,8 @@ const Bookmark: FC<Props> = ({
   const navigate = useNavigate();
 
   const [isLike, setIsLike] = useState(false);
+
+  
   const clickHeart = (): void => {
     setIsLike(!isLike);
     //여기에 좋아요 api호출
@@ -57,11 +60,13 @@ const Bookmark: FC<Props> = ({
     window.location.href = url;
   }
 
-  function toggleCheck(index: number): void {
+  function toggleCheck(bookmark:BookmarkType): void {
     if(editBookmarksIndex.includes(bookmark.id)){
-      changeEditBookmarksIndex(editBookmarksIndex.filter((bookmark)=>bookmark!==index))
+      changeEditBookmarksIndex(editBookmarksIndex.filter((editBookmark)=>editBookmark!==bookmark.id))
+      changeEditBookmarks(editBookmarks.filter((editBookmark)=>editBookmark.id!==bookmark.id))
     } else{
-      changeEditBookmarksIndex([...editBookmarksIndex,index ])
+      changeEditBookmarksIndex([...editBookmarksIndex,bookmark.id ])
+      changeEditBookmarks([...editBookmarks,bookmark ])
     }
   }
 
@@ -82,7 +87,7 @@ const Bookmark: FC<Props> = ({
                 defaultChecked={
                 editBookmarksIndex.includes(bookmark.id) ? true : false
                 }
-                onClick={() => toggleCheck(bookmark.id)}
+                onClick={() => toggleCheck(bookmark)}
                 className="checkbox checkbox-info  [--chkfg:white] me-5"
               />
             </div>

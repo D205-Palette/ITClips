@@ -1,5 +1,6 @@
 package com.ssafy.itclips.chat.service;
 
+import com.ssafy.itclips.chat.dto.GroupRoomDTO;
 import com.ssafy.itclips.chat.dto.MessageDTO;
 import com.ssafy.itclips.chat.dto.ChatRoomDTO;
 import com.ssafy.itclips.chat.entity.Chat;
@@ -55,15 +56,43 @@ public class ChatRoomService {
         saveChat(savedChatRoom, user1);
         saveChat(savedChatRoom, user2);
 
+        //레디스 저장
+        saveChatRoomInRedis(savedChatRoom);
+
+        //topic생성
+        chatRoomRepository.enterChatRoom(savedChatRoom.getId());
+    }
+
+    //그룹 채팅방 생성
+    @Transactional
+    public void chatGroupRoom(GroupRoomDTO groupRoomDTO){
+        //채팅방 생성
+        ChatRoom chatRoom = ChatRoom.builder()
+                .name(groupRoomDTO.getName())
+                .build();
+
+        ChatRoom savedChatRoom = chatRoomJPARepository.save(chatRoom);
+        for(Long userId : groupRoomDTO.getUserIds()){
+            User user = userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+            saveChat(savedChatRoom, user);
+        }
+
+        //레디스 저장
+        saveChatRoomInRedis(savedChatRoom);
+
+        //topic생성
+        chatRoomRepository.enterChatRoom(savedChatRoom.getId());
+    }
+
+    // 채팅방 레디스 생성
+    @Transactional
+    public void saveChatRoomInRedis(ChatRoom savedChatRoom) {
         ChatRoomDTO chatRoomDTO = ChatRoomDTO.builder()
                 .name(savedChatRoom.getName())
                 .roomId(savedChatRoom.getId())
                 .build();
         // 채팅방 레디스 생성
         chatRoomRepository.createChatRoom(chatRoomDTO);
-
-        //topic생성
-        chatRoomRepository.enterChatRoom(savedChatRoom.getId());
     }
 
     @Transactional

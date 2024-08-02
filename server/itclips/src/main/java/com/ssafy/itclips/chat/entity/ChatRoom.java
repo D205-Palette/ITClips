@@ -7,7 +7,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,10 +36,21 @@ public class ChatRoom {
     @OneToMany(mappedBy = "room")
     private List<Chat> chatList = new ArrayList<Chat>();
 
+    // 마지막 메세지
+    @Column(name = "last_message", length = 255)
+    private String lastMessage;
+
+    // 마지막 변경 시점
+    @UpdateTimestamp
+    @Column(name = "last_modified")
+    private LocalDateTime lastModified;
+
     @Builder
-    public ChatRoom(Long id, String name) {
+    public ChatRoom(Long id, String name, String lastMessage, LocalDateTime lastModified) {
         this.id = id;
         this.name = name;
+        this.lastMessage = lastMessage;
+        this.lastModified = lastModified;
     }
 
 }

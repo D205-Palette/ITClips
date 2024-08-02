@@ -199,6 +199,59 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
               </div>
             </div>
 
+            {/* 관심사 설정 */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium mb-2">관심사 설정</label>
+              <div className="flex w-full mb-2">
+                <div className="flex flex-grow">
+                  <InterestCategoryDropdown selectCategory={setSelectedInterest} />
+                  <button 
+                    onClick={handleAddInterest}
+                    className="btn btn-primary min-h-[2.5rem] h-auto px-4 ml-2 flex-shrink-0"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+              <div className="border rounded-md p-2 h-[120px] overflow-y-auto">
+                <div className="flex flex-wrap gap-2">
+                  {interests.length > 0 ? (
+                    interests.map((interest, index) => (
+                      <span key={index} className="bg-base-300 px-3 py-1 rounded-full text-sm flex items-center">
+                        {interest}
+                        <button onClick={() => handleRemoveInterest(index)} className="ml-2 hover:text-gray-700">
+                          <IoCloseOutline size={18} />
+                        </button>
+                      </span>
+                    ))
+                  ) : (
+                    <span className="text-gray-500 text-sm">관심사를 추가해주세요.</span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div>
+              {/* 비밀번호 변경 버튼 */}
+              <button
+                className="btn btn-outline btn-sm mr-2"
+                onClick={() => setIsPasswordChangeModalOpen(true)}
+              >
+                비밀번호 변경
+              </button>
+              {/* 회원탈퇴 버튼 */}
+              <button
+                className="btn btn-outline btn-sm text-red-500"
+                onClick={() => setIsDeleteAccountModalOpen(true)}
+              >
+                회원탈퇴
+              </button>
+            </div>
+
+          </div>
+
+          {/* 여기서부터 오른쪽 영역 */}
+          <div>
             {/* 닉네임 */}
             <div className="mb-6">
               <label className="block text-sm font-medium mb-2">닉네임</label>
@@ -234,23 +287,33 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
               <textarea
                 value={description}
                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
-                className="w-full px-3 py-2 border rounded-md resize-none bg-base-100 h-32"
+                className="w-full px-3 py-2 border rounded-md resize-none bg-base-100 h-20"
                 placeholder="자기소개를 입력하세요"
               />
             </div>
-          </div>
 
-          {/* 생년월일 */}
-          <div>
-            <div className="mb-6">
-              <label className="block text-sm font-medium mb-2">생년월일</label>
-              <input
-                type="text"
-                value={birth}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBirth(e.target.value)}
-                className="w-full px-3 py-2 border rounded-md bg-base-100"
-                placeholder="생년월일을 입력하세요"
-              />
+            <div className="mb-6 flex items-stretch gap-4">
+              {/* 생년월일 */}
+              <div className="flex-shrink-0 flex flex-col">
+                <label className="block text-sm font-medium mb-2">생년월일</label>
+                <div className="flex-grow flex items-stretch">
+                  <input
+                    type="date"
+                    value={birth}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBirth(e.target.value)}
+                    className="w-full px-3 border rounded-md bg-base-100 text-sm"
+                    placeholder="생년월일을 입력하세요"
+                  />
+                </div>
+              </div>
+
+              {/* 직업 */}
+              <div className="flex-grow flex flex-col">
+                <label className="block text-sm font-medium mb-2">직업</label>
+                <div className="flex-grow">
+                  <JobCategoryDropdown selectCategory={selectCategory} />
+                </div>
+              </div>
             </div>
 
             {/* 성별 */}
@@ -273,62 +336,13 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
                 </button>
               </div>
             </div>
-
-            {/* 직업 */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium mb-2">직업</label>
-              <JobCategoryDropdown selectCategory={selectCategory} />
-            </div>
-
-            {/* 관심사 설정 */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium mb-2">관심사 설정</label>
-              <div className="flex w-full mb-2">
-                <InterestCategoryDropdown selectCategory={setSelectedInterest} />
-                <button 
-                  onClick={handleAddInterest}
-                  className="btn btn-primary px-4 ml-2"
-                >
-                  추가
-                </button>
-              </div>
-              <div className="border rounded-md p-2 h-[120px] overflow-y-auto">
-                <div className="flex flex-wrap gap-2">
-                  {interests.length > 0 ? (
-                    interests.map((interest, index) => (
-                      <span key={index} className="bg-base-300 px-3 py-1 rounded-full text-sm flex items-center">
-                        {interest}
-                        <button onClick={() => handleRemoveInterest(index)} className="ml-2 hover:text-gray-700">
-                          <IoCloseOutline size={18} />
-                        </button>
-                      </span>
-                    ))
-                  ) : (
-                    <span className="text-gray-500 text-sm">관심사를 추가해주세요.</span>
-                  )}
-                </div>
-              </div>
-            </div>
           </div>
 
-          {/* 비밀번호 변경, 회원탈퇴, 변경완료 버튼들 */}
-          <div className="flex justify-between items-center mt-6">
-            <div>
-              <button
-                className="btn btn-outline btn-sm mr-2"
-                onClick={() => setIsPasswordChangeModalOpen(true)}
-              >
-                비밀번호 변경
-              </button>
-              <button
-                className="btn btn-outline btn-sm text-red-500"
-                onClick={() => setIsDeleteAccountModalOpen(true)}
-              >
-                회원탈퇴
-              </button>
-            </div>
-            <button className="btn btn-primary">변경 완료</button>
-          </div>
+        </div>
+        
+        {/* 변경완료 버튼 */}
+        <div className="flex justify-end items-center mt-6">
+          <button className="btn btn-primary">변경 완료</button>
         </div>
 
         {/* 비밀번호 변경 모달 */}

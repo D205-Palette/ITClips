@@ -41,7 +41,7 @@ const MessageLayout = () => {
   }
 
   return (
-    <div className={`${ isDark ? "bg-aside-dark" : "bg-aside-light" } rounded-3xl w-80 h-[35rem]`}>
+    <div className={`${ isDark ? "bg-base-300" : "bg-sky-100" } rounded-3xl w-80 h-[35rem]`}>
       {selectedChat === null && showInvite === null && (
         <AsideMessage onSelectChat={handleSelectChat} onShowInvite={handleNewChat} />
       )}

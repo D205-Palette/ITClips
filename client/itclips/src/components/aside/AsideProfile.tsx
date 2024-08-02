@@ -63,7 +63,7 @@ const AsideProfile = () => {
   };
 
   return (
-    <div className={`${ isDark ? "bg-aside-dark" : "bg-aside-light" } rounded-3xl w-80 p-8 flex flex-col items-center`}>
+    <div className={`${ isDark ? "bg-base-300" : "bg-sky-100" } rounded-3xl w-80 p-8 flex flex-col items-center`}>
       {/* 다른 유저일때 채팅하기 버튼 또는 환경설정 활성화 */}
       {isOther ? (
         <button className="btn btn-ghost btn-circle ms-16" onClick={onClickStartChat}>

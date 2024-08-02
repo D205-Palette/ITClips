@@ -64,7 +64,7 @@ const AsideRoadmap :  React.FC<Props> = (roadmap) => {
   const isMessageOpen = asideStore(state => state.isMessageOpen);
 
   return (
-    <div className={`${ isDark ? "bg-aside-dark" : "bg-aside-light" } rounded-3xl w-80 p-8 flex flex-col items-center`}>
+    <div className={`${ isDark ? "bg-base-300" : "bg-sky-100" } rounded-3xl w-80 p-8 flex flex-col items-center`}>
       {/* 더보기 버튼 */}
       { !isMessageOpen && <AsideRoadmapKebabDropdown isRoadmap={true} id={roadmapInfo.id}/> }
       {/* 북마크리스트 썸네일 */}

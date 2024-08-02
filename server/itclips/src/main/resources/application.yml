@@ -58,7 +58,16 @@ spring:
       hibernate:
         format_sql: true
 
-
+# s3
+cloud:
+  aws:
+    s3:
+      bucket: itclipsbucket
+    stack.auto: false
+    region.static: ap-northeast-2
+    credentials:
+      accessKey: AKIAU6GD2OQ5EMXR6LW4
+      secretKey: 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
 
 #spring:
 #  profiles:

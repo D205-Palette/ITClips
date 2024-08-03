@@ -36,7 +36,7 @@ const UserActivityInfo: React.FC<FollowCounts> = (follow) => {
         <div className="col-start-9 text-start font-bold">{10}</div>
       </div>
       <div className="grid grid-cols-12">
-        <div className="col-start-3 col-span-5 text-start text-gray-500">북마크 개수</div>
+        <div className="col-start-3 col-span-5 text-start text-gray-500">로드맵 개수</div>
         <div className="col-start-9 text-start font-bold">{20}</div>
       </div>
     </div>

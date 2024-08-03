@@ -51,8 +51,10 @@ public enum ErrorCode {
     FOLLOW_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "FOLLOW-001", "이미 팔로우 중인 사용자입니다."),
     FOLLOW_NOT_FOUND(HttpStatus.NOT_FOUND, "FOLLOW-002", "팔로우 관계를 찾을 수 없습니다."),
     UNFOLLOW_NOT_FOUND(HttpStatus.NOT_FOUND, "UNFOLLOW-001", "언팔로우할 팔로우 관계를 찾을 수 없습니다."),
-    INVALID_FOLLOW_REQUEST(HttpStatus.BAD_REQUEST, "FOLLOW-003", "잘못된 팔로우 요청입니다.");
+    INVALID_FOLLOW_REQUEST(HttpStatus.BAD_REQUEST, "FOLLOW-003", "잘못된 팔로우 요청입니다."),
 
+    //feed
+    FEED_NOT_FOUND(HttpStatus.NOT_FOUND, "FNF-001","피드가 없습니다.")
     ;
 
     private final HttpStatus httpStatus;

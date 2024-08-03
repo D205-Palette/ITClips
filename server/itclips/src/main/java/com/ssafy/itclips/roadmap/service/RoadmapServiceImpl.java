@@ -8,6 +8,7 @@ import com.ssafy.itclips.bookmarklist.repository.BookmarkListRepository;
 import com.ssafy.itclips.bookmarklist.service.BookmarkListService;
 import com.ssafy.itclips.error.CustomException;
 import com.ssafy.itclips.error.ErrorCode;
+import com.ssafy.itclips.feed.service.FeedService;
 import com.ssafy.itclips.roadmap.dto.*;
 import com.ssafy.itclips.roadmap.entity.Roadmap;
 import com.ssafy.itclips.roadmap.entity.RoadmapComment;
@@ -48,6 +49,7 @@ public class RoadmapServiceImpl implements RoadmapService {
     private final BookmarkListRepository bookmarkListRepository;
     private final TagRepository tagRepository;
     private final UserTagRepository userTagRepository;
+    private final FeedService feedService;
 
     //전체 로드맵 조회
     @Override
@@ -120,6 +122,8 @@ public class RoadmapServiceImpl implements RoadmapService {
         //roadmap 저장
         Roadmap roadmap = roadmapRepository.save(saveRoadmap);
 
+        //피드 생성
+        feedService.saveRoadmapFeed(userId,roadmap.getId());
         // 스탭 생성
         createStep(listIds, roadmap);
     }
@@ -181,7 +185,10 @@ public class RoadmapServiceImpl implements RoadmapService {
         roadmapRequestDTO.setOrigin(roadmapId);
         roadmapRequestDTO.setStepList(listIds);
         Roadmap saveRoadmap = roadmapRequestDTO.toEntity(user);
-        roadmapRepository.save(saveRoadmap);
+        Roadmap savedRoadmap = roadmapRepository.save(saveRoadmap);
+
+        //피드 생성
+        feedService.saveRoadmapFeed(userId,savedRoadmap.getId());
 
         createStep(roadmapRequestDTO.getStepList(), saveRoadmap);
     }

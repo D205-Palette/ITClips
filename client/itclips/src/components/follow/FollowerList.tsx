@@ -7,9 +7,6 @@ import FollowerItem from "./FollowerItem";
 // apis
 import { getFollowerList } from "../../api/followApi";
 
-// stores
-import { authStore } from "../../stores/authStore";
-
 interface Follower {
   id: number;
   fromUserId: number;
@@ -43,7 +40,6 @@ const FollowerList = () => {
 
   return (
     <div className="mt-4">
-      {/* 추천 결과 */}
       <FollowerItem items={followerList} />
     </div>
   );

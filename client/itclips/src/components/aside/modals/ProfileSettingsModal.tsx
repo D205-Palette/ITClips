@@ -12,7 +12,7 @@ import DeleteAccountModal from "./DeleteAccountModal";
 import InterestCategoryDropdown from "../ui/InterestCategoryDropdown";
 
 // apis
-import { updateProfileImage } from "../../../api/profileApi";
+import { updateProfileImage, getMyInterest, addMyInterest, removeMyInterest } from "../../../api/profileApi";
 
 // stores
 import { authStore } from "../../../stores/authStore";
@@ -23,6 +23,11 @@ interface ProfileSettingsModalProps {
   onClose: () => void;
 }
 
+interface Interest {
+  id: number;
+  title: string;
+}
+
 const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onClose }) => {
 
   const userInfo = authStore(state => state.userInfo);
@@ -30,8 +35,6 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
   // 임시 데이터들
   const [ name, setName ] = useState<string>("");
   const [ birth, setBirth ] = useState<string>("");
-  const [ interests, setInterests ] = useState<string[]>([ "Java", "Python" ]);
-  const [ newInterest, setNewInterest ] = useState<string>("");
   const [ description, setDescription ] = useState<string>("");
 
   const isDark = darkModeStore(state => state.isDark)
@@ -39,20 +42,53 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
   const [ gender, setGender ] = useState(""); // 성별 상태
   const [ isPasswordChangeModalOpen, setIsPasswordChangeModalOpen ] = useState<boolean>(false);
   const [ isDeleteAccountModalOpen, setIsDeleteAccountModalOpen ] = useState<boolean>(false);
-  const [ selectedInterest, setSelectedInterest ] = useState<string>("");
   const [ selectedFile, setSelectedFile ] = useState<File | null>(null);
   const [ isDuplicateNickname, setIsDuplicateNickname ] = useState<boolean | null>(null);
+
+  const [interests, setInterests] = useState<Interest[]>([]);
+  const [selectedInterest, setSelectedInterest] = useState<Interest | null>(null);
 
   // 프로필 이미지 상태
   const [profileImage, setProfileImage] = useState<string | null>(null);
 
   // 관심사 추가 함수
-  const handleAddInterest = (): void => {
-    if (selectedInterest && !interests.includes(selectedInterest)) {
-      setInterests([...interests, selectedInterest]);
-      setSelectedInterest('');
+  const handleAddInterest = async (): Promise<void> => {
+    if (selectedInterest && !interests.some(interest => interest.id === selectedInterest.id)) {
+      try {
+        await addMyInterest(userInfo.id ?? 0, selectedInterest.id);
+        setInterests([...interests, selectedInterest]);
+        setSelectedInterest(null);
+      } catch (error) {
+        console.error("Failed to add interest:", error);
+      }
     }
   };
+  
+  // 관심사 제거 함수
+  const handleRemoveInterest = async (interestId: number): Promise<void> => {
+    try {
+      await removeMyInterest(userInfo.id ?? 0, interestId);
+      setInterests(interests.filter(interest => interest.id !== interestId));
+    } catch (error) {
+      console.error("Failed to remove interest:", error);
+    }
+  };
+  
+  // 관심사 목록 불러오기
+  const fetchInterests = async () => {
+    try {
+      const response = await getMyInterest(userInfo.id ?? 0);
+      setInterests(response.data);
+    } catch (error) {
+      console.error("Failed to fetch interests:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (userInfo.id) {
+      fetchInterests();
+    }
+  }, [userInfo.id]);
 
   // 성별 선택 핸들러
   const handleGenderSelect = (
@@ -66,11 +102,6 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
   // 카테고리 선택 정보 함수
   const selectCategory = (category: string) => {
     setJobCategory(category);
-  };
-
-  // 관심사 제거 함수
-  const handleRemoveInterest = (index: number): void => {
-    setInterests(interests.filter((_, i) => i !== index));
   };
 
   // 비밀번호 변경 모달 로직
@@ -216,6 +247,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
                   <button 
                     onClick={handleAddInterest}
                     className="btn btn-primary min-h-[2.5rem] h-auto px-4 ml-2 flex-shrink-0"
+                    disabled={!selectedInterest}
                   >
                     +
                   </button>
@@ -224,10 +256,10 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
               <div className="border rounded-md p-2 h-[120px] overflow-y-auto">
                 <div className="flex flex-wrap gap-2">
                   {interests.length > 0 ? (
-                    interests.map((interest, index) => (
-                      <span key={index} className="bg-base-300 px-3 py-1 rounded-full text-sm flex items-center">
-                        {interest}
-                        <button onClick={() => handleRemoveInterest(index)} className="ml-2 hover:text-gray-700">
+                    interests.map((interest) => (
+                      <span key={interest.id} className="bg-base-300 px-3 py-1 rounded-full text-sm flex items-center">
+                        {interest.title}
+                        <button onClick={() => handleRemoveInterest(interest.id)} className="ml-2 hover:text-gray-700">
                           <IoCloseOutline size={18} />
                         </button>
                       </span>

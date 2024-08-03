@@ -12,7 +12,8 @@ import DeleteAccountModal from "./DeleteAccountModal";
 import InterestCategoryDropdown from "../ui/InterestCategoryDropdown";
 
 // apis
-import { updateProfileImage, getMyInterest, addMyInterest, removeMyInterest, changePassword } from "../../../api/profileApi";
+import { updateProfileImage, getMyInterest, addMyInterest, removeMyInterest, changePassword, deleteUserAccount } from "../../../api/profileApi";
+import { logoutApi } from "../../../api/authApi";
 
 // stores
 import { authStore } from "../../../stores/authStore";
@@ -31,6 +32,7 @@ interface Interest {
 const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onClose }) => {
 
   const userInfo = authStore(state => state.userInfo);
+  const logout = authStore(state => state.logout);
 
   // 임시 데이터들
   const [ name, setName ] = useState<string>("");
@@ -121,9 +123,23 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
     }
   };
 
-  const handleDeleteAccount = () => {
-    console.log('Account deletion confirmed');
-    // 회원 탈퇴 로직 넣기
+  // 회원 탈퇴 핸들러
+  const handleDeleteAccount = async () => {
+    if (userInfo.id) {
+      try {
+        await deleteUserAccount(userInfo.id);
+        console.log('회원 탈퇴가 성공적으로 처리되었습니다.');
+        await logoutApi();
+        logout();
+        onClose(); // 모달 닫기
+      } catch (error) {
+        console.error('회원 탈퇴 중 오류가 발생했습니다:', error);
+        // 오류 메시지를 사용자에게 표시하는 로직 추가
+      }
+    } else {
+      console.error('사용자 ID가 없습니다.');
+      // 오류 메시지를 사용자에게 표시하는 로직 추가
+    }
   };
 
   useEffect(() => {

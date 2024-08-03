@@ -244,11 +244,13 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         Integer scrapCount = bookmarkList.getBookmarkListScraps().size();
         Boolean isScraped = bookmarkListScrapRepository.existsByUserIdAndBookmarkListId(userId, bookmarkList.getId());
 
+        String imageUrl = fileService.getPresignedUrl("images", bookmarkList.getImage(), false).get("url");
+
         // bookmark 정보
         List<BookmarkDetailDTO> bookmarkDetails = bookmarkListRepository.findDetailedByListId(bookmarkList.getId());
         bookmarkDetails.forEach(bookmarkDetailDTO -> addAdditionalInfoForBookmarkDetailDTO(bookmarkDetailDTO, userId));
 
-        return bookmarkList.makeBookmarkListDetailDTO(likeCount, scrapCount, isLiked, isScraped, categories, tags, users, bookmarkDetails);
+        return bookmarkList.makeBookmarkListDetailDTO(likeCount, scrapCount, isLiked, isScraped, imageUrl, categories, tags, users, bookmarkDetails);
     }
 
     private void addAdditionalInfoForBookmarkDetailDTO(BookmarkDetailDTO bookmarkDetailDTO, Long userId) {

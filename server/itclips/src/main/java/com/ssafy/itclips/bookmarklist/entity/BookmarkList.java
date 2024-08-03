@@ -134,7 +134,7 @@ public class BookmarkList {
                 .build();
     }
 
-    public BookmarkListDetailDTO makeBookmarkListDetailDTO(Integer likeCount, Integer scrapCount, Boolean isLiked, Boolean isScraped,
+    public BookmarkListDetailDTO makeBookmarkListDetailDTO(Integer likeCount, Integer scrapCount, Boolean isLiked, Boolean isScraped, String imageUrl,
                                                            List<CategoryParamDTO> categories, Set<TagDTO> tags, List<UserTitleDTO> users, List<BookmarkDetailDTO> bookmarks) {
         return BookmarkListDetailDTO.builder()
                 .id(this.id)
@@ -142,7 +142,7 @@ public class BookmarkList {
                 .description(this.description)
                 .likeCount(likeCount)
                 .scrapCount(scrapCount)
-                .image(this.image)
+                .image(imageUrl)
                 .isLiked(isLiked)
                 .isScraped(isScraped)
                 .categories(categories)

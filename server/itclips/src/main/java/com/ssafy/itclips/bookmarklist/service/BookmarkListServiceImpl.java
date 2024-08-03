@@ -19,11 +19,12 @@ import com.ssafy.itclips.category.entity.Category;
 import com.ssafy.itclips.category.repository.CategoryRepository;
 import com.ssafy.itclips.error.CustomException;
 import com.ssafy.itclips.error.ErrorCode;
+import com.ssafy.itclips.global.file.DataResponseDto;
+import com.ssafy.itclips.global.file.FileService;
 import com.ssafy.itclips.group.entity.UserGroup;
 import com.ssafy.itclips.group.repository.GroupRepository;
 import com.ssafy.itclips.tag.dto.TagDTO;
 import com.ssafy.itclips.tag.entity.BookmarkListTag;
-import com.ssafy.itclips.tag.entity.BookmarkTag;
 import com.ssafy.itclips.tag.entity.Tag;
 import com.ssafy.itclips.tag.repository.BookmarkListTagRepository;
 import com.ssafy.itclips.tag.service.TagService;
@@ -53,14 +54,17 @@ public class BookmarkListServiceImpl implements BookmarkListService {
     private final BookmarkListLikeRepository bookmarkListLikeRepository;
     private final BookmarkListScrapRepository bookmarkListScrapRepository;
     private final TagService tagService;
+    private final FileService fileService;
 
     private final static Integer USER_NUM = 1;
 
     @Override
     @Transactional
-    public void createBookmarkList(Long userId, BookmarkListDTO bookmarkListDTO) throws RuntimeException {
+    public DataResponseDto createBookmarkList(Long userId, BookmarkListDTO bookmarkListDTO) throws RuntimeException {
         User user = userRepository.findById(userId)
                 .orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+        DataResponseDto imageInfo = DataResponseDto.of(fileService.getPresignedUrl("images",bookmarkListDTO.getImage(),true));
+        bookmarkListDTO.setImageToS3FileName(imageInfo.getImage());
 
         List<Tag> tags = tagService.saveTags(bookmarkListDTO.getTags());
         List<Category> categories =createNewCategories(bookmarkListDTO.getCategories());
@@ -75,15 +79,19 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         categoryRepository.saveAll(categories);
         groupRepository.saveAll(groups);
         bookmarkListTagRepository.saveAll(bookmarkListTags);
+
+        return imageInfo;
     }
 
     @Override
     @Transactional
-    public void updateBookmarkList(Long userId, Long listId, BookmarkListDTO bookmarkListDTO) throws RuntimeException{
+    public DataResponseDto updateBookmarkList(Long userId, Long listId, BookmarkListDTO bookmarkListDTO) throws RuntimeException{
         // 기존 북마크 리스트 목록을 조회
         BookmarkList existingBookmarkList = bookmarkListRepository.findById(listId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND));
         // 업데이트할 내용 설정
+        DataResponseDto imageInfo = DataResponseDto.of(fileService.getPresignedUrl("images",bookmarkListDTO.getImage(),true));
+        bookmarkListDTO.setImageToS3FileName(imageInfo.getImage());
         existingBookmarkList.updateBookmarkList(bookmarkListDTO);
         // 기존 태그, 카테고리, 그룹 삭제
         deleteRelations(userId, existingBookmarkList);
@@ -100,6 +108,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         categoryRepository.saveAll(categories);
         groupRepository.saveAll(groups);
         bookmarkListTagRepository.saveAll(bookmarkListTags);
+        return imageInfo;
     }
 
     @Override

@@ -32,7 +32,7 @@ public class FileService {
                 getGeneratePresignedUrlForDownload(bucket, fileName);
         URL url = amazonS3.generatePresignedUrl(generatePresignedUrlRequest);
 
-        return Map.of("url", url.toString());
+        return Map.of("url", url.toString(), "image", fileName);
     }
 
     private GeneratePresignedUrlRequest getGeneratePresignedUrlForDownload(String bucket, String fileName) {

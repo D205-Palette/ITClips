@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 
 // apis
 import { checkUserInfo } from "../../api/authApi";
-import { getFollowCounts } from "../../api/followApi";
+import { getFollowCounts, getFollowingList, unfollow, follow } from "../../api/followApi";
 
 // icons
 import { IoChatboxEllipsesOutline, IoSettingsOutline } from "react-icons/io5";
@@ -31,11 +31,6 @@ interface User {
   birth?: string;
 }
 
-interface FollowCounts {
-  followerCount?: number;
-  followingCount?: number;
-}
-
 const AsideProfile = () => {
 
   // 내 정보 가져오기
@@ -46,8 +41,13 @@ const AsideProfile = () => {
   const urlUserId = params.user_id ? parseInt(params.user_id, 10) : undefined;
   
   const [ urlUserInfo, setUrlUserInfo ] = useState<User>();
-  const [ followCounts, setFollowCounts ] = useState<FollowCounts>();
   const { followerCount, followingCount, setFollowerCount, setFollowingCount } = useFollowStore();
+  
+  const isDark = darkModeStore(state => state.isDark);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  
+  // (임시) 팔로우 상태인지? - 팔로우 버튼 테스트
+  const [isFollow, setIsFollow] = useState<boolean>(false);
 
   // url 유저 정보 조회
   const fetchUserInfo = async () => {
@@ -83,11 +83,22 @@ const AsideProfile = () => {
     fetchFollowCount();
   }, [urlUserId]);
 
-  const isDark = darkModeStore(state => state.isDark);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  // url 유저의 팔로우 상태 확인
+  const checkFollowStatus = async () => {
+    if (myInfo.id && urlUserId && myInfo.id !== urlUserId) {
+      try {
+        const response = await getFollowingList(myInfo.id);
+        const isFollowing = response.data.some((follow: { toUserId: number }) => follow.toUserId === urlUserId);
+        setIsFollow(isFollowing);
+      } catch (error) {
+        console.error("팔로우 상태 조회 실패", error);
+      }
+    }
+  };
 
-  // (임시) 팔로우 상태인지? - 팔로우 버튼 테스트
-  const [isFollow, setIsFollow] = useState<boolean>(false);
+  useEffect(() => {
+    checkFollowStatus();
+  }, [urlUserId, myInfo.id]);
 
   const onClickStartChat = (): void => {
     // 다른 유저 프로필의 채팅하기 버튼을 눌렀을 때
@@ -96,8 +107,26 @@ const AsideProfile = () => {
   };
 
   // 팔로우 or 언팔로우 버튼을 눌렀을 때 동작
-  const onClickFollow = (): void => {
-    setIsFollow(!isFollow);
+  const onClickFollow = async (): Promise<void> => {
+    if (myInfo.id && urlUserId) {
+      if (isFollow) {
+        try {
+          await unfollow(myInfo.id, urlUserId);
+          setIsFollow(false);
+          setFollowingCount(followingCount - 1);
+        } catch (error) {
+          console.error("언팔로우 실패", error);
+        }
+      } else {
+        try {
+          await follow(myInfo.id, urlUserId);
+          setIsFollow(true);
+          setFollowingCount(followingCount + 1);
+        } catch (error) {
+          console.error("팔로우 실패", error);
+        }
+      }
+    }
   };
 
   // 프로필 설정 모달 상태 관련

@@ -72,7 +72,7 @@ const FollowerItem: React.FC<Props> = ({ items }) => {
       {followers.map((item) => (
         <div key={item.id}>
           <NavLink
-            to={`/user/${item.id}`}
+            to={`/user/${item.fromUserId}`}
             className="flex items-center space-x-4 p-4 rounded-lg shadow"
           >
             <img src={image} alt={item.nickname} className="w-20 h-20 object-cover rounded" />

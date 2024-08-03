@@ -25,12 +25,13 @@ public class RoadmapDTO {
     private List<RoadmapCommentDTO> commentList; // 댓글 리스트
     private Long likeCnt; // 좋아요 수
     private Long scrapCnt; // 스크랩 수
+    private Boolean isLiked; // 좋아요 여부
 
 
     @Builder
     public RoadmapDTO(Long id, Long origin,  Long userId,String userName,  String title, String description, LocalDateTime createdAt,
                       String image, Byte isPublic, List<RoadmapStepResponseDto> stepList, List<RoadmapCommentDTO> commentList,
-                      Long likeCnt, Long scrapCnt) {
+                      Long likeCnt, Long scrapCnt,Boolean isLiked) {
         this.id = id;
         this.origin = origin;
         this.userId = userId;
@@ -44,10 +45,11 @@ public class RoadmapDTO {
         this.commentList = commentList;
         this.likeCnt = likeCnt;
         this.scrapCnt = scrapCnt;
+        this.isLiked = isLiked;
     }
 
     public static RoadmapDTO toDTO(Roadmap roadmap,List<RoadmapStepResponseDto> stepResponseDtoList,
-                                   List<RoadmapCommentDTO>  roadmapCommentDTOList,Long likeCnt,Long scrapCnt, String imageUrl ) {
+                                   List<RoadmapCommentDTO>  roadmapCommentDTOList,Long likeCnt,Long scrapCnt, String imageUrl,Boolean isLiked ) {
         return RoadmapDTO.builder()
                 .id(roadmap.getId())
                 .userId(roadmap.getUser().getId())
@@ -61,6 +63,7 @@ public class RoadmapDTO {
                 .commentList(roadmapCommentDTOList)
                 .likeCnt(likeCnt)
                 .scrapCnt(scrapCnt)
+                .isLiked(isLiked)
                 .build();
     }
 }

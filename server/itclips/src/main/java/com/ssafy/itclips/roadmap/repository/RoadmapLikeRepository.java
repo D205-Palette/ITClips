@@ -11,5 +11,5 @@ public interface RoadmapLikeRepository extends JpaRepository<RoadmapLike, Long> 
     RoadmapLike findByRoadmapIdAndUserId(Long roadmapId, Long userId);
     Optional<List<RoadmapLike>> findByRoadmapId(Long roadmapId);
     void deleteByRoadmapIdAndUserId(Long roadmapId, Long userId);
-
+    Boolean existsByRoadmapIdAndUserId(Long roadmapId, Long userId);
 }

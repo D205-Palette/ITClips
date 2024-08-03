@@ -49,7 +49,6 @@ public class RoadmapServiceImpl implements RoadmapService {
     private final RoadmapLikeRepository roadmapLikeRepository;
     private final UserRepository userRepository;
     private final BookmarkListRepository bookmarkListRepository;
-    private final TagRepository tagRepository;
     private final UserTagRepository userTagRepository;
     private final FeedService feedService;
     private final FileService fileService;
@@ -57,7 +56,7 @@ public class RoadmapServiceImpl implements RoadmapService {
     //전체 로드맵 조회
     @Override
     @Transactional
-    public List<RoadmapInfoDTO> findAllRoadmapList() throws RuntimeException{
+    public List<RoadmapInfoDTO> findAllRoadmapList(Long viewId) throws RuntimeException{
         // roadmap 가져오기
         List<Roadmap> roadmapList = roadmapRepository.findAll();
         if(roadmapList.isEmpty()){
@@ -67,12 +66,25 @@ public class RoadmapServiceImpl implements RoadmapService {
         List<RoadmapInfoDTO> roadmapInfoDTOList = new ArrayList<>();
 
         for (Roadmap roadmap : roadmapList) {
-            // 로드맵 단계 수
-            Long stepCnt = roadmapStepRepository.countByRoadmapId(roadmap.getId());
+
+            // 로드맵 단계
+            List<RoadmapStep> roadmapStepList = roadmapStepRepository.findByRoadmapId(roadmap.getId());
+            List<StepInfoDTO> steps = new ArrayList<>();
+
+            for(RoadmapStep roadmapStep : roadmapStepList){
+                steps.add(StepInfoDTO.toDTO(roadmapStep));
+            }
 
             // 좋아요 수
             Long likeCnt = roadmapLikeRepository.countByRoadmapId(roadmap.getId());
-            RoadmapInfoDTO roadmapInfoDTO = RoadmapInfoDTO.toDto(roadmap,stepCnt,null,likeCnt);
+
+            // 체크한단계 수
+            Long checkCnt = roadmapStepRepository.countByRoadmapIdAndCheck(roadmap.getId(), true);
+
+            // 좋아요 했는지 안했는지
+            Boolean isLiked = roadmapLikeRepository.existsByRoadmapIdAndUserId(roadmap.getId(),viewId);
+
+            RoadmapInfoDTO roadmapInfoDTO = RoadmapInfoDTO.toDto(roadmap,steps.size(),checkCnt,likeCnt,steps,isLiked);
             roadmapInfoDTOList.add(roadmapInfoDTO);
         }
 
@@ -81,7 +93,7 @@ public class RoadmapServiceImpl implements RoadmapService {
 
     // userid 기준 로드맵 조회
     @Override
-    public List<RoadmapInfoDTO> findUserRoadmapList(Long userId) throws RuntimeException {
+    public List<RoadmapInfoDTO> findUserRoadmapList(Long userId,Long viewId) throws RuntimeException {
         // 유저 아이디로 로드맵 찾기
         List<Roadmap> roadmapList = roadmapRepository.findByUserId(userId)
                         .orElseThrow(() -> new CustomException(ErrorCode.ROADMAP_NOT_FOUND));
@@ -91,14 +103,23 @@ public class RoadmapServiceImpl implements RoadmapService {
 
         // 로드맵 -> 로드맵 출력용으로 바꿈
         for (Roadmap roadmap : roadmapList) {
-            // 로드맵 단계 수
-            Long stepCnt = roadmapStepRepository.countByRoadmapId(roadmap.getId());
+            // 로드맵 단계
+            List<RoadmapStep> roadmapStepList = roadmapStepRepository.findByRoadmapId(roadmap.getId());
+            List<StepInfoDTO> steps = new ArrayList<>();
+
+            for(RoadmapStep roadmapStep : roadmapStepList){
+                steps.add(StepInfoDTO.toDTO(roadmapStep));
+            }
             // 체크한단계 수
             Long checkCnt = roadmapStepRepository.countByRoadmapIdAndCheck(roadmap.getId(), true);
             // 좋아요 수
             Long likeCnt = roadmapLikeRepository.countByRoadmapId(roadmap.getId());
 
-            RoadmapInfoDTO roadmapInfoDTO = RoadmapInfoDTO.toDto(roadmap,stepCnt,checkCnt,likeCnt);
+
+            // 좋아요 했는지 안했는지
+            Boolean isLiked = roadmapLikeRepository.existsByRoadmapIdAndUserId(roadmap.getId(),viewId);
+
+            RoadmapInfoDTO roadmapInfoDTO = RoadmapInfoDTO.toDto(roadmap,steps.size(),checkCnt,likeCnt,steps,isLiked);
             roadmapInfoDTOList.add(roadmapInfoDTO);
         }
 
@@ -265,7 +286,7 @@ public class RoadmapServiceImpl implements RoadmapService {
 
     //로드맵 상세보기
     @Override
-    public RoadmapDTO roadmapDetail(Long roadmapId) throws RuntimeException {
+    public RoadmapDTO roadmapDetail(Long roadmapId,Long viewId) throws RuntimeException {
         // 로드맵 가져오기
         Roadmap roadmap = roadmapRepository.findById(roadmapId)
                 .orElseThrow(() -> new CustomException(ErrorCode.ROADMAP_NOT_FOUND));
@@ -284,8 +305,12 @@ public class RoadmapServiceImpl implements RoadmapService {
 
         //이미지 url 생성
         String imageUrl = fileService.getPresignedUrl("images", roadmap.getImage(), false).get("url");
+
+        // 좋아요 했는지 안했는지
+        Boolean isLiked = roadmapLikeRepository.existsByRoadmapIdAndUserId(roadmap.getId(),viewId);
+
         // dto에 넣기
-        RoadmapDTO roadmapDTO = RoadmapDTO.toDTO(roadmap, stepResponseDtoList, roadmapCommentDTOList, likeCnt, scrapCnt, imageUrl);
+        RoadmapDTO roadmapDTO = RoadmapDTO.toDTO(roadmap, stepResponseDtoList, roadmapCommentDTOList, likeCnt, scrapCnt, imageUrl,isLiked);
 
 
         return roadmapDTO;

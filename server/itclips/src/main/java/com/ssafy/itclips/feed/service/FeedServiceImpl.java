@@ -8,7 +8,9 @@ import com.ssafy.itclips.feed.repository.FeedRepository;
 import com.ssafy.itclips.follow.entity.Follow;
 import com.ssafy.itclips.follow.repository.FollowRepository;
 import com.ssafy.itclips.roadmap.dto.RoadmapInfoDTO;
+import com.ssafy.itclips.roadmap.dto.StepInfoDTO;
 import com.ssafy.itclips.roadmap.entity.Roadmap;
+import com.ssafy.itclips.roadmap.entity.RoadmapStep;
 import com.ssafy.itclips.roadmap.repository.RoadmapLikeRepository;
 import com.ssafy.itclips.roadmap.repository.RoadmapRepository;
 import com.ssafy.itclips.roadmap.repository.RoadmapStepRepository;
@@ -49,14 +51,24 @@ public class FeedServiceImpl implements FeedService{
                     continue;
                 }
 
-                // 로드맵 단계 수
-                Long stepCnt = roadmapStepRepository.countByRoadmapId(roadmap.get().getId());
+                // 로드맵 단계
+                List<RoadmapStep> roadmapStepList = roadmapStepRepository.findByRoadmapId(roadmap.get().getId());
+                List<StepInfoDTO> steps = new ArrayList<>();
+
+                for(RoadmapStep roadmapStep : roadmapStepList){
+                    steps.add(StepInfoDTO.toDTO(roadmapStep));
+                }
+
                 // 체크한단계 수
                 Long checkCnt = roadmapStepRepository.countByRoadmapIdAndCheck(roadmap.get().getId(), true);
                 // 좋아요 수
                 Long likeCnt = roadmapLikeRepository.countByRoadmapId(roadmap.get().getId());
 
-                RoadmapInfoDTO roadmapInfoDTO = RoadmapInfoDTO.toDto(roadmap.get(),stepCnt,checkCnt,likeCnt);
+                // 좋아요 했는지 안했는지
+                Boolean isLiked = roadmapLikeRepository.existsByRoadmapIdAndUserId(roadmap.get().getId(),userId);
+
+
+                RoadmapInfoDTO roadmapInfoDTO = RoadmapInfoDTO.toDto(roadmap.get(),steps.size(),checkCnt,likeCnt,steps,isLiked);
                 roadmapInfoDTOList.add(roadmapInfoDTO);
             }
 

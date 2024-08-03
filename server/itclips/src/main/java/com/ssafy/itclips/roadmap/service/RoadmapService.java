@@ -12,9 +12,9 @@ import java.util.List;
 public interface RoadmapService {
 
     // 모든 로드맵 찾기
-    List<RoadmapInfoDTO> findAllRoadmapList() throws RuntimeException;
+    List<RoadmapInfoDTO> findAllRoadmapList(Long viewId) throws RuntimeException;
     // 특정 유저 로드맵 찾기
-    List<RoadmapInfoDTO> findUserRoadmapList(Long userId) throws RuntimeException;
+    List<RoadmapInfoDTO> findUserRoadmapList(Long userId,Long viewId) throws RuntimeException;
 
 
     // 로드맵 생성
@@ -22,7 +22,7 @@ public interface RoadmapService {
     // 로드맵 삭제하기
     void deleteRoadmap(Long roadmapId,Long userId) throws RuntimeException;
     // 로드맵 상세보기
-    RoadmapDTO roadmapDetail(Long roadmapId) throws RuntimeException;
+    RoadmapDTO roadmapDetail(Long roadmapId,Long viewId) throws RuntimeException;
     // 로드맵 수정
     DataResponseDto updateRoadmap(Long roadmapId, Long userId, RoadmapRequestDTO roadmapRequestDTO) throws RuntimeException;
 

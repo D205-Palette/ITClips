@@ -15,6 +15,4 @@ public interface FeedService {
     //북마크 피드 출력
     List<BookmarkListResponseDTO> getListFeed(Long userId);
 
-    // 북마크 피드 레디스 저장
-    void saveListFeed(Long userId,Long listId);
 }

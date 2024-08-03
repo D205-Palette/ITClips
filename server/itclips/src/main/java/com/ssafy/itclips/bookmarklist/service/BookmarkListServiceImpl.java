@@ -19,7 +19,11 @@ import com.ssafy.itclips.category.entity.Category;
 import com.ssafy.itclips.category.repository.CategoryRepository;
 import com.ssafy.itclips.error.CustomException;
 import com.ssafy.itclips.error.ErrorCode;
+import com.ssafy.itclips.feed.repository.FeedRepository;
 import com.ssafy.itclips.feed.service.FeedService;
+import com.ssafy.itclips.follow.entity.Follow;
+import com.ssafy.itclips.follow.repository.FollowRepository;
+import com.ssafy.itclips.follow.service.FollowService;
 import com.ssafy.itclips.group.entity.UserGroup;
 import com.ssafy.itclips.group.repository.GroupRepository;
 import com.ssafy.itclips.tag.dto.TagDTO;
@@ -56,7 +60,9 @@ public class BookmarkListServiceImpl implements BookmarkListService {
     private final BookmarkListScrapRepository bookmarkListScrapRepository;
     private final TagService tagService;
 
-    private final FeedService feedService;
+    private final FollowRepository followRepository;
+    private final FeedRepository feedRepository;
+
 
     private final static Integer USER_NUM = 1;
 
@@ -78,7 +84,12 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         BookmarkList savedBookmarkList =  bookmarkListRepository.save(bookmarkList);
 
         //피드 저장
-        feedService.saveListFeed(userId, savedBookmarkList.getId());
+        List<Follow> followersList = followRepository.findByToId(userId);
+
+        for(Follow follow : followersList) {
+            feedRepository.saveFeed(follow.getFrom().getId(),savedBookmarkList.getId(), "listFeed");
+        }
+
         categoryRepository.saveAll(categories);
         groupRepository.saveAll(groups);
         bookmarkListTagRepository.saveAll(bookmarkListTags);
@@ -275,7 +286,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
                 .collect(Collectors.toList());
     }
 
-    private BookmarkListResponseDTO convertToBookmarkListResponseDTO(BookmarkList bookmarkList, Long userId) {
+    public BookmarkListResponseDTO convertToBookmarkListResponseDTO(BookmarkList bookmarkList, Long userId) {
         List<UserTitleDTO> users = getUserTitleDTOs(bookmarkList);
         Set<TagDTO> tags = getTagDTOs(bookmarkList);
 

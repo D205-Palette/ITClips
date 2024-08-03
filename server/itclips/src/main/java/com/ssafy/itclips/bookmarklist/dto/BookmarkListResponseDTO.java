@@ -36,4 +36,5 @@ public class BookmarkListResponseDTO {
         this.users = users;
     }
 
+
 }

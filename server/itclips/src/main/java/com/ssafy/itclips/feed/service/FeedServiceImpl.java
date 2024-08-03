@@ -1,6 +1,9 @@
 package com.ssafy.itclips.feed.service;
 
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
+import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
+import com.ssafy.itclips.bookmarklist.repository.BookmarkListRepository;
+import com.ssafy.itclips.bookmarklist.service.BookmarkListServiceImpl;
 import com.ssafy.itclips.error.CustomException;
 import com.ssafy.itclips.error.ErrorCode;
 import com.ssafy.itclips.feed.repository.FeedRepository;
@@ -19,6 +22,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -30,6 +34,8 @@ public class FeedServiceImpl implements FeedService{
     private final RoadmapStepRepository roadmapStepRepository;
     private final RoadmapLikeRepository roadmapLikeRepository;
     private final FollowRepository followRepository;
+    private final BookmarkListServiceImpl bookmarkListService;
+    private final BookmarkListRepository bookmarkListRepository;
 
     // 로드맵 피드 출력
     @Transactional
@@ -40,18 +46,20 @@ public class FeedServiceImpl implements FeedService{
 
         if(roadmapIds != null) {
             for (Long roadmapId : roadmapIds) {
-                Roadmap roadmap = roadmapRepository.findById(roadmapId)
-                        .orElseThrow(()-> new CustomException(ErrorCode.ROADMAP_NOT_FOUND));
-                //TODO: 삭제됐을 경우 처리
+                Optional<Roadmap> roadmap = roadmapRepository.findById(roadmapId);
+
+                if(!roadmap.isPresent()) {
+                    continue;
+                }
 
                 // 로드맵 단계 수
-                Long stepCnt = roadmapStepRepository.countByRoadmapId(roadmap.getId());
+                Long stepCnt = roadmapStepRepository.countByRoadmapId(roadmap.get().getId());
                 // 체크한단계 수
-                Long checkCnt = roadmapStepRepository.countByRoadmapIdAndCheck(roadmap.getId(), true);
+                Long checkCnt = roadmapStepRepository.countByRoadmapIdAndCheck(roadmap.get().getId(), true);
                 // 좋아요 수
-                Long likeCnt = roadmapLikeRepository.countByRoadmapId(roadmap.getId());
+                Long likeCnt = roadmapLikeRepository.countByRoadmapId(roadmap.get().getId());
 
-                RoadmapInfoDTO roadmapInfoDTO = RoadmapInfoDTO.toDto(roadmap,stepCnt,checkCnt,likeCnt);
+                RoadmapInfoDTO roadmapInfoDTO = RoadmapInfoDTO.toDto(roadmap.get(),stepCnt,checkCnt,likeCnt);
                 roadmapInfoDTOList.add(roadmapInfoDTO);
             }
 
@@ -74,17 +82,22 @@ public class FeedServiceImpl implements FeedService{
     @Transactional
     @Override
     public List<BookmarkListResponseDTO> getListFeed(Long userId) {
-        return List.of();
-    }
+        List<Long> listIds = feedRepository.getUserFeed(userId, "listFeed");
+        List<BookmarkListResponseDTO> bookmarkListResponseDTOList = new ArrayList<>();
 
-    //리스트 피드 저장
-    @Transactional
-    @Override
-    public void saveListFeed(Long userId, Long listId){
-        List<Follow> followersList = followRepository.findByToId(userId);
+        if(listIds != null) {
+            for (Long listId : listIds) {
+                Optional<BookmarkList> bookmarkList = bookmarkListRepository.findById(listId);
+                //TODO: 삭제됐을 때 처리
 
-        for(Follow follow : followersList) {
-            feedRepository.saveFeed(follow.getFrom().getId(),listId, "listFeed");
+                if(!bookmarkList.isPresent()) {
+                    continue;
+                }
+
+                bookmarkListResponseDTOList.add(bookmarkListService.convertToBookmarkListResponseDTO(bookmarkList.get(),userId));
+            }
         }
+        return bookmarkListResponseDTOList;
     }
+
 }

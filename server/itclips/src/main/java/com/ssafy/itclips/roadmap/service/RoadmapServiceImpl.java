@@ -271,8 +271,10 @@ public class RoadmapServiceImpl implements RoadmapService {
         // 스크랩 수
         Long scrapCnt = roadmapRepository.countByOrigin(roadmapId);
 
+        //이미지 url 생성
+        String imageUrl = fileService.getPresignedUrl("images", roadmap.getImage(), false).get("url");
         // dto에 넣기
-        RoadmapDTO roadmapDTO = RoadmapDTO.toDTO(roadmap, stepResponseDtoList, roadmapCommentDTOList, likeCnt, scrapCnt);
+        RoadmapDTO roadmapDTO = RoadmapDTO.toDTO(roadmap, stepResponseDtoList, roadmapCommentDTOList, likeCnt, scrapCnt, imageUrl);
 
 
         return roadmapDTO;
@@ -461,7 +463,7 @@ public class RoadmapServiceImpl implements RoadmapService {
 
     // 로드맵 댓글 DTO
     private static RoadmapCommentDTO makeRoadmapCommentDTO(Long roadmapId, RoadmapComment roadmapComment) {
-        return new RoadmapCommentDTO().builder()
+        return RoadmapCommentDTO.builder()
                 .id(roadmapComment.getId())
                 .comment(roadmapComment.getContents())
                 .userId(roadmapComment.getUser().getId())

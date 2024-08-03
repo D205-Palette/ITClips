@@ -373,11 +373,12 @@ public class BookmarkListServiceImpl implements BookmarkListService {
                         (existing, replacement) -> existing // Handle duplicates by keeping the existing tagDTO
                 ))
                 .values());
+        String imageUrl = fileService.getPresignedUrl("images", bookmarkList.getImage(), false).get("url");
 
         return BookmarkListRoadmapDTO.builder()
                 .id(bookmarkList.getId())
                 .title(bookmarkList.getTitle())
-                .image(bookmarkList.getImage())
+                .image(imageUrl)
                 .description(bookmarkList.getDescription())
                 .bookmarkCount(bookmarkList.getBookmarks().size())
                 .users(users)

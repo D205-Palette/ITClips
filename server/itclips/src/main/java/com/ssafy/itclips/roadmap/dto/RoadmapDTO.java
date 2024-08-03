@@ -46,7 +46,8 @@ public class RoadmapDTO {
         this.scrapCnt = scrapCnt;
     }
 
-    public static RoadmapDTO toDTO(Roadmap roadmap,List<RoadmapStepResponseDto> stepResponseDtoList,List<RoadmapCommentDTO>  roadmapCommentDTOList,Long likeCnt,Long scrapCnt  ) {
+    public static RoadmapDTO toDTO(Roadmap roadmap,List<RoadmapStepResponseDto> stepResponseDtoList,
+                                   List<RoadmapCommentDTO>  roadmapCommentDTOList,Long likeCnt,Long scrapCnt, String imageUrl ) {
         return RoadmapDTO.builder()
                 .id(roadmap.getId())
                 .userId(roadmap.getUser().getId())
@@ -54,7 +55,7 @@ public class RoadmapDTO {
                 .title(roadmap.getTitle())
                 .description(roadmap.getDescription())
                 .createdAt(roadmap.getCreatedAt())
-                .image(roadmap.getImage())
+                .image(imageUrl)
                 .isPublic(roadmap.getIsPublic())
                 .stepList(stepResponseDtoList)
                 .commentList(roadmapCommentDTOList)

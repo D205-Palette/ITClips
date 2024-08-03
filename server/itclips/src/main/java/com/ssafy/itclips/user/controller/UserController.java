@@ -6,6 +6,7 @@ import com.ssafy.itclips.tag.dto.TagDTO;
 import com.ssafy.itclips.tag.repository.TagRepository;
 import com.ssafy.itclips.tag.repository.UserTagRepository;
 import com.ssafy.itclips.user.dto.UserInfoDTO;
+import com.ssafy.itclips.user.dto.UserInfoDetailDTO;
 import com.ssafy.itclips.user.entity.*;
 import com.ssafy.itclips.user.repository.UserRepository;
 import com.ssafy.itclips.user.service.MailService;
@@ -164,12 +165,14 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(USER_NOT_FOUND_MESSAGE);
         }
 
-        UserInfoDTO userInfoDTO = UserInfoDTO.builder()
+        UserInfoDetailDTO userInfoDTO = UserInfoDetailDTO.builder()
                 .nickname(user.getNickname())
                 .birth(user.getBirth())
                 .job(user.getJob())
                 .gender(user.getGender())
                 .bio(user.getBio())
+                .bookmarkListCount(user.getBookmarkLists().size())
+                .roadmapCount(user.getRoadmapList().size())
                 .build();
 
         return ResponseEntity.ok(userInfoDTO);

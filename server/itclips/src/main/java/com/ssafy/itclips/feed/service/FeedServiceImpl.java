@@ -4,8 +4,6 @@ import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
 import com.ssafy.itclips.bookmarklist.repository.BookmarkListRepository;
 import com.ssafy.itclips.bookmarklist.service.BookmarkListServiceImpl;
-import com.ssafy.itclips.error.CustomException;
-import com.ssafy.itclips.error.ErrorCode;
 import com.ssafy.itclips.feed.repository.FeedRepository;
 import com.ssafy.itclips.follow.entity.Follow;
 import com.ssafy.itclips.follow.repository.FollowRepository;
@@ -18,7 +16,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,7 +91,7 @@ public class FeedServiceImpl implements FeedService{
                     continue;
                 }
 
-                bookmarkListResponseDTOList.add(bookmarkListService.convertToBookmarkListResponseDTO(bookmarkList.get(),userId));
+                bookmarkListResponseDTOList.add(bookmarkListService.convertToBookmarkListResponseDTO(bookmarkList.get(),userId, userId));
             }
         }
         return bookmarkListResponseDTOList;

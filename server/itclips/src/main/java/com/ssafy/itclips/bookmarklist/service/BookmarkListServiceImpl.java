@@ -20,17 +20,14 @@ import com.ssafy.itclips.category.repository.CategoryRepository;
 import com.ssafy.itclips.error.CustomException;
 import com.ssafy.itclips.error.ErrorCode;
 import com.ssafy.itclips.feed.repository.FeedRepository;
-import com.ssafy.itclips.feed.service.FeedService;
 import com.ssafy.itclips.follow.entity.Follow;
 import com.ssafy.itclips.follow.repository.FollowRepository;
-import com.ssafy.itclips.follow.service.FollowService;
 import com.ssafy.itclips.global.file.DataResponseDto;
 import com.ssafy.itclips.global.file.FileService;
 import com.ssafy.itclips.group.entity.UserGroup;
 import com.ssafy.itclips.group.repository.GroupRepository;
 import com.ssafy.itclips.tag.dto.TagDTO;
 import com.ssafy.itclips.tag.entity.BookmarkListTag;
-import com.ssafy.itclips.tag.entity.BookmarkTag;
 import com.ssafy.itclips.tag.entity.Tag;
 import com.ssafy.itclips.tag.repository.BookmarkListTagRepository;
 import com.ssafy.itclips.tag.service.TagService;
@@ -151,7 +148,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
     }
 
     @Override
-    public List<BookmarkListResponseDTO> getScrapedLists(Long userId) throws RuntimeException {
+    public List<BookmarkListResponseDTO> getScrapedLists(Long userId, Long viewerId) throws RuntimeException {
         List<BookmarkListScrap> bookmarkListScraps = bookmarkListScrapRepository.findByUserId(userId);
         List<BookmarkList> bookmarkLists = getList(bookmarkListScraps);
 
@@ -160,7 +157,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         }
 
         return bookmarkLists.stream()
-                .map(bookmarkList -> convertToBookmarkListResponseDTO(bookmarkList, userId)) // userId를 추가로 전달
+                .map(bookmarkList -> convertToBookmarkListResponseDTO(bookmarkList, userId, viewerId)) // userId를 추가로 전달
                 .collect(Collectors.toList());
     }
 
@@ -182,7 +179,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
     //북마크 리스트 목록
     @Override
     @Transactional
-    public List<BookmarkListResponseDTO> getLists(Long userId, Boolean target) throws RuntimeException {
+    public List<BookmarkListResponseDTO> getLists(Long userId, Long viewerId, Boolean target) throws RuntimeException {
         List<BookmarkList> bookmarkLists = bookmarkListRepository.findDetailedByUserId(userId);
 
         if (bookmarkLists.isEmpty()) {
@@ -190,7 +187,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         }
 
         return bookmarkLists.stream()
-                .map(bookmarkList -> convertToBookmarkListResponseDTO(bookmarkList, userId)) // userId를 추가로 전달
+                .map(bookmarkList -> convertToBookmarkListResponseDTO(bookmarkList, userId,viewerId)) // userId를 추가로 전달
                 .filter(dto -> (target ? dto.getUsers().size() > USER_NUM : dto.getUsers().size() == USER_NUM))
                 .collect(Collectors.toList());
     }
@@ -300,12 +297,12 @@ public class BookmarkListServiceImpl implements BookmarkListService {
                 .collect(Collectors.toList());
     }
 
-    public BookmarkListResponseDTO convertToBookmarkListResponseDTO(BookmarkList bookmarkList, Long userId) {
+    public BookmarkListResponseDTO convertToBookmarkListResponseDTO(BookmarkList bookmarkList, Long userId, Long viewerId) {
         List<UserTitleDTO> users = getUserTitleDTOs(bookmarkList);
         Set<TagDTO> tags = getTagDTOs(bookmarkList);
 
         Integer likeCount = bookmarkList.getBookmarkListLikes().size();
-        Boolean isLiked = (bookmarkListLikeRepository.findByBookmarkListIdAndUserId(bookmarkList.getId(), userId) != null);
+        Boolean isLiked = (bookmarkListLikeRepository.findByBookmarkListIdAndUserId(bookmarkList.getId(), viewerId) != null);
         String imageUrl = fileService.getPresignedUrl("images", bookmarkList.getImage(), false).get("url");
 
         return bookmarkList.makeBookmarkListResponseDTO(bookmarkList.getBookmarks().size(), likeCount, isLiked, imageUrl, tags, users);

@@ -15,7 +15,7 @@ public interface BookmarkListService {
 
     void deleteBookmarkList(Long userId, Long listId) throws RuntimeException;
 
-    List<BookmarkListResponseDTO> getLists(Long userId,Boolean target) throws RuntimeException;
+    List<BookmarkListResponseDTO> getLists(Long userId, Long viewerId, Boolean target) throws RuntimeException;
 
     void createBookmarkListLike(Long userId, Long listId) throws RuntimeException;
 
@@ -25,7 +25,7 @@ public interface BookmarkListService {
 
     void removeScrapBookmarkList(Long userId, Long listId) throws RuntimeException;
 
-    List<BookmarkListResponseDTO> getScrapedLists(Long userId) throws RuntimeException;
+    List<BookmarkListResponseDTO> getScrapedLists(Long userId, Long viewerId) throws RuntimeException;
 
     BookmarkListDetailDTO getListDetail(Long userId, Long listId) throws RuntimeException;
 

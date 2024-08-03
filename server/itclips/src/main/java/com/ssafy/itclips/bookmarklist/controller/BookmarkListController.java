@@ -35,8 +35,9 @@ public class BookmarkListController {
             @ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없습니다."),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
     })
-    public ResponseEntity<?> getPersonalLists(@PathVariable @Parameter(description = "유저 정보", required = true) Long userId) {
-        List<BookmarkListResponseDTO> lists = bookmarkListService.getLists(userId,false);
+    public ResponseEntity<?> getPersonalLists(@PathVariable @Parameter(description = "유저 정보", required = true) Long userId,
+                                              @RequestParam @Parameter(description = "요청 유저 정보", required = true) Long viewerId) {
+        List<BookmarkListResponseDTO> lists = bookmarkListService.getLists(userId,viewerId,false);
         return new ResponseEntity<List<BookmarkListResponseDTO>>(lists,HttpStatus.OK);
     }
 
@@ -47,8 +48,9 @@ public class BookmarkListController {
             @ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없습니다."),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
     })
-    public ResponseEntity<?> getGroupLists(@PathVariable @Parameter(description = "유저 정보", required = true) Long userId) {
-        List<BookmarkListResponseDTO> lists = bookmarkListService.getLists(userId,true);
+    public ResponseEntity<?> getGroupLists(@PathVariable @Parameter(description = "유저 정보", required = true) Long userId,
+                                           @RequestParam @Parameter(description = "요청 유저 정보", required = true) Long viewerId) {
+        List<BookmarkListResponseDTO> lists = bookmarkListService.getLists(userId, viewerId, true);
         return new ResponseEntity<List<BookmarkListResponseDTO>>(lists,HttpStatus.OK);
     }
 
@@ -169,8 +171,9 @@ public class BookmarkListController {
             @ApiResponse(responseCode = "404", description = "스크랩한 글이 없습니다."),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
     })
-    public ResponseEntity<?> getScrappedLists(@PathVariable @Parameter(description = "유저 ID", required = true) Long userId) {
-        List<BookmarkListResponseDTO> lists = bookmarkListService.getScrapedLists(userId);
+    public ResponseEntity<?> getScrappedLists(@PathVariable @Parameter(description = "유저 ID", required = true) Long userId,
+                                              @RequestParam @Parameter(description = "요청 유저 정보", required = true) Long viewerId) {
+        List<BookmarkListResponseDTO> lists = bookmarkListService.getScrapedLists(userId,viewerId);
         return new ResponseEntity<List<BookmarkListResponseDTO>>(lists,HttpStatus.OK);
     }
 }

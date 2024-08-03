@@ -1,10 +1,10 @@
 package com.ssafy.itclips.roadmap.service;
 
+import com.ssafy.itclips.global.file.DataResponseDto;
 import com.ssafy.itclips.roadmap.dto.RoadmapCommentRequestDTO;
 import com.ssafy.itclips.roadmap.dto.RoadmapDTO;
 import com.ssafy.itclips.roadmap.dto.RoadmapInfoDTO;
 import com.ssafy.itclips.roadmap.dto.RoadmapRequestDTO;
-import com.ssafy.itclips.roadmap.entity.Roadmap;
 import com.ssafy.itclips.user.dto.UserListDTO;
 
 import java.util.List;
@@ -18,13 +18,13 @@ public interface RoadmapService {
 
 
     // 로드맵 생성
-    void createRoadmap(Long userId, RoadmapRequestDTO roadmapRequestDTO) throws RuntimeException;
+    DataResponseDto createRoadmap(Long userId, RoadmapRequestDTO roadmapRequestDTO) throws RuntimeException;
     // 로드맵 삭제하기
     void deleteRoadmap(Long roadmapId,Long userId) throws RuntimeException;
     // 로드맵 상세보기
     RoadmapDTO roadmapDetail(Long roadmapId) throws RuntimeException;
     // 로드맵 수정
-    void updateRoadmap(Long roadmapId,Long userId,  RoadmapRequestDTO roadmapRequestDTO) throws RuntimeException;
+    DataResponseDto updateRoadmap(Long roadmapId, Long userId, RoadmapRequestDTO roadmapRequestDTO) throws RuntimeException;
 
 
     // 로드맵 좋아요

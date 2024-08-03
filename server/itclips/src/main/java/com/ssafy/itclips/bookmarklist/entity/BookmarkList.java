@@ -4,6 +4,7 @@ import com.ssafy.itclips.bookmark.dto.BookmarkDetailDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListDetailDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
 import com.ssafy.itclips.category.dto.CategoryParamDTO;
+import com.ssafy.itclips.global.rank.RankDTO;
 import com.ssafy.itclips.report.entity.BookmarkListReport;
 import com.ssafy.itclips.bookmark.entity.Bookmark;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListDTO;
@@ -154,6 +155,14 @@ public class BookmarkList {
                 .users(users)
                 .bookmarks(bookmarks)
                 .hit(this.hit)
+                .build();
+    }
+
+    public RankDTO toRankDTO() {
+        return RankDTO.builder()
+                .id(this.id)
+                .title(this.title)
+                .count(this.hit)
                 .build();
     }
 

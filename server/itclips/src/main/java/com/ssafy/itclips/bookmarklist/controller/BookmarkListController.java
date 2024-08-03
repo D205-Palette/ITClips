@@ -184,4 +184,11 @@ public class BookmarkListController {
         List<RankDTO> lists = bookmarkListService.getListsRankingByLikes();
         return new ResponseEntity<>(lists,HttpStatus.OK);
     }
+
+    @GetMapping("/rank/hit")
+    @Operation(summary = "조회수 순 랭킹", description = "조회수 순 랭킹을 조회합니다.")
+    public ResponseEntity<?> getListsRankingByHit() {
+        List<RankDTO> lists = bookmarkListService.getListsRankingByHit();
+        return new ResponseEntity<>(lists,HttpStatus.OK);
+    }
 }

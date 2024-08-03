@@ -12,5 +12,6 @@ public interface BookmarkListRepository extends JpaRepository<BookmarkList, Long
 
     Optional<BookmarkList> findByTitle(String title);
     Optional<List<BookmarkList>> findByUserId(Long userId);
+    List<BookmarkList> findTop10ByOrderByHitDesc();
 }
 

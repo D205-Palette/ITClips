@@ -259,6 +259,16 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         return bookmarkListRepository.findListRankingByLike();
     }
 
+    @Override
+    public List<RankDTO> getListsRankingByHit() throws RuntimeException {
+        List<BookmarkList> listsRankingByHit = bookmarkListRepository.findTop10ByOrderByHitDesc();
+        List<RankDTO> rankDTOs = new ArrayList<>();
+        for (BookmarkList bookmarkList : listsRankingByHit) {
+            rankDTOs.add(bookmarkList.toRankDTO());
+        }
+        return rankDTOs;
+    }
+
     private BookmarkListDetailDTO convertToBookmarkListDetailDTO(BookmarkList bookmarkList, Long userId) {
         // list 정보
         List<UserTitleDTO> users = getUserTitleDTOs(bookmarkList);

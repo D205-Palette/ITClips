@@ -33,4 +33,6 @@ public interface BookmarkListService {
     BookmarkListRoadmapDTO getBookmarkListResponseDTO(Long listId) throws RuntimeException;
 
     List<RankDTO> getListsRankingByLikes() throws RuntimeException;
+
+    List<RankDTO> getListsRankingByHit() throws RuntimeException;
 }

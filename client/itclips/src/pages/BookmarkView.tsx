@@ -13,16 +13,15 @@ import { IoClose } from "react-icons/io5";
 import BookmarkEdit from "../components/main/Bookmark(Edit)";
 import MoveBookmarkModal from "../components/aside/modals/MoveBookmarkModal";
 import axios from "axios";
-import AddBookmarkModal from '../components/aside/modals/AddBookmarkListModal'
+import AddBookmarkModal from "../components/aside/modals/AddBookmarkListModal";
 import type { BookmarkType } from "../types/BookmarkType";
 import type { CategoryType } from "../types/BookmarkListType";
 import { useParams } from "react-router-dom";
 
 /// params.bookmarklist_id로 axios 호출해서 리스트 상세정보 받아오기. 거기서 북마크들만
 
-
 const MyBookmark = () => {
-  const params = useParams()
+  const params = useParams();
 
   const isMessageOpen = asideStore((state) => state.isMessageOpen);
   const whatCategory = mainTabStore((state) => state.whatCategory);
@@ -31,8 +30,8 @@ const MyBookmark = () => {
 
   const [editBookmarks, changeEditBookmarks] = useState<BookmarkType[]>([]);
   const [editBookmarksIndex, changeEditBookmarksIndex] = useState<number[]>([]);
+
   const [isEditModal, tabEditModal] = useState(false);
-  
   const [isAddModal, tabAddModal] = useState(false);
 
   // 임시 북마크들
@@ -97,7 +96,7 @@ const MyBookmark = () => {
       : bookmarks.filter((bookmark) => bookmark.category === whatCategory);
 
   // 임시 카테고리들
-  const categories:CategoryType[] = [
+  const categories: CategoryType[] = [
     {
       categoryId: 1,
       categoryName: "카테고리1",
@@ -122,9 +121,7 @@ const MyBookmark = () => {
         >
           {/* 메세지 뜨는 위치 */}
           <div id="aside" className="absolute col-start-2 col-span-3 z-50">
-            <div className="fixed">
-              {isMessageOpen && <MessageLayout />}
-            </div>
+            <div className="fixed">{isMessageOpen && <MessageLayout />}</div>
           </div>
           <div className="fixed">
             <AsideBookmarkList />
@@ -142,8 +139,15 @@ const MyBookmark = () => {
           {editMode ? (
             <div className="flex flex-row justify-end pe-5 my-5">
               <button
-                className={(editBookmarksIndex.length===0?"bg-white border text-sky-500":"bg-sky-500  text-slate-100 border") + "  border-sky-500 rounded-2xl py-2 px-4 font-bold hover:bg-sky-600 hover:text-white"}
-                onClick={() => (editBookmarksIndex.length!==0? tabEditModal(true) : "")}
+                className={
+                  (editBookmarksIndex.length === 0
+                    ? "bg-white border text-sky-500"
+                    : "bg-sky-500  text-slate-100 border") +
+                  "  border-sky-500 rounded-2xl py-2 px-4 font-bold hover:bg-sky-600 hover:text-white"
+                }
+                onClick={() =>
+                  editBookmarksIndex.length !== 0 ? tabEditModal(true) : ""
+                }
               >
                 이동 | {editBookmarksIndex.length}
               </button>
@@ -163,11 +167,13 @@ const MyBookmark = () => {
                 changeEditBookmarksIndex={changeEditBookmarksIndex}
               />
             ) : (
-              <Bookmark bookmark={bookmark} 
-              editBookmarks={editBookmarks}
+              <Bookmark
+                bookmark={bookmark}
+                editBookmarks={editBookmarks}
                 changeEditBookmarks={changeEditBookmarks}
                 editBookmarksIndex={editBookmarksIndex}
-                changeEditBookmarksIndex={changeEditBookmarksIndex}/>
+                changeEditBookmarksIndex={changeEditBookmarksIndex}
+              />
             )
           )}
 
@@ -177,12 +183,16 @@ const MyBookmark = () => {
               <div className="flex flex-col ">
                 <FaPlus
                   size={50}
-                  onClick={()=>tabAddModal(true)}
+                  onClick={() => tabAddModal(true)}
                   className="hover:cursor-pointer hover:text-sky-600 text-sky-400"
                 />{" "}
                 <IoClose
                   size={50}
-                  onClick={() => {toggleMode(false); changeEditBookmarks([]); changeEditBookmarksIndex([])}}
+                  onClick={() => {
+                    toggleMode(false);
+                    changeEditBookmarks([]);
+                    changeEditBookmarksIndex([]);
+                  }}
                   className="hover:cursor-pointer hover:text-slate-500"
                 />
               </div>

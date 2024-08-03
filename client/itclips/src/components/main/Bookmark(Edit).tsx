@@ -9,23 +9,6 @@ import { useNavigate } from "react-router-dom";
 import { LuChevronsUpDown } from "react-icons/lu";
 import MoveBookmarkModal from "../aside/modals/MoveBookmarkModal";
 import type { BookmarkType } from "../../types/BookmarkType";
-// interface BookmarkType {
-
-//   id: number;
-//   category: string;
-//   title: string;
-//   url: string;
-//   tags: {
-//     title: string;
-//   }[];
-
-//   content: string;
-//   isLiked: boolean;
-//   likeCount: number;
-
-// }
-
-// interface BookmarksType extends Array<BookmarkType> {}
 
 interface Props {
 

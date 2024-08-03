@@ -35,7 +35,7 @@ interface Article {
 const mainStore = create<Article>((set) => ({
   lists: [{
     id: 1,
-    image: "https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp",
+    image: "https://img.daisyui.com/images/stock/photo-1635805737707-5758 85ab0820.webp",
     bookmarks: [{ url: "www.naver.com" }, { url: "www.google.com" }],
     title: "생성된 리스트_01",
     tags: ["JAVA", "FE"],

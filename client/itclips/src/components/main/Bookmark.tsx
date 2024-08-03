@@ -1,11 +1,8 @@
 // 이미지 , 리스트명, 북마크 개수, 태그, 설명, 좋아요 버튼&좋아요 수, 리스트 세부 조작 버튼
 import { useState, FC } from "react";
-import useStore from "../../stores/mainStore";
 import KebabDropdown from "../common/KebabDropdown(Bookmark)";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import darkModeStore from "../../stores/darkModeStore";
-import mainStore from "../../stores/mainStore";
-import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa6";
 import type { BookmarkType } from "../../types/BookmarkType";
 import HoverTag from "./Bookmark(EditTag)";
@@ -15,6 +12,7 @@ import { IoIosArrowUp } from "react-icons/io";
 import axios from "axios";
 import { authStore } from "../../stores/authStore";
 import { API_BASE_URL } from "../../config";
+import EditTag from "./Bookmark(EditTag)";
 
 // const bookmarks = {
 //     title: string,
@@ -39,14 +37,14 @@ const Bookmark: FC<Props> = ({
   editBookmarksIndex,
   changeEditBookmarksIndex,
 }) => {
-  const navigate = useNavigate();
+
 
   const [isLike, toggleLike] = useState(bookmark.isLiked);
-const [likeCount, setLikeCount] = useState(bookmark.likeCount)
+  const [likeCount, setLikeCount] = useState(bookmark.likeCount);
   const [isEdit, toggleEdit] = useState(false);
   const [isTagEdit, toggleTagEdit] = useState(false);
   const [editModal, tabEditModal] = useState(false);
-  const [isHoverTag, setHoverTag] = useState(false);
+  const [isHoverTag, setIsHoverTag] = useState(false);
   const [isAiOpen, setIsAIOpen] = useState(false);
   // 그냥 더미. 있어야됨. 삭제 ㄴㄴ
   const [nothingMode, tabNothing] = useState(false);
@@ -56,33 +54,33 @@ const [likeCount, setLikeCount] = useState(bookmark.likeCount)
   const [tempTags, editTempTags] = useState(bookmark.tags);
   const [tempTag, editTempTag] = useState("");
 
-  const {userId, token} = authStore()
+  const { userId, token } = authStore();
 
+  //좋아요 
   const clickHeart = (): void => {
-    
-    if(isLike){
-    axios.delete(`${API_BASE_URL}/api/bookmark/like/${userId}/${bookmark.id}`,
-      {headers: {
-        Authorization: `Bearer ${token}`,
-      },}
-    )
-    setLikeCount(likeCount - 1)
-  } else{
-    axios.post(`${API_BASE_URL}/api/bookmark/like/${userId}/${bookmark.id}`,
-      {headers: {
-        Authorization: `Bearer ${token}`,
-      },}
-    )
-    setLikeCount(likeCount + 1)
-  }
-  toggleLike(!isLike);
+    if (isLike) {
+      axios.delete(
+        `${API_BASE_URL}/api/bookmark/like/${userId}/${bookmark.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setLikeCount(likeCount - 1);
+    } else {
+      axios.post(`${API_BASE_URL}/api/bookmark/like/${userId}/${bookmark.id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setLikeCount(likeCount + 1);
+    }
+    toggleLike(!isLike);
   };
-  
+
   const isDark = darkModeStore((state) => state.isDark);
 
-  function goExternalUrl(url: string): void {
-    window.open(url);
-  }
 
   // 태그 수정
   function submitTag(): void {
@@ -92,10 +90,11 @@ const [likeCount, setLikeCount] = useState(bookmark.likeCount)
     toggleTagEdit(false);
   }
 
+    // 최종 수정
   function completeEdit(): void {
     toggleEdit(false);
     editTempBookmark({ ...tempBookmark, title: tempTitle, tags: tempTags });
-    // 최종 수정
+
     //  /bookmark /update/{bookmarkId} 로 put요청
   }
 
@@ -110,11 +109,10 @@ const [likeCount, setLikeCount] = useState(bookmark.likeCount)
         <>
           <div className="card-body flex flex-row items-center">
             {/* 주소에 https 포함 여부 확인해야할듯 */}
-
             <div
               className="flex flex-col flex-auto justify-around"
               onClick={() => {
-                !isEdit && goExternalUrl(`https://${bookmark.url}`);
+                !isEdit && window.open(`https://${bookmark.url}`);
               }}
             >
               <div>
@@ -135,9 +133,10 @@ const [likeCount, setLikeCount] = useState(bookmark.likeCount)
             </div>
 
             {/* 태그들 */}
-            <div className="hidden items-center md:inline-flex ">
+            <div className="hidden items-center md:inline-flex " >
               {tempTags.map((tag) => (
-                <span className="ms-1">{" # " + tag.title}</span>
+                <EditTag tag={tag.title} isEdit={isEdit}/>
+                // <span className="ms-1">{" # " + tag.title}</span>
               ))}{" "}
             </div>
 
@@ -194,9 +193,9 @@ const [likeCount, setLikeCount] = useState(bookmark.likeCount)
       <div className="ps-8 pe-12 mt-3 bg-sky-100">
         {isAiOpen ? (
           <>
-          <div className="flex flex-row justify-between">
-            <RiRobot3Line size={24} />
-            <IoIosArrowUp />
+            <div className="flex flex-row justify-between">
+              <RiRobot3Line size={24} />
+              <IoIosArrowUp />
             </div>
             <p>AI 요약입니다ㅏㅏㅏ</p>
           </>

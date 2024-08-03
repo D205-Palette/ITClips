@@ -165,10 +165,11 @@ public class BookmarkListServiceImpl implements BookmarkListService {
     }
 
     @Override
+    @Transactional
     public BookmarkListDetailDTO getListDetail(Long userId, Long listId) throws RuntimeException {
         BookmarkList bookmarkList = bookmarkListRepository.findById(listId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND));
-
+        bookmarkList.upHit();
         return convertToBookmarkListDetailDTO(bookmarkList, userId);
     }
 

@@ -65,6 +65,9 @@ public class BookmarkList {
     @Column(name = "image")
     private String image;
 
+    @Column(name = "hit")
+    private Long hit;
+
     @NotNull
     @ColumnDefault("0")
     @Column(name = "is_public", nullable = false)
@@ -104,6 +107,7 @@ public class BookmarkList {
         this.description = description;
         this.image = image;
         this.isPublic = isPublic;
+        this.hit = 0L;
     }
 
     public void addCategory(Category category) {
@@ -149,6 +153,11 @@ public class BookmarkList {
                 .tags(tags)
                 .users(users)
                 .bookmarks(bookmarks)
+                .hit(this.hit)
                 .build();
+    }
+
+    public void upHit() {
+        this.hit++;
     }
 }

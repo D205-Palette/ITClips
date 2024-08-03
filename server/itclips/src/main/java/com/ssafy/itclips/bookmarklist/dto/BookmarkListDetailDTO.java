@@ -28,11 +28,12 @@ public class BookmarkListDetailDTO {
     private Set<TagDTO> tags;
     private List<UserTitleDTO> users;
     private List<BookmarkDetailDTO> bookmarks;
+    private Long hit;
 
     @Builder
     public BookmarkListDetailDTO(Long id, String title, String description, Integer likeCount, Integer scrapCount,
                                  String image, Boolean isLiked, Boolean isScraped, List<CategoryParamDTO> categories,
-                                 Set<TagDTO> tags, List<UserTitleDTO> users,List<BookmarkDetailDTO> bookmarks) {
+                                 Set<TagDTO> tags, List<UserTitleDTO> users,List<BookmarkDetailDTO> bookmarks,Long hit) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -45,6 +46,7 @@ public class BookmarkListDetailDTO {
         this.tags = tags;
         this.users = users;
         this.bookmarks = bookmarks;
+        this.hit = hit;
     }
 
 

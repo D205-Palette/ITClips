@@ -26,7 +26,7 @@ export const unfollow = (fromUserId: number, toUserId: number) => {
   return authenticatedRequest("post", "/follow/unfollow", undefined, { fromUserId, toUserId })
 }
 
-// 팔로워 삭제 - 수정필요
+// 팔로워 삭제
 export const removeFollower = (fromUserId: number, toUserId: number) => {
-  return authenticatedRequest("delete", "/follow/unfollow", undefined, { fromUserId, toUserId })
+  return authenticatedRequest("delete", "/follow/follower", undefined, { fromUserId, toUserId })
 }

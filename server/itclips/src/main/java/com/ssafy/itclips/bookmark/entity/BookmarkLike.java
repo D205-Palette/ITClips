@@ -35,7 +35,6 @@ public class BookmarkLike {
     @JoinColumn(name = "bookmark_id", nullable = false)
     private Bookmark bookmark;
 
-    @NotNull
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;

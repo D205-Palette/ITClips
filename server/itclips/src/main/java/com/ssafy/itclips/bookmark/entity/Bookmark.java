@@ -45,7 +45,6 @@ public class Bookmark {
     @Column(name = "url", nullable = false)
     private String url;
 
-    @NotNull
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;

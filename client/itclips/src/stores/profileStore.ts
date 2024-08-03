@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-interface profileInfo {
+interface User {
   id?: number;
   nickname?: string;
   job?: string;
@@ -14,8 +14,8 @@ interface profileInfo {
 }
 
 interface profileInfoStore {
-  urlUserInfo?: profileInfo;
-  setUrlUserInfo: (userInfo: profileInfo) => void;
+  urlUserInfo?: User;
+  setUrlUserInfo: (userInfo: User) => void;
 }
 
 export const profileStore = create<profileInfoStore>(set => ({

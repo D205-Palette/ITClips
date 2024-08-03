@@ -18,6 +18,7 @@ import ProfileSettingsModal from "./modals/ProfileSettingsModal";
 // stores
 import darkModeStore from "../../stores/darkModeStore";
 import { authStore } from "../../stores/authStore";
+import { useFollowStore } from "../../stores/followStore";
 
 interface User {
   id?: number;
@@ -46,6 +47,7 @@ const AsideProfile = () => {
   
   const [ urlUserInfo, setUrlUserInfo ] = useState<User>();
   const [ followCounts, setFollowCounts ] = useState<FollowCounts>();
+  const { followerCount, followingCount, setFollowerCount, setFollowingCount } = useFollowStore();
 
   // url 유저 정보 조회
   const fetchUserInfo = async () => {
@@ -69,8 +71,8 @@ const AsideProfile = () => {
     if (urlUserId) {
       try {
         const response = await getFollowCounts(urlUserId);
-        setFollowCounts(response.data);
-        console.log(response);
+        setFollowerCount(response.data.followerCount);
+        setFollowingCount(response.data.followingCount);
       } catch (error) {
         console.error("유저 조회 실패", error);
       }
@@ -135,7 +137,7 @@ const AsideProfile = () => {
         <div className="m-6"></div>
       )}
       {/* 팔로워, 팔로잉, 리스트, 북마크 수 출력 컨테이너 */}
-      <UserActivityInfo {...followCounts} />
+      <UserActivityInfo followerCount={followerCount} followingCount={followingCount} />
       {/* 프로필 설정 모달 */}
       <ProfileSettingsModal isOpen={isModalOpen} onClose={closeModal} />
     </div>

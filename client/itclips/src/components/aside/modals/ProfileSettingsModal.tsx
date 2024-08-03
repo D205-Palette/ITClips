@@ -12,7 +12,7 @@ import DeleteAccountModal from "./DeleteAccountModal";
 import InterestCategoryDropdown from "../ui/InterestCategoryDropdown";
 
 // apis
-import { updateProfileImage, getMyInterest, addMyInterest, removeMyInterest } from "../../../api/profileApi";
+import { updateProfileImage, getMyInterest, addMyInterest, removeMyInterest, changePassword } from "../../../api/profileApi";
 
 // stores
 import { authStore } from "../../../stores/authStore";
@@ -105,9 +105,21 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
   };
 
   // 비밀번호 변경 모달 로직
-  const handlePasswordChange = (newPassword: string) => {
-    // api 호출
-  }
+  const handlePasswordChange = async (oldPassword: string, newPassword: string) => {
+    if (userInfo.email) {
+      try {
+        await changePassword(userInfo.email, oldPassword, newPassword);
+        console.log('비밀번호가 성공적으로 변경되었습니다.');
+        // 성공 메시지를 사용자에게 표시하는 로직 추가
+      } catch (error) {
+        console.error('비밀번호 변경 중 오류가 발생했습니다:', error);
+        // 오류 메시지를 사용자에게 표시하는 로직 추가
+      }
+    } else {
+      console.error('사용자 이메일이 없습니다.');
+      // 오류 메시지를 사용자에게 표시하는 로직 추가
+    }
+  };
 
   const handleDeleteAccount = () => {
     console.log('Account deletion confirmed');

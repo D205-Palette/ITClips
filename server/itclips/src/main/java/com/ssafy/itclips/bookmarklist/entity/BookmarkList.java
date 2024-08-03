@@ -119,12 +119,12 @@ public class BookmarkList {
     }
 
 
-    public BookmarkListResponseDTO makeBookmarkListResponseDTO(Integer bookmarkCount, Integer likeCount, Boolean isLiked,
+    public BookmarkListResponseDTO makeBookmarkListResponseDTO(Integer bookmarkCount, Integer likeCount, Boolean isLiked,String imageUrl,
                                                                Set<TagDTO> tags, List<UserTitleDTO> users) {
         return BookmarkListResponseDTO.builder()
                 .id(this.id)
                 .title(this.title)
-                .image(this.image)
+                .image(imageUrl)
                 .description(this.description)
                 .bookmarkCount(bookmarkCount)
                 .users(users)

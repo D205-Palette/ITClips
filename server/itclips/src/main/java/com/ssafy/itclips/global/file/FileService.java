@@ -24,7 +24,7 @@ public class FileService {
     private final AmazonS3 amazonS3;
 
     public Map<String, String> getPresignedUrl(String prefix, String fileName, Boolean type) {
-        if (!prefix.isEmpty()) {
+        if (type) {
             fileName = createPath(prefix, fileName);
         }
 

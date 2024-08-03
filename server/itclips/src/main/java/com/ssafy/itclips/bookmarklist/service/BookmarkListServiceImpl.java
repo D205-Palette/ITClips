@@ -282,8 +282,9 @@ public class BookmarkListServiceImpl implements BookmarkListService {
 
         Integer likeCount = bookmarkList.getBookmarkListLikes().size();
         Boolean isLiked = (bookmarkListLikeRepository.findByBookmarkListIdAndUserId(bookmarkList.getId(), userId) != null);
+        String imageUrl = fileService.getPresignedUrl("images", bookmarkList.getImage(), false).get("url");
 
-        return bookmarkList.makeBookmarkListResponseDTO(bookmarkList.getBookmarks().size(), likeCount, isLiked, tags, users);
+        return bookmarkList.makeBookmarkListResponseDTO(bookmarkList.getBookmarks().size(), likeCount, isLiked, imageUrl, tags, users);
     }
 
     private List<UserTitleDTO> getUserTitleDTOs(BookmarkList bookmarkList) {

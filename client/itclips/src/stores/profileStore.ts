@@ -13,12 +13,12 @@ interface User {
   roadmapCount?: number;
 }
 
-interface profileInfoStore {
+interface userInfoStore {
   urlUserInfo?: User;
   setUrlUserInfo: (userInfo: User) => void;
 }
 
-export const profileStore = create<profileInfoStore>(set => ({
+export const profileStore = create<userInfoStore>(set => ({
   urlUserInfo: undefined,
   setUrlUserInfo: (userInfo) => set({ urlUserInfo: userInfo }),
 }));

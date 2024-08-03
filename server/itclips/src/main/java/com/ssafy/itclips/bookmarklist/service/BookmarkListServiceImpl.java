@@ -24,6 +24,7 @@ import com.ssafy.itclips.follow.entity.Follow;
 import com.ssafy.itclips.follow.repository.FollowRepository;
 import com.ssafy.itclips.global.file.DataResponseDto;
 import com.ssafy.itclips.global.file.FileService;
+import com.ssafy.itclips.global.rank.RankDTO;
 import com.ssafy.itclips.group.entity.UserGroup;
 import com.ssafy.itclips.group.repository.GroupRepository;
 import com.ssafy.itclips.tag.dto.TagDTO;
@@ -251,6 +252,11 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         bookmarkListTagRepository.deleteAllByBookmarklList(existingBookmarkList);
         categoryRepository.deleteAllByBookmarklList(existingBookmarkList);
         groupRepository.deleteByBookmarkListAndUserIdNot(existingBookmarkList, userId);
+    }
+
+    @Override
+    public List<RankDTO> getListsRankingByLikes() throws RuntimeException {
+        return bookmarkListRepository.findListRankingByLike();
     }
 
     private BookmarkListDetailDTO convertToBookmarkListDetailDTO(BookmarkList bookmarkList, Long userId) {

@@ -5,6 +5,7 @@ import com.ssafy.itclips.bookmarklist.dto.BookmarkListDetailDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
 import com.ssafy.itclips.bookmarklist.service.BookmarkListService;
 import com.ssafy.itclips.global.file.DataResponseDto;
+import com.ssafy.itclips.global.rank.RankDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -175,5 +176,12 @@ public class BookmarkListController {
                                               @RequestParam @Parameter(description = "요청 유저 정보", required = true) Long viewerId) {
         List<BookmarkListResponseDTO> lists = bookmarkListService.getScrapedLists(userId,viewerId);
         return new ResponseEntity<List<BookmarkListResponseDTO>>(lists,HttpStatus.OK);
+    }
+
+    @GetMapping("/rank/like")
+    @Operation(summary = "좋아요 순 랭킹", description = "좋아요 순 랭킹을 조회합니다.")
+    public ResponseEntity<?> getListsRankingByLike() {
+        List<RankDTO> lists = bookmarkListService.getListsRankingByLikes();
+        return new ResponseEntity<>(lists,HttpStatus.OK);
     }
 }

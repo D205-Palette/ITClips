@@ -5,6 +5,7 @@ import com.ssafy.itclips.bookmarklist.dto.BookmarkListDetailDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListRoadmapDTO;
 import com.ssafy.itclips.global.file.DataResponseDto;
+import com.ssafy.itclips.global.rank.RankDTO;
 
 import java.util.List;
 
@@ -30,4 +31,6 @@ public interface BookmarkListService {
     BookmarkListDetailDTO getListDetail(Long userId, Long listId) throws RuntimeException;
 
     BookmarkListRoadmapDTO getBookmarkListResponseDTO(Long listId) throws RuntimeException;
+
+    List<RankDTO> getListsRankingByLikes() throws RuntimeException;
 }

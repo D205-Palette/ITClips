@@ -1,17 +1,20 @@
 package com.ssafy.itclips.bookmarklist.repository;
 
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.itclips.bookmark.dto.BookmarkDetailDTO;
 import com.ssafy.itclips.bookmark.entity.Bookmark;
 import com.ssafy.itclips.bookmark.entity.QBookmark;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
 import com.ssafy.itclips.bookmarklist.entity.QBookmarkList;
+import com.ssafy.itclips.bookmarklist.entity.QBookmarkListLike;
 import com.ssafy.itclips.category.entity.Category;
 import com.ssafy.itclips.category.entity.QBookmarkCategory;
 import com.ssafy.itclips.category.entity.QCategory;
 import com.ssafy.itclips.error.CustomException;
 import com.ssafy.itclips.error.ErrorCode;
+import com.ssafy.itclips.global.rank.RankDTO;
 import com.ssafy.itclips.group.entity.QUserGroup;
 import com.ssafy.itclips.tag.entity.QBookmarkListTag;
 import com.ssafy.itclips.tag.entity.QTag;
@@ -40,6 +43,24 @@ public class BookmarkListRepositoryImpl implements BookmarkListRepositoryCustom 
                 .leftJoin(bookmarkList.tags, bookmarkListTag).fetchJoin()
                 .leftJoin(bookmarkListTag.tag, tag).fetchJoin()
                 .where(bookmarkList.user.id.eq(userId))
+                .fetch();
+    }
+
+    @Override
+    public List<RankDTO> findListRankingByLike() {
+        QBookmarkList qBookmarkList = QBookmarkList.bookmarkList;
+        QBookmarkListLike qBookmarkListLike = QBookmarkListLike.bookmarkListLike;
+
+        return queryFactory.select(Projections.constructor(RankDTO.class,
+                        qBookmarkList.id,
+                        qBookmarkList.title,
+                        qBookmarkListLike.count().as("count")))
+                .from(qBookmarkList)
+                .innerJoin(qBookmarkListLike)
+                .on(qBookmarkList.id.eq(qBookmarkListLike.bookmarkList.id))
+                .groupBy(qBookmarkList.id)
+                .orderBy(qBookmarkListLike.count().desc())
+                .limit(10)
                 .fetch();
     }
 

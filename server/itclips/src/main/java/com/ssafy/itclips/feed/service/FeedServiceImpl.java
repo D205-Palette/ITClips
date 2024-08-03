@@ -67,7 +67,11 @@ public class FeedServiceImpl implements FeedService{
                 // 좋아요 수
                 Long likeCnt = roadmapLikeRepository.countByRoadmapId(roadmap.get().getId());
 
-                RoadmapInfoDTO roadmapInfoDTO = RoadmapInfoDTO.toDto(roadmap.get(),steps.size(),checkCnt,likeCnt,steps);
+                // 좋아요 했는지 안했는지
+                Boolean isLiked = roadmapLikeRepository.existsByRoadmapIdAndUserId(roadmap.get().getId(),userId);
+
+
+                RoadmapInfoDTO roadmapInfoDTO = RoadmapInfoDTO.toDto(roadmap.get(),steps.size(),checkCnt,likeCnt,steps,isLiked);
                 roadmapInfoDTOList.add(roadmapInfoDTO);
             }
 

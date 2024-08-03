@@ -1,5 +1,6 @@
 package com.ssafy.itclips.feed.controller;
 
+import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
 import com.ssafy.itclips.feed.service.FeedService;
 import com.ssafy.itclips.roadmap.dto.RoadmapInfoDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,4 +28,13 @@ public class FeedController {
 
         return new ResponseEntity<>(roadmapList, HttpStatus.OK);
     }
+
+    @GetMapping("/list/{userId}")
+    @Operation(summary = "북마크 리스트 피드", description = "북마크리스트 피드입니다. ")
+    public ResponseEntity<?> listFeed(@PathVariable("userId") Long userId){
+        List<BookmarkListResponseDTO> roadmapList =  feedService.getListFeed(userId);
+
+        return new ResponseEntity<>(roadmapList, HttpStatus.OK);
+    }
+
 }

@@ -27,20 +27,20 @@ public class FeedRepository {
     }
 
     //유저 로드맵 피드
-    public List<Long> getUserRoadmapFeed(Long userId) {
-        return hashOps.get("roadmapFeed",userId);
+    public List<Long> getUserFeed(Long userId, String key) {
+        return hashOps.get(key,userId);
     }
 
     //로드맵 저장
-    public void saveRoadmapFeed(Long userId, Long roadmapId) {
-        List<Long> ids = hashOps.get("roadmapFeed",userId);
+    public void saveFeed(Long userId, Long roadmapId, String key) {
+        List<Long> ids = hashOps.get(key,userId);
 
         if(ids==null){
             ids = new ArrayList<>();
         }
         ids.add(roadmapId);
-        hashOps.put("roadmapFeed",userId,ids);
+        hashOps.put(key,userId,ids);
 
-        redisTemplate.expire("roadmapFeed", 7, TimeUnit.DAYS);
+        redisTemplate.expire(key, 7, TimeUnit.DAYS);
     }
 }

@@ -20,3 +20,18 @@ export const deleteUserAccount = (userId: number) => {
 export const updateProfileImage = (email: string, profileImage: string) => {
   return authenticatedRequest("post", "/user/profile/img", { profileImage }, { email });
 };
+
+// 사용자 관심사 목록 불러오기
+export const getMyInterest = (userId: number) => {
+  return authenticatedRequest("get", `/user/${userId}/tags`, undefined, undefined);
+};
+
+// 사용자 관심사 추가
+export const addMyInterest = (userId: number, tagId: number) => {
+  return authenticatedRequest("post", `/user/${userId}/tags`, undefined, { userId, tagId });
+};
+
+// 사용자 관심사 삭제
+export const removeMyInterest = (userId: number, tagId: number) => {
+  return authenticatedRequest("delete", `/user/${userId}/tags`, undefined, { userId, tagId });
+};

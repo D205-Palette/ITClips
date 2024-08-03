@@ -19,6 +19,7 @@ import Follower from "./pages/ProfileView/FollowFollower";
 import Following from "./pages/ProfileView/FollowFollowing";
 import MyBookmark from "./pages/BookmarkView";
 import RoadmapView from "./pages/RoadmapDetailView";
+import RoadmapCreateView from "./pages/RoadmapCreateView";
 
 // Components
 import App from "./App";
@@ -79,11 +80,17 @@ const router = createBrowserRouter([
           },
         ],
       },
+      // 로드맵 생성 페이지
+      {
+        path: "roadmap/create",
+        element: <RoadmapCreateView/>
+      },
       // 로드맵 상세 페이지
       {
         path: "roadmap/:roadmap_id",
         element: <RoadmapView />,
       },
+      
       // 북마크리스트 상세 페이지
       {
         path: "bookmarklist/:bookmarklist_id",

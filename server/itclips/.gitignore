@@ -4,6 +4,11 @@
 ### key
 /src/main/resources/application-secret.yml
 
+### key
+/src/main/resources/application-secret.properties
+/src/main/resources/keystore.p12
+
+
 HELP.md
 .gradle
 build/

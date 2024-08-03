@@ -1,12 +1,26 @@
 # application.yml
 server:
-  port: 80
+  port: 8084
+  ssl:
+    key-store: "classpath:keystore.p12"
+    key-store-type: PKCS12
+    key-store-password: ${KEY_PASSWORD}
 #  servlet:
 #    context-path: /api
+springdoc:
+  swagger-ui:
+    path: /api/swagger-ui
+  api-docs:
+    version: openapi_3_1
+    path: /api/v3/api-docs
 
 spring:
   application:
     name: itclips
+
+  profiles:
+    include: secret
+
 
   config:
     import: optional:classpath:application-secret.yml
@@ -14,9 +28,12 @@ spring:
   datasource:
     hikari:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: jdbc:mysql://localhost:3306/itclips?serverTimezone=UTC&useUnicode=yes&characterEncoding=UTF-8
-      username: root
-      password: rootroot
+      jdbc-url: jdbc:mysql://${DB_HOST}/${DB_NAME}?serverTimezone=UTC&useUnicode=yes&characterEncoding=UTF-8
+      username: ${DB_USER}
+      password: ${DB_PASSWORD}
+      #      jdbc-url: jdbc:mysql://localhost:3306/itclips?serverTimezone=UTC&useUnicode=yes&characterEncoding=UTF-8
+      #      username: root
+      #      password: 1234
       pool-name: Hikari Connection Pool
 
       maximum-pool-size: 50

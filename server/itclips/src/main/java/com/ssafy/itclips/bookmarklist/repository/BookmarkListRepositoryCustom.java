@@ -10,4 +10,5 @@ public interface BookmarkListRepositoryCustom {
     List<BookmarkList> findDetailedByUserId(Long userId);
     List<BookmarkDetailDTO> findDetailedByListId(Long listId);
     List<RankDTO> findListRankingByLike();
+    List<RankDTO> findListRankingByScrap();
 }

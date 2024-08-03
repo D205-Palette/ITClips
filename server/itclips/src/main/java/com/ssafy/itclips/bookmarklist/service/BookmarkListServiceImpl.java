@@ -269,6 +269,11 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         return rankDTOs;
     }
 
+    @Override
+    public List<RankDTO> getListsRankingByScrap() throws RuntimeException {
+        return bookmarkListRepository.findListRankingByScrap();
+    }
+
     private BookmarkListDetailDTO convertToBookmarkListDetailDTO(BookmarkList bookmarkList, Long userId) {
         // list 정보
         List<UserTitleDTO> users = getUserTitleDTOs(bookmarkList);

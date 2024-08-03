@@ -191,4 +191,11 @@ public class BookmarkListController {
         List<RankDTO> lists = bookmarkListService.getListsRankingByHit();
         return new ResponseEntity<>(lists,HttpStatus.OK);
     }
+
+    @GetMapping("/rank/scrap")
+    @Operation(summary = "즐겨찾기 순 랭킹", description = "즐겨찾기 순 랭킹을 조회합니다.")
+    public ResponseEntity<?> getListsRankingByScrap() {
+        List<RankDTO> lists = bookmarkListService.getListsRankingByScrap();
+        return new ResponseEntity<>(lists,HttpStatus.OK);
+    }
 }

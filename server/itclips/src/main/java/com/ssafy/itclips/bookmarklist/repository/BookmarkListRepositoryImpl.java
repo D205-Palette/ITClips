@@ -9,6 +9,7 @@ import com.ssafy.itclips.bookmark.entity.QBookmark;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
 import com.ssafy.itclips.bookmarklist.entity.QBookmarkList;
 import com.ssafy.itclips.bookmarklist.entity.QBookmarkListLike;
+import com.ssafy.itclips.bookmarklist.entity.QBookmarkListScrap;
 import com.ssafy.itclips.category.entity.Category;
 import com.ssafy.itclips.category.entity.QBookmarkCategory;
 import com.ssafy.itclips.category.entity.QCategory;
@@ -60,6 +61,25 @@ public class BookmarkListRepositoryImpl implements BookmarkListRepositoryCustom 
                 .on(qBookmarkList.id.eq(qBookmarkListLike.bookmarkList.id))
                 .groupBy(qBookmarkList.id)
                 .orderBy(qBookmarkListLike.count().desc())
+                .limit(10)
+                .fetch();
+    }
+
+    @Override
+    public List<RankDTO> findListRankingByScrap() {
+        QBookmarkList qBookmarkList = QBookmarkList.bookmarkList;
+        QBookmarkListScrap qBookmarkListScrap = QBookmarkListScrap.bookmarkListScrap;
+
+
+        return queryFactory.select(Projections.constructor(RankDTO.class,
+                        qBookmarkList.id,
+                        qBookmarkList.title,
+                        qBookmarkListScrap.count().as("count")))
+                .from(qBookmarkList)
+                .innerJoin(qBookmarkListScrap)
+                .on(qBookmarkList.id.eq(qBookmarkListScrap.bookmarkList.id))
+                .groupBy(qBookmarkList.id)
+                .orderBy(qBookmarkListScrap.count().desc())
                 .limit(10)
                 .fetch();
     }

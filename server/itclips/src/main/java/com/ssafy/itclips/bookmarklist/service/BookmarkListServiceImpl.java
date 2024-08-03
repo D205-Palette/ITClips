@@ -19,6 +19,11 @@ import com.ssafy.itclips.category.entity.Category;
 import com.ssafy.itclips.category.repository.CategoryRepository;
 import com.ssafy.itclips.error.CustomException;
 import com.ssafy.itclips.error.ErrorCode;
+import com.ssafy.itclips.feed.repository.FeedRepository;
+import com.ssafy.itclips.feed.service.FeedService;
+import com.ssafy.itclips.follow.entity.Follow;
+import com.ssafy.itclips.follow.repository.FollowRepository;
+import com.ssafy.itclips.follow.service.FollowService;
 import com.ssafy.itclips.group.entity.UserGroup;
 import com.ssafy.itclips.group.repository.GroupRepository;
 import com.ssafy.itclips.tag.dto.TagDTO;
@@ -29,6 +34,7 @@ import com.ssafy.itclips.tag.service.TagService;
 import com.ssafy.itclips.user.dto.UserTitleDTO;
 import com.ssafy.itclips.user.entity.User;
 import com.ssafy.itclips.user.repository.UserRepository;
+import com.ssafy.itclips.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -53,6 +59,10 @@ public class BookmarkListServiceImpl implements BookmarkListService {
     private final BookmarkListScrapRepository bookmarkListScrapRepository;
     private final TagService tagService;
 
+    private final FollowRepository followRepository;
+    private final FeedRepository feedRepository;
+
+
     private final static Integer USER_NUM = 1;
 
     @Override
@@ -70,7 +80,15 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         groupUsers.add(user);
         setRelations(groupUsers, bookmarkList, groups, tags, bookmarkListTags, categories);
         user.addBookmarkList(bookmarkList);
-        bookmarkListRepository.save(bookmarkList);
+        BookmarkList savedBookmarkList =  bookmarkListRepository.save(bookmarkList);
+
+        //피드 저장
+        List<Follow> followersList = followRepository.findByToId(userId);
+
+        for(Follow follow : followersList) {
+            feedRepository.saveFeed(follow.getFrom().getId(),savedBookmarkList.getId(), "listFeed");
+        }
+
         categoryRepository.saveAll(categories);
         groupRepository.saveAll(groups);
         bookmarkListTagRepository.saveAll(bookmarkListTags);
@@ -150,6 +168,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
                 .toList();
     }
 
+    //북마크 리스트 목록
     @Override
     @Transactional
     public List<BookmarkListResponseDTO> getLists(Long userId, Boolean target) throws RuntimeException {
@@ -268,7 +287,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
                 .collect(Collectors.toList());
     }
 
-    private BookmarkListResponseDTO convertToBookmarkListResponseDTO(BookmarkList bookmarkList, Long userId) {
+    public BookmarkListResponseDTO convertToBookmarkListResponseDTO(BookmarkList bookmarkList, Long userId) {
         List<UserTitleDTO> users = getUserTitleDTOs(bookmarkList);
         Set<TagDTO> tags = getTagDTOs(bookmarkList);
 

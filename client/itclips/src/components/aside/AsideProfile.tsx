@@ -19,6 +19,7 @@ import ProfileSettingsModal from "./modals/ProfileSettingsModal";
 import darkModeStore from "../../stores/darkModeStore";
 import { authStore } from "../../stores/authStore";
 import { useFollowStore } from "../../stores/followStore";
+import { profileStore } from "../../stores/profileStore";
 
 interface User {
   id?: number;
@@ -29,6 +30,8 @@ interface User {
   email?: string;
   darkMode?: boolean;
   birth?: string;
+  bookmarkListCount?: number;
+  roadmapCount?: number;
 }
 
 const AsideProfile = () => {
@@ -40,7 +43,7 @@ const AsideProfile = () => {
   const params = useParams<{ user_id?: string }>();
   const urlUserId = params.user_id ? parseInt(params.user_id, 10) : undefined;
   
-  const [ urlUserInfo, setUrlUserInfo ] = useState<User>();
+  const { setUrlUserInfo } = profileStore();
   const { followerCount, followingCount, setFollowerCount, setFollowingCount } = useFollowStore();
   
   const isDark = darkModeStore(state => state.isDark);
@@ -153,7 +156,7 @@ const AsideProfile = () => {
       {/* 프로필 이미지 컨테이너 */}
       <ImageContainer />
       {/* 닉네임, 이메일, 소개글 정보 컨테이너 */}
-      {myInfo && <UserDetailInfo {...urlUserInfo} />}
+      {myInfo && <UserDetailInfo {...profileStore().urlUserInfo} />}
       {/* 자기인지 아닌지에 따라 활성화되는 팔로우 버튼 */}
       {myInfo.id !== urlUserId ? (
         <button

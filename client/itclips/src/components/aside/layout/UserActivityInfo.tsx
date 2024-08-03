@@ -3,15 +3,19 @@
 import { useParams } from "react-router-dom";
 
 import { NavLink } from "react-router-dom";
+import { profileStore } from "../../../stores/profileStore";
 
-interface FollowCounts {
+interface InfoCounts {
   followerCount?: number;
   followingCount?: number;
+  bookmarkListCount?: number;
+  roadmapCount?: number;
 }
 
-const UserActivityInfo: React.FC<FollowCounts> = (follow) => {
+const UserActivityInfo: React.FC<InfoCounts> = (follow) => {
   
   const params = useParams();
+  const { urlUserInfo } = profileStore();
 
   return (
     <div className="w-full grid grid-cols-1 gap-y-4 mt-6">
@@ -33,11 +37,11 @@ const UserActivityInfo: React.FC<FollowCounts> = (follow) => {
       </div>
       <div className="grid grid-cols-12">
         <div className="col-start-3 col-span-5 text-start text-gray-500">리스트 개수</div>
-        <div className="col-start-9 text-start font-bold">{10}</div>
+        <div className="col-start-9 text-start font-bold">{urlUserInfo?.bookmarkListCount ?? 0}</div>
       </div>
       <div className="grid grid-cols-12">
         <div className="col-start-3 col-span-5 text-start text-gray-500">로드맵 개수</div>
-        <div className="col-start-9 text-start font-bold">{20}</div>
+        <div className="col-start-9 text-start font-bold">{urlUserInfo?.roadmapCount ?? 0}</div>
       </div>
     </div>
   );

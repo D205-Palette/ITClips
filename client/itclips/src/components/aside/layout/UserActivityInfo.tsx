@@ -4,24 +4,14 @@ import { useParams } from "react-router-dom";
 
 import { NavLink } from "react-router-dom";
 
-interface ActivityInfo {
-  followers: number;
-  following: number;
-  listCount: number;
-  bookmarkCount: number;
+interface FollowCounts {
+  followerCount?: number;
+  followingCount?: number;
 }
 
-const UserActivityInfo = () => {
+const UserActivityInfo: React.FC<FollowCounts> = (follow) => {
   
   const params = useParams();
-
-  // 더미 데이터
-  const data: ActivityInfo = {
-    followers: 100,
-    following: 200,
-    listCount: 30,
-    bookmarkCount: 10,
-  }
 
   return (
     <div className="w-full grid grid-cols-1 gap-y-4 mt-6">
@@ -29,7 +19,7 @@ const UserActivityInfo = () => {
         <div className="col-start-3 col-span-5 text-start text-gray-500">팔로워</div>
         <div className="col-start-9">
           <NavLink to={`/user/${params.user_id}/follow/follower`}>
-            <button id="followers" className="text-start font-bold hover:bg-sky-200 hover:rounded">{data.followers}</button>
+            <button id="followers" className="text-start font-bold hover:bg-sky-200 hover:rounded">{follow.followerCount}</button>
           </NavLink>
         </div>
       </div>
@@ -37,17 +27,17 @@ const UserActivityInfo = () => {
         <div className="col-start-3 col-span-5 text-start text-gray-500">팔로잉</div>
         <div className="col-start-9">
           <NavLink to={`/user/${params.user_id}/follow/following`}>
-            <button id="following" className="text-start font-bold hover:bg-sky-200 hover:rounded">{data.following}</button>
+            <button id="following" className="text-start font-bold hover:bg-sky-200 hover:rounded">{follow.followingCount}</button>
           </NavLink>
         </div>
       </div>
       <div className="grid grid-cols-12">
         <div className="col-start-3 col-span-5 text-start text-gray-500">리스트 개수</div>
-        <div className="col-start-9 text-start font-bold">{data.listCount}</div>
+        <div className="col-start-9 text-start font-bold">{10}</div>
       </div>
       <div className="grid grid-cols-12">
         <div className="col-start-3 col-span-5 text-start text-gray-500">북마크 개수</div>
-        <div className="col-start-9 text-start font-bold">{data.bookmarkCount}</div>
+        <div className="col-start-9 text-start font-bold">{20}</div>
       </div>
     </div>
   );

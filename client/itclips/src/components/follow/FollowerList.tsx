@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import FollowerItem from "./FollowerItem";
 
 // apis
-import { getFollowingList } from "../../api/followApi";
+import { getFollowerList } from "../../api/followApi";
 
 // stores
 import { authStore } from "../../stores/authStore";
@@ -21,29 +21,30 @@ interface Follower {
 
 const FollowerList = () => {
 
-  const [ followingList, setFollowingList ] = useState<Follower[]>([]);
+  const [ followerList, setFollowerList ] = useState<Follower[]>([]);
   const { user_id } = useParams<{ user_id: string }>();
 
-  // 팔로우 목록 조회
-  useEffect(() => {
-    const fetchFollowingList = async () => {
-      if (user_id) {
-        try {
-          const response = await getFollowingList(parseInt(user_id, 10));
-          setFollowingList(response.data);
-          console.log(response);
-        } catch (error) {
-          console.error("팔로우 목록 조회 실패", error);
-        }
+  // 팔로워 목록 조회
+  const fetchFollowerList = async () => {
+    if (user_id) {
+      try {
+        const response = await getFollowerList(parseInt(user_id, 10));
+        setFollowerList(response.data);
+        console.log(response);
+      } catch (error) {
+        console.error("팔로워 목록 조회 실패", error);
       }
-    };
-    fetchFollowingList();
+    }
+  };
+  
+  useEffect(() => {
+    fetchFollowerList();
   }, [user_id]);
 
   return (
     <div className="mt-4">
       {/* 추천 결과 */}
-      <FollowerItem items={followingList} />
+      <FollowerItem items={followerList} />
     </div>
   );
 };

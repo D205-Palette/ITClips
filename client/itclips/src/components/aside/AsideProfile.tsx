@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 
 // apis
 import { checkUserInfo } from "../../api/authApi";
+import { getFollowCounts } from "../../api/followApi";
 
 // icons
 import { IoChatboxEllipsesOutline, IoSettingsOutline } from "react-icons/io5";
@@ -29,6 +30,11 @@ interface User {
   birth?: string;
 }
 
+interface FollowCounts {
+  followerCount?: number;
+  followingCount?: number;
+}
+
 const AsideProfile = () => {
 
   // 내 정보 가져오기
@@ -39,31 +45,47 @@ const AsideProfile = () => {
   const urlUserId = params.user_id ? parseInt(params.user_id, 10) : undefined;
   
   const [ urlUserInfo, setUrlUserInfo ] = useState<User>();
+  const [ followCounts, setFollowCounts ] = useState<FollowCounts>();
 
-  // 팔로우 목록 조회
-  useEffect(() => {
-    const fetchFollowingList = async () => {
-      if (urlUserId) {
-        try {
-          const response = await checkUserInfo(urlUserId);
-          setUrlUserInfo(response.data);
-          console.log(response);
-        } catch (error) {
-          console.error("유저 조회 실패", error);
-        }
+  // url 유저 정보 조회
+  const fetchUserInfo = async () => {
+    if (urlUserId) {
+      try {
+        const response = await checkUserInfo(urlUserId);
+        setUrlUserInfo(response.data);
+        console.log(response);
+      } catch (error) {
+        console.error("유저 조회 실패", error);
       }
-    };
-    fetchFollowingList();
+    }
+  };
+  
+  useEffect(() => {
+    fetchUserInfo();
+  }, [urlUserId]);
+
+  // url 유저 팔로우 수 조회
+  const fetchFollowCount = async () => {
+    if (urlUserId) {
+      try {
+        const response = await getFollowCounts(urlUserId);
+        setFollowCounts(response.data);
+        console.log(response);
+      } catch (error) {
+        console.error("유저 조회 실패", error);
+      }
+    }
+  };
+  
+  useEffect(() => {
+    fetchFollowCount();
   }, [urlUserId]);
 
   const isDark = darkModeStore(state => state.isDark);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   // (임시) 팔로우 상태인지? - 팔로우 버튼 테스트
   const [isFollow, setIsFollow] = useState<boolean>(false);
-
-  // (임시) 다른 유저의 정보인지? - 프로필 화면 테스트
-  const [isOther, setIsOther] = useState<boolean>(false);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const onClickStartChat = (): void => {
     // 다른 유저 프로필의 채팅하기 버튼을 눌렀을 때
@@ -113,7 +135,7 @@ const AsideProfile = () => {
         <div className="m-6"></div>
       )}
       {/* 팔로워, 팔로잉, 리스트, 북마크 수 출력 컨테이너 */}
-      <UserActivityInfo />
+      <UserActivityInfo {...followCounts} />
       {/* 프로필 설정 모달 */}
       <ProfileSettingsModal isOpen={isModalOpen} onClose={closeModal} />
     </div>

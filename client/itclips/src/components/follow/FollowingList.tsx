@@ -1,33 +1,46 @@
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+
 // components
 import FollowingItem from "./FollowingItem";
 
-interface User {
+// apis
+import { getFollowingList } from "../../api/followApi";
+
+interface Following {
   id: number;
-  username: string;
-  imageUrl: string;
+  fromUserId: number;
+  toUserId: number;
+  nickname: string;
+  profileImage: string;
   email: string;
-  tag: string;
 }
 
 const FollowingList = () => {
 
-  // 더미 데이터
-  const data: User[] = [
-    { id: 1, username: "고양양", imageUrl: "", email: "abc@gmail.com", tag: "#관심사1 #관심사2 #태그" },
-    { id: 2, username: "고양양", imageUrl: "", email: "abc@gmail.com", tag: "#관심사1 #관심사2 #태그" },
-    { id: 3, username: "고양양", imageUrl: "", email: "abc@gmail.com", tag: "#관심사1 #관심사2 #태그" },
-    { id: 4, username: "고양양", imageUrl: "", email: "abc@gmail.com", tag: "#관심사1 #관심사2 #태그" },
-    { id: 5, username: "고양양", imageUrl: "", email: "abc@gmail.com", tag: "#관심사1 #관심사2 #태그" },
-    { id: 6, username: "고양양", imageUrl: "", email: "abc@gmail.com", tag: "#관심사1 #관심사2 #태그" },
-    { id: 7, username: "고양양", imageUrl: "", email: "abc@gmail.com", tag: "#관심사1 #관심사2 #태그" },
-    { id: 8, username: "고양양", imageUrl: "", email: "abc@gmail.com", tag: "#관심사1 #관심사2 #태그" },
-    { id: 9, username: "고양양", imageUrl: "", email: "abc@gmail.com", tag: "#관심사1 #관심사2 #태그" },
-    { id: 10, username: "고양양", imageUrl: "", email: "abc@gmail.com", tag: "#관심사1 #관심사2 #태그" },
-  ]
+  const [ followingList, setFollowingList ] = useState<Following[]>([]);
+  const { user_id } = useParams<{ user_id: string }>();
+
+  // 팔로잉 목록 조회
+  const fetchFollowingList = async () => {
+    if (user_id) {
+      try {
+        const response = await getFollowingList(parseInt(user_id, 10));
+        setFollowingList(response.data);
+        console.log(response);
+      } catch (error) {
+        console.error("팔로잉 목록 조회 실패", error);
+      }
+    }
+  };
+  
+  useEffect(() => {
+    fetchFollowingList();
+  }, [user_id]);
 
   return (
     <div className="mt-4">
-      <FollowingItem items={data} />
+      <FollowingItem items={followingList} />
     </div>
   );
 };

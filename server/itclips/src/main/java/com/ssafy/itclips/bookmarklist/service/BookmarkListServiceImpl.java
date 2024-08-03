@@ -24,17 +24,19 @@ import com.ssafy.itclips.feed.service.FeedService;
 import com.ssafy.itclips.follow.entity.Follow;
 import com.ssafy.itclips.follow.repository.FollowRepository;
 import com.ssafy.itclips.follow.service.FollowService;
+import com.ssafy.itclips.global.file.DataResponseDto;
+import com.ssafy.itclips.global.file.FileService;
 import com.ssafy.itclips.group.entity.UserGroup;
 import com.ssafy.itclips.group.repository.GroupRepository;
 import com.ssafy.itclips.tag.dto.TagDTO;
 import com.ssafy.itclips.tag.entity.BookmarkListTag;
+import com.ssafy.itclips.tag.entity.BookmarkTag;
 import com.ssafy.itclips.tag.entity.Tag;
 import com.ssafy.itclips.tag.repository.BookmarkListTagRepository;
 import com.ssafy.itclips.tag.service.TagService;
 import com.ssafy.itclips.user.dto.UserTitleDTO;
 import com.ssafy.itclips.user.entity.User;
 import com.ssafy.itclips.user.repository.UserRepository;
-import com.ssafy.itclips.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -58,6 +60,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
     private final BookmarkListLikeRepository bookmarkListLikeRepository;
     private final BookmarkListScrapRepository bookmarkListScrapRepository;
     private final TagService tagService;
+    private final FileService fileService;
 
     private final FollowRepository followRepository;
     private final FeedRepository feedRepository;
@@ -67,9 +70,11 @@ public class BookmarkListServiceImpl implements BookmarkListService {
 
     @Override
     @Transactional
-    public void createBookmarkList(Long userId, BookmarkListDTO bookmarkListDTO) throws RuntimeException {
+    public DataResponseDto createBookmarkList(Long userId, BookmarkListDTO bookmarkListDTO) throws RuntimeException {
         User user = userRepository.findById(userId)
                 .orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+        DataResponseDto imageInfo = DataResponseDto.of(fileService.getPresignedUrl("images",bookmarkListDTO.getImage(),true));
+        bookmarkListDTO.setImageToS3FileName(imageInfo.getImage());
 
         List<Tag> tags = tagService.saveTags(bookmarkListDTO.getTags());
         List<Category> categories =createNewCategories(bookmarkListDTO.getCategories());
@@ -92,15 +97,19 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         categoryRepository.saveAll(categories);
         groupRepository.saveAll(groups);
         bookmarkListTagRepository.saveAll(bookmarkListTags);
+
+        return imageInfo;
     }
 
     @Override
     @Transactional
-    public void updateBookmarkList(Long userId, Long listId, BookmarkListDTO bookmarkListDTO) throws RuntimeException{
+    public DataResponseDto updateBookmarkList(Long userId, Long listId, BookmarkListDTO bookmarkListDTO) throws RuntimeException{
         // 기존 북마크 리스트 목록을 조회
         BookmarkList existingBookmarkList = bookmarkListRepository.findById(listId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND));
         // 업데이트할 내용 설정
+        DataResponseDto imageInfo = DataResponseDto.of(fileService.getPresignedUrl("images",bookmarkListDTO.getImage(),true));
+        bookmarkListDTO.setImageToS3FileName(imageInfo.getImage());
         existingBookmarkList.updateBookmarkList(bookmarkListDTO);
         // 기존 태그, 카테고리, 그룹 삭제
         deleteRelations(userId, existingBookmarkList);
@@ -117,6 +126,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         categoryRepository.saveAll(categories);
         groupRepository.saveAll(groups);
         bookmarkListTagRepository.saveAll(bookmarkListTags);
+        return imageInfo;
     }
 
     @Override
@@ -255,11 +265,13 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         Integer scrapCount = bookmarkList.getBookmarkListScraps().size();
         Boolean isScraped = bookmarkListScrapRepository.existsByUserIdAndBookmarkListId(userId, bookmarkList.getId());
 
+        String imageUrl = fileService.getPresignedUrl("images", bookmarkList.getImage(), false).get("url");
+
         // bookmark 정보
         List<BookmarkDetailDTO> bookmarkDetails = bookmarkListRepository.findDetailedByListId(bookmarkList.getId());
         bookmarkDetails.forEach(bookmarkDetailDTO -> addAdditionalInfoForBookmarkDetailDTO(bookmarkDetailDTO, userId));
 
-        return bookmarkList.makeBookmarkListDetailDTO(likeCount, scrapCount, isLiked, isScraped, categories, tags, users, bookmarkDetails);
+        return bookmarkList.makeBookmarkListDetailDTO(likeCount, scrapCount, isLiked, isScraped, imageUrl, categories, tags, users, bookmarkDetails);
     }
 
     private void addAdditionalInfoForBookmarkDetailDTO(BookmarkDetailDTO bookmarkDetailDTO, Long userId) {
@@ -293,8 +305,9 @@ public class BookmarkListServiceImpl implements BookmarkListService {
 
         Integer likeCount = bookmarkList.getBookmarkListLikes().size();
         Boolean isLiked = (bookmarkListLikeRepository.findByBookmarkListIdAndUserId(bookmarkList.getId(), userId) != null);
+        String imageUrl = fileService.getPresignedUrl("images", bookmarkList.getImage(), false).get("url");
 
-        return bookmarkList.makeBookmarkListResponseDTO(bookmarkList.getBookmarks().size(), likeCount, isLiked, tags, users);
+        return bookmarkList.makeBookmarkListResponseDTO(bookmarkList.getBookmarks().size(), likeCount, isLiked, imageUrl, tags, users);
     }
 
     private List<UserTitleDTO> getUserTitleDTOs(BookmarkList bookmarkList) {

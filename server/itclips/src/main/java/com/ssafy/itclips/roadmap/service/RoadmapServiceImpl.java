@@ -8,6 +8,8 @@ import com.ssafy.itclips.bookmarklist.repository.BookmarkListRepository;
 import com.ssafy.itclips.bookmarklist.service.BookmarkListService;
 import com.ssafy.itclips.error.CustomException;
 import com.ssafy.itclips.error.ErrorCode;
+import com.ssafy.itclips.global.file.DataResponseDto;
+import com.ssafy.itclips.global.file.FileService;
 import com.ssafy.itclips.feed.service.FeedService;
 import com.ssafy.itclips.roadmap.dto.*;
 import com.ssafy.itclips.roadmap.entity.Roadmap;
@@ -50,6 +52,7 @@ public class RoadmapServiceImpl implements RoadmapService {
     private final TagRepository tagRepository;
     private final UserTagRepository userTagRepository;
     private final FeedService feedService;
+    private final FileService fileService;
 
     //전체 로드맵 조회
     @Override
@@ -105,10 +108,13 @@ public class RoadmapServiceImpl implements RoadmapService {
     // 로드맵 생성
     @Override
     @Transactional
-    public void createRoadmap(Long userId, RoadmapRequestDTO roadmapRequestDTO) throws RuntimeException {
+    public DataResponseDto createRoadmap(Long userId, RoadmapRequestDTO roadmapRequestDTO) throws RuntimeException {
         // 생성자
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        //이미지 s3 경로로 저장
+        DataResponseDto imageInfo = DataResponseDto.of(fileService.getPresignedUrl("images",roadmapRequestDTO.getImage(),true));
+        roadmapRequestDTO.setImageToS3FileName(imageInfo.getImage());
 
         // step에 넣을 bookmark list
         List<Long> listIds = roadmapRequestDTO.getStepList();
@@ -126,18 +132,23 @@ public class RoadmapServiceImpl implements RoadmapService {
         feedService.saveRoadmapFeed(userId,roadmap.getId());
         // 스탭 생성
         createStep(listIds, roadmap);
+        return imageInfo;
     }
 
 
     // 로드맵수정
     @Override
     @Transactional
-    public void updateRoadmap(Long roadmapId,Long userId,  RoadmapRequestDTO roadmapRequestDTO) throws RuntimeException {
+    public DataResponseDto updateRoadmap(Long roadmapId, Long userId, RoadmapRequestDTO roadmapRequestDTO) throws RuntimeException {
         // 수정할 로드맵 가져오기
         Roadmap roadmap = roadmapRepository.findById(roadmapId)
                 .orElseThrow(() -> new CustomException(ErrorCode.ROADMAP_NOT_FOUND));
 
         checkUser(roadmap, userId);
+
+        //이미지 s3 경로로 저장
+        DataResponseDto imageInfo = DataResponseDto.of(fileService.getPresignedUrl("images",roadmapRequestDTO.getImage(),true));
+        roadmapRequestDTO.setImageToS3FileName(imageInfo.getImage());
 
         // step에 넣을 bookmark list
         List<Long> listIds = roadmapRequestDTO.getStepList();
@@ -158,6 +169,7 @@ public class RoadmapServiceImpl implements RoadmapService {
 
         // 스탭 생성
         createStep(listIds, roadmap);
+        return imageInfo;
     }
 
 
@@ -270,8 +282,10 @@ public class RoadmapServiceImpl implements RoadmapService {
         // 스크랩 수
         Long scrapCnt = roadmapRepository.countByOrigin(roadmapId);
 
+        //이미지 url 생성
+        String imageUrl = fileService.getPresignedUrl("images", roadmap.getImage(), false).get("url");
         // dto에 넣기
-        RoadmapDTO roadmapDTO = RoadmapDTO.toDTO(roadmap, stepResponseDtoList, roadmapCommentDTOList, likeCnt, scrapCnt);
+        RoadmapDTO roadmapDTO = RoadmapDTO.toDTO(roadmap, stepResponseDtoList, roadmapCommentDTOList, likeCnt, scrapCnt, imageUrl);
 
 
         return roadmapDTO;
@@ -460,7 +474,7 @@ public class RoadmapServiceImpl implements RoadmapService {
 
     // 로드맵 댓글 DTO
     private static RoadmapCommentDTO makeRoadmapCommentDTO(Long roadmapId, RoadmapComment roadmapComment) {
-        return new RoadmapCommentDTO().builder()
+        return RoadmapCommentDTO.builder()
                 .id(roadmapComment.getId())
                 .comment(roadmapComment.getContents())
                 .userId(roadmapComment.getUser().getId())

@@ -4,13 +4,14 @@ import com.ssafy.itclips.bookmarklist.dto.BookmarkListDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListDetailDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListRoadmapDTO;
+import com.ssafy.itclips.global.file.DataResponseDto;
 
 import java.util.List;
 
 public interface BookmarkListService {
-    void createBookmarkList(Long userId, BookmarkListDTO bookmarkListDTO) throws RuntimeException;
+    DataResponseDto createBookmarkList(Long userId, BookmarkListDTO bookmarkListDTO) throws RuntimeException;
 
-    void updateBookmarkList(Long userId, Long listId, BookmarkListDTO bookmarkListDTO) throws RuntimeException;
+    DataResponseDto updateBookmarkList(Long userId, Long listId, BookmarkListDTO bookmarkListDTO) throws RuntimeException;
 
     void deleteBookmarkList(Long userId, Long listId) throws RuntimeException;
 

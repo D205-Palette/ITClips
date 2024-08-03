@@ -58,7 +58,18 @@ spring:
       hibernate:
         format_sql: true
 
-
+# s3
+cloud:
+  aws:
+    stack:
+      auto: false
+    credentials:
+      accessKey: ${S3_ACCESS}
+      secretKey: ${S3_PRIVATE}
+    region:
+      static: ap-northeast-2
+  s3:
+    bucket: ${S3_BUCKET}
 
 #spring:
 #  profiles:

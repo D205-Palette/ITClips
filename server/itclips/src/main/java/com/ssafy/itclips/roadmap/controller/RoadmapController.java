@@ -1,5 +1,6 @@
 package com.ssafy.itclips.roadmap.controller;
 
+import com.ssafy.itclips.global.file.DataResponseDto;
 import com.ssafy.itclips.roadmap.dto.RoadmapCommentRequestDTO;
 import com.ssafy.itclips.roadmap.dto.RoadmapDTO;
 import com.ssafy.itclips.roadmap.dto.RoadmapInfoDTO;
@@ -50,8 +51,8 @@ public class RoadmapController {
     @PostMapping("/{userId}")
     @Operation(summary = "로드맵 생성 " , description = "로드맵을 생성합니다.")
     public ResponseEntity<?> createRoadmap(@PathVariable("userId") Long userId, @RequestBody RoadmapRequestDTO roadmapRequestDTO){
-        roadmapService.createRoadmap(userId,roadmapRequestDTO);
-        return new ResponseEntity<>(HttpStatus.OK);
+        DataResponseDto imageInfo = roadmapService.createRoadmap(userId,roadmapRequestDTO);
+        return new ResponseEntity<DataResponseDto>(imageInfo, HttpStatus.OK);
     }
 
     // 로드맵 삭제
@@ -66,8 +67,8 @@ public class RoadmapController {
     @PutMapping("/{roadmapId}/{userId}")
     @Operation(summary = "로드맵 수정", description = "로드맵 수정 페이지입니다. ")
     public ResponseEntity<?> updateRoadmap(@PathVariable("roadmapId") Long roadmapId,@PathVariable("userId") Long userId, @RequestBody RoadmapRequestDTO roadmapRequestDTO){
-        roadmapService.updateRoadmap(roadmapId,userId, roadmapRequestDTO);
-        return new ResponseEntity<>(HttpStatus.OK);
+        DataResponseDto imageInfo = roadmapService.updateRoadmap(roadmapId,userId, roadmapRequestDTO);
+        return new ResponseEntity<DataResponseDto>(imageInfo, HttpStatus.OK);
     }
 
     // 로드맵 상세 보기

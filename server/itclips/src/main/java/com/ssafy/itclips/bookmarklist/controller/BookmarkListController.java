@@ -4,6 +4,7 @@ import com.ssafy.itclips.bookmarklist.dto.BookmarkListDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListDetailDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
 import com.ssafy.itclips.bookmarklist.service.BookmarkListService;
+import com.ssafy.itclips.global.file.DataResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -76,8 +77,8 @@ public class BookmarkListController {
     public ResponseEntity<?> createBookmarkList(@PathVariable @Parameter(description = "유저 정보", required = true) Long userId,
                                                 @RequestBody @Parameter(description = "추가 할 리스트 정보", required = true) BookmarkListDTO bookmarkListDTO) {
 
-        bookmarkListService.createBookmarkList(userId,bookmarkListDTO);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        DataResponseDto url = bookmarkListService.createBookmarkList(userId,bookmarkListDTO);
+        return new ResponseEntity<DataResponseDto>(url,HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{userId}/{listId}")
@@ -90,8 +91,8 @@ public class BookmarkListController {
     public ResponseEntity<?> updateBookmarkList(@PathVariable @Parameter(description = "유저 ID", required = true) Long userId,
                                                 @PathVariable @Parameter(description = "리스트 ID", required = true) Long listId,
                                                 @RequestBody @Parameter(description = "업데이트할 리스트 정보", required = true) BookmarkListDTO bookmarkListDTO) {
-        bookmarkListService.updateBookmarkList(userId, listId, bookmarkListDTO);
-        return new ResponseEntity<>(HttpStatus.OK);
+        DataResponseDto url = bookmarkListService.updateBookmarkList(userId, listId, bookmarkListDTO);
+        return new ResponseEntity<DataResponseDto>(url,HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{userId}/{listId}")

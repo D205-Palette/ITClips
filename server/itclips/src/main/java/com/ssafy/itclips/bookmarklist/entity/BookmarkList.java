@@ -119,12 +119,12 @@ public class BookmarkList {
     }
 
 
-    public BookmarkListResponseDTO makeBookmarkListResponseDTO(Integer bookmarkCount, Integer likeCount, Boolean isLiked,
+    public BookmarkListResponseDTO makeBookmarkListResponseDTO(Integer bookmarkCount, Integer likeCount, Boolean isLiked,String imageUrl,
                                                                Set<TagDTO> tags, List<UserTitleDTO> users) {
         return BookmarkListResponseDTO.builder()
                 .id(this.id)
                 .title(this.title)
-                .image(this.image)
+                .image(imageUrl)
                 .description(this.description)
                 .bookmarkCount(bookmarkCount)
                 .users(users)
@@ -134,7 +134,7 @@ public class BookmarkList {
                 .build();
     }
 
-    public BookmarkListDetailDTO makeBookmarkListDetailDTO(Integer likeCount, Integer scrapCount, Boolean isLiked, Boolean isScraped,
+    public BookmarkListDetailDTO makeBookmarkListDetailDTO(Integer likeCount, Integer scrapCount, Boolean isLiked, Boolean isScraped, String imageUrl,
                                                            List<CategoryParamDTO> categories, Set<TagDTO> tags, List<UserTitleDTO> users, List<BookmarkDetailDTO> bookmarks) {
         return BookmarkListDetailDTO.builder()
                 .id(this.id)
@@ -142,7 +142,7 @@ public class BookmarkList {
                 .description(this.description)
                 .likeCount(likeCount)
                 .scrapCount(scrapCount)
-                .image(this.image)
+                .image(imageUrl)
                 .isLiked(isLiked)
                 .isScraped(isScraped)
                 .categories(categories)

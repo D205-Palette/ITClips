@@ -52,4 +52,8 @@ public class RoadmapRequestDTO {
                 .isPublic(roadmap.getIsPublic())
                 .build();
     }
+
+    public void setImageToS3FileName(String image) {
+        this.image = image;
+    }
 }

@@ -23,7 +23,6 @@ import com.ssafy.itclips.group.entity.UserGroup;
 import com.ssafy.itclips.group.repository.GroupRepository;
 import com.ssafy.itclips.tag.dto.TagDTO;
 import com.ssafy.itclips.tag.entity.BookmarkListTag;
-import com.ssafy.itclips.tag.entity.BookmarkTag;
 import com.ssafy.itclips.tag.entity.Tag;
 import com.ssafy.itclips.tag.repository.BookmarkListTagRepository;
 import com.ssafy.itclips.tag.service.TagService;
@@ -211,9 +210,11 @@ public class BookmarkListServiceImpl implements BookmarkListService {
 
     @Override
     @Transactional
-    public void removeScrapBookmarkList(Long scrapId) throws RuntimeException {
-        BookmarkListScrap existBookmarkListScrap = bookmarkListScrapRepository.findById(scrapId)
-                .orElseThrow(() -> new CustomException(ErrorCode.LIST_NOT_SCRAPPED));
+    public void removeScrapBookmarkList(Long userId, Long listId) throws RuntimeException {
+        BookmarkListScrap existBookmarkListScrap = bookmarkListScrapRepository.findByUserIdAndBookmarkListId(userId,listId);
+        if(existBookmarkListScrap == null) {
+            throw new CustomException(ErrorCode.LIST_NOT_SCRAPPED);
+        }
         bookmarkListScrapRepository.delete(existBookmarkListScrap);
     }
 

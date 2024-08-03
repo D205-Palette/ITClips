@@ -11,6 +11,12 @@ import PasswordChangeModal from "./PasswordChangeModal";
 import DeleteAccountModal from "./DeleteAccountModal";
 import InterestCategoryDropdown from "../ui/InterestCategoryDropdown";
 
+// apis
+import { updateProfileImage } from "../../../api/profileApi";
+
+// stores
+import { authStore } from "../../../stores/authStore";
+
 // 프로필 모달 상태 props
 interface ProfileSettingsModalProps {
   isOpen: boolean;
@@ -18,6 +24,8 @@ interface ProfileSettingsModalProps {
 }
 
 const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onClose }) => {
+
+  const userInfo = authStore(state => state.userInfo);
 
   // 임시 데이터들
   const [ name, setName ] = useState<string>("");
@@ -111,11 +119,11 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
 
   // 프로필 이미지 변경 핸들러
   const handleImageChange = async () => {
-    if (selectedFile) {
+    if (selectedFile && userInfo.email) {
       try {
-        const formData = new FormData();
-        formData.append('image', selectedFile);
+        const profileImagePath = URL.createObjectURL(selectedFile);
         // 여기 추가 api 호출하기
+        await updateProfileImage(userInfo.email, profileImagePath);
         console.log('프로필 이미지가 성공적으로 변경되었습니다.');
       } catch (error) {
         console.error('프로필 이미지 변경 중 오류가 발생했습니다:', error);

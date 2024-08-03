@@ -49,7 +49,6 @@ public class RoadmapServiceImpl implements RoadmapService {
     private final RoadmapLikeRepository roadmapLikeRepository;
     private final UserRepository userRepository;
     private final BookmarkListRepository bookmarkListRepository;
-    private final TagRepository tagRepository;
     private final UserTagRepository userTagRepository;
     private final FeedService feedService;
     private final FileService fileService;
@@ -67,12 +66,21 @@ public class RoadmapServiceImpl implements RoadmapService {
         List<RoadmapInfoDTO> roadmapInfoDTOList = new ArrayList<>();
 
         for (Roadmap roadmap : roadmapList) {
-            // 로드맵 단계 수
-            Long stepCnt = roadmapStepRepository.countByRoadmapId(roadmap.getId());
+            // 로드맵 단계
+            List<RoadmapStep> roadmapStepList = roadmapStepRepository.findByRoadmapId(roadmap.getId());
+            List<StepInfoDTO> steps = new ArrayList<>();
+
+            for(RoadmapStep roadmapStep : roadmapStepList){
+                steps.add(StepInfoDTO.toDTO(roadmapStep));
+            }
 
             // 좋아요 수
             Long likeCnt = roadmapLikeRepository.countByRoadmapId(roadmap.getId());
-            RoadmapInfoDTO roadmapInfoDTO = RoadmapInfoDTO.toDto(roadmap,stepCnt,null,likeCnt);
+
+            // 체크한단계 수
+            Long checkCnt = roadmapStepRepository.countByRoadmapIdAndCheck(roadmap.getId(), true);
+
+            RoadmapInfoDTO roadmapInfoDTO = RoadmapInfoDTO.toDto(roadmap,steps.size(),checkCnt,likeCnt,steps);
             roadmapInfoDTOList.add(roadmapInfoDTO);
         }
 
@@ -91,14 +99,19 @@ public class RoadmapServiceImpl implements RoadmapService {
 
         // 로드맵 -> 로드맵 출력용으로 바꿈
         for (Roadmap roadmap : roadmapList) {
-            // 로드맵 단계 수
-            Long stepCnt = roadmapStepRepository.countByRoadmapId(roadmap.getId());
+            // 로드맵 단계
+            List<RoadmapStep> roadmapStepList = roadmapStepRepository.findByRoadmapId(roadmap.getId());
+            List<StepInfoDTO> steps = new ArrayList<>();
+
+            for(RoadmapStep roadmapStep : roadmapStepList){
+                steps.add(StepInfoDTO.toDTO(roadmapStep));
+            }
             // 체크한단계 수
             Long checkCnt = roadmapStepRepository.countByRoadmapIdAndCheck(roadmap.getId(), true);
             // 좋아요 수
             Long likeCnt = roadmapLikeRepository.countByRoadmapId(roadmap.getId());
 
-            RoadmapInfoDTO roadmapInfoDTO = RoadmapInfoDTO.toDto(roadmap,stepCnt,checkCnt,likeCnt);
+            RoadmapInfoDTO roadmapInfoDTO = RoadmapInfoDTO.toDto(roadmap,steps.size(),checkCnt,likeCnt,steps);
             roadmapInfoDTOList.add(roadmapInfoDTO);
         }
 

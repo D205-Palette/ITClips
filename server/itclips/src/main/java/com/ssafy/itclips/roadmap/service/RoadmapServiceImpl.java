@@ -37,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -462,6 +463,47 @@ public class RoadmapServiceImpl implements RoadmapService {
         return roadmapRepository.findListRankingByScrap();
     }
 
+    @Override
+    public List<RoadmapInfoDTO> searchRoadMaps(Integer page, String searchType, Long userId, String title) throws RuntimeException {
+        //searchType hit,like,scrap으로 분기
+        List<Roadmap> roadmapList;
+
+        roadmapList = searchType.equals("hit") ? roadmapRepository.findRoadMapByTitleAndHit(title, page) :
+                searchType.equals("scrap") ? roadmapRepository.findRoadMapListByTitleAndScrap(title, page) :
+                        roadmapRepository.findRoadMapListByTitleAndLike(title, page);
+
+
+        if (roadmapList.isEmpty()) {
+            throw new CustomException(ErrorCode.ROADMAP_NOT_FOUND);
+        }
+
+        List<RoadmapInfoDTO> roadmapInfoDTOList = new ArrayList<>();
+
+        for (Roadmap roadmap : roadmapList) {
+
+            // 로드맵 단계
+            List<RoadmapStep> roadmapStepList = roadmapStepRepository.findByRoadmapId(roadmap.getId());
+            List<StepInfoDTO> steps = new ArrayList<>();
+
+            for(RoadmapStep roadmapStep : roadmapStepList){
+                steps.add(StepInfoDTO.toDTO(roadmapStep));
+            }
+
+            // 좋아요 수
+            Long likeCnt = roadmapLikeRepository.countByRoadmapId(roadmap.getId());
+
+            // 체크한단계 수
+            Long checkCnt = roadmapStepRepository.countByRoadmapIdAndCheck(roadmap.getId(), true);
+
+            // 좋아요 했는지 안했는지
+            Boolean isLiked = roadmapLikeRepository.existsByRoadmapIdAndUserId(roadmap.getId(),userId);
+
+            RoadmapInfoDTO roadmapInfoDTO = RoadmapInfoDTO.toDto(roadmap,steps.size(),checkCnt,likeCnt,steps,isLiked);
+            roadmapInfoDTOList.add(roadmapInfoDTO);
+        }
+
+        return roadmapInfoDTOList;
+    }
 
     ////////////////// get dto /////////////////////
 

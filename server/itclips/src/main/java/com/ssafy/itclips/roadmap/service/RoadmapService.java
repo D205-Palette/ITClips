@@ -58,4 +58,6 @@ public interface RoadmapService {
     List<RankDTO> getListsRankingByHit();
     // 스크랩 인기순위
     List<RankDTO> getListsRankingByScrap();
+
+    List<RoadmapInfoDTO> searchRoadMaps(Integer page, String searchType, Long userId, String title) throws RuntimeException;
 }

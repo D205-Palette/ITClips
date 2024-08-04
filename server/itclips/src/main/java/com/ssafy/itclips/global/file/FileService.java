@@ -6,9 +6,11 @@ import com.amazonaws.services.s3.Headers;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 import java.util.Map;
@@ -16,6 +18,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FileService {
 
     @Value("${cloud.s3.bucket}")
@@ -23,16 +26,19 @@ public class FileService {
 
     private final AmazonS3 amazonS3;
 
-    public Map<String, String> getPresignedUrl(String prefix, String fileName, Boolean type) {
+    public Map<String, String> getPresignedUrl(String prefix, String fileName, Boolean type)  {
         if (type) {
             fileName = createPath(prefix, fileName);
+        }
+        if(fileName == null) {
+            fileName = "aa";
         }
 
         GeneratePresignedUrlRequest generatePresignedUrlRequest = type ? getGeneratePresignedUrlForUpload(bucket, fileName) :
                 getGeneratePresignedUrlForDownload(bucket, fileName);
-        URL url = amazonS3.generatePresignedUrl(generatePresignedUrlRequest);
 
-        return Map.of("url", url.toString(), "image", fileName);
+        URL url = amazonS3.generatePresignedUrl(generatePresignedUrlRequest);
+        return Map.of("url",url.toString(), "image", fileName);
     }
 
     private GeneratePresignedUrlRequest getGeneratePresignedUrlForDownload(String bucket, String fileName) {

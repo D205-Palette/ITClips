@@ -37,4 +37,6 @@ public interface BookmarkListService {
     List<RankDTO> getListsRankingByHit() throws RuntimeException;
 
     List<RankDTO> getListsRankingByScrap() throws RuntimeException;
+
+    List<BookmarkListResponseDTO> searchLists(Integer page, String searchType, Long userId, String title) throws RuntimeException;
 }

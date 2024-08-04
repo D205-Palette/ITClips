@@ -198,4 +198,14 @@ public class BookmarkListController {
         List<RankDTO> lists = bookmarkListService.getListsRankingByScrap();
         return new ResponseEntity<>(lists,HttpStatus.OK);
     }
+
+    @GetMapping("/search/{page}/{searchType}/{title}")
+    public ResponseEntity<?> searchList(@PathVariable Integer page,
+                                        @PathVariable String searchType,
+                                        @PathVariable String title,
+                                        @RequestParam Long userId) {
+        List<BookmarkListResponseDTO> lists = bookmarkListService.searchLists(page,searchType,userId,title);
+
+        return new ResponseEntity<>(lists,HttpStatus.OK);
+    }
 }

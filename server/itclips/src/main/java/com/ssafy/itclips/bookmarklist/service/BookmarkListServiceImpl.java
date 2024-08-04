@@ -158,7 +158,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         }
 
         return bookmarkLists.stream()
-                .map(bookmarkList -> convertToBookmarkListResponseDTO(bookmarkList, userId, viewerId)) // userId를 추가로 전달
+                .map(bookmarkList -> convertToBookmarkListResponseDTO(bookmarkList, viewerId)) // userId를 추가로 전달
                 .collect(Collectors.toList());
     }
 
@@ -188,7 +188,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         }
 
         return bookmarkLists.stream()
-                .map(bookmarkList -> convertToBookmarkListResponseDTO(bookmarkList, userId,viewerId)) // userId를 추가로 전달
+                .map(bookmarkList -> convertToBookmarkListResponseDTO(bookmarkList,viewerId)) // userId를 추가로 전달
                 .filter(dto -> (target ? dto.getUsers().size() > USER_NUM : dto.getUsers().size() == USER_NUM))
                 .collect(Collectors.toList());
     }
@@ -274,6 +274,27 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         return bookmarkListRepository.findListRankingByScrap();
     }
 
+    @Override
+    @Transactional
+    public List<BookmarkListResponseDTO> searchLists(Integer page, String searchType, Long userId, String title) throws RuntimeException {
+
+        //searchType hit,like,scrap으로 분기
+        List<BookmarkList> bookmarkLists;
+
+        bookmarkLists = searchType.equals("hit") ? bookmarkListRepository.findBookmarkListByTitleAndHit(title, page) :
+                searchType.equals("scrap") ? bookmarkListRepository.findBookmarkListByTitleAndScrap(title, page) :
+                        bookmarkListRepository.findBookmarkListByTitleAndLike(title, page);
+
+
+        if (bookmarkLists.isEmpty()) {
+            throw new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND);
+        }
+
+        return bookmarkLists.stream()
+                .map(bookmarkList -> convertToBookmarkListResponseDTO(bookmarkList,userId)) // userId를 추가로 전달
+                .collect(Collectors.toList());
+    }
+
     private BookmarkListDetailDTO convertToBookmarkListDetailDTO(BookmarkList bookmarkList, Long userId) {
         // list 정보
         List<UserTitleDTO> users = getUserTitleDTOs(bookmarkList);
@@ -318,7 +339,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
                 .collect(Collectors.toList());
     }
 
-    public BookmarkListResponseDTO convertToBookmarkListResponseDTO(BookmarkList bookmarkList, Long userId, Long viewerId) {
+    public BookmarkListResponseDTO convertToBookmarkListResponseDTO(BookmarkList bookmarkList, Long viewerId) {
         List<UserTitleDTO> users = getUserTitleDTOs(bookmarkList);
         Set<TagDTO> tags = getTagDTOs(bookmarkList);
 

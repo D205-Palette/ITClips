@@ -31,6 +31,7 @@ public class BookmarkListRepositoryImpl implements BookmarkListRepositoryCustom 
 
     private final JPAQueryFactory queryFactory;
 
+    private static final Integer PAGE_SIZE = 8;
 
     @Override
     public List<BookmarkList> findDetailedByUserId(Long userId) {
@@ -44,6 +45,59 @@ public class BookmarkListRepositoryImpl implements BookmarkListRepositoryCustom 
                 .leftJoin(bookmarkList.tags, bookmarkListTag).fetchJoin()
                 .leftJoin(bookmarkListTag.tag, tag).fetchJoin()
                 .where(bookmarkList.user.id.eq(userId))
+                .fetch();
+    }
+
+    @Override
+    public List<BookmarkList> findBookmarkListByTitleAndHit(String title, Integer pageNo) {
+        QBookmarkList qBookmarkList = QBookmarkList.bookmarkList;
+
+        int offset = (pageNo - 1) * PAGE_SIZE;
+
+        return queryFactory.selectFrom(qBookmarkList)
+                .where(qBookmarkList.title.contains(title)
+                        .and(qBookmarkList.isPublic.isTrue()))
+                .orderBy(qBookmarkList.hit.desc(), qBookmarkList.createdAt.desc())
+                .offset(offset)
+                .limit(PAGE_SIZE)
+                .fetch();
+    }
+
+    @Override
+    public List<BookmarkList> findBookmarkListByTitleAndScrap(String title, Integer pageNo) {
+        QBookmarkList qBookmarkList = QBookmarkList.bookmarkList;
+        QBookmarkListScrap qBookmarkListScrap = QBookmarkListScrap.bookmarkListScrap;
+
+        int offset = (pageNo - 1) * PAGE_SIZE;
+
+        return queryFactory.select(qBookmarkList)
+                .from(qBookmarkList)
+                .join(qBookmarkListScrap).on(qBookmarkList.id.eq(qBookmarkListScrap.bookmarkList.id))
+                .where(qBookmarkList.title.contains(title)
+                        .and(qBookmarkList.isPublic.isTrue()))
+                .groupBy(qBookmarkList.id)
+                .orderBy(qBookmarkListScrap.id.count().desc(), qBookmarkList.createdAt.desc())
+                .offset(offset)
+                .limit(PAGE_SIZE)
+                .fetch();
+    }
+
+    @Override
+    public List<BookmarkList> findBookmarkListByTitleAndLike(String title, Integer pageNo) {
+        QBookmarkList qBookmarkList = QBookmarkList.bookmarkList;
+        QBookmarkListLike qBookmarkListLike = QBookmarkListLike.bookmarkListLike;
+
+        int offset = (pageNo - 1) * PAGE_SIZE;
+
+        return queryFactory.select(qBookmarkList)
+                .from(qBookmarkList)
+                .join(qBookmarkListLike).on(qBookmarkList.id.eq(qBookmarkListLike.bookmarkList.id))
+                .where(qBookmarkList.title.contains(title)
+                        .and(qBookmarkList.isPublic.isTrue()))
+                .groupBy(qBookmarkList.id)
+                .orderBy(qBookmarkListLike.id.count().desc(), qBookmarkList.createdAt.desc())
+                .offset(offset)
+                .limit(PAGE_SIZE)
                 .fetch();
     }
 

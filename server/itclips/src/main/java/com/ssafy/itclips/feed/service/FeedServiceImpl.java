@@ -103,7 +103,7 @@ public class FeedServiceImpl implements FeedService{
                     continue;
                 }
 
-                bookmarkListResponseDTOList.add(bookmarkListService.convertToBookmarkListResponseDTO(bookmarkList.get(),userId, userId));
+                bookmarkListResponseDTOList.add(bookmarkListService.convertToBookmarkListResponseDTO(bookmarkList.get(),userId));
             }
         }
         return bookmarkListResponseDTOList;

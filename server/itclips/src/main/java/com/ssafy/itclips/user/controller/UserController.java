@@ -166,6 +166,8 @@ public class UserController {
         }
 
         UserInfoDetailDTO userInfoDTO = UserInfoDetailDTO.builder()
+                .id(user.getId())
+                .email(user.getEmail())
                 .nickname(user.getNickname())
                 .birth(user.getBirth())
                 .job(user.getJob())

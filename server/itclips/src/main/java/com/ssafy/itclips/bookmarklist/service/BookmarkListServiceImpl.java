@@ -28,6 +28,7 @@ import com.ssafy.itclips.global.rank.RankDTO;
 import com.ssafy.itclips.group.entity.UserGroup;
 import com.ssafy.itclips.group.repository.GroupRepository;
 import com.ssafy.itclips.tag.dto.TagDTO;
+import com.ssafy.itclips.tag.dto.TagSearchDTO;
 import com.ssafy.itclips.tag.entity.BookmarkListTag;
 import com.ssafy.itclips.tag.entity.Tag;
 import com.ssafy.itclips.tag.repository.BookmarkListTagRepository;
@@ -285,6 +286,20 @@ public class BookmarkListServiceImpl implements BookmarkListService {
                 searchType.equals("scrap") ? bookmarkListRepository.findBookmarkListByTitleAndScrap(title, page) :
                         bookmarkListRepository.findBookmarkListByTitleAndLike(title, page);
 
+
+        if (bookmarkLists.isEmpty()) {
+            throw new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND);
+        }
+
+        return bookmarkLists.stream()
+                .map(bookmarkList -> convertToBookmarkListResponseDTO(bookmarkList,userId)) // userId를 추가로 전달
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<BookmarkListResponseDTO> searchListsByTags(Integer page, Long userId, TagSearchDTO tagSearchDTO) throws RuntimeException {
+
+        List<BookmarkList> bookmarkLists = bookmarkListRepository.findBookmarkListByTags(tagSearchDTO,page);
 
         if (bookmarkLists.isEmpty()) {
             throw new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND);

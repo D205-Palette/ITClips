@@ -17,6 +17,8 @@ import com.ssafy.itclips.error.CustomException;
 import com.ssafy.itclips.error.ErrorCode;
 import com.ssafy.itclips.global.rank.RankDTO;
 import com.ssafy.itclips.group.entity.QUserGroup;
+import com.ssafy.itclips.tag.dto.TagDTO;
+import com.ssafy.itclips.tag.dto.TagSearchDTO;
 import com.ssafy.itclips.tag.entity.QBookmarkListTag;
 import com.ssafy.itclips.tag.entity.QTag;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -163,5 +166,30 @@ public class BookmarkListRepositoryImpl implements BookmarkListRepositoryCustom 
         }
 
         return bookmarkDetailDTOs;
+    }
+
+    @Override
+    public List<BookmarkList> findBookmarkListByTags(TagSearchDTO tagSearchDTO, Integer pageNo) {
+        QBookmarkList qBookmarkList = QBookmarkList.bookmarkList;
+        QBookmarkListTag qBookmarkListTag = QBookmarkListTag.bookmarkListTag;
+        QTag qTag = QTag.tag;
+
+        List<TagDTO> tags = tagSearchDTO.getTags();
+
+        List<String> tagTitles = tags.stream()
+                .map(TagDTO::getTitle)
+                .toList();
+
+        int offset = (pageNo - 1) * PAGE_SIZE;
+
+        return queryFactory.select(qBookmarkList)
+                .from(qBookmarkList)
+                .join(qBookmarkListTag).on(qBookmarkList.id.eq(qBookmarkListTag.bookmarkList.id))
+                .join(qTag).on(qTag.id.eq(qBookmarkListTag.tag.id))
+                .where(qTag.title.in(tagTitles))
+                .orderBy(qBookmarkList.hit.desc(), qBookmarkList.createdAt.desc())
+                .offset(offset)
+                .limit(PAGE_SIZE)
+                .fetch();
     }
 }

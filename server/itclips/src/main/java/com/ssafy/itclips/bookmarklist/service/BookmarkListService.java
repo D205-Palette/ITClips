@@ -6,6 +6,7 @@ import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListRoadmapDTO;
 import com.ssafy.itclips.global.file.DataResponseDto;
 import com.ssafy.itclips.global.rank.RankDTO;
+import com.ssafy.itclips.tag.dto.TagSearchDTO;
 
 import java.util.List;
 
@@ -39,4 +40,6 @@ public interface BookmarkListService {
     List<RankDTO> getListsRankingByScrap() throws RuntimeException;
 
     List<BookmarkListResponseDTO> searchLists(Integer page, String searchType, Long userId, String title) throws RuntimeException;
+
+    List<BookmarkListResponseDTO> searchListsByTags(Integer page, Long userId, TagSearchDTO tagSearchDTO) throws RuntimeException;
 }

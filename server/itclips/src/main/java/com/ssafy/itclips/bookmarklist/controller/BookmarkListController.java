@@ -6,6 +6,7 @@ import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
 import com.ssafy.itclips.bookmarklist.service.BookmarkListService;
 import com.ssafy.itclips.global.file.DataResponseDto;
 import com.ssafy.itclips.global.rank.RankDTO;
+import com.ssafy.itclips.tag.dto.TagSearchDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -206,6 +207,16 @@ public class BookmarkListController {
                                         @PathVariable String title,
                                         @RequestParam Long userId) {
         List<BookmarkListResponseDTO> lists = bookmarkListService.searchLists(page,searchType,userId,title);
+
+        return new ResponseEntity<>(lists,HttpStatus.OK);
+    }
+
+    @PostMapping("/search/tag/{page}")
+    @Operation(summary = "태그 검색", description = "태그 검색 수행")
+    public ResponseEntity<?> searchListByTags(@PathVariable Integer page,
+                                              @RequestParam Long userId,
+                                              @RequestBody TagSearchDTO tagSearchDTO) {
+        List<BookmarkListResponseDTO> lists = bookmarkListService.searchListsByTags(page,userId,tagSearchDTO);
 
         return new ResponseEntity<>(lists,HttpStatus.OK);
     }

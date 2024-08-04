@@ -1,4 +1,4 @@
-import { authenticatedRequest, authenticatedUserSettingRequest } from "./apiUtils";
+import { authenticatedRequest, authenticatedUserSettingRequest, request } from "./apiUtils";
 
 interface updatedUserInfo {
   id?: number;
@@ -45,4 +45,9 @@ export const addMyInterest = (userId: number, tagId: number) => {
 // 사용자 관심사 삭제
 export const removeMyInterest = (userId: number, tagId: number) => {
   return authenticatedRequest("delete", `/user/${userId}/tags`, undefined, { userId, tagId });
+};
+
+// 닉네임 중복확인
+export const checkNicknameDuplication = (nickname: string) => {
+  return request("get", `/user/nicknameCheck`, undefined, { nickname });
 };

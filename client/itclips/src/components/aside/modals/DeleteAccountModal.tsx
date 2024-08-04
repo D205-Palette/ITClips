@@ -1,27 +1,39 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-// components
-import DeletedAccountModal from "./DeletedAccountModal";
+// stores
+import { authStore } from "../../../stores/authStore";
 
 interface DeleteAccountModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm: () => Promise<void>;
 }
 
 const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({ isOpen, onClose, onConfirm }) => {
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [isDeletedModalOpen, setIsDeletedModalOpen] = useState(false);
+  const navigate = useNavigate();
+  const logout = authStore(state => state.logout);
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (isConfirmed) {
-      onConfirm();
-      setIsDeletedModalOpen(true);
+      try {
+        await onConfirm();
+        setIsDeletedModalOpen(true);
+      } catch (error) {
+        console.error("회원 탈퇴 중 오류 발생:", error);
+        // 에러 발생 시 사용자에게 알림
+        alert("회원 탈퇴 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+      }
     }
   };
 
   const handleDeletedModalClose = () => {
     setIsDeletedModalOpen(false);
+    logout();
+    navigate("/intro"); // 회원 탈퇴 완료 후 intro 페이지로 리다이렉트
+    onClose();
   };
 
   if (!isOpen) return null;
@@ -70,11 +82,6 @@ const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({ isOpen, onClose
           </div>
         </div>
       </div>
-      <DeletedAccountModal
-        isOpen={isDeletedModalOpen}
-        onDeleteModalClose={onClose}
-        onDeletedModalClose={handleDeletedModalClose}
-      />
     </>
   );
 };

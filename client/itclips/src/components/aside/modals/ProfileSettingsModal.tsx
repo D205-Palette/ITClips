@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import darkModeStore from '../../../stores/darkModeStore';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 // icons
 import { IoCloseOutline } from 'react-icons/io5';
@@ -10,12 +10,14 @@ import JobCategoryDropdown from "../ui/JobCategoryDropdown";
 import PasswordChangeModal from "./PasswordChangeModal";
 import DeleteAccountModal from "./DeleteAccountModal";
 import InterestCategoryDropdown from "../ui/InterestCategoryDropdown";
+import DeletedAccountModal from "./DeletedAccountModal";
 
 // apis
-import { updateProfileImage, getMyInterest, addMyInterest, removeMyInterest, changePassword, deleteUserAccount, updateUserInfo } from "../../../api/profileApi";
+import { updateProfileImage, getMyInterest, addMyInterest, removeMyInterest, deleteUserAccount, updateUserInfo } from "../../../api/profileApi";
 import { logoutApi } from "../../../api/authApi";
 
 // stores
+import darkModeStore from "../../../stores/darkModeStore";
 import { authStore } from "../../../stores/authStore";
 
 // 프로필 모달 상태 props
@@ -39,9 +41,11 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
   const [notification, setNotification] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
   const isDark = darkModeStore(state => state.isDark)
   const [ isPasswordChangeModalOpen, setIsPasswordChangeModalOpen ] = useState<boolean>(false);
-  const [ isDeleteAccountModalOpen, setIsDeleteAccountModalOpen ] = useState<boolean>(false);
   const [ selectedFile, setSelectedFile ] = useState<File | null>(null);
   const [ isDuplicateNickname, setIsDuplicateNickname ] = useState<boolean | null>(null);
+  const [ isDeleteAccountModalOpen, setIsDeleteAccountModalOpen ] = useState<boolean>(false);
+  const [ isDeletedAccountModalOpen, setIsDeletedAccountModalOpen ] = useState<boolean>(false);
+  const navigate = useNavigate();
   
   const [interests, setInterests] = useState<Interest[]>([]);
   const [selectedInterest, setSelectedInterest] = useState<Interest | null>(null);
@@ -176,15 +180,19 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
         console.log('회원 탈퇴가 성공적으로 처리되었습니다.');
         await logoutApi();
         logout();
-        onClose(); // 모달 닫기
+        setIsDeleteAccountModalOpen(false);
+        setIsDeletedAccountModalOpen(true);
       } catch (error) {
         console.error('회원 탈퇴 중 오류가 발생했습니다:', error);
-        // 오류 메시지를 사용자에게 표시하는 로직 추가
       }
-    } else {
-      console.error('사용자 ID가 없습니다.');
-      // 오류 메시지를 사용자에게 표시하는 로직 추가
     }
+  };
+
+  // 회원 탈퇴 확인
+  const handleDeletedAccountModalClose = () => {
+    setIsDeletedAccountModalOpen(false);
+    navigate("/intro");  // 회원 탈퇴 완료 후 intro 페이지로 리다이렉트
+    onClose();  // ProfileSettingsModal 닫기
   };
   
   // 닉네임 중복 확인 핸들러
@@ -452,6 +460,13 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
           isOpen={isDeleteAccountModalOpen}
           onClose={() => setIsDeleteAccountModalOpen(false)}
           onConfirm={handleDeleteAccount}
+        />
+
+        {/* 회원 탈퇴 완료 모달 */}
+        <DeletedAccountModal
+          isOpen={isDeletedAccountModalOpen}
+          onDeleteModalClose={() => setIsDeletedAccountModalOpen(false)}
+          onDeletedModalClose={handleDeletedAccountModalClose}
         />
 
         {/* 토스트 알람 */}

@@ -23,7 +23,7 @@ export const changePassword = (email: string, oldPassword: string, newPassword: 
 
 // 회원 탈퇴
 export const deleteUserAccount = (userId: number) => {
-  return authenticatedRequest("delete", `/user/${userId}/profile/`, undefined, { userId });
+  return authenticatedRequest("delete", `/user/${userId}/profile`, undefined, { userId });
 };
 
 // 프로필 이미지 변경

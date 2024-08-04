@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 // icons
 import { IoCloseOutline } from 'react-icons/io5';
@@ -13,7 +14,7 @@ import InterestCategoryDropdown from "../ui/InterestCategoryDropdown";
 import DeletedAccountModal from "./DeletedAccountModal";
 
 // apis
-import { updateProfileImage, getMyInterest, addMyInterest, removeMyInterest, deleteUserAccount, updateUserInfo } from "../../../api/profileApi";
+import { updateProfileImage, getMyInterest, addMyInterest, removeMyInterest, deleteUserAccount, updateUserInfo, checkNicknameDuplication } from "../../../api/profileApi";
 import { logoutApi } from "../../../api/authApi";
 
 // stores
@@ -197,14 +198,24 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
   
   // 닉네임 중복 확인 핸들러
   const handleCheckNickname = async () => {
+    if (!nickname.trim()) {
+      setNotification({ message: "닉네임을 입력해주세요.", type: 'error' });
+      return;
+    }
+  
     try {
-      // 닉네임 중복 확인 API 호출 (임의의 로직)
-      // API 호출 결과에 따라 isDuplicate 값을 설정
-      const isDuplicate = true; // true면 중복
-      setIsDuplicateNickname(isDuplicate);
-      console.log(isDuplicate ? '중복된 닉네임입니다.' : '사용 가능한 닉네임입니다.');
-    } catch (error) {
-      console.error('닉네임 중복 확인 중 오류가 발생했습니다:', error);
+      const response = await checkNicknameDuplication(nickname);
+      setIsDuplicateNickname(false);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        if (error.response && error.response.status === 409) {
+          setIsDuplicateNickname(true);
+        } else {
+          console.error('닉네임 중복 확인 중 오류가 발생했습니다:', error);
+        }
+      } else {
+        console.error('예상치 못한 오류가 발생했습니다:', error);
+      }
     }
   };
   

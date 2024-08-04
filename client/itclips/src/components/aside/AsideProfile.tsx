@@ -21,6 +21,17 @@ import { authStore } from "../../stores/authStore";
 import { useFollowStore } from "../../stores/followStore";
 import { profileStore } from "../../stores/profileStore";
 
+interface UserInfo {
+  id?: number;
+  email?: string;
+  nickname?: string;
+  birth?: string;
+  job?: string;
+  gender?: boolean;
+  darkMode?: boolean;
+  bio?: string;
+};
+
 const AsideProfile = () => {
   // 내 정보 가져오기
   const myInfo = authStore(state => state.userInfo);
@@ -37,6 +48,10 @@ const AsideProfile = () => {
   
   // 팔로우 상태인지?
   const [isFollow, setIsFollow] = useState<boolean>(false);
+
+  const updateAsideInfo = (updatedInfo: UserInfo) => {
+    setUrlUserInfo(updatedInfo);
+  };
 
   useEffect(() => {
     // url 유저 정보 조회
@@ -147,7 +162,7 @@ const AsideProfile = () => {
       {/* 팔로워, 팔로잉, 리스트, 북마크 수 출력 컨테이너 */}
       <UserActivityInfo followerCount={followerCount} followingCount={followingCount} />
       {/* 프로필 설정 모달 */}
-      <ProfileSettingsModal isOpen={isModalOpen} onClose={closeModal} />
+      <ProfileSettingsModal isOpen={isModalOpen} onClose={closeModal} updateAsideInfo={updateAsideInfo} />
     </div>
   );
 };

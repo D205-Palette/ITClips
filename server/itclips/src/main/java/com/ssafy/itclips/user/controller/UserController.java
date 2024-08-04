@@ -3,6 +3,7 @@ package com.ssafy.itclips.user.controller;
 import com.ssafy.itclips.global.jwt.JwtToken;
 import com.ssafy.itclips.global.jwt.JwtTokenProvider;
 import com.ssafy.itclips.tag.dto.TagDTO;
+import com.ssafy.itclips.tag.dto.UserTagDTO;
 import com.ssafy.itclips.tag.repository.TagRepository;
 import com.ssafy.itclips.tag.repository.UserTagRepository;
 import com.ssafy.itclips.user.dto.UserInfoDTO;
@@ -418,8 +419,8 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("관심사 태그가 존재하지 않습니다.");
         }
 
-        List<TagDTO> tagDTOs = userTags.stream()
-                .map(userTag -> new TagDTO(userTag.getTag().getId(), userTag.getTag().getTitle()))
+        List<UserTagDTO> tagDTOs = userTags.stream()
+                .map(userTag -> new UserTagDTO(userTag.getTag().getId(), userTag.getTag().getTitle()))
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(tagDTOs);

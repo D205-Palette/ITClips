@@ -167,23 +167,6 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
       console.error("Failed to remove interest:", error);
     }
   };
-  
-  // 비밀번호 변경 모달 로직
-  const handlePasswordChange = async (oldPassword: string, newPassword: string) => {
-    if (userInfo.email) {
-      try {
-        await changePassword(userInfo.email, oldPassword, newPassword);
-        console.log('비밀번호가 성공적으로 변경되었습니다.');
-        // 성공 메시지를 사용자에게 표시하는 로직 추가
-      } catch (error) {
-        console.error('비밀번호 변경 중 오류가 발생했습니다:', error);
-        // 오류 메시지를 사용자에게 표시하는 로직 추가
-      }
-    } else {
-      console.error('사용자 이메일이 없습니다.');
-      // 오류 메시지를 사용자에게 표시하는 로직 추가
-    }
-  };
 
   // 회원 탈퇴 핸들러
   const handleDeleteAccount = async () => {
@@ -202,13 +185,6 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
       console.error('사용자 ID가 없습니다.');
       // 오류 메시지를 사용자에게 표시하는 로직 추가
     }
-  };
-  
-  // 이전 비밀번호와 비교 로직
-  const validateOldPassword = async (password: string) => {
-    // 비밀번호 비교 로직 추가
-    // 비밀번호가 같을경우 true, 다를경우 false
-    return true;
   };
   
   // 닉네임 중복 확인 핸들러
@@ -468,8 +444,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
         <PasswordChangeModal
           isOpen={isPasswordChangeModalOpen}
           onClose={() => setIsPasswordChangeModalOpen(false)}
-          onSubmit={handlePasswordChange}
-          validateOldPassword={validateOldPassword}
+          setNotification={setNotification}
         />
 
         {/* 회원 탈퇴 모달 */}

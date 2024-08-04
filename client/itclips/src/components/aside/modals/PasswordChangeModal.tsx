@@ -1,28 +1,70 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { AxiosError } from 'axios';
+
+// stores
+import { authStore } from "../../../stores/authStore";
+
+// apis
+import { changePassword } from "../../../api/profileApi";
+
+interface NotificationType {
+  message: string;
+  type: 'success' | 'error';
+};
 
 interface PasswordChangeModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (oldPassword: string, newPassword: string) => void;
-  validateOldPassword: (password: string) => Promise<boolean>;
+  setNotification: (notification: NotificationType) => void;
 }
 
-const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({ isOpen, onClose, onSubmit, validateOldPassword }) => {
+const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({ isOpen, onClose, setNotification }) => {
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const userInfo = authStore(state => state.userInfo);
+
+  // 비밀번호 변경 모달 로직
+  const handlePasswordChange = async (oldPassword: string, newPassword: string): Promise<boolean> => {
+    if (userInfo.email) {
+      try {
+        const response = await changePassword(userInfo.email, oldPassword, newPassword);
+        if (response.status === 200) {
+          console.log('비밀번호가 성공적으로 변경되었습니다.');
+          setNotification({ message: "비밀번호가 성공적으로 변경되었습니다.", type: 'success' });
+          return true; // 성공적으로 변경됨
+        } else {
+          throw new Error('비밀번호 변경 실패');
+        }
+      } catch (error) {
+        const axiosError = error as AxiosError;
+  
+        // 400 에러일 경우
+        if (axiosError.response) {
+          if (axiosError.response.status === 400) {
+            console.error('기존 비밀번호가 일치하지 않습니다.');
+            setNotification({ message: "기존 비밀번호가 일치하지 않습니다.", type: 'error' });
+          } else {
+            console.error('비밀번호 변경 중 오류가 발생했습니다:', axiosError);
+            setNotification({ message: "비밀번호 변경에 실패했습니다.", type: 'error' });
+          }
+        } else {
+          console.error('비밀번호 변경 중 오류가 발생했습니다:', axiosError);
+          setNotification({ message: "비밀번호 변경에 실패했습니다.", type: 'error' });
+        }
+        return false; // 실패
+      }
+    } else {
+      console.error('사용자 이메일이 없습니다.');
+      setNotification({ message: "사용자 이메일이 없습니다.", type: 'error' });
+      return false; // 이메일이 없으면 실패
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-
-    // 기존 비밀번호 확인
-    const isOldPasswordValid = await validateOldPassword(oldPassword);
-    if (!isOldPasswordValid) {
-      setError('기존 비밀번호가 올바르지 않습니다.');
-      return;
-    }
 
     if (newPassword !== confirmPassword) {
       setError('새 비밀번호가 일치하지 않습니다.');
@@ -36,12 +78,15 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({ isOpen, onClo
       setError('새 비밀번호는 기존 비밀번호와 달라야 합니다.');
       return;
     }
-    onSubmit(oldPassword, newPassword);
+
+    const isPasswordChanged = await handlePasswordChange(oldPassword, newPassword); // 비동기 함수 호출
     setOldPassword('');
     setNewPassword('');
     setConfirmPassword('');
     setError('');
-    onClose();
+    if (isPasswordChanged) {
+      onClose(); // 모달 닫기
+    }
   };
 
   if (!isOpen) return null;

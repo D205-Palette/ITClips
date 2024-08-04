@@ -2,21 +2,24 @@
 
 import React from "react";
 
-interface UserProps {
-  username: string;
-  email: string;
-  description: string;
-  likeCount: number;
-  starCount: number;
+interface User {
+  id?: number;
+  nickname?: string;
+  job?: string;
+  bio?: string;
+  gender?: boolean;
+  email?: string;
+  darkMode?: boolean;
+  birth?: string;
 }
 
-const UserDetailInfo = (data: UserProps) => {
+const UserDetailInfo = (data: User) => {
 
   return (
     <div className="text-center">
-      <h2 className="text-xl font-bold mb-1">{data.username}</h2>
-      <p className="text-gray-500 mb-2">{data.email}</p>
-      <p className="text-center text-sm mb-6">{data.description}</p>
+      <h2 className="text-xl font-bold mb-1">{data.nickname || "Unknown"}</h2>
+      <p className="text-gray-500 mb-2">{data.email || "No email"}</p>
+      <p className="text-center text-sm mb-6">{data.bio || "소개글이 없습니다."}</p>
     </div>
   );
 };

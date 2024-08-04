@@ -4,8 +4,8 @@ import { FC, useState, useEffect, useRef } from 'react';
 import { VscKebabVertical } from "react-icons/vsc";
 
 // components
-import BookmarkListEditModal from "../modals/BookmarkListEditModal";
-import DeleteBookmarkListModal from "../modals/DeleteContentModal";
+import RoadmapEditModal from "../modals/RoadmapEditModal";
+import DeleteBookmarkListModal from "../modals/DeleteBookmarkListModal";
 import UrlCopyModal from "../../common/UrlCopyModal";
 import ReportModal from "../modals/ReportModal";
 import FavoriteConfirmationModal from '../modals/FavoriteConfirmModal';
@@ -16,7 +16,7 @@ interface Props {
   id:number;
 }
 
-const AsideKebabDropdown :FC<Props> = (isRoadmap, id) => {
+const AsideRoadmapKebabDropdown :FC<Props> = (isRoadmap, id) => {
   const [ isEditModalOpen, setIsEditModalOpen ] = useState<boolean>(false);
   const [ isDeleteModalOpen, setIsDeleteModalOpen ] = useState<boolean>(false);
   const [ isUrlCopyModalOpen, setIsUrlCopyModalOpen ] = useState<boolean>(false);
@@ -96,14 +96,14 @@ const AsideKebabDropdown :FC<Props> = (isRoadmap, id) => {
           </ul>
         </div>
       )}
-      <BookmarkListEditModal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} />
-      <DeleteBookmarkListModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} whatContent='리스트' id={id}/>
+      <RoadmapEditModal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} />
+      <DeleteBookmarkListModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} />
       <UrlCopyModal isOpen={isUrlCopyModalOpen} onClose={() => setIsUrlCopyModalOpen(false)} />
-      <ReportModal isOpen={isReportModalOpen} onClose={() => setIsReportModalOpen(false)} whatContent='리스트' id={id}/>
+      <ReportModal isOpen={isReportModalOpen} onClose={() => setIsReportModalOpen(false)} />
       <FavoriteConfirmationModal isOpen={isFavoriteModalOpen} onClose={() => setIsFavoriteModalOpen(false)}/>
       <ScrapConfirmationModal isOpen={isScrapModalOpen} onClose={() => setIsScrapModalOpen(false)}/>
     </div>
   );
 };
 
-export default AsideKebabDropdown;
+export default AsideRoadmapKebabDropdown;

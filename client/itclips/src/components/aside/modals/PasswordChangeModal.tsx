@@ -3,26 +3,42 @@ import React, { useState } from 'react';
 interface PasswordChangeModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (newPassword: string) => void;
+  onSubmit: (oldPassword: string, newPassword: string) => void;
+  validateOldPassword: (password: string) => Promise<boolean>;
 }
 
-const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({ isOpen, onClose, onSubmit }) => {
-  const [password, setPassword] = useState('');
+const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({ isOpen, onClose, onSubmit, validateOldPassword }) => {
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      setError('비밀번호가 일치하지 않습니다.');
+    setError('');
+
+    // 기존 비밀번호 확인
+    const isOldPasswordValid = await validateOldPassword(oldPassword);
+    if (!isOldPasswordValid) {
+      setError('기존 비밀번호가 올바르지 않습니다.');
       return;
     }
-    if (password.length < 8) {
-      setError('비밀번호는 8자 이상이어야 합니다.');
+
+    if (newPassword !== confirmPassword) {
+      setError('새 비밀번호가 일치하지 않습니다.');
       return;
     }
-    onSubmit(password);
-    setPassword('');
+    if (newPassword.length < 8) {
+      setError('새 비밀번호는 8자 이상이어야 합니다.');
+      return;
+    }
+    if (oldPassword === newPassword) {
+      setError('새 비밀번호는 기존 비밀번호와 달라야 합니다.');
+      return;
+    }
+    onSubmit(oldPassword, newPassword);
+    setOldPassword('');
+    setNewPassword('');
     setConfirmPassword('');
     setError('');
     onClose();
@@ -36,12 +52,23 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({ isOpen, onClo
         <h2 className="text-xl font-bold mb-4">비밀번호 변경</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="password" className="block mb-2">새 비밀번호</label>
+            <label htmlFor="oldPassword" className="block mb-2">기존 비밀번호</label>
             <input
               type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              id="oldPassword"
+              value={oldPassword}
+              onChange={(e) => setOldPassword(e.target.value)}
+              className="w-full px-3 py-2 border rounded"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="newPassword" className="block mb-2">새 비밀번호</label>
+            <input
+              type="password"
+              id="newPassword"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
               className="w-full px-3 py-2 border rounded"
               required
             />

@@ -200,6 +200,7 @@ public class BookmarkListController {
     }
 
     @GetMapping("/search/{page}/{searchType}/{title}")
+    @Operation(summary = "리스트 검색", description = "리스트 검색 수행")
     public ResponseEntity<?> searchList(@PathVariable Integer page,
                                         @PathVariable String searchType,
                                         @PathVariable String title,

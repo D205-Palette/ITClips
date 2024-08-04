@@ -182,6 +182,7 @@ public class RoadmapController {
     }
 
     @GetMapping("/search/{page}/{searchType}/{title}")
+    @Operation(summary = "로드맵 검색", description = "로드맵 검색 수행")
     public ResponseEntity<?> searchRoadMap(@PathVariable Integer page,
                                         @PathVariable String searchType,
                                         @PathVariable String title,

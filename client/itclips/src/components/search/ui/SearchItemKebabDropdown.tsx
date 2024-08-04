@@ -1,6 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-
-// icons
 import { VscKebabVertical } from "react-icons/vsc";
 
 // components
@@ -9,11 +7,10 @@ import ReportModal from "../../aside/modals/ReportModal";
 import AddToFavorites from "../../common/AddToFavoritesModal";
 
 const SearchItemKebabDropdown = () => {
-
-  const [ isUrlCopyModalOpen, setIsUrlCopyModalOpen ] = useState<boolean>(false);
-  const [ isReportModalOpen, setIsReportModalOpen ] = useState<boolean>(false);
-  const [ isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-  const [ isAddToFavModalOpen, setIsAddToFavModalOpen ] = useState<boolean>(false);
+  const [isUrlCopyModalOpen, setIsUrlCopyModalOpen] = useState<boolean>(false);
+  const [isReportModalOpen, setIsReportModalOpen] = useState<boolean>(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+  const [isAddToFavModalOpen, setIsAddToFavModalOpen] = useState<boolean>(false);
   
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -32,21 +29,10 @@ const SearchItemKebabDropdown = () => {
     };
   }, []);
 
-  // url 로직 구현하기
-  // const handleCopyClipBoard = async () => {
-  //   try {
-  //     await navigator.clipboard.writeText(window.location.href);
-  //     setIsUrlCopyModalOpen(true)
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
-
   const categories: string[] = ["url복사", "신고하기", "즐겨찾기"];
 
   const handleMenu = (menu: string) => {
     if (menu === "url복사") {
-      // 일단 모달만 띄우기
       setIsUrlCopyModalOpen(true);
     } else if (menu === "신고하기") {
       setIsReportModalOpen(true);
@@ -57,7 +43,7 @@ const SearchItemKebabDropdown = () => {
   };
 
   return (
-    <div className="self-end flex justify-end relative" ref={dropdownRef}>
+    <div className="relative" ref={dropdownRef}>
       <button
         id="dropdownDefaultButton"
         onClick={toggleDropdown}
@@ -68,7 +54,7 @@ const SearchItemKebabDropdown = () => {
       </button>
 
       {isDropdownOpen && (
-        <div className="absolute right-full top-1/2 -translate-y-1/2 mr-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 z-10">
+        <div className="absolute right-0 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 z-50">
           <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
             {categories.map((category) => (
               <li key={category} onClick={() => handleMenu(category)}>

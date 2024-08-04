@@ -33,7 +33,7 @@ const SearchCategoryDropdown: React.FC<CategoryProps> = ({ selectCategory }) => 
   }, []);
 
   return (
-    <div ref={dropdownRef}>
+    <div ref={dropdownRef} className="relative">  {/* relative 클래스 추가 */}
       <button
         id="dropdownDefaultButton"
         onClick={toggleDropdown}
@@ -44,7 +44,7 @@ const SearchCategoryDropdown: React.FC<CategoryProps> = ({ selectCategory }) => 
       </button>
 
       {isOpen && (
-        <div className="absolute mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+        <div className="absolute mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 h-40 z-50">  {/* z-50 클래스 추가 */}
           <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
             {categories.map((category) => (
               <li key={category} onClick={() => handleCategory(category)}>

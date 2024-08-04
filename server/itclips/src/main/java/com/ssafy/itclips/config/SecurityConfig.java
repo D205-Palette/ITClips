@@ -97,6 +97,12 @@ public class SecurityConfig {
                         .requestMatchers("/api/feed/**").permitAll()    // API 개발 중 접근 없이 swagger 테스트 하기 위함
                         .requestMatchers("/api/list/**").permitAll()    // API 개발 중 접근 없이 swagger 테스트 하기 위함
                         .requestMatchers("/api/file/**").permitAll()
+                        .requestMatchers("/api/category/**").permitAll()
+                        .requestMatchers("/api/bookmark/**").permitAll()
+                        .requestMatchers("/api/report/**").permitAll()
+                        .requestMatchers("/api/follow/**").permitAll()
+                        .requestMatchers("/api/tag/**").permitAll()
+                        .requestMatchers("/api/group/**").permitAll()
                         .anyRequest().authenticated()
                 )
 

@@ -12,7 +12,7 @@ import DeleteAccountModal from "./DeleteAccountModal";
 import InterestCategoryDropdown from "../ui/InterestCategoryDropdown";
 
 // apis
-import { updateProfileImage, getMyInterest, addMyInterest, removeMyInterest, changePassword, deleteUserAccount } from "../../../api/profileApi";
+import { updateProfileImage, getMyInterest, addMyInterest, removeMyInterest, changePassword, deleteUserAccount, updateUserInfo } from "../../../api/profileApi";
 import { logoutApi } from "../../../api/authApi";
 
 // stores
@@ -34,24 +34,103 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
   const userInfo = authStore(state => state.userInfo);
   const logout = authStore(state => state.logout);
 
-  // 임시 데이터들
-  const [ name, setName ] = useState<string>("");
-  const [ birth, setBirth ] = useState<string>("");
-  const [ description, setDescription ] = useState<string>("");
-
+  const [notification, setNotification] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
   const isDark = darkModeStore(state => state.isDark)
-  const [ jobCategory, setJobCategory ] = useState("직업");
-  const [ gender, setGender ] = useState(""); // 성별 상태
   const [ isPasswordChangeModalOpen, setIsPasswordChangeModalOpen ] = useState<boolean>(false);
   const [ isDeleteAccountModalOpen, setIsDeleteAccountModalOpen ] = useState<boolean>(false);
   const [ selectedFile, setSelectedFile ] = useState<File | null>(null);
   const [ isDuplicateNickname, setIsDuplicateNickname ] = useState<boolean | null>(null);
-
+  
   const [interests, setInterests] = useState<Interest[]>([]);
   const [selectedInterest, setSelectedInterest] = useState<Interest | null>(null);
-
+  
+  // 수정된 유저 정보를 담기
+  const [nickname, setNickname] = useState(userInfo.nickname || "");
+  const [bio, setBio] = useState(userInfo.bio || "");
+  const [birthDate, setBirthDate] = useState(userInfo.birth || "");
+  const [job, setJob] = useState(userInfo.job || "");
+  const [genderBoolean, setGenderBoolean] = useState(userInfo.gender || false);
+  
   // 프로필 이미지 상태
   const [profileImage, setProfileImage] = useState<string | null>(null);
+
+  // 프로필 수정에 따른 토스트 알람
+  useEffect(() => {
+    if (notification) {
+      const timer = setTimeout(() => {
+        setNotification(null);
+      }, 3000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [notification]);
+  
+  // 모달이 열릴 때 스크롤 안되게 설정
+  useEffect(() => {
+    if (isOpen) {
+      // 모달이 열릴 때 body에 overflow: hidden 적용
+      document.body.style.overflow = 'hidden';
+    } else {
+      // 모달이 닫힐 때 overflow 스타일 제거
+      document.body.style.overflow = 'unset';
+    }
+    
+    // 컴포넌트가 언마운트될 때 overflow 스타일 제거
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
+  // 프로필 이미지 선택 핸들러
+  const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  
+  // 프로필 이미지 변경 핸들러
+  const handleImageChange = async () => {
+    if (selectedFile && userInfo.email) {
+      try {
+        const profileImagePath = URL.createObjectURL(selectedFile);
+        // 여기 추가 api 호출
+        await updateProfileImage(userInfo.email, profileImagePath);
+        console.log('프로필 이미지가 성공적으로 변경되었습니다.');
+      } catch (error) {
+        console.error('프로필 이미지 변경 중 오류가 발생했습니다:', error);
+      }
+    }
+  };
+
+  // 프로필 이미지 지우기 핸들러
+  const handleImageDelete = () => {
+    setProfileImage(null);
+    setSelectedFile(null);
+    // 프로필 이미지 삭제하는 로직 추가하기
+    console.log('프로필 이미지가 삭제되었습니다.');
+  };
+  
+  // 관심사 목록 불러오기
+  useEffect(() => {
+    const fetchInterests = async () => {
+      try {
+        const response = await getMyInterest(userInfo.id ?? 0);
+        setInterests(response.data);
+      } catch (error) {
+        console.error("Failed to fetch interests:", error);
+      }
+    };
+
+    if (userInfo.id) {
+      fetchInterests();
+    }
+  }, [userInfo.id]);
 
   // 관심사 추가 함수
   const handleAddInterest = async (): Promise<void> => {
@@ -76,36 +155,6 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
     }
   };
   
-  // 관심사 목록 불러오기
-  const fetchInterests = async () => {
-    try {
-      const response = await getMyInterest(userInfo.id ?? 0);
-      setInterests(response.data);
-    } catch (error) {
-      console.error("Failed to fetch interests:", error);
-    }
-  };
-
-  useEffect(() => {
-    if (userInfo.id) {
-      fetchInterests();
-    }
-  }, [userInfo.id]);
-
-  // 성별 선택 핸들러
-  const handleGenderSelect = (
-    selectedGender: string,
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    event.preventDefault(); // 기본 동작 방지
-    setGender(selectedGender); // 성별 상태 업데이트
-  };
-
-  // 카테고리 선택 정보 함수
-  const selectCategory = (category: string) => {
-    setJobCategory(category);
-  };
-
   // 비밀번호 변경 모달 로직
   const handlePasswordChange = async (oldPassword: string, newPassword: string) => {
     if (userInfo.email) {
@@ -141,63 +190,14 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
       // 오류 메시지를 사용자에게 표시하는 로직 추가
     }
   };
-
-  useEffect(() => {
-    if (isOpen) {
-      // 모달이 열릴 때 body에 overflow: hidden 적용
-      document.body.style.overflow = 'hidden';
-    } else {
-      // 모달이 닫힐 때 overflow 스타일 제거
-      document.body.style.overflow = 'unset';
-    }
-
-    // 컴포넌트가 언마운트될 때 overflow 스타일 제거
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen]);
-
+  
+  // 이전 비밀번호와 비교 로직
   const validateOldPassword = async (password: string) => {
     // 비밀번호 비교 로직 추가
     // 비밀번호가 같을경우 true, 다를경우 false
     return true;
   };
-
-  // 프로필 이미지 선택 핸들러
-  const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setSelectedFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfileImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  // 프로필 이미지 변경 핸들러
-  const handleImageChange = async () => {
-    if (selectedFile && userInfo.email) {
-      try {
-        const profileImagePath = URL.createObjectURL(selectedFile);
-        // 여기 추가 api 호출하기
-        await updateProfileImage(userInfo.email, profileImagePath);
-        console.log('프로필 이미지가 성공적으로 변경되었습니다.');
-      } catch (error) {
-        console.error('프로필 이미지 변경 중 오류가 발생했습니다:', error);
-      }
-    }
-  };
-
-  // 프로필 이미지 지우기 핸들러
-  const handleImageDelete = () => {
-    setProfileImage(null);
-    setSelectedFile(null);
-    // 프로필 이미지 삭제하는 로직 추가하기
-    console.log('프로필 이미지가 삭제되었습니다.');
-  };
-
+  
   // 닉네임 중복 확인 핸들러
   const handleCheckNickname = async () => {
     try {
@@ -210,9 +210,37 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
       console.error('닉네임 중복 확인 중 오류가 발생했습니다:', error);
     }
   };
-
+  
+  // 변경 완료 버튼 로직
+  const handleUpdateProfile = async () => {
+    if (!userInfo.id || !userInfo.email) {
+      console.error('사용자 정보가 없습니다.');
+      setNotification({ message: "사용자 정보가 없습니다.", type: 'error' });
+      return;
+    }
+    
+    const updatedUserInfo = {
+      id: userInfo.id,
+      email: userInfo.email,
+      nickname: nickname,
+      birth: birthDate,
+      job: job,
+      gender: genderBoolean,
+      darkMode: userInfo.darkMode,
+      bio: bio
+    };
+    
+    try {
+      await updateUserInfo(userInfo.id, updatedUserInfo);
+      setNotification({ message: "프로필 정보가 성공적으로 업데이트되었습니다.", type: 'success' });
+    } catch (error) {
+      console.error('프로필 정보 업데이트 중 오류가 발생했습니다:', error);
+      setNotification({ message: "프로필 정보 업데이트에 실패했습니다.", type: 'error' });
+    }
+  };
+  
   if (!isOpen) return null;
-
+  
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-base-100 rounded-lg p-8 w-[800px] max-w-[90%]">
@@ -246,20 +274,20 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
                       accept="image/*"
                       onChange={handleImageSelect}
                       className="hidden"
-                    />
+                      />
                   </label>
                   <button
                     onClick={handleImageChange}
                     className="btn btn-sm btn-primary w-full"
                     disabled={!selectedFile}
-                  >
+                    >
                     변경
                   </button>
                   <button
                     onClick={handleImageDelete}
                     className="btn btn-sm btn-outline btn-error w-full"
                     disabled={!profileImage}
-                  >
+                    >
                     지우기
                   </button>
                 </div>
@@ -326,10 +354,10 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
               <div className="flex items-center space-x-2">
                 <input
                   type="text"
-                  value={name}
+                  value={nickname}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    setName(e.target.value);
-                    setIsDuplicateNickname(null); // 입력값이 변경되면 중복 확인 상태 초기화
+                    setNickname(e.target.value);
+                    setIsDuplicateNickname(null);
                   }}
                   className="flex-grow px-3 py-2 border rounded-md bg-base-100"
                   placeholder="닉네임을 입력하세요"
@@ -353,8 +381,8 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
             <div className="mb-6">
               <label className="block text-sm font-medium mb-2">소개글</label>
               <textarea
-                value={description}
-                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
+                value={bio}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setBio(e.target.value)}
                 className="w-full px-3 py-2 border rounded-md resize-none bg-base-100 h-20"
                 placeholder="자기소개를 입력하세요"
               />
@@ -365,13 +393,13 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
               <div className="flex-shrink-0 flex flex-col">
                 <label className="block text-sm font-medium mb-2">생년월일</label>
                 <div className="flex-grow flex items-stretch">
-                  <input
-                    type="date"
-                    value={birth}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBirth(e.target.value)}
-                    className="w-full px-3 border rounded-md bg-base-100 text-sm"
-                    placeholder="생년월일을 입력하세요"
-                  />
+                <input
+                  type="date"
+                  value={birthDate}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBirthDate(e.target.value)}
+                  className="w-full px-3 border rounded-md bg-base-100 text-sm"
+                  placeholder="생년월일을 입력하세요"
+                />
                 </div>
               </div>
 
@@ -379,7 +407,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
               <div className="flex-grow flex flex-col">
                 <label className="block text-sm font-medium mb-2">직업</label>
                 <div className="flex-grow">
-                  <JobCategoryDropdown selectCategory={selectCategory} />
+                  <JobCategoryDropdown selectCategory={(category) => setJob(category)} />
                 </div>
               </div>
             </div>
@@ -389,15 +417,21 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
               <label className="block text-sm font-medium mb-2">성별</label>
               <div className="flex items-center gap-4">
                 <button
-                  className={`btn ${gender === "male" ? "btn-primary" : "btn-outline"} flex-1`}
-                  onClick={(event) => handleGenderSelect("male", event)}
+                  className={`btn ${genderBoolean ? "btn-primary" : "btn-outline"} flex-1`}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setGenderBoolean(true);
+                  }}
                 >
                   <FaMale className="w-6 h-6 mr-2" />
                   남성
                 </button>
                 <button
-                  className={`btn ${gender === "female" ? "btn-primary" : "btn-outline"} flex-1`}
-                  onClick={(event) => handleGenderSelect("female", event)}
+                  className={`btn ${!genderBoolean ? "btn-primary" : "btn-outline"} flex-1`}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setGenderBoolean(false);
+                  }}
                 >
                   <FaFemale className="w-6 h-6 mr-2" />
                   여성
@@ -410,7 +444,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
         
         {/* 변경완료 버튼 */}
         <div className="flex justify-end items-center mt-6">
-          <button className="btn btn-primary">변경 완료</button>
+          <button className="btn btn-primary" onClick={handleUpdateProfile}>변경 완료</button>
         </div>
 
         {/* 비밀번호 변경 모달 */}
@@ -427,6 +461,22 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
           onClose={() => setIsDeleteAccountModalOpen(false)}
           onConfirm={handleDeleteAccount}
         />
+
+        {/* 토스트 알람 */}
+        {notification && (
+          <div 
+            className={`fixed bottom-4 left-1/2 transform -translate-x-1/2 p-4 rounded-md ${
+              notification.type === 'success' ? 'bg-green-500' : 'bg-red-500'
+            } text-white shadow-lg z-50 transition-opacity duration-300`}
+            style={{
+              opacity: notification ? 1 : 0,
+              visibility: notification ? 'visible' : 'hidden',
+            }}
+          >
+            {notification.message}
+          </div>
+        )}
+
       </div>
     </div>
   );

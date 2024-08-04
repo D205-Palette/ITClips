@@ -5,7 +5,7 @@ import { VscKebabVertical } from "react-icons/vsc";
 
 // components
 import RoadmapEditModal from "../modals/RoadmapEditModal";
-import DeleteBookmarkListModal from "../modals/DeleteBookmarkListModal";
+// import DeleteBookmarkListModal from "../modals/DeleteBookmarkListModal";
 import UrlCopyModal from "../../common/UrlCopyModal";
 import ReportModal from "../modals/ReportModal";
 import FavoriteConfirmationModal from '../modals/FavoriteConfirmModal';
@@ -97,9 +97,9 @@ const AsideRoadmapKebabDropdown :FC<Props> = (isRoadmap, id) => {
         </div>
       )}
       <RoadmapEditModal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} />
-      <DeleteBookmarkListModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} />
+      {/* <DeleteBookmarkListModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} /> */}
       <UrlCopyModal isOpen={isUrlCopyModalOpen} onClose={() => setIsUrlCopyModalOpen(false)} />
-      <ReportModal isOpen={isReportModalOpen} onClose={() => setIsReportModalOpen(false)} />
+      {/* <ReportModal isOpen={isReportModalOpen} onClose={() => setIsReportModalOpen(false)} /> */}
       <FavoriteConfirmationModal isOpen={isFavoriteModalOpen} onClose={() => setIsFavoriteModalOpen(false)}/>
       <ScrapConfirmationModal isOpen={isScrapModalOpen} onClose={() => setIsScrapModalOpen(false)}/>
     </div>

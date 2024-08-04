@@ -38,42 +38,42 @@ const AsideProfile = () => {
   // 팔로우 상태인지?
   const [isFollow, setIsFollow] = useState<boolean>(false);
 
-  // url 유저 정보 조회
-  const fetchUserInfo = async (userId: number) => {
-    try {
-      const response = await checkUserInfo(userId);
-      setUrlUserInfo(response.data);
-      console.log(response);
-    } catch (error) {
-      console.error("유저 조회 실패", error);
-    }
-  };
-
-  // 팔로우 수 조회
-  const fetchFollowCount = async (userId: number) => {
-    try {
-      const response = await getFollowCounts(userId);
-      setFollowerCount(response.data.followerCount);
-      setFollowingCount(response.data.followingCount);
-    } catch (error) {
-      console.error("유저 조회 실패", error);
-    }
-  };
-
-  // 팔로우 상태 확인
-  const checkFollowStatus = async () => {
-    if (myInfo.id && urlUserId && myInfo.id !== urlUserId) {
-      try {
-        const response = await getFollowingList(myInfo.id);
-        const isFollowing = response.data.some((follow: { toUserId: number }) => follow.toUserId === urlUserId);
-        setIsFollow(isFollowing);
-      } catch (error) {
-        console.error("팔로우 상태 조회 실패", error);
-      }
-    }
-  };
-
   useEffect(() => {
+    // url 유저 정보 조회
+    const fetchUserInfo = async (userId: number) => {
+      try {
+        const response = await checkUserInfo(userId);
+        setUrlUserInfo(response.data);
+        console.log(response);
+      } catch (error) {
+        console.error("유저 조회 실패", error);
+      }
+    };
+    
+    // 팔로우 수 조회
+    const fetchFollowCount = async (userId: number) => {
+      try {
+        const response = await getFollowCounts(userId);
+        setFollowerCount(response.data.followerCount);
+        setFollowingCount(response.data.followingCount);
+      } catch (error) {
+        console.error("유저 조회 실패", error);
+      }
+    };
+    
+    // 팔로우 상태 확인
+    const checkFollowStatus = async () => {
+      if (myInfo.id && urlUserId && myInfo.id !== urlUserId) {
+        try {
+          const response = await getFollowingList(myInfo.id);
+          const isFollowing = response.data.some((follow: { toUserId: number }) => follow.toUserId === urlUserId);
+          setIsFollow(isFollowing);
+        } catch (error) {
+          console.error("팔로우 상태 조회 실패", error);
+        }
+      }
+    };
+
     if (urlUserId) {
       fetchUserInfo(urlUserId);
       fetchFollowCount(urlUserId);

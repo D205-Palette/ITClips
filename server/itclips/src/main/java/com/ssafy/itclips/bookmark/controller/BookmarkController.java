@@ -46,7 +46,7 @@ public class BookmarkController {
     })
     public ResponseEntity<?> updateBookmark(@PathVariable @Parameter(description = "북마크 ID", required = true) Long bookmarkId,
                                             @RequestBody @Parameter(description = "북마크 수정 정보", required = true) BookmarkRequestDTO bookmarkRequestDTO) {
-
+        log.info(bookmarkRequestDTO.toString());
         bookmarkService.updateBookmark(bookmarkId,bookmarkRequestDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }

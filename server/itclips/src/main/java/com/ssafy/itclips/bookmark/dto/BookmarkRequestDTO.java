@@ -1,15 +1,13 @@
 package com.ssafy.itclips.bookmark.dto;
 
 import com.ssafy.itclips.tag.dto.TagDTO;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookmarkRequestDTO {

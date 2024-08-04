@@ -26,6 +26,7 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -150,6 +151,11 @@ public class ChatRoomService {
                 chatRoomDTO = ChatRoomDTO.toDto(chatRoom);
                 //레디스 저장
                 chatRoomRepository.createChatRoom(chatRoomDTO);
+            }
+            Optional<Message> lastMessage = messageJPARepository.findLastMessageByChatRoomId(chatRoomDTO.getId());
+            if(lastMessage.isPresent()) {
+                chatRoomDTO.setLastMessage(lastMessage.get().getMessage());
+
             }
             chatRoomDTOList.add(chatRoomDTO);
 

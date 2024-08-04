@@ -103,6 +103,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/follow/**").permitAll()
                         .requestMatchers("/api/tag/**").permitAll()
                         .requestMatchers("/api/group/**").permitAll()
+                        .requestMatchers("/api/pub/**").permitAll()
+                        .requestMatchers("/api/sub/**").permitAll()
                         .anyRequest().authenticated()
                 )
 

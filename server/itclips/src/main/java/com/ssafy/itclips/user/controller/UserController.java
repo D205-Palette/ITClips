@@ -1,8 +1,10 @@
 package com.ssafy.itclips.user.controller;
 
+import com.ssafy.itclips.follow.service.FollowService;
 import com.ssafy.itclips.global.jwt.JwtToken;
 import com.ssafy.itclips.global.jwt.JwtTokenProvider;
 import com.ssafy.itclips.tag.dto.TagDTO;
+import com.ssafy.itclips.tag.dto.UserTagDTO;
 import com.ssafy.itclips.tag.repository.TagRepository;
 import com.ssafy.itclips.tag.repository.UserTagRepository;
 import com.ssafy.itclips.user.dto.UserInfoDTO;
@@ -48,6 +50,7 @@ public class UserController {
     private final JwtTokenProvider tokenProvider;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    private final FollowService followService;
     private final MailService mailService;
     private final ConcurrentHashMap<String, String> verificationCodes = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, String> passwordResetCodes = new ConcurrentHashMap<>();
@@ -165,7 +168,12 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(USER_NOT_FOUND_MESSAGE);
         }
 
+        long followerCount = followService.getFollowerCount(user);
+        long followingCount = followService.getFollowingCount(user);
+
         UserInfoDetailDTO userInfoDTO = UserInfoDetailDTO.builder()
+                .id(user.getId())
+                .email(user.getEmail())
                 .nickname(user.getNickname())
                 .birth(user.getBirth())
                 .job(user.getJob())
@@ -173,6 +181,8 @@ public class UserController {
                 .bio(user.getBio())
                 .bookmarkListCount(user.getBookmarkLists().size())
                 .roadmapCount(user.getRoadmapList().size())
+                .followerCount(followerCount)
+                .followingCount(followingCount)
                 .build();
 
         return ResponseEntity.ok(userInfoDTO);
@@ -416,8 +426,8 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("관심사 태그가 존재하지 않습니다.");
         }
 
-        List<TagDTO> tagDTOs = userTags.stream()
-                .map(userTag -> new TagDTO(userTag.getTag().getId(), userTag.getTag().getTitle()))
+        List<UserTagDTO> tagDTOs = userTags.stream()
+                .map(userTag -> new UserTagDTO(userTag.getTag().getId(), userTag.getTag().getTitle()))
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(tagDTOs);

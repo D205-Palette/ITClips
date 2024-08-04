@@ -7,17 +7,13 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @ToString
-public class TagDTO {
+public class UserTagDTO {
+    private Long id;
     private String title;
 
     @Builder
-    public TagDTO(String title) {
+    public UserTagDTO(Long id, String title) {
+        this.id = id;
         this.title = title;
-    }
-
-    public static TagDTO toDTO(Tag tag) {
-        return TagDTO.builder()
-                .title(tag.getTitle())
-                .build();
     }
 }

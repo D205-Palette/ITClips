@@ -1,5 +1,6 @@
 package com.ssafy.itclips.user.controller;
 
+import com.ssafy.itclips.follow.service.FollowService;
 import com.ssafy.itclips.global.jwt.JwtToken;
 import com.ssafy.itclips.global.jwt.JwtTokenProvider;
 import com.ssafy.itclips.tag.dto.TagDTO;
@@ -49,6 +50,7 @@ public class UserController {
     private final JwtTokenProvider tokenProvider;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    private final FollowService followService;
     private final MailService mailService;
     private final ConcurrentHashMap<String, String> verificationCodes = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, String> passwordResetCodes = new ConcurrentHashMap<>();
@@ -166,6 +168,9 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(USER_NOT_FOUND_MESSAGE);
         }
 
+        long followerCount = followService.getFollowerCount(user);
+        long followingCount = followService.getFollowingCount(user);
+
         UserInfoDetailDTO userInfoDTO = UserInfoDetailDTO.builder()
                 .id(user.getId())
                 .email(user.getEmail())
@@ -176,6 +181,8 @@ public class UserController {
                 .bio(user.getBio())
                 .bookmarkListCount(user.getBookmarkLists().size())
                 .roadmapCount(user.getRoadmapList().size())
+                .followerCount(followerCount)
+                .followingCount(followingCount)
                 .build();
 
         return ResponseEntity.ok(userInfoDTO);

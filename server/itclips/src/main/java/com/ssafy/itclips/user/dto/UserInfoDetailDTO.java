@@ -21,9 +21,13 @@ public class UserInfoDetailDTO {
     private String bio;
     private int bookmarkListCount;
     private int roadmapCount;
+    private long followerCount;
+    private long followingCount;
 
     @Builder
-    public UserInfoDetailDTO(Long id, String email, String nickname, LocalDate birth, String job, Boolean gender, Boolean darkMode, String bio, int bookmarkListCount, int roadmapCount) {
+    public UserInfoDetailDTO(Long id, String email, String nickname, LocalDate birth, String job, Boolean gender, Boolean darkMode, String bio,
+                             int bookmarkListCount, int roadmapCount,
+                             long followerCount, long followingCount) {
         this.id = id;
         this.email = email;
         this.nickname = nickname;
@@ -34,6 +38,8 @@ public class UserInfoDetailDTO {
         this.bio = bio;
         this.bookmarkListCount = bookmarkListCount;
         this.roadmapCount = roadmapCount;
+        this.followerCount = followerCount;
+        this.followingCount = followingCount;
     }
 
 }

@@ -22,6 +22,7 @@ import { authStore } from "../../../stores/authStore";
 interface ProfileSettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
+  updateAsideInfo: (updatedInfo: any) => void;
 }
 
 interface Interest {
@@ -29,9 +30,10 @@ interface Interest {
   title: string;
 }
 
-const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onClose }) => {
+const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onClose, updateAsideInfo }) => {
 
   const userInfo = authStore(state => state.userInfo);
+  const fetchUserInfo = authStore(state => state.fetchUserInfo);
   const logout = authStore(state => state.logout);
 
   const [notification, setNotification] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
@@ -50,6 +52,17 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
   const [birthDate, setBirthDate] = useState(userInfo.birth || "");
   const [job, setJob] = useState(userInfo.job || "");
   const [genderBoolean, setGenderBoolean] = useState(userInfo.gender || false);
+
+  // 유저 정보의 변화를 감지 (수정)
+  useEffect(() => {
+    if (userInfo) {
+      setNickname(userInfo.nickname || "");
+      setBio(userInfo.bio || "");
+      setBirthDate(userInfo.birth || "");
+      setJob(userInfo.job || "");
+      setGenderBoolean(userInfo.gender || false);
+    }
+  }, [userInfo]);
   
   // 프로필 이미지 상태
   const [profileImage, setProfileImage] = useState<string | null>(null);
@@ -220,18 +233,22 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
     }
     
     const updatedUserInfo = {
-      id: userInfo.id,
-      email: userInfo.email,
+      ...userInfo, // 기존 정보 유지
       nickname: nickname,
       birth: birthDate,
       job: job,
       gender: genderBoolean,
-      darkMode: userInfo.darkMode,
       bio: bio
     };
     
     try {
       await updateUserInfo(userInfo.id, updatedUserInfo);
+      
+      // authStore의 userInfo 상태 업데이트
+      fetchUserInfo(updatedUserInfo);
+
+      updateAsideInfo(updatedUserInfo);
+      
       setNotification({ message: "프로필 정보가 성공적으로 업데이트되었습니다.", type: 'success' });
     } catch (error) {
       console.error('프로필 정보 업데이트 중 오류가 발생했습니다:', error);
@@ -407,7 +424,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
               <div className="flex-grow flex flex-col">
                 <label className="block text-sm font-medium mb-2">직업</label>
                 <div className="flex-grow">
-                  <JobCategoryDropdown selectCategory={(category) => setJob(category)} />
+                  <JobCategoryDropdown selectCategory={setJob} initialValue={job} />
                 </div>
               </div>
             </div>

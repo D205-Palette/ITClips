@@ -1,5 +1,6 @@
 package com.ssafy.itclips.roadmap.entity;
 
+import com.ssafy.itclips.global.rank.RankDTO;
 import com.ssafy.itclips.roadmap.dto.RoadmapRequestDTO;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
@@ -63,6 +64,10 @@ public class Roadmap {
     @Column(name = "is_public", nullable = false)
     private Byte isPublic;
 
+    @Column(name = "hit")
+    private Long hit;
+
+
     //step
     @OneToMany(mappedBy = "roadmap")
     private List<RoadmapStep> stepList = new ArrayList<RoadmapStep>();
@@ -76,7 +81,7 @@ public class Roadmap {
     private List<RoadmapLike> roadmapLikeList = new ArrayList<RoadmapLike>();
 
     @Builder
-    public Roadmap(Long id, User user, Long origin , String title, String description,String image, Byte isPublic) {
+    public Roadmap(Long id, User user, Long origin , String title, String description,String image, Byte isPublic,Long hit) {
         this.id = id;
         this.user = user;
         this.origin = origin;
@@ -86,6 +91,7 @@ public class Roadmap {
         this.image = image;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
+        this.hit = hit;
     }
 
     public void updateRoadmap(RoadmapRequestDTO roadmapRequestDTO) {
@@ -93,6 +99,14 @@ public class Roadmap {
         this.description = roadmapRequestDTO.getDescription();
         this.isPublic = roadmapRequestDTO.getIsPublic();
         this.image = roadmapRequestDTO.getImage();
+    }
+
+    public RankDTO toRankDTO(Roadmap roadmap){
+        return RankDTO.builder()
+                .id(roadmap.getId())
+                .title(roadmap.getTitle())
+                .count(roadmap.getHit())
+                .build();
     }
 
 }

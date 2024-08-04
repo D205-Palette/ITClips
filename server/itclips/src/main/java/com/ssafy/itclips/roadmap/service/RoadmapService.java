@@ -1,6 +1,7 @@
 package com.ssafy.itclips.roadmap.service;
 
 import com.ssafy.itclips.global.file.DataResponseDto;
+import com.ssafy.itclips.global.rank.RankDTO;
 import com.ssafy.itclips.roadmap.dto.RoadmapCommentRequestDTO;
 import com.ssafy.itclips.roadmap.dto.RoadmapDTO;
 import com.ssafy.itclips.roadmap.dto.RoadmapInfoDTO;
@@ -50,4 +51,11 @@ public interface RoadmapService {
     void comment(Long roadmapId, Long userId, RoadmapCommentRequestDTO roadmapCommentRequestDTO) throws RuntimeException;
     // 로드맵 댓글 삭제
     void deleteComment(Long commentId, Long userId) throws RuntimeException;
+
+    //로드맵 좋아요 인기순위
+    List<RankDTO> getListsRankingByLikes();
+    //조회수 인기순위
+    List<RankDTO> getListsRankingByHit();
+    // 스크랩 인기순위
+    List<RankDTO> getListsRankingByScrap();
 }

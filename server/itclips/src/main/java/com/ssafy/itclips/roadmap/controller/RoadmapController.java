@@ -1,6 +1,7 @@
 package com.ssafy.itclips.roadmap.controller;
 
 import com.ssafy.itclips.global.file.DataResponseDto;
+import com.ssafy.itclips.global.rank.RankDTO;
 import com.ssafy.itclips.roadmap.dto.RoadmapCommentRequestDTO;
 import com.ssafy.itclips.roadmap.dto.RoadmapDTO;
 import com.ssafy.itclips.roadmap.dto.RoadmapInfoDTO;
@@ -152,5 +153,30 @@ public class RoadmapController {
     public ResponseEntity<?> deleteComment(@PathVariable("commentId") Long commentId, @PathVariable("userId") Long userId){
             roadmapService.deleteComment(commentId, userId);
             return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // 로드맵 좋아요 인기순위
+    @GetMapping("/rank/like")
+    @Operation(summary = "로드맵 좋아요 인기순위 ", description = "로드맵 좋아요 인기순위")
+    public ResponseEntity<?> likeRoadmapRank(){
+        List<RankDTO> lists = roadmapService.getListsRankingByLikes();
+        return new ResponseEntity<>(lists,HttpStatus.OK);
+    }
+
+
+    //로드맵 조회수 인기순위
+    @GetMapping("/rank/hit")
+    @Operation(summary = "로드맵 조회수 인기순위 ", description = "로드맵 조회순 인기순위")
+    public ResponseEntity<?> hitRoadmapRank(){
+        List<RankDTO> lists = roadmapService.getListsRankingByHit();
+        return new ResponseEntity<>(lists,HttpStatus.OK);
+    }
+
+    //로드맵 스크랩 인기순위
+    @GetMapping("/rank/scrap")
+    @Operation(summary = "로드맵 스크랩 인기순위 ", description = "로드맵 스크랩 인기순위")
+    public ResponseEntity<?> scrapRoadmapRank(){
+        List<RankDTO> lists = roadmapService.getListsRankingByScrap();
+        return new ResponseEntity<>(lists, HttpStatus.OK);
     }
 }

@@ -11,6 +11,7 @@ import com.ssafy.itclips.error.ErrorCode;
 import com.ssafy.itclips.global.file.DataResponseDto;
 import com.ssafy.itclips.global.file.FileService;
 import com.ssafy.itclips.feed.service.FeedService;
+import com.ssafy.itclips.global.rank.RankDTO;
 import com.ssafy.itclips.roadmap.dto.*;
 import com.ssafy.itclips.roadmap.entity.Roadmap;
 import com.ssafy.itclips.roadmap.entity.RoadmapComment;
@@ -285,11 +286,14 @@ public class RoadmapServiceImpl implements RoadmapService {
     }
 
     //로드맵 상세보기
+    @Transactional
     @Override
     public RoadmapDTO roadmapDetail(Long roadmapId,Long viewId) throws RuntimeException {
         // 로드맵 가져오기
         Roadmap roadmap = roadmapRepository.findById(roadmapId)
                 .orElseThrow(() -> new CustomException(ErrorCode.ROADMAP_NOT_FOUND));
+        roadmap.setHit(roadmap.getHit() + 1);
+        roadmapRepository.save(roadmap);
 
         // 로드맵 댓글 가져오기
         List<RoadmapCommentDTO> roadmapCommentDTOList = getRoadmapCommentDTOList(roadmapId);
@@ -436,6 +440,26 @@ public class RoadmapServiceImpl implements RoadmapService {
         }
 
         roadmapCommentRepository.delete(comment);
+    }
+
+    @Override
+    public List<RankDTO> getListsRankingByLikes() {
+        return roadmapRepository.findListRankingByLike();
+    }
+
+    @Override
+    public List<RankDTO> getListsRankingByHit() {
+        List<Roadmap> roadmapRankingByHit = roadmapRepository.findTop10ByOrderByHitDesc();
+        List<RankDTO> rankDTOs = new ArrayList<>();
+        for (Roadmap roadmap : roadmapRankingByHit) {
+            rankDTOs.add(roadmap.toRankDTO(roadmap));
+        }
+        return rankDTOs;
+    }
+
+    @Override
+    public List<RankDTO> getListsRankingByScrap() {
+        return roadmapRepository.findListRankingByScrap();
     }
 
 

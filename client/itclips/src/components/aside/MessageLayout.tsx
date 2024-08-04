@@ -15,8 +15,8 @@ const MessageLayout = () => {
   const isMessageOpen = asideStore(state => state.isMessageOpen);
   const setSelectedChat = asideStore(state => state.setSelectedChat);
 
-  const handleSelectChat = (chatId: any) => {
-    setSelectedChat(chatId);
+  const handleSelectChat = (roomId: any) => {
+    setSelectedChat(roomId);
   };
 
   const handleBackToList = () => {

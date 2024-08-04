@@ -43,9 +43,9 @@ const AsideMessage: React.FC<MessageListProps> = ({ onSelectChat, onShowInvite }
     fetchChatRooms(); // 채팅방 목록 가져오기
   }, [userId]); // userId가 변경될 때마다 실행
 
-  const onClickMessage = (id: number) => {
+  const onClickMessage = (roomId: number) => {
     // 해당 메세지 대화창으로 이동하게 구현하기
-    onSelectChat(id);
+    onSelectChat(roomId);
   }
 
   const onClickInvite = (state: number) => {
@@ -58,7 +58,7 @@ const AsideMessage: React.FC<MessageListProps> = ({ onSelectChat, onShowInvite }
       <MessageHeader onClickInvite={onClickInvite} />
       {/* 받은 메세지 영역 */}
       <MessageListContainer 
-        messages={data.map(room => ({
+        rooms={data.map(room => ({
           id: room.id,
           title: room.name,
           subtitle: room.lastMessage || '메시지가 없습니다.', // 마지막 메시지가 없을 경우 기본 메시지

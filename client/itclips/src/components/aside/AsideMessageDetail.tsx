@@ -7,6 +7,9 @@ import MessageBackButton from "./ui/MessageBackButton";
 import MessageInviteButton from "./ui/MessageInviteButton";
 import MessageContainer from "./layout/MessageContainer";
 
+// apis
+import { getChatRoomMessages } from "../../api/messageApi";
+
 interface Message {
   id: number;
   content: string;
@@ -15,7 +18,7 @@ interface Message {
 
 // AsideMessage에서 id값을가지고 데이터를 꺼내서 라우터로 AsideMessageDetail 컴포넌트로 넘겨줌
 
-const AsideMessageDetail = ({ chatId, onBack }: any) => {
+const AsideMessageDetail = ({ roomId, onBack }: any) => {
   // chatId는 넘겨받아서 axios로 데이터 다시 호출
   // chatId나 다른 데이터 넘겨받아서 axios로 채팅 내용 호출받으면 됨
   

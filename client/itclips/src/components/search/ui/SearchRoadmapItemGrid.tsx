@@ -30,12 +30,17 @@ const SearchRoadmapItemGrid: React.FC<RoadmapProps> = ({ item }) => {
   };
 
   return (
-    <div>
+    <div className="relative">
       <NavLink
-        to={`/bookmarklist/${item.id}`}
+        to={`/roadmap/${item.id}`}
         className="block h-full"
       >
-        <img src={image} alt={item.title} className="w-full h-40 object-cover" />
+        <div className="relative">
+          <img src={image} alt={item.title} className="w-full h-40 object-cover" />
+          <div className="absolute top-2 right-2 z-10" onClick={handleNavLink}>
+            <SearchItemKebabDropdown />
+          </div>
+        </div>
         <div className="p-3">
           <div className="flex flex-col">
             <h3 className="text-lg font-semibold truncate mb-1">{item.title}</h3>

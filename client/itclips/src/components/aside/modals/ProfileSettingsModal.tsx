@@ -26,6 +26,7 @@ interface ProfileSettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
   updateAsideInfo: (updatedInfo: any) => void;
+  setGlobalNotification: (notification: { message: string, type: 'success' | 'error' } | null) => void;
 }
 
 interface Interest {
@@ -33,7 +34,7 @@ interface Interest {
   title: string;
 }
 
-const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onClose, updateAsideInfo }) => {
+const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onClose, updateAsideInfo, setGlobalNotification }) => {
 
   const userInfo = authStore(state => state.userInfo);
   const fetchUserInfo = authStore(state => state.fetchUserInfo);
@@ -75,17 +76,6 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
   
   // 프로필 이미지 상태
   const [profileImage, setProfileImage] = useState<string | null>(null);
-
-  // 프로필 수정에 따른 토스트 알람
-  useEffect(() => {
-    if (notification) {
-      const timer = setTimeout(() => {
-        setNotification(null);
-      }, 3000);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [notification]);
   
   // 모달이 열릴 때 스크롤 안되게 설정
   useEffect(() => {
@@ -227,12 +217,18 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
   const handleUpdateProfile = async () => {
     if (!userInfo.id || !userInfo.email) {
       console.error('사용자 정보가 없습니다.');
-      setNotification({ message: "사용자 정보가 없습니다.", type: 'error' });
+      setGlobalNotification({ message: "사용자 정보가 없습니다.", type: 'error' });
+      return;
+    }
+  
+    // 닉네임이 변경되었고, 중복 확인이 되지 않았을 때만 체크
+    if (nickname !== userInfo.nickname && (isDuplicateNickname === null || isDuplicateNickname === true)) {
+      setGlobalNotification({ message: "닉네임 중복 확인을 해주세요.", type: 'error' });
       return;
     }
     
     const updatedUserInfo = {
-      ...userInfo, // 기존 정보 유지
+      ...userInfo,
       nickname: nickname,
       birth: birthDate,
       job: job,
@@ -242,16 +238,13 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
     
     try {
       await updateUserInfo(userInfo.id, updatedUserInfo);
-      
-      // authStore의 userInfo 상태 업데이트
       fetchUserInfo(updatedUserInfo);
-
       updateAsideInfo(updatedUserInfo);
-      
-      setNotification({ message: "프로필 정보가 성공적으로 업데이트되었습니다.", type: 'success' });
+      setGlobalNotification({ message: "프로필 정보가 성공적으로 업데이트되었습니다.", type: 'success' });
+      onClose();
     } catch (error) {
       console.error('프로필 정보 업데이트 중 오류가 발생했습니다:', error);
-      setNotification({ message: "프로필 정보 업데이트에 실패했습니다.", type: 'error' });
+      setGlobalNotification({ message: "프로필 정보 업데이트에 실패했습니다.", type: 'error' });
     }
   };
   

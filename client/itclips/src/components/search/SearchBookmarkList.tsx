@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 // components
 import SearchBookmarkListItemsContainer from "./layout/SearchBookmarkListItemsContainer";
@@ -7,21 +8,47 @@ import SearchBookmarkListItemsContainer from "./layout/SearchBookmarkListItemsCo
 import { FaList } from "react-icons/fa";
 import { CiBoxList } from "react-icons/ci";
 import { HiOutlineSquares2X2, HiMiniSquares2X2 } from "react-icons/hi2";
+import { IoIosWarning } from "react-icons/io";
+
+// apis
+import { bookmarkSearch } from "../../api/searchApi";
+
+// stores
+import { authStore } from "../../stores/authStore";
+
+interface Tag {
+  title: string;
+}
+
+interface User {
+  id: number;
+  nickName: string;
+}
 
 interface BookmarkListItem {
   id: number;
   title: string;
-  username: string;
-  bookmarks: number;
-  likes: number;
-  createdAt: string;
-  thumbnailUrl: string;
+  description: string;
+  bookmarkCount: number;
+  likeCount: number;
+  image: string;
+  isLiked: boolean;
+  tags: Tag[];
+  users: User[];
 }
 
-const SearchBookmarkList = () => {
+interface SearchBookmarkListProps {
+  keyword: string;
+}
+
+const SearchBookmarkList: React.FC<SearchBookmarkListProps> = ({ keyword }) => {
+
+  const userId = authStore(state => state.userId);
 
   const [ viewMode, setViewMode ] = useState<'grid' | 'list'>('list');
-  const [ sortBy, setSortBy ] = useState<'views' | 'bookmarks' | 'likes'>('views');
+  const [ sortBy, setSortBy ] = useState<"조회수" | "스크랩수" | "좋아요수">("조회수");
+  const [ bookmarkListItems, setBookmarkListItems ] = useState<BookmarkListItem[]>([]);
+  const [ hasResults, setHasResults ] = useState<boolean>(true);
 
   const tabList = () => {
     setViewMode("list");
@@ -31,14 +58,23 @@ const SearchBookmarkList = () => {
     setViewMode("grid");
   };
 
-  // 더미 데이터
-  const data: BookmarkListItem[] = [
-    { id: 1, title: "북마크 리스트_01", username: "고양양", bookmarks: 12, likes: 10, createdAt: "2024-01-01", thumbnailUrl: "" },
-    { id: 2, title: "북마크 리스트_02", username: "고양양", bookmarks: 12, likes: 10, createdAt: "2024-01-01", thumbnailUrl: "" },
-    { id: 3, title: "북마크 리스트_03", username: "고양양", bookmarks: 12, likes: 10, createdAt: "2024-01-01", thumbnailUrl: "" },
-    { id: 4, title: "북마크 리스트_04", username: "고양양", bookmarks: 12, likes: 10, createdAt: "2024-01-01", thumbnailUrl: "" },
-    { id: 5, title: "북마크 리스트_05", username: "고양양", bookmarks: 12, likes: 10, createdAt: "2024-01-01", thumbnailUrl: "" },
-  ]
+  useEffect(() => {
+    const fetchBookmarkList = async () => {
+      try {
+        const response = await bookmarkSearch(userId, 1, sortBy, keyword);
+        setBookmarkListItems(response.data);
+        setHasResults(true);
+      } catch (error) {
+        console.error("북마크 리스트 검색 중 오류 발생 or 결과 없음:", error);
+        if (axios.isAxiosError(error) && error.response?.status === 404) {
+          setBookmarkListItems([]);
+          setHasResults(false);
+        }
+      }
+    };
+
+    fetchBookmarkList();
+  }, [userId, sortBy, keyword]);
 
   return (
     <div className="mt-4">
@@ -53,30 +89,39 @@ const SearchBookmarkList = () => {
       <div className="flex justify-between mb-4">
         <div className="space-x-2">
           <button 
-            className={`px-4 py-2 rounded-full ${sortBy === 'views' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-            onClick={() => setSortBy('views')}
+            className={`px-4 py-2 rounded-full ${sortBy === "조회수" ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+            onClick={() => setSortBy("조회수")}
           >
             조회수
           </button>
           <button 
-            className={`px-4 py-2 rounded-full ${sortBy === 'bookmarks' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-            onClick={() => setSortBy('bookmarks')}
+            className={`px-4 py-2 rounded-full ${sortBy === "스크랩수" ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+            onClick={() => setSortBy("스크랩수")}
           >
             스크랩수
           </button>
           <button 
-            className={`px-4 py-2 rounded-full ${sortBy === 'likes' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-            onClick={() => setSortBy('likes')}
+            className={`px-4 py-2 rounded-full ${sortBy === "좋아요수" ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+            onClick={() => setSortBy("좋아요수")}
           >
             좋아요수
           </button>
         </div>
       </div>
-      {/* 검색 결과 */}
-      <SearchBookmarkListItemsContainer
-        items={data}
-        viewMode={viewMode}
-      />
+      {/* 검색 결과 (검색 결과가 없으면 다른 창 출력) */}
+      {hasResults ? (
+        <SearchBookmarkListItemsContainer
+          items={bookmarkListItems}
+          viewMode={viewMode}
+        />
+      ) : (
+        <div className="flex flex-row items-center justify-center mt-10">
+          <IoIosWarning color="skyblue" size={28} />
+          <div className="ms-3 text-sm lg:text-xl font-bold py-8 text-center">
+            검색 결과가 없습니다.
+          </div>
+        </div>
+      )}
     </div>
   );
 };

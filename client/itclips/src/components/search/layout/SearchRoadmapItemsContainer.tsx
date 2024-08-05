@@ -4,14 +4,28 @@ import React from "react";
 import SearchRoadmapItemList from "../ui/SearchRoadmapItemList";
 import SearchRoadmapItemGrid from "../ui/SearchRoadmapItemGrid";
 
+interface Step {
+  id: number;
+  listId: number;
+  listTitle: string;
+  order: string;
+  check: boolean;
+}
+
 interface RoadmapItem {
   id: number;
+  userId: number;
+  userName: string;
   title: string;
-  username: string;
-  bookmarks: number;
-  likes: number;
+  description: string;
+  image: string;
+  isPublic: number;
   createdAt: string;
-  thumbnailUrl: string;
+  stepCnt: number;
+  checkCnt: number;
+  likeCnt: number;
+  steps: Step[];
+  isLiked: boolean;
 }
 
 interface RoadmapViewProps {

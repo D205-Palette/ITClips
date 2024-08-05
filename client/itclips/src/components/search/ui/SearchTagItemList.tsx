@@ -8,17 +8,28 @@ import SearchItemKebabDropdown from "./SearchItemKebabDropdown";
 import image from "../../../assets/images/profile_image.png";
 
 interface Tag {
+  title: string;
+}
+
+interface User {
+  id: number;
+  nickName: string;
+}
+
+interface BookmarkListItem {
   id: number;
   title: string;
-  username: string;
-  bookmarks: number;
-  likes: number;
-  createdAt: string;
-  thumbnailUrl: string;
+  description: string;
+  bookmarkCount: number;
+  likeCount: number;
+  image: string;
+  isLiked: boolean;
+  tags: Tag[];
+  users: User[];
 }
 
 interface TagProps {
-  item: Tag;
+  item: BookmarkListItem;
 }
 
 const SearchTagItemList: React.FC<TagProps> = ({ item }) => {
@@ -27,6 +38,13 @@ const SearchTagItemList: React.FC<TagProps> = ({ item }) => {
   const handleNavLink = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+  };
+
+  // users의 nickName을 처리하는 함수
+  const getUserNames = (users: User[]) => {
+    if (users.length === 0) return "";
+    if (users.length === 1) return users[0].nickName;
+    return users.map(user => user.nickName).join(", ");
   };
 
   return (
@@ -39,14 +57,14 @@ const SearchTagItemList: React.FC<TagProps> = ({ item }) => {
         <div className="flex-grow">
           <h3 className="text-lg font-semibold">{item.title}</h3>
           <div className="flex space-x-4 mt-2">
-            <span className="text-bold text-sky-500">{item.bookmarks}개</span>
-            <p className="text-sm text-gray-400">{item.username} 생성</p>
+            <span className="mr-2 font-bold text-sky-500">{item.bookmarkCount}개</span>
+            <p className="text-sm text-gray-400">{getUserNames(item.users)} 생성</p>
           </div>
         </div>
 
         <p className="text-gray-500">리스트에 관한 설명</p>
 
-        <button className="btn btn-ghost btn-xs text-sm" onClick={handleNavLink}>❤️ {item.likes}</button>
+        <button className="btn btn-ghost btn-xs text-sm" onClick={handleNavLink}>❤️ {item.likeCount}</button>
 
         <div onClick={handleNavLink}>
           <SearchItemKebabDropdown whatContent="리스트" id={item.id}/>

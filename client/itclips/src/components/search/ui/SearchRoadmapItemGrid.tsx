@@ -7,14 +7,28 @@ import SearchItemKebabDropdown from "./SearchItemKebabDropdown";
 // images (임시)
 import image from "../../../assets/images/profile_image.png";
 
+interface Step {
+  id: number;
+  listId: number;
+  listTitle: string;
+  order: string;
+  check: boolean;
+}
+
 interface RoadmapItem {
   id: number;
+  userId: number;
+  userName: string;
   title: string;
-  username: string;
-  bookmarks: number;
-  likes: number;
+  description: string;
+  image: string;
+  isPublic: number;
   createdAt: string;
-  thumbnailUrl: string;
+  stepCnt: number;
+  checkCnt: number;
+  likeCnt: number;
+  steps: Step[];
+  isLiked: boolean;
 }
 
 interface RoadmapProps {
@@ -45,11 +59,11 @@ const SearchRoadmapItemGrid: React.FC<RoadmapProps> = ({ item }) => {
           <div className="flex flex-col">
             <h3 className="text-lg font-semibold truncate mb-1">{item.title}</h3>
             <div className="flex items-center text-gray-600 text-sm">
-              <span className="mr-2 font-bold text-sky-500">{item.bookmarks}개</span>
-              <p className="truncate text-gray-400">{item.username} 생성</p>
+              <span className="mr-2 font-bold text-sky-500">{item.steps.length}개</span>
+              <p className="truncate text-gray-400">{item.userName} 생성</p>
             </div>
             <div className="flex justify-end mt-2">
-              <button className="btn btn-ghost btn-xs" onClick={handleNavLink}>❤️ {item.likes}</button>
+              <button className="btn btn-ghost btn-xs" onClick={handleNavLink}>❤️ {item.likeCnt}</button>
             </div>
           </div>
         </div>

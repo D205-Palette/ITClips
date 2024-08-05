@@ -43,11 +43,23 @@ const AsideProfile = () => {
   const params = useParams<{ userId?: string }>();
   const urlUserId = params.userId ? parseInt(params.userId, 10) : undefined;
   const { urlUserInfo, setUrlUserInfo, updateFollowCount } = profileStore();
-  const isDark = darkModeStore((state) => state.isDark);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
+  const isDark = darkModeStore(state => state.isDark);
+  const [ isModalOpen, setIsModalOpen ] = useState<boolean>(false);
+  const [ globalNotification, setGlobalNotification ] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
+  
   // 팔로우 상태인지?
   const [isFollow, setIsFollow] = useState<boolean>(false);
+
+  // 토스트 알람 메뉴
+  useEffect(() => {
+    if (globalNotification) {
+      const timer = setTimeout(() => {
+        setGlobalNotification(null);
+      }, 3000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [globalNotification]);
 
   const updateAsideInfo = (updatedInfo: UserInfo) => {
     setUrlUserInfo(updatedInfo);
@@ -166,7 +178,18 @@ const AsideProfile = () => {
         isOpen={isModalOpen}
         onClose={closeModal}
         updateAsideInfo={updateAsideInfo}
+        setGlobalNotification={setGlobalNotification}  
       />
+      {/* 토스트 알람 */}
+      {globalNotification && (
+        <div 
+          className={`fixed bottom-4 left-1/2 transform -translate-x-1/2 p-4 rounded-md ${
+            globalNotification.type === 'success' ? 'bg-green-500' : 'bg-red-500'
+          } text-white shadow-lg z-50 transition-opacity duration-300`}
+        >
+          {globalNotification.message}
+        </div>
+      )}
     </div>
   );
 };

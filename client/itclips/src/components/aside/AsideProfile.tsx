@@ -66,7 +66,6 @@ const AsideProfile = () => {
   };
 
   useEffect(() => {
-    console.log(urlUserId);
     // url 유저 정보 조회
     const fetchUserInfo = async (userId: number) => {
       try {

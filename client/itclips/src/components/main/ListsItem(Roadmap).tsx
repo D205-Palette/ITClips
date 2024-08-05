@@ -57,7 +57,7 @@ const ListItem: FC<Props> = ({ list,changeCount }) => {
       <div
         className={
           (isDark ? "hover:brightness-125" : "hover:brightness-95") +
-          " card card-side bg-base-100 shadow-xl  h-28 col-span-4 odd:col-start-1  even:col-start-4 mb-10"
+          " card card-side bg-base-100  h-28 col-span-4 odd:col-start-1  even:col-start-4 mb-10 z-10"
         }
       >
         <>
@@ -68,7 +68,7 @@ const ListItem: FC<Props> = ({ list,changeCount }) => {
             <img
               src="https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp"
               alt="Movie"
-              className="size-28 hidden lg:inline"
+              className="size-28 hidden lg:inline "
             />
           </figure>
 

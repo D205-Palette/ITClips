@@ -1,4 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, FC } from "react";
+
+// icons
 import { VscKebabVertical } from "react-icons/vsc";
 
 // components
@@ -6,11 +8,17 @@ import UrlCopyModal from "../../common/UrlCopyModal";
 import ReportModal from "../../aside/modals/ReportModal";
 import AddToFavorites from "../../common/AddToFavoritesModal";
 
-const SearchItemKebabDropdown = () => {
+interface Props {
+  id: number;
+  whatContent: string;
+}
+
+const SearchItemKebabDropdown: FC<Props> = ({id, whatContent}) => {
   const [isUrlCopyModalOpen, setIsUrlCopyModalOpen] = useState<boolean>(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState<boolean>(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-  const [isAddToFavModalOpen, setIsAddToFavModalOpen] = useState<boolean>(false);
+  const [isAddToFavModalOpen, setIsAddToFavModalOpen] =
+    useState<boolean>(false);
   
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -18,19 +26,22 @@ const SearchItemKebabDropdown = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsDropdownOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
   const categories: string[] = ["url복사", "신고하기", "즐겨찾기"];
-
+  
   const handleMenu = (menu: string) => {
     if (menu === "url복사") {
       setIsUrlCopyModalOpen(true);
@@ -67,9 +78,20 @@ const SearchItemKebabDropdown = () => {
         </div>
       )}
       {/* 모달 컴포넌트들 */}
-      <UrlCopyModal isOpen={isUrlCopyModalOpen} onClose={() => setIsUrlCopyModalOpen(false)} />
-      <ReportModal isOpen={isReportModalOpen} onClose={() => setIsReportModalOpen(false)} />
-      <AddToFavorites isOpen={isAddToFavModalOpen} onClose={() => setIsAddToFavModalOpen(false)}/>
+      <UrlCopyModal
+        isOpen={isUrlCopyModalOpen}
+        onClose={() => setIsUrlCopyModalOpen(false)}
+      />
+      <ReportModal
+        isOpen={isReportModalOpen}
+        onClose={() => setIsReportModalOpen(false)}
+        whatContent={whatContent}
+        id={id}
+      />
+      <AddToFavorites
+        isOpen={isAddToFavModalOpen}
+        onClose={() => setIsAddToFavModalOpen(false)}
+      />
     </div>
   );
 };

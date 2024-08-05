@@ -49,7 +49,7 @@ const SearchTagItemList: React.FC<TagProps> = ({ item }) => {
         <button className="btn btn-ghost btn-xs text-sm" onClick={handleNavLink}>❤️ {item.likes}</button>
 
         <div onClick={handleNavLink}>
-          <SearchItemKebabDropdown />
+          <SearchItemKebabDropdown whatContent="리스트" id={item.id}/>
         </div>
       </NavLink>
     </div>

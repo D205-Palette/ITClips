@@ -1,5 +1,5 @@
 // 로드맵 상세보기 데이터
-type RoadmapType = {
+type RoadmapDetailType = {
   id: number;
   userId: number;
   userName: string;
@@ -36,5 +36,21 @@ type RoadmapType = {
   likeCnt: number;
   scrapCnt: number;
 };
+// 로드맵 간략 보기 데이터
+type RoadmapSumType = 
+  {
+    id: number
+    userId : number
+    userName: string
+    title: string
+    description: string
+    image: string
+    isPublic: number
+    createdAt: string
+    stepCnt: number
+    checkCnt: number
+    likeCnt:number
+    isLiked:boolean
+  }
 
-export type { RoadmapType };
+export type { RoadmapDetailType,RoadmapSumType };

@@ -43,7 +43,7 @@ const router = createBrowserRouter([
       },
       // 로그인 후 홈페이지(MY)
       {
-        path: "user/:user_id",
+        path: "user/:userId",
         element: <ProfileView />,
         children: [
           {
@@ -81,12 +81,12 @@ const router = createBrowserRouter([
       },
       // 로드맵 상세 페이지
       {
-        path: "roadmap/:roadmap_id",
+        path: "roadmap/:roadmapId",
         element: <RoadmapView />,
       },
       // 북마크리스트 상세 페이지
       {
-        path: "bookmarklist/:bookmarklist_id",
+        path: "bookmarklist/:bookmarklistId",
         element: <MyBookmark />,
       },
       // 피드 페이지

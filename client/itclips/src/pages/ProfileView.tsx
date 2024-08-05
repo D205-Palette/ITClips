@@ -26,9 +26,13 @@ export default function MyView() {
         <div id="aside" className="xl:col-start-2 xl:col-span-3 hidden xl:block ">
           {/* 메세지 뜨는 위치 */}
           <div id="aside" className="absolute col-start-3 col-span-2 z-50 ">
-            { isMessageOpen && <MessageLayout /> }
+            <div>
+              { isMessageOpen && <MessageLayout /> }
+            </div>
           </div>
-          <AsideProfile />
+          <div className="fixed z-20">
+            <AsideProfile />
+          </div>
         </div>
        
 

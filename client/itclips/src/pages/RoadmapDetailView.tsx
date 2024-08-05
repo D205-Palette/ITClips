@@ -80,6 +80,40 @@ const roadmap = {
       check: 1,
       order: 2,
     },
+    {
+      id: 4,
+      roadmapId:5,
+      bookmarkListResponseDTO: {
+        id: 1,
+        title: "My First Bookmark List",
+        description: "This is a description for the first bookmark list",
+        bookmarkCount: 0,
+        likeCount: 1,
+        image:
+          "https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp",
+        tags: [],
+        users: [],
+      },
+      check: 0,
+      order: 1,
+    },
+    {
+      id: 5,
+      roadmapId: 4,
+      bookmarkListResponseDTO: {
+        id: 1,
+        title: "My First Bookmark List",
+        description: "This is a description for the first bookmark list",
+        bookmarkCount: 0,
+        likeCount: 1,
+        image:
+          "https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp",
+        tags: [],
+        users: [],
+      },
+      check: 0,
+      order: 1,
+    },
   ],
   commentList: [
     {
@@ -133,23 +167,26 @@ const RoadmapView = () => {
 <div id='Body' className="grid grid-cols-12 gap-4">
 
 {/* aside 자리 */}
-<div id="aside" className="xl:col-start-3 xl:col-span-3 hidden xl:block ">
+<div id="aside" className="xl:col-start-2 xl:col-span-3 hidden xl:block ">
   {/* 메세지 뜨는 위치 */}
-  <div id="aside" className="absolute col-start-3 col-span-2 z-50 ">
+  <div id="aside" className="absolute col-start-2 col-span-2 z-50 ">
   { isMessageOpen && <MessageLayout /> }
   </div>
+  <div className="fixed z-20">
   <AsideRoadmap roadmap={roadmap} />
+  </div>
 </div>                                        
 
 
 {/* main자리 */}
-<div id="Main" className="xl:col-start-6 xl:col-span-6 col-start-3 col-span-8 gap-4">
+<div id="Main" className="xl:col-start-5 xl:col-span-7 col-start-3 col-span-8 gap-4">
   {/* <MainTab /> */}
   <div className="grid  grid-cols-7 ">
+    <div className="fixed z-10 w-7/12">
         <div className="col-span-7">
           <MainTab />
         </div>
-
+        </div>
         <div className="col-span-7 flex flex-row justify-between my-9">
           <div>
             <BackButton />
@@ -169,7 +206,7 @@ const RoadmapView = () => {
           </div>
           {/* 퍼센트 계산 방법이.... 전체 필터걸어서 isCompleted된거 구하는거긴한데... */}
         </div>
-
+       
         {roadmap.stepList.map((list) => (
           <ListItem list={list} changeCount={changeCount} />
         ))}

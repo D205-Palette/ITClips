@@ -92,7 +92,7 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({ isOpen, onClo
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-30">
       <div className="bg-base-100 rounded-lg p-6 w-96">
         <h2 className="text-xl font-bold mb-4">비밀번호 변경</h2>
         <form onSubmit={handleSubmit}>

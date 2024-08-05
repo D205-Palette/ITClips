@@ -13,6 +13,4 @@ type BookmarkType = {
   likeCount: number;
 };
 
-
-
 export type { BookmarkType };

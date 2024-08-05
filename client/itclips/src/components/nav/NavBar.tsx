@@ -7,7 +7,7 @@ import NotificationButton from "./NavNotificationButton";
 import HomeButton from "../nav/NavHomeButton";
 import LogoutButton from "../nav/NavLogoutButton";
 import MessageButton from "../nav/NavMessageButton";
-import tabStore from "../../stores/categoriesStore";
+// import tabStore from "../../stores/categoriesStore";
 import darkModeStore from "../../stores/darkModeStore";
 
 const NavBar = () => {

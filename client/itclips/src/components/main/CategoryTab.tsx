@@ -11,20 +11,21 @@ import CategorySingleTab from "./CategorySingleTab";
 import { useState, useRef, FC,useEffect } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import { FaPlus } from "react-icons/fa6";
-import categoriesStore from "../../stores/categoriesStore";
+// import categoriesStore from "../../stores/categoriesStore";
 // 조건 맞는애들만 카테고리 필터 해주는 거 ㅇㅋㅇㅋ
 import { useNavigate } from "react-router-dom";
-
+import axios from "axios";
+import { authStore } from "../../stores/authStore";
+import { API_BASE_URL } from "../../config";
 interface Props {
   categories: { categoryId: number; categoryName: string }[];
+  listId:number
 }
 
-const CategoryTab: FC<Props> = ({ categories }) => {
-
+const CategoryTab: FC<Props> = ({ categories,listId }) => {
+  const {userId, token} = authStore()
   const isDark = darkModeStore((state) => state.isDark);
-  // const categories = categoriesStore((state) => state.categories);
 
-  const addCategory = categoriesStore((state) => state.addCategory);
 
   
   const [createMode, modeChange] = useState(false);
@@ -37,6 +38,9 @@ const CategoryTab: FC<Props> = ({ categories }) => {
     }
   }, [createMode]);
   
+  useEffect(()=>{
+
+  }, [])
   // 뒤로가기 버튼
   const BackButton = (): any => {
     return (
@@ -52,7 +56,6 @@ const CategoryTab: FC<Props> = ({ categories }) => {
       <button
         onClick={() => {
           modeChange(true);
-          // clickCreateBtn();
         }}>
         <FaPlus className="ms-2 " />
       </button>
@@ -63,17 +66,31 @@ const CategoryTab: FC<Props> = ({ categories }) => {
   const CreateCategorySection = () => {
     const [inputValue, changeInputValue] = useState<string>("");
 
-    const createCategory = (event: React.FormEvent): void => {
-      event.preventDefault();
+    const createCategory = (): void => {
       // 카테고리 추가 api
-      //   /category/add/{listId}경로로 {categoryName:inputValue}와 함께 POST
 
-      addCategory(inputValue);
+      axios({
+        method: "post",
+        url: `${API_BASE_URL}/api/category/add/${listId}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data:{
+          categoryName:inputValue,
+        }
+      })
+        .then((res) => {
+
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+
       modeChange(false); // 추가하면 추가 모드 off
     };
 
     return (
-      <form onSubmit={createCategory}>
+      <form onSubmit={()=>createCategory()}>
         <input
           ref={inputRef}
           type="text"
@@ -109,8 +126,8 @@ const CategoryTab: FC<Props> = ({ categories }) => {
           className=" flex flex-row  whitespace-nowrap  container overflow-x-scroll "
           onWheel={handleScroll}
         >
-          {categories.map((category, index) => (
-            <CategorySingleTab whatCategory={category} index={index} />
+          {categories.map((category) => (
+            <CategorySingleTab category={category} />
           ))}
           {createMode ? (
             <CreateCategorySection />

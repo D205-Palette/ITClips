@@ -13,6 +13,7 @@ import NoContent from "./NoContent";
 import { FaPlus } from "react-icons/fa6";
 import BookmarkListCreateModal from "../../components/aside/modals/BookmarkListCreateModal";
 import { API_BASE_URL } from "../../config";
+import { useParams } from "react-router-dom";
 
 export default function MyView() {
   const [isList, setTab] = useState(true);
@@ -30,18 +31,22 @@ export default function MyView() {
   }
 
   const filterdLists = lists.filter((list) => list.title.includes(filterText));
+  const params = useParams()
 
   // 마운트할때 유저의 북마크 리스트들 요약
   useEffect(() => {
     async function fetchData() {
       axios({
         method: "get",
-        url: `${API_BASE_URL}/api/list/personal/${userId}`,
+        url: `${API_BASE_URL}/api/list/personal/${params.userId}`,
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      })
-        .then((res) => {
+        params:{
+          viewerId:userId, 
+        },
+        })
+          .then((res) => {
           setLists(res.data);
         })
         .catch((err) => {

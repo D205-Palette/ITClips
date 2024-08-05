@@ -11,7 +11,7 @@ import { BookmarkListSumType } from "../../types/BookmarkListType";
 import NoContent from "./NoContent";
 import { authStore } from "../../stores/authStore";
 import { API_BASE_URL } from "../../config";
-
+import { useParams } from "react-router-dom";
 const MyGroupBookmarkList = () => {      
   
   const [filterText, changeFilterText] = useState("")
@@ -19,21 +19,24 @@ const MyGroupBookmarkList = () => {
   const[lists, setLists] = useState<BookmarkListSumType[]>([])
   const filterdLists = lists.filter((list) => list.title.includes(filterText)) //||list.tags.includes({title:filterText}))
   const { token, userId } = authStore()
-
+  const params = useParams()
   function tabList(): void {
     setTab(true);
   }
   function tabAlbum(): void {
     setTab(false);
   }
-  
+  // 그룹 북마크들 api
   useEffect(() => {
     async function fetchData() {
       axios({
         method: "get",
-        url: `${API_BASE_URL}/api/list/group/${userId}`,
+        url: `${API_BASE_URL}/api/list/group/${params.userId}`,
         headers: {
           Authorization: `Bearer ${token}`,
+        },
+        params:{
+          viewerId:userId, 
         },
       })
         .then((res) => {

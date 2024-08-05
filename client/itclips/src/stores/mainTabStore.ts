@@ -1,25 +1,22 @@
 import { create } from "zustand";
 
-
 interface Tab {
+  whatCategory: { categoryId: number; categoryName: string };
+  changeCategory: (category: {
+    categoryId: number;
+    categoryName: string;
+  }) => void;
 
-  whatCategory:string
-  changeCategory: (category:string) => void
 
-
-  // isFollower:boolean
-  // changeIsFollower: (isFollower:boolean) => void
 }
 
 const Tab = create<Tab>((set) => ({
+  whatCategory: { categoryId: 0, categoryName: "" },
+  changeCategory: (category) =>
+    set((state) => ({
+      whatCategory: (state.whatCategory.categoryId === category.categoryId ? { categoryId: 0, categoryName: "" }: category)
+    })),
 
-    whatCategory:'',
-    changeCategory: (category) => set((state) => ({whatCategory :  (state.whatCategory === category ? '' : category)})),
-
-
-    
-    // isFollower:true,
-    // changeIsFollower: (isFollower) => set((state)=>({isFollower : isFollower}) )
 }));
 
-export default Tab
+export default Tab;

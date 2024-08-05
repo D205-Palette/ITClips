@@ -16,6 +16,7 @@ interface Props {
 }
 
 const RoadMap: FC<Props> = ({ roadmap }) => {
+
   const { userId, token } = authStore();
   const [isLike, setIsLike] = useState(roadmap.isLiked);
   const [likeCount, changeLikeCount] = useState(roadmap.likeCnt)
@@ -29,7 +30,7 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
       }); changeLikeCount(likeCount -1 )
     } else {
       {
-        axios.post(`${API_BASE_URL}/api/list/like/${roadmap.id}/${userId}`, {
+        axios.post(`${API_BASE_URL}/api/roadmap/like/${roadmap.id}/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -38,7 +39,6 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
       changeLikeCount(likeCount + 1 )
     } setIsLike(!isLike);
   };
-
   const isDark = darkModeStore((state) => state.isDark);
   const percentage = ((roadmap.checkCnt * 100) / roadmap.stepCnt).toFixed(1);
   const navigate = useNavigate();
@@ -106,8 +106,8 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
 
             <div className="card-actions justify-end flex items-center">
               <button onClick={clickHeart} className="btn btn-ghost z-0 ">
-                {isLike ? <FaHeart /> : <FaRegHeart />}
-                {roadmap.likeCnt}{" "}
+                {isLike ? <FaHeart color="red"/> : <FaRegHeart />}
+                {likeCount}{" "}
               </button>
               <button className="hidden md:inline">
                 <KebabDropdown whatMenu="로드맵" id={roadmap.id} />

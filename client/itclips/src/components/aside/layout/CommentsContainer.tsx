@@ -1,15 +1,11 @@
-import React, { useState } from "react";
+import React, { useState,useEffect,FC } from "react";
 import { MdOutlineEdit, MdDelete, MdCheck, MdClose } from "react-icons/md";
-
+import type { BookmarkListDetailType } from "../../../types/BookmarkListType";
 // components
 import CommentWrite from "../ui/CommentWrite";
-
-interface Comment {
-  id: number;
-  username: string;
-  content: string;
-}
-
+import axios from "axios";
+import { API_BASE_URL } from "../../../config";
+import { authStore } from "../../../stores/authStore";
 interface Tag {
   id: number;
   content: string;
@@ -24,11 +20,45 @@ interface Item {
   tags: Tag[];
   comments: Comment[];
 }
+type Comment = {
+  commentId: number;
+  commentUser: {
+    id: number;
+    nickName: string;
+  };
+  comment: string;
+  commentTime: string;
+}
 
-const CommentsContainer = (data: Item) => {
+interface Props {
+  id:number;
+}
+const CommentsContainer :FC<Props> = ({id}) => {
+  const {userId, token} = authStore()
+  const [comments, setComments] = useState<Comment[]>([])
+
+  // 댓글 가져오기
+  useEffect(() => {
+    async function fetchData() {
+      axios({
+        method: "get",
+        url: `${API_BASE_URL}/api/comment/${id}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        })
+          .then((res) => {
+          setComments(res.data);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+    fetchData();
+  }, []);
+
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editContent, setEditContent] = useState("");
-
   const handleEdit = (id: number, content: string) => {
     setEditingId(id);
     setEditContent(content);
@@ -59,12 +89,12 @@ const CommentsContainer = (data: Item) => {
             scrollbarColor: "#CBD5E0 #EDF2F7"
           }}
         >
-          {data.comments.map((comment) => (
-            <div key={comment.id} className="bg-base-100 p-3 rounded-lg shadow-sm flex items-center w-full">
-              {editingId !== comment.id && (
-                <p className="font-semibold text-sm w-1/5">{comment.username}</p>
+          {comments.map((comment) => (
+            <div key={comment.commentId} className="bg-base-100 p-3 rounded-lg shadow-sm flex items-center w-full">
+              {editingId !== comment.commentId && (
+                <p className="font-semibold text-sm w-1/5">{comment.commentUser.nickName}</p>
               )}
-              {editingId === comment.id ? (
+              {editingId === comment.commentId ? (
                 <input
                   type="text"
                   value={editContent}
@@ -72,12 +102,12 @@ const CommentsContainer = (data: Item) => {
                   className="text-sm flex-grow px-4 rounded w-full"
                 />
               ) : (
-                <p className="text-sm flex-grow px-4">{comment.content}</p>
+                <p className="text-sm flex-grow px-4">{comment.comment}</p>
               )}
               <div className="flex space-x-1">
-                {editingId === comment.id ? (
+                {editingId === comment.commentId ? (
                   <>
-                    <button onClick={() => handleSave(comment.id)} className="p-1 hover:bg-gray-100 rounded-full">
+                    <button onClick={() => handleSave(comment.commentId)} className="p-1 hover:bg-gray-100 rounded-full">
                       <MdCheck className="h-4 w-4 text-green-500" />
                     </button>
                     <button onClick={handleCancel} className="p-1 hover:bg-gray-100 rounded-full">
@@ -86,10 +116,10 @@ const CommentsContainer = (data: Item) => {
                   </>
                 ) : (
                   <>
-                    <button onClick={() => handleEdit(comment.id, comment.content)} className="p-1 hover:bg-gray-100 rounded-full">
+                    <button onClick={() => handleEdit(comment.commentId, comment.comment)} className="p-1 hover:bg-gray-100 rounded-full">
                       <MdOutlineEdit className="h-4 w-4 text-gray-500" />
                     </button>
-                    <button onClick={() => handleDelete(comment.id)} className="p-1 hover:bg-gray-100 rounded-full">
+                    <button onClick={() => handleDelete(comment.commentId)} className="p-1 hover:bg-gray-100 rounded-full">
                       <MdDelete className="h-4 w-4 text-gray-500" />
                     </button>
                   </>

@@ -11,7 +11,7 @@ import type { BookmarkListSumType } from "../../types/BookmarkListType";
 import NoContent from "./NoContent";
 import { API_BASE_URL } from "../../config";
 import { authStore } from "../../stores/authStore";
-
+import { useParams } from "react-router-dom";
 const MyGroupBookmarkList = () => {      
   
   const [filterText, changeFilterText] = useState("")
@@ -19,7 +19,7 @@ const MyGroupBookmarkList = () => {
   const [lists, setLists] = useState<BookmarkListSumType[]>([])
   const { token, userId } = authStore()
   const filterdLists = lists.filter((list) => list.title.includes(filterText)) // ||list.tags.includes({title: filterText}))
-
+  const params = useParams()
   function tabList(): void {
     setTab(true);
   }
@@ -31,9 +31,12 @@ const MyGroupBookmarkList = () => {
     async function fetchData() {
       axios({
         method: "get",
-        url: `${API_BASE_URL}/api/list/scrap/${userId}`,
+        url: `${API_BASE_URL}/api/list/scrap/${params.userId}`,
         headers: {
           Authorization: `Bearer ${token}`,
+        },
+        params:{
+          viewerId:userId, 
         },
       })
         .then((res) => {

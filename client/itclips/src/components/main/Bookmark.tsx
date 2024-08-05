@@ -1,18 +1,18 @@
 // 이미지 , 리스트명, 북마크 개수, 태그, 설명, 좋아요 버튼&좋아요 수, 리스트 세부 조작 버튼
-import { useState, FC } from "react";
+import { useState, FC,useEffect } from "react";
 import KebabDropdown from "../common/KebabDropdown(Bookmark)";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import darkModeStore from "../../stores/darkModeStore";
 import { FaPlus } from "react-icons/fa6";
 import type { BookmarkType } from "../../types/BookmarkType";
-import HoverTag from "./Bookmark(EditTag)";
+import HoverTag from "./Bookmark(Tag)";
 import AISummary from "./BookmarkAISummary";
 import { RiRobot3Line } from "react-icons/ri";
 import { IoIosArrowUp } from "react-icons/io";
 import axios from "axios";
 import { authStore } from "../../stores/authStore";
 import { API_BASE_URL } from "../../config";
-import EditTag from "./Bookmark(EditTag)";
+import EditTag from "./Bookmark(Tag)";
 
 // const bookmarks = {
 //     title: string,
@@ -38,6 +38,20 @@ const Bookmark: FC<Props> = ({
   changeEditBookmarksIndex,
 }) => {
 
+  const [tempBookmark, editTempBookmark] = useState<BookmarkType>(bookmark);
+  const [tempTitle, editTempTitle] = useState<string>('');
+  const [tempTags, editTempTags] = useState(bookmark.tags);
+  const [tempTag, editTempTag] = useState("");
+
+  useEffect(() => {
+    async function fetchData() {
+      editTempBookmark(bookmark)
+      editTempTitle(bookmark.title)
+      editTempTags(bookmark.tags)
+      editTempTag("")
+    }
+    fetchData();
+  }, []);
 
   const [isLike, toggleLike] = useState(bookmark.isLiked);
   const [likeCount, setLikeCount] = useState(bookmark.likeCount);
@@ -49,14 +63,11 @@ const Bookmark: FC<Props> = ({
   // 그냥 더미. 있어야됨. 삭제 ㄴㄴ
   const [nothingMode, tabNothing] = useState(false);
 
-  const [tempBookmark, editTempBookmark] = useState(bookmark);
-  const [tempTitle, editTempTitle] = useState(bookmark.title);
-  const [tempTags, editTempTags] = useState(bookmark.tags);
-  const [tempTag, editTempTag] = useState("");
+
 
   const { userId, token } = authStore();
 
-  //좋아요 
+  //좋아요
   const clickHeart = (): void => {
     if (isLike) {
       axios.delete(
@@ -81,23 +92,33 @@ const Bookmark: FC<Props> = ({
 
   const isDark = darkModeStore((state) => state.isDark);
 
-
   // 태그 수정
   function submitTag(): void {
     // tempBookmark를 formData로 해서 put 요청
     editTempTags([...tempTags, { title: tempTag }]);
+    
     editTempTag("");
     toggleTagEdit(false);
   }
 
-    // 최종 수정
+  // 최종 수정
   function completeEdit(): void {
     toggleEdit(false);
-    editTempBookmark({ ...tempBookmark, title: tempTitle, tags: tempTags });
-
+    // editTempBookmark({ ...tempBookmark, title: tempTitle, tags: tempTags });
+    editTempBookmark({...tempBookmark, title:tempTitle})
     //  /bookmark /update/{bookmarkId} 로 put요청
+    axios.put(`${API_BASE_URL}/api/bookmark/update/${bookmark.id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+        url:bookmark.url,
+        title:tempTitle,
+        tags:tempTags,
+        content:bookmark.content,
+      
+    });
   }
-
+  
   return (
     <>
       <div
@@ -118,7 +139,7 @@ const Bookmark: FC<Props> = ({
               <div>
                 {isEdit ? (
                   <input
-                    type="text"
+                    type="text" 
                     value={tempTitle}
                     onChange={(e) => editTempTitle(e.target.value)}
                     className="text-xl font-bold border-slate-400 border rounded-md"
@@ -133,9 +154,14 @@ const Bookmark: FC<Props> = ({
             </div>
 
             {/* 태그들 */}
-            <div className="hidden items-center md:inline-flex " >
+            <div className="hidden items-center md:inline-flex ">
               {tempTags.map((tag) => (
-                <EditTag tag={tag.title} isEdit={isEdit}/>
+                <EditTag
+                  tag={tag.title}
+                  isEdit={isEdit}
+                  tempTags={tempTags}
+                  editTempTags={editTempTags}
+                />
                 // <span className="ms-1">{" # " + tag.title}</span>
               ))}{" "}
             </div>

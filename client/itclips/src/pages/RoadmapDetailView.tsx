@@ -12,151 +12,74 @@ import ListItem from "../components/main/ListsItem(Roadmap)";
 import { useEffect, useState } from "react";
 import darkModeStore from "../stores/darkModeStore";
 import AsideRoadmap from '../components/aside/AsideRoadmap'
+import { useParams } from "react-router-dom";
+import type { RoadmapDetailType } from "../types/RoadmapType";
+import axios from "axios";
+import { API_BASE_URL } from "../config";
+import { authStore } from "../stores/authStore";
 
-interface Props {
-  roadmapId: number;
-}
-
-// prop으로 받은 로드맵 id 로 axios 호출해서 조회
-const roadmap = {
-  id: 1,
-  userId: 1,
-  userName: "UserOne",
-  title: "First Roadmap",
-  description: "This is the description for the first roadmap",
-  createdAt: "2024-07-24T05:41:26",
-  image:
-    "https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp",
-  isPublic: 1,
-  stepList: [
-    {
-      id: 1,
-      roadmapId: 1,
-      bookmarkListResponseDTO: {
-        id: 1,
-        title: "My First Bookmark List",
-        description: "This is a description for the first bookmark list",
-        bookmarkCount: 0,
-        likeCount: 1,
-        image:
-          "https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp",
-        tags: [],
-        users: [],
-      },
-      check: 0,
-      order: 1,
-    },
-    {
-      id: 2,
-      roadmapId: 1,
-      bookmarkListResponseDTO: {
-        id: 3,
-        title: "UserOne Second Bookmark List",
-        description: "This is a description for UserOne's second bookmark list",
-        bookmarkCount: 0,
-        likeCount: 1,
-        image:
-          "https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp",
-        tags: [],
-        users: [],
-      },
-      check: 1,
-      order: 2,
-    },
-    {
-      id: 3,
-      roadmapId: 1,
-      bookmarkListResponseDTO: {
-        id: 3,
-        title: "Happy for UserOne Third Bookmark List",
-        description: "This is a description for UserOne's second bookmark list",
-        bookmarkCount: 0,
-        likeCount: 1,
-        image:
-          "https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp",
-        tags: [],
-        users: [],
-      },
-      check: 1,
-      order: 2,
-    },
-    {
-      id: 4,
-      roadmapId:5,
-      bookmarkListResponseDTO: {
-        id: 1,
-        title: "My First Bookmark List",
-        description: "This is a description for the first bookmark list",
-        bookmarkCount: 0,
-        likeCount: 1,
-        image:
-          "https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp",
-        tags: [],
-        users: [],
-      },
-      check: 0,
-      order: 1,
-    },
-    {
-      id: 5,
-      roadmapId: 4,
-      bookmarkListResponseDTO: {
-        id: 1,
-        title: "My First Bookmark List",
-        description: "This is a description for the first bookmark list",
-        bookmarkCount: 0,
-        likeCount: 1,
-        image:
-          "https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp",
-        tags: [],
-        users: [],
-      },
-      check: 0,
-      order: 1,
-    },
-  ],
-  commentList: [
-    {
-      id: 1,
-      comment: "This is a comment on the first roadmap by UserOne",
-      userId: 1,
-      userName: "UserOne",
-      createdAt: "2024-07-24T05:41:26",
-      roadmapId: 1,
-    },
-    {
-      id: 2,
-      comment: "This is a comment on the first roadmap by Admin",
-      userId: 2,
-      userName: "AdminUser",
-      createdAt: "2024-07-24T05:41:26",
-      roadmapId: 1,
-    },
-  ],
-  likeCnt: 2,
-  scrapCnt : 4,
-};
-
-const bookmarkLists = roadmap.stepList;
-
-const checkedList = bookmarkLists.filter((list) => list.check);
+type StepTListType = {
+    id: number;
+    roadmapId: number;
+    bookmarkListResponseDTO: {
+      id: number;
+      title: string;
+      description: string;
+      bookmarkCount: number;
+      likeCount: number;
+      image: string;
+      tags: {title:string}[];
+      users: {id:number, nickName:string}[];
+    };
+    check: boolean;
+    order: number;
+  }
 
 
 const RoadmapView = () => {
-  const bookmarks = mainStore((state) => state.bookmarks);
-  // const lists = mainStore((state) => state.lists);
-  // const completedList = lists.filter((list)=>list.isCompleted)
+  const params = useParams()
+  const {userId, token} = authStore()
+  const [roadmap, setRoadmap] = useState<RoadmapDetailType>()
+
+  useEffect(() => {
+    async function fetchData() {
+      axios({
+        method: "get",
+        url: `${API_BASE_URL}/api/roadmap/${params.roadmapId}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params:{
+          viewId:userId, 
+        },
+        })
+          .then((res) => {
+          setRoadmap(res.data);
+          console.log(res)
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+    fetchData();
+  }, []);
+
+  const bookmarkLists  = roadmap?.stepList 
+
+  const checkedList = bookmarkLists?.filter((list:any) => list.check===true);
+
   const isMessageOpen = asideStore((state) => state.isMessageOpen);
   const navigate = useNavigate();
   const isDark = darkModeStore((state) => state.isDark);
 
-  const [count, changeCount] = useState(checkedList.length);
+  const [count, changeCount] = useState<any>(checkedList?.length);
 
-  const percentage = ((count * 100) / bookmarkLists.length).toFixed(1);
+  // const percentage = ((count * 100) / roadmap?.stepList.length).toFixed(1);
+
 
   const BackButton = (): any => {
     return (
-      <button className="me-5  " onClick={() => navigate(`/user/${roadmap.userId}/roadmap/`)}>
+      <button className="me-5  " onClick={() => navigate(`/user/${roadmap?.userId}/roadmap/`)}>
         <IoIosArrowBack size="40px" />{" "}
       </button>
     );
@@ -191,7 +114,7 @@ const RoadmapView = () => {
           <div>
             <BackButton />
           </div>
-          <div
+          {/* <div
             className={
               (!isDark
                 ? percentage === "100.0"
@@ -203,11 +126,11 @@ const RoadmapView = () => {
             }
           >
             {`${percentage}` + "%"}
-          </div>
+          </div> */}
           {/* 퍼센트 계산 방법이.... 전체 필터걸어서 isCompleted된거 구하는거긴한데... */}
         </div>
        
-        {roadmap.stepList.map((list) => (
+        {roadmap?.stepList.map((list:any) => (
           <ListItem list={list} changeCount={changeCount} />
         ))}
     

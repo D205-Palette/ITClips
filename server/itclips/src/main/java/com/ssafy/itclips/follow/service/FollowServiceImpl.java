@@ -1,5 +1,7 @@
 package com.ssafy.itclips.follow.service;
 
+import com.ssafy.itclips.alarm.entity.NotificationType;
+import com.ssafy.itclips.alarm.service.NotificationService;
 import com.ssafy.itclips.error.CustomException;
 import com.ssafy.itclips.error.ErrorCode;
 import com.ssafy.itclips.follow.dto.FollowDetailDTO;
@@ -25,6 +27,7 @@ public class FollowServiceImpl implements FollowService {
     private final UserService userService;
     private final FollowRepository followRepository;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
     @Transactional
     @Override
@@ -46,7 +49,12 @@ public class FollowServiceImpl implements FollowService {
         follow.setFrom(fromUser);
         follow.setTo(toUser);
 
-        return followRepository.save(follow);
+        Follow savedFollw = followRepository.save(follow);
+
+        //알림 전송
+        notificationService.sendNotification(fromUserId, toUserId, fromUserId, fromUser.getNickname(), NotificationType.FOLLOW);
+
+        return savedFollw;
     }
 
     @Transactional(readOnly = true)
@@ -74,6 +82,9 @@ public class FollowServiceImpl implements FollowService {
                         userService.getUserById(fromUserId),
                         userService.getUserById(toUserId))
                 .orElseThrow(() -> new CustomException(ErrorCode.UNFOLLOW_NOT_FOUND));
+
+        // 알림 전송 삭제
+        notificationService.deleteNotification(fromUserId, toUserId, fromUserId , NotificationType.FOLLOW);
 
         followRepository.delete(follow);
     }

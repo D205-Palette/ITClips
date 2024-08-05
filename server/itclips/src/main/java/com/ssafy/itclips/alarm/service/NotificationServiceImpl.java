@@ -115,28 +115,14 @@ public class NotificationServiceImpl implements NotificationService{
             case LIST_COMMENT:
                 content = nickName+"님이 회원님의 북마크리스트에 댓글을 남겼습니다.";
                 break;
+            case FOLLOW:
+                content = nickName+"님이 회원님을 팔로우했습니다.";
+                break;
         }
 
         send(senderId, receiverId, type, content, roadmapId);
 
     }
-
-
-    // 북마크 좋아요 알림
-
-
-
-    // 북마크 스크랩 알림
-
-
-
-    // 북마크 댓글
-
-
-    // 팔로움 알림
-
-
-    // 팔로우 취소
 
 
     @Transactional

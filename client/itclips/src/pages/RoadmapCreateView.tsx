@@ -163,7 +163,10 @@ const RoadmapCreateView: React.FC = () => {
   };
 
   // 로드맵 생성 버튼 클릭
-  const handleCreateRoadmap = (values: { title: string; description: string }) => {
+  const handleCreateRoadmap = async (values: {
+    title: string;
+    description: string;
+  }) => {
     const roadmapData = {
       title: values.title,
       description: values.description,
@@ -172,9 +175,15 @@ const RoadmapCreateView: React.FC = () => {
       stepList: roadmap.map((item) => Number(item.originalId)),
       imageToS3FileName: "string",
     };
-
-    console.log("보낼 데이터:", roadmapData);
-    // 여기서 로드맵 생성 API 호출을 추가할 수 있습니다.
+    try {
+    const roadmapCreateResponse = await axios.post(`${API_BASE_URL}/api/roadmap/${userId}`, roadmapData, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    console.log(roadmapCreateResponse.data); // 일단 생성 잘됨
+  } catch (error) {
+    console.error(error); }
+    
+    
   };
 
   // 초기 값과 validation schema
@@ -192,14 +201,14 @@ const RoadmapCreateView: React.FC = () => {
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="aside xl:col-start-3 xl:col-span-3 flex flex-col w-full">
           {/* 왼쪽 탭 */}
-          <div className="flex justify-center space-x-10 mb-4 font-bold">
+          <div className="flex justify-center space-x-5 mb-4 font-bold text-xs">
             <button
               onClick={() => handleTabChange("bookmarks")}
               className={`tab-button ${
                 activeTab === "bookmarks" ? `${activeButton}` : ""
               }`}
             >
-              <div className="flex gap-2 items-center">
+              <div className="flex gap-1 items-center">
                 <FaRegBookmark />
                 <span>북마크리스트</span>
               </div>
@@ -378,7 +387,6 @@ const RoadmapCreateView: React.FC = () => {
                       component="div"
                       className="text-red-500"
                     />
-
                   </div>
                 </div>
 
@@ -428,7 +436,9 @@ const RoadmapCreateView: React.FC = () => {
                                     <h4 className="text-lg font-bold">
                                       {item.title}
                                     </h4>
-                                    <p className="line-clamp-1">{item.description}</p>
+                                    <p className="line-clamp-1">
+                                      {item.description}
+                                    </p>
                                   </div>
                                   <div className="flex w-40 gap-1 overflow-hidden whitespace-nowrap">
                                     {/* <div className="flex-grow overflow-hidden text-ellipsis">

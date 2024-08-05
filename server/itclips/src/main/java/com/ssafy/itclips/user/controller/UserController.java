@@ -3,7 +3,6 @@ package com.ssafy.itclips.user.controller;
 import com.ssafy.itclips.follow.service.FollowService;
 import com.ssafy.itclips.global.jwt.JwtToken;
 import com.ssafy.itclips.global.jwt.JwtTokenProvider;
-import com.ssafy.itclips.tag.dto.TagDTO;
 import com.ssafy.itclips.tag.dto.UserTagDTO;
 import com.ssafy.itclips.tag.repository.TagRepository;
 import com.ssafy.itclips.tag.repository.UserTagRepository;
@@ -11,6 +10,7 @@ import com.ssafy.itclips.user.dto.UserInfoDTO;
 import com.ssafy.itclips.user.dto.UserInfoDetailDTO;
 import com.ssafy.itclips.user.entity.*;
 import com.ssafy.itclips.user.repository.UserRepository;
+import com.ssafy.itclips.user.service.AuthenticatedUser;
 import com.ssafy.itclips.user.service.MailService;
 import com.ssafy.itclips.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,14 +44,17 @@ import java.util.stream.Collectors;
 public class UserController {
 
     private final UserService userService;
+    private final FollowService followService;
+    private final MailService mailService;
+
     private final UserRepository userRepository;
     private final TagRepository tagRepository;
     private final UserTagRepository userTagRepository;
+
     private final JwtTokenProvider tokenProvider;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final AuthenticatedUser authenticatedUser;
 
-    private final FollowService followService;
-    private final MailService mailService;
     private final ConcurrentHashMap<String, String> verificationCodes = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, String> passwordResetCodes = new ConcurrentHashMap<>();
 
@@ -156,36 +159,53 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 정보 조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
-            @ApiResponse(responseCode = "404", description = "회원 정보 없음", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+            @ApiResponse(responseCode = "404", description = "회원 정보 없음", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
     })
     public ResponseEntity<?> getProfile(@PathVariable("userId") Long userId) {
-        if (!isAuthenticated()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(UNAUTHORIZED_MESSAGE);
+        // 현재 인증된 사용자 정보 가져오기
+        User currentUser = authenticatedUser.getCurrentAuthenticatedUser();
+        if (currentUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: Please log in.");
         }
 
-        User user = userService.getUserById(userId);
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(USER_NOT_FOUND_MESSAGE);
+        // 요청된 사용자 정보 가져오기
+        User targetUser = userService.getUserById(userId);
+        if (targetUser == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
         }
 
-        long followerCount = followService.getFollowerCount(user);
-        long followingCount = followService.getFollowingCount(user);
 
-        UserInfoDetailDTO userInfoDTO = UserInfoDetailDTO.builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .nickname(user.getNickname())
-                .birth(user.getBirth())
-                .job(user.getJob())
-                .gender(user.getGender())
-                .bio(user.getBio())
-                .bookmarkListCount(user.getBookmarkLists().size())
-                .roadmapCount(user.getRoadmapList().size())
+        long followerCount = followService.getFollowerCount(targetUser);
+        long followingCount = followService.getFollowingCount(targetUser);
+
+        // 요청된 사용자와 현재 인증된 사용자 비교
+        UserInfoDetailDTO.UserInfoDetailDTOBuilder userInfoDTOBuilder = UserInfoDetailDTO.builder()
+                .id(targetUser.getId())
+                .email(targetUser.getEmail())
+                .nickname(targetUser.getNickname())
+                .birth(targetUser.getBirth())
+                .job(targetUser.getJob())
+                .gender(targetUser.getGender())
+                .bio(targetUser.getBio())
+                .bookmarkListCount(targetUser.getBookmarkLists().size())
+                .roadmapCount(targetUser.getRoadmapList().size())
                 .followerCount(followerCount)
-                .followingCount(followingCount)
-                .build();
+                .followingCount(followingCount);
 
-        return ResponseEntity.ok(userInfoDTO);
+        if (userId.equals(currentUser.getId())) {   // 본인 정보일 경우
+            return ResponseEntity.ok(userInfoDTOBuilder.build());
+        } else {    // 다른 사용자 정보일 경우
+            boolean isFollowing = followService.isFollowing(currentUser, targetUser);
+            boolean isFollowers = followService.isFollowedBy(targetUser, currentUser);
+
+            UserInfoDetailDTO userInfoDTO = userInfoDTOBuilder
+                    .isFollowing(isFollowing)
+                    .isFollowers(isFollowers)
+                    .build();
+
+            return ResponseEntity.ok(userInfoDTO);
+        }
     }
 
     @PutMapping("/{userId}/profile")

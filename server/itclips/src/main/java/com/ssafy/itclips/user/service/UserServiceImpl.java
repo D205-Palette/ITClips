@@ -171,6 +171,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Long getUserIdByNickname(String nickname) {
+        User user = getUserByNickname(nickname);
+        return user != null ? user.getId() : null;
+    }
+
+
+    @Override
     public User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."));

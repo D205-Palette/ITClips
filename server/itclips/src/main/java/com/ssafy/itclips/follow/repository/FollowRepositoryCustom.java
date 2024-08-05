@@ -21,4 +21,6 @@ public interface FollowRepositoryCustom {
     List<Follow> findByFromId(Long userId);
 
     List<Follow> findByToId(Long userId);
+
+    boolean existsByFromUserAndToUser(User fromUser, User toUser);
 }

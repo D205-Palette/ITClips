@@ -11,7 +11,7 @@ import { IoCloseOutline } from "react-icons/io5";
 interface EditModalProps {
   isOpen: boolean;
   onClose: () => void;
-  id:number
+  id: number;
 }
 
 const BookmarkListEditModal: React.FC<EditModalProps> = ({
@@ -19,7 +19,6 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
   onClose,
   id,
 }) => {
-
   useEffect(() => {
     async function fetchData() {
       axios({
@@ -28,17 +27,17 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        params:{
-          userId:userId, 
+        params: {
+          userId: userId,
         },
-        })
-          .then((res) => {
-            setTempTitle(res.data.title);
-            setTempDescription(res.data.description)
-            setTempTags(res.data.tags)
-            setTempCategories(res.data.categories)
-            setTempImage(res.data.image)
-            // 이미지 없다
+      })
+        .then((res) => {
+          setTempTitle(res.data.title);
+          setTempDescription(res.data.description);
+          setTempTags(res.data.tags);
+          setTempCategories(res.data.categories);
+          setTempImage(res.data.image);
+          // 이미지 없다
         })
         .catch((err) => {
           console.error(err);
@@ -49,18 +48,18 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
 
   const [tempTitle, setTempTitle] = useState<string>("");
   const [tempDescription, setTempDescription] = useState<string>("");
-  const [tempTag, setTempTag] = useState("")
-  const [tempTags, setTempTags] = useState<{title:string}[]>([]);
+  const [tempTag, setTempTag] = useState("");
+  const [tempTags, setTempTags] = useState<{ title: string }[]>([]);
   const [tempCategories, setTempCategories] = useState<string[]>([]);
-  const [tempImage, setTempImage] = useState("")
+  const [tempImage, setTempImage] = useState("");
   // user 설정이랑 이미지 해ㅇ줘야하나?
-  const [isPublic, setIsPublic] = useState(false)
-  const [imageToS3FileName, setImageToS3FileName] = useState("")
+  const [isPublic, setIsPublic] = useState(false);
+  const [imageToS3FileName, setImageToS3FileName] = useState("");
   const { userId, token } = authStore();
 
   const handleAddTag = () => {
     if (tempTag.trim() !== "") {
-      setTempTags([...tempTags, {title:tempTag.trim()}]);
+      setTempTags([...tempTags, { title: tempTag.trim() }]);
       setTempTag("");
     }
   };
@@ -69,32 +68,52 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
     setTempTags(tempTags.filter((tag) => tag.title !== inputText));
   };
 
-  const endCreate = () => {
-    axios({
-      method: "post",
-      url: `${API_BASE_URL}/api/list/add/${userId}`,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      data: {
-        title: tempTitle,
-        description: tempDescription,
-        image: "string",
-        isPublic: isPublic,
-        categories: tempCategories,
-        users: [],
-        tags: tempTags,
-        imageToS3FileName: imageToS3FileName,
-      },
-    })
-      .then((res) => {
-        onClose()
+  const endEdit = () => {
+    axios
+      .put(`${API_BASE_URL}/api/list/update/${userId}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: {
+          title: tempTitle,
+          description: tempDescription,
+          isPublic: isPublic,
+          categories: tempCategories,
+          users: [],
+          tags: tempTags,
+          imageToS3FileName: 'imageToS3FileName',
+        },
       })
-      .catch((err) => {
-        console.error(err);
+      .then((res) => {
+        onClose();
       });
-
   };
+
+  //   axios({
+  //     method: "put",
+  //     url: `${API_BASE_URL}/api/list/update/${userId}/${id}`,
+  //     headers: {
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //     data: {
+  //       title: tempTitle,
+  //       description: tempDescription,
+  //       image: "string",
+  //       isPublic: isPublic,
+  //       categories: tempCategories,
+  //       users: [],
+  //       tags: tempTags,
+  //       imageToS3FileName: imageToS3FileName,
+  //     },
+  //   })
+  //     .then((res) => {
+  //       onClose()
+  //     })
+  //     .catch((err) => {
+  //       console.error(err);
+  //     });
+
+  // };
 
   if (!isOpen) return null;
 
@@ -102,7 +121,7 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white rounded-lg p-6 w-96">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">북마크 리스트 생성</h2>
+          <h2 className="text-xl font-bold">북마크 리스트 수정</h2>
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700"
@@ -196,8 +215,8 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
           </div>
         </div>
 
-        <button className="btn btn-primary w-full" onClick={() => endCreate()}>
-          생성
+        <button className="btn btn-primary w-full" onClick={() => endEdit()}>
+          수정
         </button>
       </div>
     </div>

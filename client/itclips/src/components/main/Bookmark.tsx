@@ -115,7 +115,6 @@ const Bookmark: FC<Props> = ({
         title:tempTitle,
         tags:tempTags,
         content:bookmark.content,
-      
     });
   }
   

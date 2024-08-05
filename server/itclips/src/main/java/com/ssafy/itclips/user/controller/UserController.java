@@ -154,7 +154,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/{userId}/profile")
+    @GetMapping("/{userId}/profile/{targetId}")
     @Operation(summary = "회원 정보 조회", description = "사용자의 프로필 정보를 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 정보 조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
@@ -162,24 +162,27 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "회원 정보 없음", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "서버 오류", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
     })
-    public ResponseEntity<?> getProfile(@PathVariable("userId") Long userId) {
-        // 현재 인증된 사용자 정보 가져오기
-        User currentUser = authenticatedUser.getCurrentAuthenticatedUser();
+    public ResponseEntity<?> getProfile(@PathVariable("userId") Long userId, @PathVariable("targetId") Long targetId) {
+//        // 현재 인증된 사용자 정보 가져오기
+//        User currentUser = authenticatedUser.getCurrentAuthenticatedUser();
+//        if (currentUser == null) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: Please log in.");
+//        }
+
+        // 본인 불러오기
+        User currentUser = userService.getUserById(userId);
         if (currentUser == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: Please log in.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Current user not found.");
         }
-
-        // 요청된 사용자 정보 가져오기
-        User targetUser = userService.getUserById(userId);
+        // 타깃 불러오기
+        User targetUser = userService.getUserById(targetId);
         if (targetUser == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Target user not found.");
         }
-
 
         long followerCount = followService.getFollowerCount(targetUser);
         long followingCount = followService.getFollowingCount(targetUser);
 
-        // 요청된 사용자와 현재 인증된 사용자 비교
         UserInfoDetailDTO.UserInfoDetailDTOBuilder userInfoDTOBuilder = UserInfoDetailDTO.builder()
                 .id(targetUser.getId())
                 .email(targetUser.getEmail())
@@ -193,7 +196,7 @@ public class UserController {
                 .followerCount(followerCount)
                 .followingCount(followingCount);
 
-        if (userId.equals(currentUser.getId())) {   // 본인 정보일 경우
+        if (userId.equals(targetId)) {   // 본인 정보일 경우
             return ResponseEntity.ok(userInfoDTOBuilder.build());
         } else {    // 다른 사용자 정보일 경우
             boolean isFollowing = followService.isFollowing(currentUser, targetUser);

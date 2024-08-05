@@ -1,6 +1,7 @@
 package com.ssafy.itclips.roadmap.controller;
 
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
+import com.ssafy.itclips.alarm.service.NotificationService;
 import com.ssafy.itclips.global.file.DataResponseDto;
 import com.ssafy.itclips.global.rank.RankDTO;
 import com.ssafy.itclips.roadmap.dto.RoadmapCommentRequestDTO;
@@ -31,6 +32,7 @@ import java.util.List;
 public class RoadmapController {
 
     private final RoadmapService roadmapService;
+    private final NotificationService notificationService;
 
     // 모든 로드맵 보기
     @GetMapping("/list")
@@ -179,16 +181,5 @@ public class RoadmapController {
     public ResponseEntity<?> scrapRoadmapRank(){
         List<RankDTO> lists = roadmapService.getListsRankingByScrap();
         return new ResponseEntity<>(lists, HttpStatus.OK);
-    }
-
-    @GetMapping("/search/{page}/{searchType}/{title}")
-    @Operation(summary = "로드맵 검색", description = "로드맵 검색 수행")
-    public ResponseEntity<?> searchRoadMap(@PathVariable Integer page,
-                                        @PathVariable String searchType,
-                                        @PathVariable String title,
-                                        @RequestParam Long userId) {
-        List<RoadmapInfoDTO> lists = roadmapService.searchRoadMaps(page,searchType,userId,title);
-
-        return new ResponseEntity<>(lists,HttpStatus.OK);
     }
 }

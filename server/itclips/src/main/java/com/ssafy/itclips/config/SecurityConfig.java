@@ -105,6 +105,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/group/**").permitAll()
                         .requestMatchers("/api/pub/**").permitAll()
                         .requestMatchers("/api/sub/**").permitAll()
+                        .requestMatchers("/api/notify/**").permitAll()
+                        .requestMatchers("/api/comment/**").permitAll()
                         .anyRequest().authenticated()
                 )
 

@@ -70,11 +70,11 @@ const AsideRoadmap :  React.FC<Props> = (roadmap) => {
       {/* 북마크리스트 썸네일 */}
       <ImageContainer />
       {/* 북마크리스트 정보 */}
-      <ItemDetailInfo {...roadmapInfo} />
+      {/* <ItemDetailInfo {...roadmapInfo} /> */}
       {/* 좋아요, 즐겨찾기 칸 */}
-      <LikesFavoritesCount {...roadmapInfo} />
+      {/* <LikesFavoritesCount {...roadmapInfo} /> */}
       {/* 태그 창 */}
-      <Tags {...roadmapInfo} />
+      {/* <Tags {...roadmapInfo} /> */}
       {/* 댓글 창 */}
       <CommentsContainer {...roadmapInfo} />
     </div>

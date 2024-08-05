@@ -7,7 +7,7 @@ import { asideStore } from "../stores/asideStore";
 import MessageLayout from "../components/aside/MessageLayout";
 import mainTabStore from "../stores/mainTabStore";
 import { FaEdit } from "react-icons/fa";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
 import BookmarkEdit from "../components/main/Bookmark(Edit)";
@@ -16,12 +16,20 @@ import axios from "axios";
 import AddBookmarkModal from "../components/aside/modals/AddBookmarkListModal";
 import type { BookmarkType } from "../types/BookmarkType";
 import type { CategoryType } from "../types/BookmarkListType";
+import type { BookmarkListDetailType } from "../types/BookmarkListType";
 import { useParams } from "react-router-dom";
-
-/// params.bookmarklist_id로 axios 호출해서 리스트 상세정보 받아오기. 거기서 북마크들만
+import { API_BASE_URL } from "../config";
+import { authStore } from "../stores/authStore";
+/// params.bookmarklistId로 axios 호출해서 리스트 상세정보 받아오기. 거기서 북마크들만
 
 const MyBookmark = () => {
   const params = useParams();
+
+  const tempListId = params.bookmarklistId;
+  let listId = 0;
+  if (tempListId) {
+    listId = parseInt(tempListId);
+  }
 
   const isMessageOpen = asideStore((state) => state.isMessageOpen);
   const whatCategory = mainTabStore((state) => state.whatCategory);
@@ -33,83 +41,41 @@ const MyBookmark = () => {
 
   const [isEditModal, tabEditModal] = useState(false);
   const [isAddModal, tabAddModal] = useState(false);
+  const { userId, token } = authStore();
 
-  // 임시 북마크들
-  const bookmarks: BookmarkType[] = [
-    {
-      id: 1,
-      category: "카테고리1",
-      title: "네이버",
-      url: "www.naver.com",
-      tags: [
-        {
-          title: "FE",
+  const [tempCategories, setTempCategories] = useState<CategoryType[]>([]);
+  const [bookmarkList, setBookmarkList] = useState<BookmarkListDetailType>();
+
+  useEffect(() => {
+    async function fetchData() {
+      axios({
+        method: "get",
+        url: `${API_BASE_URL}/api/list/${tempListId}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-        {
-          title: "JAVA",
+        params: {
+          userId: userId,
         },
-      ],
-      content: "내용",
-      isLiked: false,
-      likeCount: 3,
-    },
-    {
-      id: 2,
-      category: "카테고리2",
-      title: "구글",
-      url: "www.google.com",
-      tags: [
-        {
-          title: "BE",
-        },
-        {
-          title: "JAVA",
-        },
-      ],
-      content: "북마크에 관한 설명",
-      isLiked: true,
-      likeCount: 16,
-    },
-    {
-      id: 3,
-      category: "카테고리3",
-      title: "유튜브",
-      url: "www.youtube.com",
-      tags: [
-        {
-          title: "FE",
-        },
-        {
-          title: "JAVA",
-        },
-      ],
-      content: "내용",
-      isLiked: false,
-      likeCount: 10,
-    },
-  ];
+      })
+        .then((res) => {
+          console.log(res);
+          setBookmarkList(res.data);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+    fetchData();
+  }, []);
 
   //보여줄 필터링 된 북마크들
   const filteredBookmarks =
-    whatCategory === ""
-      ? bookmarks
-      : bookmarks.filter((bookmark) => bookmark.category === whatCategory);
-
-  // 임시 카테고리들
-  const categories: CategoryType[] = [
-    {
-      categoryId: 1,
-      categoryName: "카테고리1",
-    },
-    {
-      categoryId: 2,
-      categoryName: "카테고리2",
-    },
-    {
-      categoryId: 3,
-      categoryName: "카테고리3",
-    },
-  ];
+    whatCategory.categoryName === ""
+      ? bookmarkList?.bookmarks
+      : bookmarkList?.bookmarks.filter(
+          (bookmark) => bookmark.category === whatCategory.categoryName
+        );
 
   return (
     <>
@@ -124,10 +90,12 @@ const MyBookmark = () => {
             <div className="fixed">{isMessageOpen && <MessageLayout />}</div>
           </div>
           <div className="fixed">
-            <AsideBookmarkList />
+            {bookmarkList ? (
+              <AsideBookmarkList bookmarkList={bookmarkList} />
+            ) : (
+              <></>
+            )}
           </div>
-          {/* 여기에 listId prop으로 내려줘야되나?? */}
-          <AsideBookmarkList />
         </div>
 
         {/* main자리 */}
@@ -152,29 +120,35 @@ const MyBookmark = () => {
                 이동 | {editBookmarksIndex.length}
               </button>
             </div>
-          ) : (
-            <CategoryTab categories={categories} />
+          ) : (bookmarkList ? 
+            <CategoryTab categories={bookmarkList.categories} listId={bookmarkList.id} />
+           : 
+            <></>
           )}
 
           {/* 북마크들 */}
-          {filteredBookmarks.map((bookmark) =>
-            editMode ? (
-              <BookmarkEdit
-                bookmark={bookmark}
-                editBookmarks={editBookmarks}
-                changeEditBookmarks={changeEditBookmarks}
-                editBookmarksIndex={editBookmarksIndex}
-                changeEditBookmarksIndex={changeEditBookmarksIndex}
-              />
-            ) : (
-              <Bookmark
-                bookmark={bookmark}
-                editBookmarks={editBookmarks}
-                changeEditBookmarks={changeEditBookmarks}
-                editBookmarksIndex={editBookmarksIndex}
-                changeEditBookmarksIndex={changeEditBookmarksIndex}
-              />
+          {filteredBookmarks ? (
+            filteredBookmarks.map((bookmark) =>
+              editMode ? (
+                <BookmarkEdit
+                  bookmark={bookmark}
+                  editBookmarks={editBookmarks}
+                  changeEditBookmarks={changeEditBookmarks}
+                  editBookmarksIndex={editBookmarksIndex}
+                  changeEditBookmarksIndex={changeEditBookmarksIndex}
+                />
+              ) : (
+                <Bookmark
+                  bookmark={bookmark}
+                  editBookmarks={editBookmarks}
+                  changeEditBookmarks={changeEditBookmarks}
+                  editBookmarksIndex={editBookmarksIndex}
+                  changeEditBookmarksIndex={changeEditBookmarksIndex}
+                />
+              )
             )
+          ) : (
+            <></>
           )}
 
           {/* 에디터 모드 전환 버튼 */}
@@ -183,7 +157,11 @@ const MyBookmark = () => {
               <div className="flex flex-col ">
                 <FaPlus
                   size={50}
-                  onClick={() => tabAddModal(true)}
+                  onClick={() =>
+                    whatCategory.categoryName === ""
+                      ? window.alert("카테고리를 선택해주세요")
+                      : tabAddModal(true)
+                  }
                   className="hover:cursor-pointer hover:text-sky-600 text-sky-400"
                 />{" "}
                 <IoClose
@@ -221,6 +199,7 @@ const MyBookmark = () => {
           moveBookmarks={editBookmarksIndex}
           tabModal={tabAddModal}
           toggleMode={toggleMode}
+          listId={listId}
         />
       )}
     </>

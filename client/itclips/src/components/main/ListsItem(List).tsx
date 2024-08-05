@@ -52,7 +52,7 @@ const ListItem: FC<Props> = ({ list }) => {
       >
         <>
           <figure
-            onClick={() => navigate("/bookmarklist/:bookmarklist_id")}
+            onClick={() => navigate(`/bookmarklist/${list.id}`)}
             className="hover:cursor-pointer w-1/6"
           >
             <img
@@ -64,7 +64,7 @@ const ListItem: FC<Props> = ({ list }) => {
 
           <div className="card-body flex flex-row w-5/6">
             <div className="flex flex-col flex-auto justify-around w-8/12">
-              <div onClick={() => navigate("/bookmarklist/:bookmarklist_id")}>
+              <div onClick={() => navigate(`/bookmarklist/${list.id}`)}>
                 {" "}
                 <h4 className="flex-auto card-title hover:cursor-pointer">
                   {list.title}

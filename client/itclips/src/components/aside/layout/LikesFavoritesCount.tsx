@@ -2,7 +2,7 @@
 
 // icons
 import { FaRegHeart, FaRegStar } from "react-icons/fa";
-
+import type { BookmarkListDetailType } from "../../../types/BookmarkListType";
 interface Comment {
   id: number;
   username: string;
@@ -24,7 +24,7 @@ interface Item {
   comments: Comment[];
 }
 
-const LikesFavoritesCount = (data: Item) => {
+const LikesFavoritesCount = (data: BookmarkListDetailType) => {
 
   return (
     <div className="grid grid-cols-6">
@@ -33,7 +33,7 @@ const LikesFavoritesCount = (data: Item) => {
           <FaRegHeart />
         </div>
         <div>
-          <span>{data.like}</span>
+          <span>{data.likeCount}</span>
         </div>
       </div>
       <div className="col-start-5 flex">
@@ -41,7 +41,7 @@ const LikesFavoritesCount = (data: Item) => {
           <FaRegStar />
         </div>
         <div>
-          <span>{data.fav}</span>
+          <span>{data.scrapCount}</span>
         </div>
       </div>
     </div>

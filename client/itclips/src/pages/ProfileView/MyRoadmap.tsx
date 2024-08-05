@@ -8,20 +8,24 @@ import { FaPlus } from "react-icons/fa6";
 import axios from "axios";
 import { API_BASE_URL } from "../../config";
 import { authStore } from "../../stores/authStore";
+import { useParams } from "react-router-dom";
 
 const MyRoadmap: FC = () => {
   const {userId, token} = authStore()
   const [roadmaps, setRoadmaps] = useState<RoadmapSumType[]>([])
-
+  const params = useParams()
   // 로드맵 요약 불러오기
   useEffect(() => {
 		async function fetchData() {
       axios({
         method: 'get',
-        url: `${API_BASE_URL}/api/roadmap/list/${userId}`,
+        url: `${API_BASE_URL}/api/roadmap/list/${params.userId}`,
         headers: {
           Authorization: `Bearer ${token}`
-        }
+        },
+        params:{
+          viewId:userId, 
+        },
       })
       .then((res) => {
         setRoadmaps(res.data)

@@ -1,6 +1,7 @@
 package com.ssafy.itclips.user.controller;
 
 import com.ssafy.itclips.follow.service.FollowService;
+import com.ssafy.itclips.global.file.FileService;
 import com.ssafy.itclips.global.jwt.JwtToken;
 import com.ssafy.itclips.global.jwt.JwtTokenProvider;
 import com.ssafy.itclips.tag.dto.UserTagDTO;
@@ -46,6 +47,7 @@ public class UserController {
     private final UserService userService;
     private final FollowService followService;
     private final MailService mailService;
+    private final FileService fileService;
 
     private final UserRepository userRepository;
     private final TagRepository tagRepository;
@@ -154,7 +156,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/{userId}/profile/{targetId}")
+    @GetMapping("/profile/{userId}/{viewerId}")
     @Operation(summary = "회원 정보 조회", description = "사용자의 프로필 정보를 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 정보 조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
@@ -162,7 +164,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "회원 정보 없음", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "서버 오류", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
     })
-    public ResponseEntity<?> getProfile(@PathVariable("userId") Long userId, @PathVariable("targetId") Long targetId) {
+    public ResponseEntity<?> getProfile(@PathVariable("userId") Long userId, @PathVariable("viewerId") Long viewerId) {
 //        // 현재 인증된 사용자 정보 가져오기
 //        User currentUser = authenticatedUser.getCurrentAuthenticatedUser();
 //        if (currentUser == null) {
@@ -170,12 +172,12 @@ public class UserController {
 //        }
 
         // 본인 불러오기
-        User currentUser = userService.getUserById(userId);
+        User currentUser = userService.getUserById(viewerId);
         if (currentUser == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Current user not found.");
         }
         // 타깃 불러오기
-        User targetUser = userService.getUserById(targetId);
+        User targetUser = userService.getUserById(userId);
         if (targetUser == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Target user not found.");
         }
@@ -183,32 +185,28 @@ public class UserController {
         long followerCount = followService.getFollowerCount(targetUser);
         long followingCount = followService.getFollowingCount(targetUser);
 
-        UserInfoDetailDTO.UserInfoDetailDTOBuilder userInfoDTOBuilder = UserInfoDetailDTO.builder()
-                .id(targetUser.getId())
-                .email(targetUser.getEmail())
-                .nickname(targetUser.getNickname())
-                .birth(targetUser.getBirth())
-                .job(targetUser.getJob())
-                .gender(targetUser.getGender())
-                .bio(targetUser.getBio())
-                .bookmarkListCount(targetUser.getBookmarkLists().size())
-                .roadmapCount(targetUser.getRoadmapList().size())
-                .followerCount(followerCount)
-                .followingCount(followingCount);
+        String imageUrl = getImageUrl(targetUser);
 
-        if (userId.equals(targetId)) {   // 본인 정보일 경우
-            return ResponseEntity.ok(userInfoDTOBuilder.build());
+        UserInfoDetailDTO userInfo = targetUser.convertToUserInfoDetailDTO(followingCount, followerCount,imageUrl);
+
+        if (userId.equals(viewerId)) {   // 본인 정보일 경우
+            return ResponseEntity.ok(userInfo);
         } else {    // 다른 사용자 정보일 경우
             boolean isFollowing = followService.isFollowing(currentUser, targetUser);
             boolean isFollowers = followService.isFollowedBy(targetUser, currentUser);
 
-            UserInfoDetailDTO userInfoDTO = userInfoDTOBuilder
-                    .isFollowing(isFollowing)
-                    .isFollowers(isFollowers)
-                    .build();
+            userInfo.setFollowStatus(isFollowing, isFollowers);
 
-            return ResponseEntity.ok(userInfoDTO);
+            return ResponseEntity.ok(userInfo);
         }
+    }
+
+    private String getImageUrl(User targetUser) {
+        String imageUrl = targetUser.getProfileImage();
+        if(imageUrl != null) {
+            imageUrl = fileService.getPresignedUrl("images", targetUser.getProfileImage(), false).get("url");
+        }
+        return imageUrl;
     }
 
     @PutMapping("/{userId}/profile")
@@ -521,6 +519,16 @@ public class UserController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 관심사가 존재하지 않습니다.");
         }
+    }
+
+    @GetMapping("/search/{page}/{title}")
+    @Operation(summary = "유저 검색", description = "유저를 검색합니다")
+    public ResponseEntity<?> searchUsers(@PathVariable Integer page,
+                                         @PathVariable String title,
+                                         @RequestParam Long userId)
+    {
+        List<UserInfoDetailDTO> users = userService.searchUsers(page,title,userId);
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     private String generateTemporaryPassword() {

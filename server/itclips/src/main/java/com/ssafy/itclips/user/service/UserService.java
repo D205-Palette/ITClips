@@ -2,10 +2,12 @@ package com.ssafy.itclips.user.service;
 
 import com.ssafy.itclips.global.jwt.JwtToken;
 import com.ssafy.itclips.user.dto.UserInfoDTO;
+import com.ssafy.itclips.user.dto.UserInfoDetailDTO;
 import com.ssafy.itclips.user.entity.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface UserService {
     User signup(SignupForm signupForm) throws IOException;
@@ -43,4 +45,6 @@ public interface UserService {
     boolean nicknameCheck(String nickname);
 
     void updatePassword(User user, String newPassword);
+
+    List<UserInfoDetailDTO> searchUsers(Integer page, String title, Long userId) throws RuntimeException;
 }

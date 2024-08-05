@@ -12,6 +12,7 @@ import com.ssafy.itclips.comment.entity.BookmarkListComment;
 import com.ssafy.itclips.group.entity.UserGroup;
 import com.ssafy.itclips.roadmap.entity.Roadmap;
 import com.ssafy.itclips.roadmap.entity.RoadmapLike;
+import com.ssafy.itclips.user.dto.UserInfoDetailDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -184,5 +185,22 @@ public class User {
         this.role = role;
         this.darkMode = darkMode;
         this.provider = provider;
+    }
+
+    public UserInfoDetailDTO convertToUserInfoDetailDTO(Long followingCount, Long followerCount, String imageUrl) {
+        return UserInfoDetailDTO.builder()
+                .id(this.id)
+                .email(this.email)
+                .nickname(this.nickname)
+                .image(imageUrl)
+                .birth(this.birth)
+                .job(this.job)
+                .gender(this.gender)
+                .bio(this.bio)
+                .bookmarkListCount(this.bookmarkLists.size())
+                .roadmapCount(this.roadmapList.size())
+                .followerCount(followerCount)
+                .followingCount(followingCount)
+                .build();
     }
 }

@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface UserRepositoryCustom {
     List<User> findByEmails(List<String> emails);
+    List<User> findUserWithNickName(String nickname, Integer pageNo);
 }

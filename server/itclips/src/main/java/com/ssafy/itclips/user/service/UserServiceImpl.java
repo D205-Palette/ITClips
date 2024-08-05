@@ -1,8 +1,13 @@
 package com.ssafy.itclips.user.service;
 
+import com.ssafy.itclips.error.CustomException;
+import com.ssafy.itclips.error.ErrorCode;
+import com.ssafy.itclips.follow.repository.FollowRepository;
+import com.ssafy.itclips.global.file.FileService;
 import com.ssafy.itclips.global.jwt.JwtToken;
 import com.ssafy.itclips.global.jwt.JwtTokenProvider;
 import com.ssafy.itclips.user.dto.UserInfoDTO;
+import com.ssafy.itclips.user.dto.UserInfoDetailDTO;
 import com.ssafy.itclips.user.entity.*;
 import com.ssafy.itclips.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +26,11 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +47,8 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
+    private final FollowRepository followRepository;
+    private final FileService fileService;
 
     @Transactional
     @Override
@@ -245,6 +255,41 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean nicknameCheck(String nickname) {
         return userRepository.existsByNickname(nickname);
+    }
+
+    @Override
+    public List<UserInfoDetailDTO> searchUsers(Integer page, String title, Long userId) throws RuntimeException {
+        User currentUser = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        List<User> users = userRepository.findUserWithNickName(title, page);
+        if (users.isEmpty()) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        return users.stream()
+                .filter(targetUser -> !targetUser.equals(currentUser))
+                .map(targetUser -> convertToUserInfoDetailDTO(targetUser, currentUser))
+                .collect(Collectors.toList());
+    }
+
+    private UserInfoDetailDTO convertToUserInfoDetailDTO(User targetUser, User currentUser) {
+        Long followerCount = followRepository.countByTo(targetUser);
+        Long followingCount = followRepository.countByFrom(targetUser);
+        String imageUrl = getImageUrl(targetUser);
+        UserInfoDetailDTO userInfo = targetUser.convertToUserInfoDetailDTO(followingCount, followerCount,imageUrl);
+        boolean isFollowing = followRepository.existsByFromUserAndToUser(currentUser, targetUser);
+        boolean isFollowers = followRepository.existsByFromUserAndToUser(targetUser, currentUser);
+        userInfo.setFollowStatus(isFollowing, isFollowers);
+        return userInfo;
+    }
+
+    private String getImageUrl(User targetUser) {
+        String imageUrl = targetUser.getProfileImage();
+        if(imageUrl != null) {
+            imageUrl = fileService.getPresignedUrl("images", targetUser.getProfileImage(), false).get("url");
+        }
+        return imageUrl;
     }
 
     // 파일 이름이 중복되지 않도록 고유한 파일 이름 생성

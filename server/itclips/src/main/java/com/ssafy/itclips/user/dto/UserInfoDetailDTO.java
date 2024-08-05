@@ -17,8 +17,8 @@ public class UserInfoDetailDTO {
     private LocalDate birth;
     private String job;
     private Boolean gender;
-    private Boolean darkMode;
     private String bio;
+    private String image;
     private int bookmarkListCount;
     private int roadmapCount;
     private long followerCount;
@@ -26,26 +26,9 @@ public class UserInfoDetailDTO {
     private boolean isFollowing;
     private boolean isFollowers;
 
-//    @Builder
-//    public UserInfoDetailDTO(Long id, String email, String nickname, LocalDate birth, String job, Boolean gender, Boolean darkMode, String bio,
-//                             int bookmarkListCount, int roadmapCount,
-//                             long followerCount, long followingCount) {
-//        this.id = id;
-//        this.email = email;
-//        this.nickname = nickname;
-//        this.birth = birth;
-//        this.job = job;
-//        this.gender = gender;
-//        this.darkMode = darkMode;
-//        this.bio = bio;
-//        this.bookmarkListCount = bookmarkListCount;
-//        this.roadmapCount = roadmapCount;
-//        this.followerCount = followerCount;
-//        this.followingCount = followingCount;
-//    }
 
     @Builder
-    public UserInfoDetailDTO(Long id, String email, String nickname, LocalDate birth, String job, Boolean gender, Boolean darkMode, String bio,
+    public UserInfoDetailDTO(Long id, String email, String nickname, LocalDate birth, String job, Boolean gender, String image, String bio,
                              int bookmarkListCount, int roadmapCount,
                              long followerCount, long followingCount,
                              boolean isFollowing, boolean isFollowers) {
@@ -53,14 +36,19 @@ public class UserInfoDetailDTO {
         this.email = email;
         this.nickname = nickname;
         this.birth = birth;
+        this.image = image;
         this.job = job;
         this.gender = gender;
-        this.darkMode = darkMode;
         this.bio = bio;
         this.bookmarkListCount = bookmarkListCount;
         this.roadmapCount = roadmapCount;
         this.followerCount = followerCount;
         this.followingCount = followingCount;
+        this.isFollowing = isFollowing;
+        this.isFollowers = isFollowers;
+    }
+
+    public void setFollowStatus(Boolean isFollowing, Boolean isFollowers) {
         this.isFollowing = isFollowing;
         this.isFollowers = isFollowers;
     }

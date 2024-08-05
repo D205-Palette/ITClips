@@ -17,10 +17,10 @@ interface Props {
       bookmarkCount: number;
       likeCount: number;
       image: string;
-      tags: string[];
-      users: number[];
-    },
-    check: number;
+      tags: {title:string}[];
+      users: {id:number, nickName:string}[];
+    };
+    check: boolean;
     order: number;
   };
   changeCount: React.Dispatch<React.SetStateAction<number>>;
@@ -38,14 +38,14 @@ const ListItem: FC<Props> = ({ list,changeCount }) => {
   };
   const isDark = darkModeStore((state) => state.isDark);
 
-  function toggleCheck(isCheck:number): void {
+  function toggleCheck(isCheck:boolean): void {
     // 체크박스 눌렀을때 axios로 토글 됐다고 보내기
-    if(isCheck===1){
+    if(isCheck){
       changeCount((state) => state - 1)
-      list.check = 0
+      list.check = false
     } else {
       changeCount((state) => state + 1)
-      list.check = 1
+      list.check = true
     }
     //  여기에 토글하는 api 호출
     //  /roadmap/step/{stepId == list.id}/{userId} 경로로 put 요청
@@ -82,7 +82,7 @@ const ListItem: FC<Props> = ({ list,changeCount }) => {
             <div className="form-control flex flex-row items-center">
               <input
                 type="checkbox"
-                defaultChecked={list.check===1? true : false}
+                defaultChecked={list.check? true : false}
                 onClick={() => toggleCheck(list.check)}
                 className="checkbox checkbox-info  [--chkfg:white]"
               />

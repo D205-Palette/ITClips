@@ -141,7 +141,7 @@ const SocialSignupView = () => {
         window.alert("소셜 회원가입을 완료하였습니다.");
         login(); // 로그인 상태 업데이트
 
-        const userInfoResponse = await checkUserInfo(userId);
+        const userInfoResponse = await checkUserInfo(userId, userId);
         if (userInfoResponse.status === 200) {
           fetchUserInfo(userInfoResponse.data); // 로컬 스토리지에 유저 정보 업데이트
           window.alert(`환영합니다 ${userInfoResponse.data.nickname}님!`);

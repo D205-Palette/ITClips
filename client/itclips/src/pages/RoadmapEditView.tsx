@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import {
   DragDropContext,
   Droppable,
@@ -11,6 +12,7 @@ import axios from "axios";
 import { API_BASE_URL } from "../config";
 import { authStore } from "../stores/authStore";
 import { BookmarkListSumType } from "../types/BookmarkListType";
+import { RoadmapDetailType } from "../types/RoadmapType";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
@@ -21,6 +23,8 @@ interface Item extends BookmarkListSumType {
   originalId?: string; // 원본 아이디를 저장할 수 있는 필드
 }
 
+interface RoadampItem extends RoadmapDetailType {}
+
 // 각 탭의 초기값 (더미데이터는 이제 빈 배열로 초기화)
 const initialItems: { [key: string]: Item[] } = {
   bookmarks: [],
@@ -28,8 +32,8 @@ const initialItems: { [key: string]: Item[] } = {
   favorites: [],
 };
 
-const RoadmapCreateView: React.FC = () => {
-  const navigate = useNavigate();
+const RoadmapEditView: React.FC = () => {
+  const navigate = useNavigate()
   const { userId, token } = authStore();
   const [activeTab, setActiveTab] = useState<string>("bookmarks");
   const [items, setItems] = useState<Item[]>(initialItems[activeTab]);
@@ -38,6 +42,11 @@ const RoadmapCreateView: React.FC = () => {
   const [isPublic, setIsPublic] = useState<boolean>(true);
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const activeButton = "text-sky-500";
+  const [roadmapItem, setRoadmapItem] = useState<RoadampItem | null>(null);
+  const { roadmapId } = useParams<{ roadmapId: string }>();
+
+  // const urlParams = new URLSearchParams(window.location.search);
+  // const roadmapId = urlParams.get("roadmapId");
 
   // API로부터 데이터 불러오기
   const fetchData = async () => {
@@ -57,6 +66,12 @@ const RoadmapCreateView: React.FC = () => {
         `${API_BASE_URL}/api/list/scrap/${userId}?viewerId=${userId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
+      // 기존 로드맵 정보 조회
+      const roadmapResponse = await axios.get(
+        `${API_BASE_URL}/api/roadmap/${roadmapId}?viewId=${userId}`
+      );
+      console.log(roadmapResponse.data);
+      setRoadmapItem(roadmapResponse.data);
 
       // 데이터 가공하여 설정
       const processItems = (data: any[]): Item[] =>
@@ -163,7 +178,7 @@ const RoadmapCreateView: React.FC = () => {
     setRoadmap(updatedRoadmap);
   };
 
-  // 로드맵 생성 버튼 클릭
+  // 로드맵 수정 버튼 클릭
   const handleCreateRoadmap = async (values: {
     title: string;
     description: string;
@@ -177,32 +192,61 @@ const RoadmapCreateView: React.FC = () => {
       imageToS3FileName: "string",
     };
     try {
-      const roadmapCreateResponse = await axios.post(
-        `${API_BASE_URL}/api/roadmap/${userId}`,
+      console.log("수정해야될 로드맵 정보:", roadmapData);
+      const roadmapCreateResponse = await axios.put(
+        `${API_BASE_URL}/api/roadmap/${roadmapId}/${userId}`,
         roadmapData,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
-      );      
-      window.alert("로드맵을 생성하였습니다.");
-      navigate(`/user/${userId}/roadmap`)
+      );
+      window.alert("로드맵을 수정하였습니다.");
+      navigate(`/user/${userId}/roadmap`);
+      console.log(roadmapCreateResponse.data); // 일단 생성 잘됨
     } catch (error) {
-      window.alert("로드맵을 생성을 실패하였습니다.");
       console.error(error);
     }
   };
 
-  // 초기 값과 validation schema
-  const initialValues = { title: "", description: "" };
+  // Formik의 초기 값 설정
+  const initialValues = {
+    title: roadmapItem?.title || "",
+    description: roadmapItem?.description || "",
+  };
+
   const validationSchema = Yup.object({
     title: Yup.string().required("로드맵 제목을 입력해주세요."),
     description: Yup.string().required("로드맵 내용을 입력해주세요."),
   });
 
+  // useEffect를 사용해 불러온 데이터를 상태에 설정
+  useEffect(() => {
+    if (roadmapItem) {
+      setIsPublic(roadmapItem.isPublic === 1);
+      setProfileImage(roadmapItem.image);
+      const processedRoadmap = roadmapItem.stepList.map((item: any, index) => ({
+        id: index,
+        originalId: item.bookmarkListRoadmapDTO.id,
+        title: item.bookmarkListRoadmapDTO.title,
+        description: item.bookmarkListRoadmapDTO.description,
+        bookmarkCount: item.bookmarkListRoadmapDTO.bookmarkCount,
+        likeCount: item.bookmarkListRoadmapDTO.likeCount,
+        image: item.bookmarkListRoadmapDTO.image,
+        isLiked: item.bookmarkListRoadmapDTO.isLiked,
+        tags: item.bookmarkListRoadmapDTO.tags,
+        users: item.bookmarkListRoadmapDTO.users,
+      }));
+      setRoadmap(processedRoadmap);
+
+      console.log(roadmapItem);
+      console.log("로드맵 : ", roadmap);
+    }
+  }, [roadmapItem]);
+
   return (
     <div className="grid grid-cols-12 flex-col justify-center gap-x-6 gap-y-5">
       <h1 className="xl:col-start-3 xl:col-span-3 text-3xl font-bold">
-        로드맵 생성
+        로드맵 수정
       </h1>
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="aside xl:col-start-3 xl:col-span-3 flex flex-col w-full">
@@ -315,14 +359,15 @@ const RoadmapCreateView: React.FC = () => {
           </Droppable>
         </div>
 
-        {/* 로드맵 생성 */}
+        {/* 로드맵 수정 */}
         <div className="main flex flex-col gap-5 xl:col-start-6 xl:col-span-5 w-full">
           <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={handleCreateRoadmap}
+            enableReinitialize // roadmapItem 변경 시 초기값 업데이트
           >
-            {({ handleSubmit }) => (
+            {({ handleSubmit, setFieldValue }) => (
               <Form onSubmit={handleSubmit}>
                 {/* 로드맵 Info 입력 */}
                 <div className="flex justify-center items-center gap-x-6 w-full">
@@ -349,7 +394,17 @@ const RoadmapCreateView: React.FC = () => {
                         <input
                           type="file"
                           accept="image/*"
-                          onChange={handleImageChange}
+                          onChange={(event) => {
+                            const file = event.target.files?.[0];
+                            if (file) {
+                              const reader = new FileReader();
+                              reader.onloadend = () => {
+                                setProfileImage(reader.result as string);
+                                setFieldValue("image", reader.result);
+                              };
+                              reader.readAsDataURL(file);
+                            }
+                          }}
                           className="hidden"
                         />
                       </label>
@@ -431,8 +486,7 @@ const RoadmapCreateView: React.FC = () => {
                                 <div className="me-3 font-bold">
                                   {index + 1}
                                 </div>
-
-                                {item.image?.trim() !== "" ? (
+                                {item.image ? (
                                   <img
                                     src={item.image}
                                     alt="img"
@@ -469,7 +523,7 @@ const RoadmapCreateView: React.FC = () => {
                   )}
                 </Droppable>
                 <button type="submit" className="btn btn-primary btn-outline">
-                  로드맵 생성하기
+                  로드맵 수정하기
                 </button>
               </Form>
             )}
@@ -480,4 +534,4 @@ const RoadmapCreateView: React.FC = () => {
   );
 };
 
-export default RoadmapCreateView;
+export default RoadmapEditView;

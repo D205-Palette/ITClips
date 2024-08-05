@@ -10,36 +10,48 @@ import { FC, useState } from "react";
 import { IoIosClose } from "react-icons/io";
 import mainTabStore from "../../stores/mainTabStore";
 import { FaPlus } from "react-icons/fa6";
-import categoriesStore from "../../stores/categoriesStore";
-
+// import categoriesStore from "../../stores/categoriesStore";
+import axios from "axios";
+import { authStore } from "../../stores/authStore";
+import { API_BASE_URL } from "../../config";
 interface Props {
-  whatCategory: {
+  category: {
     categoryId: number;
     categoryName: string;
-}
-  index: number;
+  };
 }
 
-const CategorySingleTab: FC<Props> = ({ whatCategory, index }) => {
+const CategorySingleTab: FC<Props> = ({ category }) => {
   const version = true;
-
+  const { userId, token } = authStore();
   const isDark = darkModeStore((state) => state.isDark);
   const color = isDark
     ? "bg-slate-900 text-slate-300 border-solid border-slate-100 border-2 p-1"
     : "bg-slate-0 text-slate-900 border-solid border-slate-900 border-2 p-1";
-  const categories = categoriesStore((state) => state.categories);
-  const deleteCategory = categoriesStore((state) => state.deleteCategory);
-  const category = mainTabStore((state) => state.whatCategory);
+  // const categories = categoriesStore((state) => state.categories);
+  // const deleteCategory = categoriesStore((state) => state.deleteCategory);
+  const whatCategory = mainTabStore((state) => state.whatCategory);
   const changeCategory = mainTabStore((state) => state.changeCategory);
 
+  function deleteCategory(): void {
+    axios({
+      method: "delete",
+      url: `${API_BASE_URL}/api/category/delete/${category.categoryId}`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
 
   const DeleteButton = (): any => {
     return (
       <button
-        onClick={() => deleteCategory(whatCategory.categoryName)
-          // 여기에 진짜 카테고리 삭제할 건지 경고창 띄우기
-          // api로 카테고리 삭제ㅋ
-        }
+        onClick={() => deleteCategory()}
         className={isDark ? "text-slate-100" : "text-slate-900 "}
       >
         <IoIosClose size="24px" />
@@ -51,13 +63,15 @@ const CategorySingleTab: FC<Props> = ({ whatCategory, index }) => {
     <>
       <button
         className={
-          (category === whatCategory.categoryName
+          (category.categoryName === whatCategory.categoryName
             ? "bg-sky-500 text-slate-100 border-solid border-sky-500 border-2 p-1"
             : color) + " rounded-2xl mx-2 ps-3"
         }
       >
         <div className="flex flex-row items-center">
-          <div onClick={() => changeCategory(whatCategory.categoryName)}>{whatCategory.categoryName}</div>{" "}
+          <div onClick={() =>{ changeCategory(category); console.log(category); console.log(whatCategory)}}>
+            {category.categoryName}
+          </div>{" "}
           <DeleteButton />
         </div>
       </button>

@@ -106,6 +106,15 @@ public class NotificationServiceImpl implements NotificationService{
             case ROADMAP_COMMENT:
                 content = nickName+"님이 회원님의 로드맵에 댓글을 남겼습니다.";
                 break;
+            case LIST_LIKE:
+                content = nickName+"님이 회원님의 북마크리스트를 좋아합니다.";
+                break;
+            case LIST_SCRAP:
+                content = nickName+"님이 회원님의 북마크리스트를 스크랩했습니다.";
+                break;
+            case LIST_COMMENT:
+                content = nickName+"님이 회원님의 북마크리스트에 댓글을 남겼습니다.";
+                break;
         }
 
         send(senderId, receiverId, type, content, roadmapId);

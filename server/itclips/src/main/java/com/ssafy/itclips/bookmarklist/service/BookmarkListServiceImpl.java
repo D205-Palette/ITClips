@@ -1,5 +1,7 @@
 package com.ssafy.itclips.bookmarklist.service;
 
+import com.ssafy.itclips.alarm.entity.NotificationType;
+import com.ssafy.itclips.alarm.service.NotificationService;
 import com.ssafy.itclips.bookmark.dto.BookmarkDetailDTO;
 import com.ssafy.itclips.bookmark.entity.Bookmark;
 import com.ssafy.itclips.bookmark.repository.BookmarkLikeRepository;
@@ -62,6 +64,8 @@ public class BookmarkListServiceImpl implements BookmarkListService {
 
     private final FollowRepository followRepository;
     private final FeedRepository feedRepository;
+
+    private final NotificationService notificationService;
 
 
     private final static Integer USER_NUM = 1;
@@ -206,6 +210,15 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         BookmarkListLike bookmarkListLike = new BookmarkListLike();
         bookmarkListLike.addUserAndBookmarkList(user,bookmarkList);
         bookmarkListLikeRepository.save(bookmarkListLike);
+
+        Set<UserGroup> groups = bookmarkList.getGroups();
+
+        for (UserGroup group : groups) {
+            Long receiverId = group.getUser().getId();
+            String senderNickname = user.getNickname();
+            //알림 전송
+            notificationService.sendNotification(userId, receiverId,listId,senderNickname, NotificationType.LIST_LIKE);
+        }
     }
 
     @Override
@@ -219,6 +232,14 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         if (existBookmarkListLike == null) {
             throw new CustomException(ErrorCode.LIST_LIKE_NOT_FOUND);
         }
+
+        Set<UserGroup> groups = bookmarkList.getGroups();
+        for (UserGroup group : groups) {
+            Long receiverId = group.getUser().getId();
+            // 알림 삭제
+            notificationService.deleteNotification(userId, receiverId, listId, NotificationType.LIST_LIKE);
+        }
+
         bookmarkListLikeRepository.delete(existBookmarkListLike);
     }
 
@@ -234,6 +255,16 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         BookmarkListScrap bookmarkListScrap = new BookmarkListScrap();
         bookmarkListScrap.addUserAndBookmarkList(user,bookmarkList);
         bookmarkListScrapRepository.save(bookmarkListScrap);
+
+        //알림 전송
+        Set<UserGroup> groups = bookmarkList.getGroups();
+
+        for (UserGroup group : groups) {
+            Long receiverId = group.getUser().getId();
+            String senderNickname = user.getNickname();
+            //알림 전송
+            notificationService.sendNotification(userId, receiverId,listId,senderNickname, NotificationType.LIST_SCRAP);
+        }
     }
 
     @Override
@@ -243,6 +274,17 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         if(existBookmarkListScrap == null) {
             throw new CustomException(ErrorCode.LIST_NOT_SCRAPPED);
         }
+        //스크랩 취소 알림 삭제
+        BookmarkList bookmarkList = bookmarkListRepository.findById(listId)
+                .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND));
+
+        Set<UserGroup> groups = bookmarkList.getGroups();
+        for (UserGroup group : groups) {
+            Long receiverId = group.getUser().getId();
+            // 알림 삭제
+            notificationService.deleteNotification(userId, receiverId, listId, NotificationType.LIST_SCRAP);
+        }
+
         bookmarkListScrapRepository.delete(existBookmarkListScrap);
     }
 

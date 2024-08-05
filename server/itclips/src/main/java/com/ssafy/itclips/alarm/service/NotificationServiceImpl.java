@@ -1,5 +1,6 @@
 package com.ssafy.itclips.alarm.service;
 
+import com.ssafy.itclips.alarm.dto.NotifyReadDTO;
 import com.ssafy.itclips.alarm.entity.Notification;
 import com.ssafy.itclips.alarm.entity.NotificationType;
 import com.ssafy.itclips.alarm.repository.EmitterRepository;
@@ -58,23 +59,48 @@ public class NotificationServiceImpl implements NotificationService{
 
     }
 
+    // 유저 알림 리스트
     @Override
     public List<Notification> findUserList(Long userId) {
         List<Notification> notificationList = notificationRepository.findByUserId(userId);
         return notificationList;
     }
-//    @Override
-//    public List<SseEmitter> findUserList(Long userId) {
-//        Map<String, SseEmitter> emitterMap = emitterRepository.findAllEmitterStartWithByUserId(userId.toString());
-//        List<SseEmitter> emitters = new ArrayList<>();
-//
-//        emitterMap.forEach(
-//                (key, emitter) -> {
-//                    emitters.add(emitter);
-//                }
-//        );
-//        return emitters;
-//    }
+
+    // 읽음 처리
+    @Override
+    public void readAll(NotifyReadDTO notifyReadDTO) {
+        //알림 아이디 목록 받아옴
+        List<Long> ids = notifyReadDTO.getNotificationIds();
+
+        for (Long id : ids) {
+            // 알림 찾아옴
+            Notification notification = notificationRepository.findById(id).orElse(null);
+            if (notification != null) {
+                // 읽음 처리 ㅇ
+                notification.setRead(true);
+            }
+            //저장
+            notificationRepository.save(notification);
+        }
+
+    }
+
+
+    // 좋아요 알림
+    //보내는 사람 id, 받는 사람 id , 타입, 보내는 사람 닉네임
+    @Override
+    public void sendRoadmapLikeNotification(Long senderId, Long receiverId, Long roadmapId, String nickName){
+        String content = nickName+"님이 회원님의 로드맵을 좋아합니다.";
+
+        send(senderId, receiverId, NotificationType.ROADMAP_LIKE, content, roadmapId);
+
+    }
+
+    //좋아요 취소
+    @Override
+    public void deleteRaodmapLikeNotification(Long senderId, Long receiverId, Long roadmapId){
+        notificationRepository.deleteBySenderIdAndUserIdAndTypeId(senderId,receiverId,roadmapId);
+    }
 
 
     @Transactional
@@ -116,19 +142,4 @@ public class NotificationServiceImpl implements NotificationService{
 
     }
 
-    // 좋아요 알림
-    //보내는 사람 id, 받는 사람 id , 타입, 보내는 사람 닉네임
-    @Override
-    public void sendRoadmapLikeNotification(Long senderId, Long receiverId, Long roadmapId, String nickName){
-        String content = nickName+"님이 회원님의 로드맵을 좋아합니다.";
-
-        send(senderId, receiverId, NotificationType.ROADMAP_LIKE, content, roadmapId);
-
-    }
-
-    //좋아요 취소
-    @Override
-    public void deleteRaodmapLikeNotification(Long senderId, Long receiverId, Long roadmapId){
-        notificationRepository.deleteBySenderIdAndUserIdAndTypeId(senderId,receiverId,roadmapId);
-    }
 }

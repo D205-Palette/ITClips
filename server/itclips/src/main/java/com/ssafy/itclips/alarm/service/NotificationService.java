@@ -1,5 +1,6 @@
 package com.ssafy.itclips.alarm.service;
 
+import com.ssafy.itclips.alarm.dto.NotifyReadDTO;
 import com.ssafy.itclips.alarm.entity.Notification;
 import com.ssafy.itclips.alarm.entity.NotificationType;
 import org.apache.coyote.BadRequestException;
@@ -16,9 +17,10 @@ public interface NotificationService {
     SseEmitter subscribe(Long memberId, String lastEventId) throws IOException;
 
 //    //알림 리스트
-//    List<SseEmitter> findUserList(Long userId);
     List<Notification> findUserList(Long userId);
 
+    // 알림 읽음 처리
+    void readAll(NotifyReadDTO notifyReadDTO);
 
     // 좋아요 알림
     //보내는 사람 id, 받는 사람 id , 타입, 보내는 사람 닉네임

@@ -1,11 +1,13 @@
 package com.ssafy.itclips.alarm.controller;
 
+import com.ssafy.itclips.alarm.dto.NotifyReadDTO;
 import com.ssafy.itclips.alarm.entity.Notification;
 import com.ssafy.itclips.alarm.service.NotificationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,16 +48,23 @@ public class NotificationController {
         return sseEmitter;
     }
 
-//    @GetMapping("/list/{userId}")
-//    @Operation(summary = "유저 알림 리스트 조회 ", description = "유저가 받은 알림 리스트 ")
-//    public List<SseEmitter> list(@PathVariable("userId") Long userId) {
-//        List<SseEmitter> sseEmitterList = notificationService.findUserList(userId);
-//        return sseEmitterList;
-//    }
     @GetMapping("/list/{userId}")
     @Operation(summary = "유저 알림 리스트 조회 ", description = "유저가 받은 알림 리스트 ")
     public List<Notification> list(@PathVariable("userId") Long userId) {
         List<Notification> notificationList = notificationService.findUserList(userId);
         return notificationList;
     }
+
+    //알림 읽음
+    @PutMapping("/read")
+    @Operation(summary = "알림 읽음 처리", description = "알림 읽음 처리 ")
+    public ResponseEntity<?> read(@RequestBody NotifyReadDTO notifyReadDTO) {
+        notificationService.readAll(notifyReadDTO);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+
+    //알림 삭제
+
+
 }

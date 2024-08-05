@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 // components
 import SearchRoadmapItemsContainer from "./layout/SearchRoadmapItemsContainer";
@@ -7,6 +8,7 @@ import SearchRoadmapItemsContainer from "./layout/SearchRoadmapItemsContainer";
 import { FaList } from "react-icons/fa";
 import { CiBoxList } from "react-icons/ci";
 import { HiOutlineSquares2X2, HiMiniSquares2X2 } from "react-icons/hi2";
+import { IoIosWarning } from "react-icons/io";
 
 // apis
 import { roadmapSearch } from "../../api/searchApi";
@@ -49,6 +51,7 @@ const SearchRoadmap: React.FC<SearchRoadmapProps> = ({ keyword }) => {
   const [ viewMode, setViewMode ] = useState<'grid' | 'list'>('list');
   const [ sortBy, setSortBy ] = useState<"조회수" | "스크랩수" | "좋아요수">("조회수");
   const [ roadmapItems, setRoadmapItems ] = useState<RoadmapItem[]>([]);
+  const [ hasResults, setHasResults ] = useState<boolean>(true);
 
   const tabList = () => {
     setViewMode("list");
@@ -63,8 +66,13 @@ const SearchRoadmap: React.FC<SearchRoadmapProps> = ({ keyword }) => {
       try {
         const response = await roadmapSearch(userId, 1, sortBy, keyword);
         setRoadmapItems(response.data);
+        setHasResults(true);
       } catch (error) {
-        console.error("북마크 리스트 검색 중 오류 발생:", error);
+        console.error("로드맵 검색 중 오류 발생 or 결과 없음:", error);
+        if (axios.isAxiosError(error) && error.response?.status === 404) {
+          setRoadmapItems([]);
+          setHasResults(false);
+        }
       }
     };
 
@@ -103,11 +111,20 @@ const SearchRoadmap: React.FC<SearchRoadmapProps> = ({ keyword }) => {
           </button>
         </div>
       </div>
-      {/* 검색 결과 */}
-      <SearchRoadmapItemsContainer
-        items={roadmapItems}
-        viewMode={viewMode}
-      />
+      {/* 검색 결과 (검색 결과가 없으면 다른 창 출력) */}
+      {hasResults ? (
+        <SearchRoadmapItemsContainer
+          items={roadmapItems}
+          viewMode={viewMode}
+        />
+      ) : (
+        <div className="flex flex-row items-center justify-center mt-10">
+          <IoIosWarning color="skyblue" size={28} />
+          <div className="ms-3 text-sm lg:text-xl font-bold py-8 text-center">
+            검색 결과가 없습니다.
+          </div>
+        </div>
+      )}
     </div>
   );
 };

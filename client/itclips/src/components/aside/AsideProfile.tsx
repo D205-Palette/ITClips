@@ -33,19 +33,19 @@ interface UserInfo {
   roadmapCount?: number;
   followerCount?: number;
   followingCount?: number;
-};
+}
 
 const AsideProfile = () => {
   // 내 정보 가져오기
-  const myInfo = authStore(state => state.userInfo);
+  const myInfo = authStore((state) => state.userInfo);
 
   // url에서 user_id 가져오기
   const params = useParams<{ userId?: string }>();
   const urlUserId = params.userId ? parseInt(params.userId, 10) : undefined;
   const { urlUserInfo, setUrlUserInfo, updateFollowCount } = profileStore();
-  const isDark = darkModeStore(state => state.isDark);
+  const isDark = darkModeStore((state) => state.isDark);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  
+
   // 팔로우 상태인지?
   const [isFollow, setIsFollow] = useState<boolean>(false);
 
@@ -58,20 +58,24 @@ const AsideProfile = () => {
     // url 유저 정보 조회
     const fetchUserInfo = async (userId: number) => {
       try {
-        const response = await checkUserInfo(userId);
-        setUrlUserInfo(response.data);
-        console.log(response);
+        if (urlUserId) {
+          const response = await checkUserInfo(userId, urlUserId);
+          setUrlUserInfo(response.data);
+          console.log(response);
+        }
       } catch (error) {
         console.error("유저 조회 실패", error);
       }
     };
-    
+
     // 팔로우 상태 확인
     const checkFollowStatus = async () => {
       if (myInfo.id && urlUserId && myInfo.id !== urlUserId) {
         try {
           const response = await getFollowingList(myInfo.id);
-          const isFollowing = response.data.some((follow: { toUserId: number }) => follow.toUserId === urlUserId);
+          const isFollowing = response.data.some(
+            (follow: { toUserId: number }) => follow.toUserId === urlUserId
+          );
           setIsFollow(isFollowing);
         } catch (error) {
           console.error("팔로우 상태 조회 실패", error);
@@ -122,10 +126,17 @@ const AsideProfile = () => {
   };
 
   return (
-    <div className={`${ isDark ? "bg-base-300" : "bg-sky-100" } rounded-3xl w-80 p-8 flex flex-col items-center`}>
+    <div
+      className={`${
+        isDark ? "bg-base-300" : "bg-sky-100"
+      } rounded-3xl w-80 p-8 flex flex-col items-center`}
+    >
       {/* 다른 유저일때 채팅하기 버튼 또는 환경설정 활성화 */}
       {myInfo.id !== urlUserId ? (
-        <button className="btn btn-ghost btn-circle ms-16" onClick={onClickStartChat}>
+        <button
+          className="btn btn-ghost btn-circle ms-16"
+          onClick={onClickStartChat}
+        >
           <IoChatboxEllipsesOutline className="h-8 w-8" />
         </button>
       ) : (
@@ -140,10 +151,10 @@ const AsideProfile = () => {
       {/* 자기인지 아닌지에 따라 활성화되는 팔로우 버튼 */}
       {myInfo.id !== urlUserId ? (
         <button
-          className={`text-white btn ${isFollow ? 'btn-error' : 'btn-info'}`}
+          className={`text-white btn ${isFollow ? "btn-error" : "btn-info"}`}
           onClick={onClickFollow}
         >
-          {isFollow ? '언팔로우' : '팔로우'}
+          {isFollow ? "언팔로우" : "팔로우"}
         </button>
       ) : (
         <div className="m-6"></div>
@@ -151,7 +162,11 @@ const AsideProfile = () => {
       {/* 팔로워, 팔로잉, 리스트, 북마크 수 출력 컨테이너 */}
       <UserActivityInfo />
       {/* 프로필 설정 모달 */}
-      <ProfileSettingsModal isOpen={isModalOpen} onClose={closeModal} updateAsideInfo={updateAsideInfo} />
+      <ProfileSettingsModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        updateAsideInfo={updateAsideInfo}
+      />
     </div>
   );
 };

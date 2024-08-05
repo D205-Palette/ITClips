@@ -32,7 +32,7 @@ const EmailLoginModal: React.FC = () => {
         if (response.status === 200) {      
           fetchUserToken(response.data.accessToken); // 로컬 스토리지에 유저 토큰 업데이트
           fetchUserId(response.data.userId) // 로컬 스토리지에 유저 아이디 업데이트
-          const userInfoResponse = await checkUserInfo(response.data.userId);          
+          const userInfoResponse = await checkUserInfo(response.data.userId, response.data.userId);          
           fetchUserInfo(userInfoResponse.data); // 로컬 스토리지에 유저 정보 업데이트
           window.alert(`환영합니다 ${userInfoResponse.data.nickname}님!`);
           login(); // 로그인 상태 업데이트          

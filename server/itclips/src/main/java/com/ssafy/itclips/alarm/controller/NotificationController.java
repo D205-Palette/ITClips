@@ -68,6 +68,7 @@ public class NotificationController {
     @DeleteMapping("/{alarmId}")
     @Operation(summary = "알림 삭제 ", description = "알림 삭제 ")
     public ResponseEntity<?> delete(@PathVariable("alarmId") Long alarmId) {
+        notificationService.deleteNotify(alarmId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

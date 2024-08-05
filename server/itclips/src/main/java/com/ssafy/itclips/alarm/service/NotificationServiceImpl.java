@@ -79,6 +79,11 @@ public class NotificationServiceImpl implements NotificationService{
         }
     }
 
+    @Override
+    public void deleteNotify(Long alarmId) {
+        notificationRepository.deleteById(alarmId);
+    }
+
 
     // 좋아요 알림
     //보내는 사람 id, 받는 사람 id , 타입, 보내는 사람 닉네임

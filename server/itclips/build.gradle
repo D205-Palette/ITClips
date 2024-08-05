@@ -44,6 +44,8 @@ dependencies {
 	compileOnly group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2'
 	//stomp
 	implementation 'org.webjars:stomp-websocket:2.3.3-1'
+	//sse
+	implementation 'org.springframework.boot:spring-boot-starter-web-services'
 
 	//querydsl dependencies 추가(스프링부트 3.0 이상)
 	// querydsl dependencies 추가(스프링부트 3.0 이상)

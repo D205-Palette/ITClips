@@ -1,5 +1,6 @@
 package com.ssafy.itclips.roadmap.service;
 
+import com.ssafy.itclips.alarm.service.NotificationService;
 import com.ssafy.itclips.bookmark.repository.BookmarkRepository;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListRoadmapDTO;
@@ -53,6 +54,7 @@ public class RoadmapServiceImpl implements RoadmapService {
     private final UserTagRepository userTagRepository;
     private final FeedService feedService;
     private final FileService fileService;
+    private final NotificationService notificationService;
 
     //전체 로드맵 조회
     @Override
@@ -337,6 +339,9 @@ public class RoadmapServiceImpl implements RoadmapService {
 
         like.addRoadmapAndUser(roadmap,user);
         roadmapLikeRepository.save(like);
+
+        //알림 보내기
+        notificationService.sendRoadmapLikeNotification(userId, roadmap.getUser().getId(), roadmap.getId(), user.getNickname());
     }
 
     // 좋아요 취소
@@ -350,6 +355,9 @@ public class RoadmapServiceImpl implements RoadmapService {
         else{
             throw new CustomException(ErrorCode.ROADMAP_LIKE_NOT_FOUND);
         }
+
+        //알림 삭제
+        notificationService.deleteRaodmapLikeNotification(userId,existLike.getRoadmap().getUser().getId(),existLike.getRoadmap().getId());
 
     }
 

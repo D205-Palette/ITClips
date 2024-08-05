@@ -41,7 +41,7 @@ interface SearchBookmarkListProps {
 
 const SearchBookmarkList: React.FC<SearchBookmarkListProps> = ({ keyword }) => {
 
-  const userId = authStore(state => state.userId)
+  const userId = authStore(state => state.userId);
 
   const [ viewMode, setViewMode ] = useState<'grid' | 'list'>('list');
   const [ sortBy, setSortBy ] = useState<"조회수" | "스크랩수" | "좋아요수">("조회수");

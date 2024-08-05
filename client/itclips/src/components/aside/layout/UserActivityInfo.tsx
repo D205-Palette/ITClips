@@ -5,14 +5,7 @@ import { useParams } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import { profileStore } from "../../../stores/profileStore";
 
-interface InfoCounts {
-  followerCount?: number;
-  followingCount?: number;
-  bookmarkListCount?: number;
-  roadmapCount?: number;
-}
-
-const UserActivityInfo: React.FC<InfoCounts> = (follow) => {
+const UserActivityInfo = () => {
   
   const params = useParams();
   const { urlUserInfo } = profileStore();
@@ -23,7 +16,7 @@ const UserActivityInfo: React.FC<InfoCounts> = (follow) => {
         <div className="col-start-3 col-span-5 text-start text-gray-500">팔로워</div>
         <div className="col-start-9">
           <NavLink to={`/user/${params.userId}/follow/follower`}>
-            <button id="followers" className="text-start font-bold hover:bg-sky-200 hover:rounded">{follow.followerCount}</button>
+            <button id="followers" className="text-start font-bold hover:bg-sky-200 hover:rounded">{urlUserInfo?.followerCount}</button>
           </NavLink>
         </div>
       </div>
@@ -31,7 +24,7 @@ const UserActivityInfo: React.FC<InfoCounts> = (follow) => {
         <div className="col-start-3 col-span-5 text-start text-gray-500">팔로잉</div>
         <div className="col-start-9">
           <NavLink to={`/user/${params.userId}/follow/following`}>
-            <button id="following" className="text-start font-bold hover:bg-sky-200 hover:rounded">{follow.followingCount}</button>
+            <button id="following" className="text-start font-bold hover:bg-sky-200 hover:rounded">{urlUserInfo?.followingCount}</button>
           </NavLink>
         </div>
       </div>

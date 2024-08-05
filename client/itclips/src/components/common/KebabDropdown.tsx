@@ -9,7 +9,7 @@ import ScrapConfirmationModal from "../aside/modals/ScrapComfirmModal";
 import { API_BASE_URL } from "../../config";
 import axios from "axios";
 import { authStore } from "../../stores/authStore";
-
+import { useNavigate } from "react-router-dom";
 // 무슨 탭에서 눌렀는지 받는 인자
 // 리스트, 즐겨찾기, 로드맵  3가지로 받을예정. 그룹 리스트랑 그냥 리스트는 차이 없음
 interface Props {
@@ -25,7 +25,7 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
   const [isReportModalOpen, setIsReportModalOpen] = useState<boolean>(false);
   const [isFavoriteModalOpen, setIsFavoriteModalOpen] = useState<boolean>(false);
   const [isScrapModalOpen, setIsScrapModalOpen] = useState<boolean>(false);
-
+  const navigate = useNavigate()
   // 유저 아이디 임시값. 나중엔 스토리지서 받아오면됨
   const {userId, token} = authStore()
   // 리스트 즐겨찾기
@@ -64,7 +64,7 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
           {/* 수정 삭제는 남꺼일때 안 보이게 */}
           <li
             className={whatMenu === "즐겨찾기" ? "hidden" : ""}
-            onClick={() => setIsEditModalOpen(true)}
+            onClick={() => {whatMenu==="로드맵"? navigate(`/roadmap/${id}/edit`):setIsEditModalOpen(true)}}
           >
             <a>수정하기</a>
           </li>

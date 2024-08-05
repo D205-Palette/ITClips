@@ -11,7 +11,6 @@ import ScrapConfirmationModal from "../aside/modals/ScrapComfirmModal";
 // 무슨 탭에서 눌렀는지 받는 인자
 // 리스트, 즐겨찾기, 로드맵, 북마크 4가지로 받을예정. 그룹 리스트랑 그냥 리스트는 차이 없음
 interface Props {
-  whatMenu: string;
   // id 가 그떄그때마다 listID, roadmapId, bookmarkId 달라짐
   bookmark: BookmarkType;
   isEdit: boolean;
@@ -22,14 +21,14 @@ interface Props {
   changeEditBookmarksIndex: React.Dispatch<React.SetStateAction<number[]>>;
   tabModal: React.Dispatch<React.SetStateAction<boolean>>;
   toggleMode: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsAIOpen : React.Dispatch<React.SetStateAction<boolean>>;
+  setIsAIOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const KebabDropdown: FC<Props> = ({
-  whatMenu,
   bookmark,
   toggleEdit,
   changeEditBookmarksIndex,
+  changeEditBookmarks,
   toggleMode,
   setIsAIOpen,
 }) => {
@@ -38,8 +37,8 @@ const KebabDropdown: FC<Props> = ({
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [isUrlCopyModalOpen, setIsUrlCopyModalOpen] = useState<boolean>(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState<boolean>(false);
-  const [isFavoriteModalOpen, setIsFavoriteModalOpen] = useState<boolean>(false);
-
+  const [isFavoriteModalOpen, setIsFavoriteModalOpen] =
+    useState<boolean>(false);
 
   return (
     <>
@@ -52,7 +51,7 @@ const KebabDropdown: FC<Props> = ({
           className="dropdown-content menu bg-base-100 rounded-box w-52 p-2 shadow z-30"
         >
           {/* 이구간은 내꺼 남꺼일때& 즐겨찾기일떄 유무 */}
-          <li className={whatMenu === "즐겨찾기" ? "hidden" : ""}>
+          <li>
             <a onClick={() => toggleEdit(true)}>수정하기</a>
           </li>
           <li onClick={() => setIsDeleteModalOpen(true)}>
@@ -65,19 +64,18 @@ const KebabDropdown: FC<Props> = ({
               url 복사
             </a>
           </li>
-          <li className={whatMenu === "북마크" ? "" : "hidden"} onClick={()=>{setIsAIOpen(true); toggleEdit(false);}}>
+          <li
+            onClick={() => {
+              setIsAIOpen(true);
+              toggleEdit(false);
+            }}
+          >
             <a>AI 요약</a>
           </li>
-          <li
-            className={whatMenu === "북마크" ? "" : "hidden"}
-            onClick={() => tabEditModal(true)}
-          >
+          <li onClick={() => tabEditModal(true)}>
             <a>내 리스트에 추가</a>
           </li>
-          <li
-            className={whatMenu === "로드맵" ? "hidden" : ""}
-            onClick={() => setIsReportModalOpen(true)}
-          >
+          <li onClick={() => setIsReportModalOpen(true)}>
             <a>신고하기</a>
           </li>
         </ul>
@@ -93,7 +91,7 @@ const KebabDropdown: FC<Props> = ({
           whatMenu={"추가"}
         />
       )}
-
+      {/* 삭제 */}
       {isDeleteModalOpen && (
         <DeleteBookmarkListModal
           isOpen={isDeleteModalOpen}
@@ -102,12 +100,14 @@ const KebabDropdown: FC<Props> = ({
           id={bookmark.id}
         />
       )}
+      {/* url 복사 */}
       {isUrlCopyModalOpen && (
         <UrlCopyModal
           isOpen={isUrlCopyModalOpen}
           onClose={() => setIsUrlCopyModalOpen(false)}
         />
       )}
+      {/* 신고 */}
       {isReportModalOpen && (
         <ReportModal
           isOpen={isReportModalOpen}
@@ -116,12 +116,7 @@ const KebabDropdown: FC<Props> = ({
           id={bookmark.id}
         />
       )}
-      {isFavoriteModalOpen && (
-        <FavoriteConfirmationModal
-          isOpen={isFavoriteModalOpen}
-          onClose={() => setIsFavoriteModalOpen(false)}
-        />
-      )}
+      {/*  */}
     </>
   );
 };

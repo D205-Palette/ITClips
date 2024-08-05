@@ -1,6 +1,4 @@
-import SearchBar from "../components/main/MainSearchBar";
 import CategoryTab from "../components/main/CategoryTab";
-import mainStore from "../stores/mainStore";
 import Bookmark from "../components/main/Bookmark";
 import AsideBookmarkList from "../components/aside/AsideBookmarkList";
 import { asideStore } from "../stores/asideStore";
@@ -13,14 +11,13 @@ import { IoClose } from "react-icons/io5";
 import BookmarkEdit from "../components/main/Bookmark(Edit)";
 import MoveBookmarkModal from "../components/aside/modals/MoveBookmarkModal";
 import axios from "axios";
-import AddBookmarkModal from "../components/aside/modals/AddBookmarkListModal";
+import AddBookmarkModal from "../components/aside/modals/AddBookmarkModal";
 import type { BookmarkType } from "../types/BookmarkType";
 import type { CategoryType } from "../types/BookmarkListType";
 import type { BookmarkListDetailType } from "../types/BookmarkListType";
 import { useParams } from "react-router-dom";
 import { API_BASE_URL } from "../config";
 import { authStore } from "../stores/authStore";
-/// params.bookmarklistId로 axios 호출해서 리스트 상세정보 받아오기. 거기서 북마크들만
 
 const MyBookmark = () => {
   const params = useParams();
@@ -33,7 +30,9 @@ const MyBookmark = () => {
 
   const isMessageOpen = asideStore((state) => state.isMessageOpen);
   const whatCategory = mainTabStore((state) => state.whatCategory);
-
+  const changeCategory = mainTabStore((state)=>state.changeCategory)
+  const tempCategories = mainTabStore((state) => state.tempCategories)
+  const setTempCategories = mainTabStore((state)=>state.setTempCategories)
   const [editMode, toggleMode] = useState(false);
 
   const [editBookmarks, changeEditBookmarks] = useState<BookmarkType[]>([]);
@@ -43,14 +42,40 @@ const MyBookmark = () => {
   const [isAddModal, tabAddModal] = useState(false);
   const { userId, token } = authStore();
 
-  const [tempCategories, setTempCategories] = useState<CategoryType[]>([]);
-  const [bookmarkList, setBookmarkList] = useState<BookmarkListDetailType>();
 
+  // 메인으로 쓸것들
+  const [bookmarkList, setBookmarkList] = useState<BookmarkListDetailType>();
+  const [bookmarks, setBookmarks] = useState<BookmarkType[]>([])
+
+  // 북마크 추가 버튼 누를 시, 임시로 잡아줬던 whatCategory의 id값을 갱신해줘야됨 
+  const addBookmark =  () => {
+    axios({
+      method: "get",
+      url: `${API_BASE_URL}/api/list/${listId}`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      params: {
+        userId: userId,
+      },
+    })
+      .then((res) => {
+        const newCatId = res.data.categories.filter((cat:CategoryType)=>cat.categoryName===whatCategory.categoryName)[0].categoryId
+        changeCategory({categoryId:newCatId, categoryName:whatCategory.categoryName})
+        console.log(`웟 카테고리`)
+        console.log(whatCategory)
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
+
+  // 북마크들
   useEffect(() => {
     async function fetchData() {
       axios({
         method: "get",
-        url: `${API_BASE_URL}/api/list/${tempListId}`,
+        url: `${API_BASE_URL}/api/list/${listId}`,
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -59,8 +84,9 @@ const MyBookmark = () => {
         },
       })
         .then((res) => {
-          console.log(res);
           setBookmarkList(res.data);
+          setBookmarks(res.data.bookmarks)
+          setTempCategories(res.data.categories)
         })
         .catch((err) => {
           console.error(err);
@@ -69,13 +95,6 @@ const MyBookmark = () => {
     fetchData();
   }, []);
 
-  //보여줄 필터링 된 북마크들
-  const filteredBookmarks =
-    whatCategory.categoryName === ""
-      ? bookmarkList?.bookmarks
-      : bookmarkList?.bookmarks.filter(
-          (bookmark) => bookmark.category === whatCategory.categoryName
-        );
 
   return (
     <>
@@ -108,27 +127,26 @@ const MyBookmark = () => {
             <div className="flex flex-row justify-end pe-5 my-5">
               <button
                 className={
-                  (editBookmarksIndex.length === 0
+                  (editBookmarks.length === 0
                     ? "bg-white border text-sky-500"
                     : "bg-sky-500  text-slate-100 border") +
                   "  border-sky-500 rounded-2xl py-2 px-4 font-bold hover:bg-sky-600 hover:text-white"
                 }
                 onClick={() =>
-                  editBookmarksIndex.length !== 0 ? tabEditModal(true) : ""
+                  editBookmarks.length !== 0 ? tabEditModal(true) : ""
                 }
               >
-                이동 | {editBookmarksIndex.length}
+                이동 | {editBookmarks.length}
               </button>
             </div>
           ) : (bookmarkList ? 
-            <CategoryTab categories={bookmarkList.categories} listId={bookmarkList.id} />
+            <CategoryTab listId={bookmarkList.id} />
            : 
             <></>
           )}
-
           {/* 북마크들 */}
-          {filteredBookmarks ? (
-            filteredBookmarks.map((bookmark) =>
+          {bookmarks ? (
+            bookmarks.map((bookmark) =>
               editMode ? (
                 <BookmarkEdit
                   bookmark={bookmark}
@@ -158,9 +176,8 @@ const MyBookmark = () => {
                 <FaPlus
                   size={50}
                   onClick={() =>
-                    whatCategory.categoryName === ""
-                      ? window.alert("카테고리를 선택해주세요")
-                      : tabAddModal(true)
+                  { tabAddModal(true);addBookmark() }
+
                   }
                   className="hover:cursor-pointer hover:text-sky-600 text-sky-400"
                 />{" "}
@@ -185,6 +202,7 @@ const MyBookmark = () => {
         </div>
       </div>
 
+      {/* 북마크 이동 모달 */}
       {isEditModal && (
         <MoveBookmarkModal
           editBookmarks={editBookmarks}
@@ -194,12 +212,13 @@ const MyBookmark = () => {
           whatMenu={"이동"}
         />
       )}
+      {/* 북마크 추가 모달 */}
       {isAddModal && (
         <AddBookmarkModal
-          moveBookmarks={editBookmarksIndex}
           tabModal={tabAddModal}
           toggleMode={toggleMode}
           listId={listId}
+          categoryId = {whatCategory.categoryId}
         />
       )}
     </>

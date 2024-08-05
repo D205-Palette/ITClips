@@ -17,17 +17,20 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { authStore } from "../../stores/authStore";
 import { API_BASE_URL } from "../../config";
+import { CategoryType } from "../../types/BookmarkListType";
+import Tab from "../../stores/mainTabStore";
 interface Props {
-  categories: { categoryId: number; categoryName: string }[];
+  // categories: CategoryType[];
   listId:number
 }
 
-const CategoryTab: FC<Props> = ({ categories,listId }) => {
+const CategoryTab: FC<Props> = ({ listId }) => {
   const {userId, token} = authStore()
   const isDark = darkModeStore((state) => state.isDark);
 
+  // const [tempCategories, setTempCategories] = useState<CategoryType[]>(categories)
+  const {tempCategories, addTempCategories, deleteTempCategories} = Tab()
 
-  
   const [createMode, modeChange] = useState(false);
   const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -68,7 +71,6 @@ const CategoryTab: FC<Props> = ({ categories,listId }) => {
 
     const createCategory = (): void => {
       // 카테고리 추가 api
-
       axios({
         method: "post",
         url: `${API_BASE_URL}/api/category/add/${listId}`,
@@ -80,7 +82,7 @@ const CategoryTab: FC<Props> = ({ categories,listId }) => {
         }
       })
         .then((res) => {
-
+          addTempCategories({categoryId:0,categoryName:inputValue})
         })
         .catch((err) => {
           console.error(err);
@@ -126,8 +128,8 @@ const CategoryTab: FC<Props> = ({ categories,listId }) => {
           className=" flex flex-row  whitespace-nowrap  container overflow-x-scroll "
           onWheel={handleScroll}
         >
-          {categories.map((category) => (
-            <CategorySingleTab category={category} />
+          {tempCategories.map((category) => (
+            <CategorySingleTab tempCategory={category} />
           ))}
           {createMode ? (
             <CreateCategorySection />

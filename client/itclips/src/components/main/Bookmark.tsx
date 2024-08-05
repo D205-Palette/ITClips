@@ -13,7 +13,7 @@ import axios from "axios";
 import { authStore } from "../../stores/authStore";
 import { API_BASE_URL } from "../../config";
 import EditTag from "./Bookmark(Tag)";
-
+import mainTabStore from '../../stores/mainTabStore'
 // const bookmarks = {
 //     title: string,
 //     url: string,
@@ -43,6 +43,7 @@ const Bookmark: FC<Props> = ({
   const [tempTags, editTempTags] = useState(bookmark.tags);
   const [tempTag, editTempTag] = useState("");
 
+
   useEffect(() => {
     async function fetchData() {
       editTempBookmark(bookmark)
@@ -63,8 +64,7 @@ const Bookmark: FC<Props> = ({
   // 그냥 더미. 있어야됨. 삭제 ㄴㄴ
   const [nothingMode, tabNothing] = useState(false);
 
-
-
+  const {whatCategory} = mainTabStore()
   const { userId, token } = authStore();
 
   //좋아요
@@ -122,7 +122,7 @@ const Bookmark: FC<Props> = ({
   return (
     <>
       <div
-        className={
+        className={(whatCategory.categoryName === bookmark.category || whatCategory.categoryName==="" ? " "  : "hidden ") +
           (isDark ? "hover:bg-slate-700" : "hover:bg-slate-100") +
           " card card-side bg-base-100 shadow-sm hover:cursor-pointer h-28 my-1"
         }
@@ -196,8 +196,8 @@ const Bookmark: FC<Props> = ({
                   수정
                 </button>
               ) : (
+                // 북마크 전용 드롭다운
                 <KebabDropdown
-                  whatMenu="북마크"
                   bookmark={bookmark}
                   isEdit={isEdit}
                   toggleEdit={toggleEdit}

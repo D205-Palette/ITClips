@@ -24,7 +24,7 @@ public class BookmarkController {
 
     private final BookmarkService bookmarkService;
 
-    @PostMapping("/add/{listId}/{categoryId}")
+    @PostMapping(value={"/add/{listId}","/add/{listId}/{categoryId}"})
     @Operation(summary = "북마크 추가", description = "북마크를 추가합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "북마크가 성공적으로 추가되었습니다."),
@@ -32,7 +32,7 @@ public class BookmarkController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
     })
     public ResponseEntity<?> createBookmark(@PathVariable @Parameter(description = "리스트 정보", required = true) Long listId,
-                                            @PathVariable @Parameter(description = "카테고리 정보", required = true) Long categoryId,
+                                            @PathVariable(required = false) @Parameter(description = "카테고리 정보") Long categoryId,
                                             @RequestBody @Parameter(description = "북마크 생성 정보", required = true) BookmarkRequestDTO bookmarkRequestDTO) {
         bookmarkService.createBookmark(listId,categoryId,bookmarkRequestDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);

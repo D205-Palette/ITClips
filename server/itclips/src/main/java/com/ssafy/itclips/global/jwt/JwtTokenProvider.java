@@ -57,7 +57,11 @@ public class JwtTokenProvider {
                 .collect(Collectors.joining(","));
 
         long now = System.currentTimeMillis();
-
+        System.out.println(authentication.toString());
+        System.out.println(authentication.getPrincipal());
+        System.out.println(authentication.getCredentials());
+        System.out.println(authentication.getDetails());
+        System.out.println(authentication.getName());
         // Access Token 생성
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())

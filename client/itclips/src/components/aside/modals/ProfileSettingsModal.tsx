@@ -58,6 +58,10 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
   const [job, setJob] = useState(userInfo.job || "");
   const [genderBoolean, setGenderBoolean] = useState(userInfo.gender || false);
 
+  useEffect(() => {
+    setIsDuplicateNickname(null);
+  }, [isOpen]);
+
   // 유저 정보의 변화를 감지 (수정)
   useEffect(() => {
     if (userInfo) {

@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 
 // apis
 import { checkUserInfo } from "../../api/authApi";
-import { getFollowCounts, getFollowingList, unfollow, follow } from "../../api/followApi";
+import { getFollowingList, unfollow, follow } from "../../api/followApi";
 
 // icons
 import { IoChatboxEllipsesOutline, IoSettingsOutline } from "react-icons/io5";
@@ -18,65 +18,69 @@ import ProfileSettingsModal from "./modals/ProfileSettingsModal";
 // stores
 import darkModeStore from "../../stores/darkModeStore";
 import { authStore } from "../../stores/authStore";
-import { useFollowStore } from "../../stores/followStore";
 import { profileStore } from "../../stores/profileStore";
+
+interface UserInfo {
+  id?: number;
+  email?: string;
+  nickname?: string;
+  birth?: string;
+  job?: string;
+  gender?: boolean;
+  darkMode?: boolean;
+  bio?: string;
+  bookmarkListCount?: number;
+  roadmapCount?: number;
+  followerCount?: number;
+  followingCount?: number;
+};
 
 const AsideProfile = () => {
   // 내 정보 가져오기
   const myInfo = authStore(state => state.userInfo);
 
   // url에서 user_id 가져오기
-  const params = useParams<{ user_id?: string }>();
-  const urlUserId = params.user_id ? parseInt(params.user_id, 10) : undefined;
-  
-  const { setUrlUserInfo, urlUserInfo } = profileStore();
-  const { followerCount, followingCount, setFollowerCount, setFollowingCount } = useFollowStore();
-  
+  const params = useParams<{ userId?: string }>();
+  const urlUserId = params.userId ? parseInt(params.userId, 10) : undefined;
+  const { urlUserInfo, setUrlUserInfo, updateFollowCount } = profileStore();
   const isDark = darkModeStore(state => state.isDark);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   
   // 팔로우 상태인지?
   const [isFollow, setIsFollow] = useState<boolean>(false);
 
-  // url 유저 정보 조회
-  const fetchUserInfo = async (userId: number) => {
-    try {
-      const response = await checkUserInfo(userId);
-      setUrlUserInfo(response.data);
-      console.log(response);
-    } catch (error) {
-      console.error("유저 조회 실패", error);
-    }
-  };
-
-  // 팔로우 수 조회
-  const fetchFollowCount = async (userId: number) => {
-    try {
-      const response = await getFollowCounts(userId);
-      setFollowerCount(response.data.followerCount);
-      setFollowingCount(response.data.followingCount);
-    } catch (error) {
-      console.error("유저 조회 실패", error);
-    }
-  };
-
-  // 팔로우 상태 확인
-  const checkFollowStatus = async () => {
-    if (myInfo.id && urlUserId && myInfo.id !== urlUserId) {
-      try {
-        const response = await getFollowingList(myInfo.id);
-        const isFollowing = response.data.some((follow: { toUserId: number }) => follow.toUserId === urlUserId);
-        setIsFollow(isFollowing);
-      } catch (error) {
-        console.error("팔로우 상태 조회 실패", error);
-      }
-    }
+  const updateAsideInfo = (updatedInfo: UserInfo) => {
+    setUrlUserInfo(updatedInfo);
   };
 
   useEffect(() => {
+    console.log(urlUserId);
+    // url 유저 정보 조회
+    const fetchUserInfo = async (userId: number) => {
+      try {
+        const response = await checkUserInfo(userId);
+        setUrlUserInfo(response.data);
+        console.log(response);
+      } catch (error) {
+        console.error("유저 조회 실패", error);
+      }
+    };
+    
+    // 팔로우 상태 확인
+    const checkFollowStatus = async () => {
+      if (myInfo.id && urlUserId && myInfo.id !== urlUserId) {
+        try {
+          const response = await getFollowingList(myInfo.id);
+          const isFollowing = response.data.some((follow: { toUserId: number }) => follow.toUserId === urlUserId);
+          setIsFollow(isFollowing);
+        } catch (error) {
+          console.error("팔로우 상태 조회 실패", error);
+        }
+      }
+    };
+
     if (urlUserId) {
       fetchUserInfo(urlUserId);
-      fetchFollowCount(urlUserId);
       checkFollowStatus();
     }
   }, [urlUserId, myInfo.id]); // urlUserId와 myInfo.id가 변경될 때마다 호출
@@ -92,7 +96,7 @@ const AsideProfile = () => {
         try {
           await unfollow(myInfo.id, urlUserId);
           setIsFollow(false);
-          setFollowingCount(followingCount - 1);
+          updateFollowCount(false);
         } catch (error) {
           console.error("언팔로우 실패", error);
         }
@@ -100,7 +104,7 @@ const AsideProfile = () => {
         try {
           await follow(myInfo.id, urlUserId);
           setIsFollow(true);
-          setFollowingCount(followingCount + 1);
+          updateFollowCount(true);
         } catch (error) {
           console.error("팔로우 실패", error);
         }
@@ -145,9 +149,9 @@ const AsideProfile = () => {
         <div className="m-6"></div>
       )}
       {/* 팔로워, 팔로잉, 리스트, 북마크 수 출력 컨테이너 */}
-      <UserActivityInfo followerCount={followerCount} followingCount={followingCount} />
+      <UserActivityInfo />
       {/* 프로필 설정 모달 */}
-      <ProfileSettingsModal isOpen={isModalOpen} onClose={closeModal} />
+      <ProfileSettingsModal isOpen={isModalOpen} onClose={closeModal} updateAsideInfo={updateAsideInfo} />
     </div>
   );
 };

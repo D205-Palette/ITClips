@@ -22,7 +22,7 @@ const SearchUserItemContainer: React.FC<UserProps> = ({ items }) => {
   return (
     <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-4">
       {items.map((item) => (
-      <div key={item.id}>
+      <div key={item.id} className="p-4 rounded shadow">
         <SearchUserItem item={item} />
       </div>
     ))}

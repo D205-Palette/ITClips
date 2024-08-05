@@ -2,7 +2,7 @@
 
 import React from "react";
 
-interface Message {
+interface ChatRoom {
   id: number;
   title: string;
   subtitle: string;
@@ -10,21 +10,21 @@ interface Message {
 }
 
 interface ChildComponentProps {
-  messages: Message[];
+  rooms: ChatRoom[];
   onClickMessage: (id: number) => any;
 }
 
-const MessageContainer: React.FC<ChildComponentProps> = ({ messages, onClickMessage }) => {
+const MessageContainer: React.FC<ChildComponentProps> = ({ rooms, onClickMessage }) => {
   return (
     <div>
       <ul className="space-y-4 h-[26rem] overflow-y-auto">
-        {messages.map((message: Message) => (
-          <li key={message.id} className="flex justify-between items-center bg-base-100 rounded w-100 px-3 py-2" onClick={() => onClickMessage(message.id)}>
+        {rooms.map((room: ChatRoom) => (
+          <li key={room.id} className="flex justify-between items-center bg-base-100 rounded w-100 px-3 py-2" onClick={() => onClickMessage(room.id)}>
             <div className="p-3">
-              <h3 className="font-semibold text-start">{message.title}</h3>
-              <p className="text-sm text-gray-500 text-start message-content">{message.subtitle}</p>
+              <h3 className="font-semibold text-start">{room.title}</h3>
+              <p className="text-sm text-gray-500 text-start message-content">{room.subtitle}</p>
             </div>
-            {message.hasNotification && (
+            {room.hasNotification && (
               <span className="badge badge-sm badge-error m-5"></span>
             )}
           </li>

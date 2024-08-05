@@ -1,10 +1,24 @@
 // AsideMessage.tsx 는 메세지 컴포넌트 메인
 
-import React, { useState } from "react";
+import React, { useState, useEffect  } from "react";
 
 // components
 import MessageHeader from "./layout/MessageHeader";
 import MessageListContainer from "./layout/MessageListContainer";
+
+// apis
+import { getChatRooms } from "../../api/messageApi";
+
+// stores
+import { authStore } from "../../stores/authStore";
+
+// 채팅방 인터페이스
+interface ChatRoom {
+  id: number;
+  name: string;
+  lastMessage: string | null;
+  lastModified: string | null;
+}
 
 interface MessageListProps {
   onSelectChat: (id: number) => void;
@@ -13,24 +27,25 @@ interface MessageListProps {
 
 const AsideMessage: React.FC<MessageListProps> = ({ onSelectChat, onShowInvite }) => {
 
-  // 더미 데이터
-  const [ data ] = useState([
-    { id: 1, title: '고양친구', subtitle: '궁금한게 있습니다' },
-    { id: 2, title: '고양친구의친구', subtitle: '누구세요??' },
-    { id: 3, title: '고양친구, 고양양', subtitle: '감사합니다', hasNotification: true },
-    { id: 4, title: '고양친구, 고양양', subtitle: '왕감사', hasNotification: true },
-    { id: 5, title: '고양친구, 고양양', subtitle: '찐감사', hasNotification: true },
-    { id: 6, title: '고양친구, 고양양', subtitle: '너무감사', hasNotification: true },
-    { id: 7, title: '고양친구, 고양양', subtitle: '완전감사', hasNotification: true },
-  ]);
+  const userId = authStore(state => state.userId);
+  const [data, setData] = useState<ChatRoom[]>([]);
 
-  // const addMessage = (newMassage: Message) => {
-  //   setData(prevMessage => [...prevMessage, newMassage]);
-  // }
+  useEffect(() => {
+    const fetchChatRooms = async () => {
+      try {
+        const response = await getChatRooms(userId); // 사용자 채팅방 목록 가져오기
+        setData(response.data); // API에서 반환된 데이터의 data 속성 사용
+      } catch (error) {
+        console.error("Failed to fetch chat rooms:", error);
+      }
+    };
 
-  const onClickMessage = (id: number) => {
+    fetchChatRooms(); // 채팅방 목록 가져오기
+  }, [userId]); // userId가 변경될 때마다 실행
+
+  const onClickMessage = (roomId: number) => {
     // 해당 메세지 대화창으로 이동하게 구현하기
-    onSelectChat(id);
+    onSelectChat(roomId);
   }
 
   const onClickInvite = (state: number) => {
@@ -40,11 +55,15 @@ const AsideMessage: React.FC<MessageListProps> = ({ onSelectChat, onShowInvite }
   return (
     <div className="p-4 max-w-sm mx-auto h-[35rem] flex flex-col">
       {/* 메세지 헤더 영역 */}
-      <MessageHeader onClickInvite = { onClickInvite } />
+      <MessageHeader onClickInvite={onClickInvite} />
       {/* 받은 메세지 영역 */}
       <MessageListContainer 
-        messages = { data }
-        onClickMessage = { onClickMessage }
+        rooms={data.map(room => ({
+          id: room.id,
+          title: room.name,
+          subtitle: room.lastMessage || '메시지가 없습니다.', // 마지막 메시지가 없을 경우 기본 메시지
+        }))}
+        onClickMessage={onClickMessage}
       />
     </div>
   );

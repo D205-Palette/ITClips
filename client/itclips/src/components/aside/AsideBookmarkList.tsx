@@ -1,4 +1,5 @@
 // AsideBookmarkList.tsx 는 북마크리스트 정보를 출력하는 컴포넌트
+import { useParams } from "react-router-dom";
 
 // components
 import AsideBookmarkListKebabDropdown from "./ui/AsideBookmarkListKebabDropdown";
@@ -13,6 +14,8 @@ import darkModeStore from "../../stores/darkModeStore";
 import { asideStore } from "../../stores/asideStore";
 
 import type { BookmarkListDetailType } from "../../types/BookmarkListType";
+// apis
+import { getBookmarkListComments } from "../../api/bookmarkListApi";
 
 interface Comment {
   id: number;
@@ -61,6 +64,8 @@ const AsideBookmarkList : React.FC<ItemProps> = ({bookmarkList}) => {
 
   const isDark = darkModeStore(state => state.isDark);
   const isMessageOpen = asideStore(state => state.isMessageOpen);
+
+  const params = useParams();
 
   return (
     <div className={`${ isDark ? "bg-base-300" : "bg-sky-100" } rounded-3xl w-80 p-8 flex flex-col items-center`}>

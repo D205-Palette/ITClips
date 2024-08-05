@@ -8,15 +8,23 @@ import darkModeStore from "../../../stores/darkModeStore";
 
 interface JobProps {
   selectCategory: (category: string) => void;
+  initialValue?: string;
 }
 
-const JobCategoryDropdown: React.FC<JobProps> = ({ selectCategory }) => {
+const JobCategoryDropdown: React.FC<JobProps> = ({ selectCategory, initialValue }) => {
+
   const [ searchCategory, setSearchCategory ] = useState<string>("프론트엔드 개발자");
   const [ isOpen, setIsOpen ] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const isDark = darkModeStore(state => state.isDark);
 
   const toggleDropdown = (): void => setIsOpen(!isOpen);
+
+  useEffect(() => {
+    if (initialValue) {
+      setSearchCategory(initialValue);
+    }
+  }, [initialValue]);
 
   const categories: string[] = [
     "프론트엔드 개발자",

@@ -9,6 +9,7 @@ type UserInfo = {
     birth?: string
     job?: string
     gender?: boolean
+    bio?: string;
     refreshToken?: string
     role?: string
     darkMode?: boolean

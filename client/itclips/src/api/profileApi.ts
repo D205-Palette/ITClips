@@ -1,8 +1,19 @@
-import { authenticatedRequest } from "./apiUtils";
+import { authenticatedRequest, authenticatedUserSettingRequest, request } from "./apiUtils";
+
+interface updatedUserInfo {
+  id?: number;
+  email?: string;
+  nickname?: string;
+  birth?: string;
+  job?: string;
+  gender?: boolean;
+  darkMode?: boolean;
+  bio?: string;
+};
 
 // 회원 정보 수정(닉네임, 소개글, 생년월일, 직업, 성별)
-export const updateUserInfo = (userId: number, newInfo: object) => {
-  return authenticatedRequest("put", `/user/${userId}/profile`, { newInfo }, { userId });
+export const updateUserInfo = (userId: number, newInfo: updatedUserInfo) => {
+  return authenticatedUserSettingRequest("put", `/user/${userId}/profile`, newInfo, undefined);
 };
 
 // 비밀번호 변경
@@ -12,13 +23,13 @@ export const changePassword = (email: string, oldPassword: string, newPassword: 
 
 // 회원 탈퇴
 export const deleteUserAccount = (userId: number) => {
-  return authenticatedRequest("delete", `/user/${userId}/profile/img`, undefined, { userId });
+  return authenticatedRequest("delete", `/user/${userId}/profile`, undefined, { userId });
 };
 
 // 프로필 이미지 변경
 // 주의 : 동작안하면 headers에 'Content-Type': 'multipart/form-data' 붙여서 보내기
 export const updateProfileImage = (email: string, profileImage: string) => {
-  return authenticatedRequest("post", "/user/profile/img", { profileImage }, { email });
+  return authenticatedRequest("post", "/user/profile/img", profileImage, { email });
 };
 
 // 사용자 관심사 목록 불러오기
@@ -34,4 +45,9 @@ export const addMyInterest = (userId: number, tagId: number) => {
 // 사용자 관심사 삭제
 export const removeMyInterest = (userId: number, tagId: number) => {
   return authenticatedRequest("delete", `/user/${userId}/tags`, undefined, { userId, tagId });
+};
+
+// 닉네임 중복확인
+export const checkNicknameDuplication = (nickname: string) => {
+  return request("get", `/user/nicknameCheck`, undefined, { nickname });
 };

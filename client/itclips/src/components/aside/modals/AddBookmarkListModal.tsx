@@ -1,10 +1,6 @@
-// DeleteBookmarkListModal.tsx 는 AsideBookmarkList.tsx 에서 더보기 메뉴의 '삭제하기' 버튼을 눌렀을 때 출력되는 컴포넌트
-
 import React from "react";
 import { FC, useState, useRef } from "react";
 import { IoClose } from "react-icons/io5";
-import mainStore from "../../../stores/mainStore";
-import axios from "axios";
 import { FaPlus } from "react-icons/fa6";
 import { API_BASE_URL } from "../../../config";
 import { authStore } from "../../../stores/authStore";

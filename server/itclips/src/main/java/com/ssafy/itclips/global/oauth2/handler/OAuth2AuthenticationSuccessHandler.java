@@ -70,7 +70,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 //        response.setHeader("Authorization", jwtToken.getGrantType() + " " + jwtToken.getAccessToken());
 //        response.setHeader("Authorization-Refresh", jwtToken.getRefreshToken());
 //        response.setHeader("userId", String.valueOf(findUser.getId()));
-        String targetUrl = String.format("https://localhost:3000/oauth2/callback?accessToken=%s&refreshToken=%s&userId=%d",
+        String targetUrl = String.format("https://i11d205.p.ssafy.io:3000/oauth2/callback?accessToken=%s&refreshToken=%s&userId=%d",
                 jwtToken.getAccessToken(),
                 jwtToken.getRefreshToken(),
                 findUser.getId());

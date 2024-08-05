@@ -1,5 +1,6 @@
 package com.ssafy.itclips.roadmap.service;
 
+import com.ssafy.itclips.alarm.entity.NotificationType;
 import com.ssafy.itclips.alarm.service.NotificationService;
 import com.ssafy.itclips.bookmark.repository.BookmarkRepository;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
@@ -226,6 +227,9 @@ public class RoadmapServiceImpl implements RoadmapService {
         //피드 생성
         feedService.saveRoadmapFeed(userId,savedRoadmap.getId());
 
+        //알림 전송
+        notificationService.sendNotification(userId, roadmap.getUser().getId(),roadmapId,user.getNickname(),NotificationType.ROADMAP_SCRAP);
+
         createStep(roadmapRequestDTO.getStepList(), saveRoadmap);
     }
 
@@ -276,6 +280,15 @@ public class RoadmapServiceImpl implements RoadmapService {
                 .orElseThrow(() -> new CustomException(ErrorCode.ROADMAP_NOT_FOUND));
 
         checkUser(roadmap, userId);
+
+        //스크랩 취소 알림 삭제
+        if(roadmap.getOrigin()!=null){
+            Roadmap originRoadmap = roadmapRepository.findById(roadmap.getOrigin()).orElse(null);
+            if(originRoadmap!=null){
+
+                notificationService.deleteNotification(userId, originRoadmap.getUser().getId(),roadmapId,NotificationType.ROADMAP_SCRAP);
+            }
+        }
 
         roadmapRepository.deleteById(roadmapId);
     }
@@ -341,7 +354,7 @@ public class RoadmapServiceImpl implements RoadmapService {
         roadmapLikeRepository.save(like);
 
         //알림 보내기
-        notificationService.sendRoadmapLikeNotification(userId, roadmap.getUser().getId(), roadmap.getId(), user.getNickname());
+        notificationService.sendNotification(userId, roadmap.getUser().getId(), roadmap.getId(), user.getNickname(),NotificationType.ROADMAP_LIKE);
     }
 
     // 좋아요 취소
@@ -350,14 +363,16 @@ public class RoadmapServiceImpl implements RoadmapService {
     public void unlikeRoadmap(Long roadmapId, Long userId) throws RuntimeException {
         RoadmapLike existLike = roadmapLikeRepository.findByRoadmapIdAndUserId(roadmapId, userId);
         if(existLike != null){
+
+            //알림 삭제
+            notificationService.deleteNotification(userId,existLike.getRoadmap().getUser().getId(),existLike.getRoadmap().getId(), NotificationType.ROADMAP_LIKE);
+
+            //좋아요 삭제
             roadmapLikeRepository.deleteByRoadmapIdAndUserId(roadmapId, userId);
         }
         else{
             throw new CustomException(ErrorCode.ROADMAP_LIKE_NOT_FOUND);
         }
-
-        //알림 삭제
-        notificationService.deleteRaodmapLikeNotification(userId,existLike.getRoadmap().getUser().getId(),existLike.getRoadmap().getId());
 
     }
 
@@ -433,6 +448,10 @@ public class RoadmapServiceImpl implements RoadmapService {
         RoadmapComment roadmapComment = RoadmapCommentRequestDTO.toEntity(roadmap, user, roadmapCommentRequestDTO);
 
         roadmapCommentRepository.save(roadmapComment);
+
+        //알림 전송
+        notificationService.sendNotification(userId, roadmap.getUser().getId(),roadmapId,user.getNickname(),NotificationType.ROADMAP_COMMENT);
+
     }
 
 
@@ -447,14 +466,22 @@ public class RoadmapServiceImpl implements RoadmapService {
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
 
+        //알림 삭제
+        notificationService.deleteNotification(userId,comment.getRoadmap().getUser().getId(), comment.getRoadmap().getId(),NotificationType.ROADMAP_COMMENT);
+
         roadmapCommentRepository.delete(comment);
+
     }
 
+
+    //좋아요 랭킹
     @Override
     public List<RankDTO> getListsRankingByLikes() {
         return roadmapRepository.findListRankingByLike();
     }
 
+
+    //조회수 랭킹
     @Override
     public List<RankDTO> getListsRankingByHit() {
         List<Roadmap> roadmapRankingByHit = roadmapRepository.findTop10ByOrderByHitDesc();
@@ -465,6 +492,8 @@ public class RoadmapServiceImpl implements RoadmapService {
         return rankDTOs;
     }
 
+
+    //스크랩 랭킹
     @Override
     public List<RankDTO> getListsRankingByScrap() {
         return roadmapRepository.findListRankingByScrap();

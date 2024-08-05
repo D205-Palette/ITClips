@@ -25,11 +25,12 @@ public interface NotificationService {
     //알림 삭제
     void deleteNotify(Long alarmId);
 
-    // 좋아요 알림
+    // 알림
     //보내는 사람 id, 받는 사람 id , 타입, 보내는 사람 닉네임
-    void sendRoadmapLikeNotification(Long senderId, Long receiverId, Long roadmapId, String nickName);
+    void sendNotification(Long senderId, Long receiverId, Long roadmapId, String nickName, NotificationType type);
 
-    //좋아요 취소
-    void deleteRaodmapLikeNotification(Long senderId, Long receiverId, Long roadmapId);
+    //e댓글, 좋아요 , 스크랩 취소시 알림 삭제
+    void deleteNotification(Long senderId, Long receiverId, Long roadmapId, NotificationType type);
+
 
 }

@@ -1,12 +1,14 @@
 package com.ssafy.itclips.user.service;
 
 import com.ssafy.itclips.user.entity.User;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class AuthenticatedUser {
 
     private final UserService userService;
@@ -17,6 +19,7 @@ public class AuthenticatedUser {
 
     public User getCurrentAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
 
         if (authentication == null || !authentication.isAuthenticated()) {
             return null;

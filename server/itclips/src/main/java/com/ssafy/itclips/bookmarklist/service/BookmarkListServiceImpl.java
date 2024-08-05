@@ -320,13 +320,20 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         Integer scrapCount = bookmarkList.getBookmarkListScraps().size();
         Boolean isScraped = bookmarkListScrapRepository.existsByUserIdAndBookmarkListId(userId, bookmarkList.getId());
 
-        String imageUrl = fileService.getPresignedUrl("images", bookmarkList.getImage(), false).get("url");
-
+        String imageUrl = getImageUrl(bookmarkList);
         // bookmark 정보
         List<BookmarkDetailDTO> bookmarkDetails = bookmarkListRepository.findDetailedByListId(bookmarkList.getId());
         bookmarkDetails.forEach(bookmarkDetailDTO -> addAdditionalInfoForBookmarkDetailDTO(bookmarkDetailDTO, userId));
 
         return bookmarkList.makeBookmarkListDetailDTO(likeCount, scrapCount, isLiked, isScraped, imageUrl, categories, tags, users, bookmarkDetails);
+    }
+
+    private String getImageUrl(BookmarkList bookmarkList) {
+        String imageUrl = bookmarkList.getImage();
+        if(imageUrl != null) {
+            imageUrl = fileService.getPresignedUrl("images", bookmarkList.getImage(), false).get("url");
+        }
+        return imageUrl;
     }
 
     private void addAdditionalInfoForBookmarkDetailDTO(BookmarkDetailDTO bookmarkDetailDTO, Long userId) {
@@ -360,7 +367,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
 
         Integer likeCount = bookmarkList.getBookmarkListLikes().size();
         Boolean isLiked = (bookmarkListLikeRepository.findByBookmarkListIdAndUserId(bookmarkList.getId(), viewerId) != null);
-        String imageUrl = fileService.getPresignedUrl("images", bookmarkList.getImage(), false).get("url");
+        String imageUrl = getImageUrl(bookmarkList);
 
         return bookmarkList.makeBookmarkListResponseDTO(bookmarkList.getBookmarks().size(), likeCount, isLiked, imageUrl, tags, users);
     }

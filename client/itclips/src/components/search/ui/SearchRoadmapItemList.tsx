@@ -32,7 +32,7 @@ const SearchRoadmapItemList: React.FC<RoadmapProps> = ({ item }) => {
   return (
     <div>
       <NavLink
-        to={`/bookmarklist/${item.id}`}
+        to={`/roadmap/${item.id}`}
         className="flex items-center space-x-4 flex-grow"
       >
         <img src={image} alt={item.title} className="w-20 h-20 object-cover rounded" />

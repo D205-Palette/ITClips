@@ -19,25 +19,25 @@ interface Follower {
 const FollowerList = () => {
 
   const [ followerList, setFollowerList ] = useState<Follower[]>([]);
-  const { user_id } = useParams<{ user_id: string }>();
+  const { userId } = useParams<{ userId: string }>();
 
   // 팔로워 목록 조회
-  const fetchFollowerList = async () => {
-    if (user_id) {
-      try {
-        const response = await getFollowerList(parseInt(user_id, 10));
-        setFollowerList(response.data);
-        console.log(response);
-      } catch (error) {
-        console.error("팔로워 목록 조회 실패", error);
-      }
-    }
-  };
-  
   useEffect(() => {
-    fetchFollowerList();
-  }, [user_id]);
+    const fetchFollowerList = async () => {
+      if (userId) {
+        try {
+          const response = await getFollowerList(parseInt(userId, 10));
+          setFollowerList(response.data);
+          console.log(response);
+        } catch (error) {
+          console.error("팔로워 목록 조회 실패", error);
+        }
+      }
+    };
 
+    fetchFollowerList();
+  }, [userId]);
+  
   return (
     <div className="mt-4">
       <FollowerItem items={followerList} />

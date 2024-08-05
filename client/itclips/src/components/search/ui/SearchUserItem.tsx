@@ -20,7 +20,7 @@ interface SearchUserItemProps {
 
 const SearchUserItem: React.FC<SearchUserItemProps> = ({ item }) => {
 
-  // 더보기 버튼 기능이 NavLink와 안겹치게 설정
+  // 버튼 기능이 NavLink와 안겹치게 설정
   const handleNavLink = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();

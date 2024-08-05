@@ -20,6 +20,7 @@ import Following from "./components/follow/FollowingList";
 import MyBookmark from "./pages/BookmarkView";
 import RoadmapView from "./pages/RoadmapDetailView";
 import RoadmapCreateView from "./pages/RoadmapCreateView";
+import RoadmapEditView from "./pages/RoadmapEditView";
 
 // Components
 import App from "./App";
@@ -90,7 +91,11 @@ const router = createBrowserRouter([
         path: "roadmap/:roadmapId",
         element: <RoadmapView />,
       },
-      
+      // 로드맵 수정 페이지
+      {
+        path: "roadmap/:roadmapId/edit",
+        element: <RoadmapEditView />,
+      },
       // 북마크리스트 상세 페이지
       {
         path: "bookmarklist/:bookmarklistId",

@@ -19,24 +19,24 @@ interface Following {
 const FollowingList = () => {
 
   const [ followingList, setFollowingList ] = useState<Following[]>([]);
-  const { user_id } = useParams<{ user_id: string }>();
+  const { userId } = useParams<{ userId: string }>();
 
   // 팔로잉 목록 조회
-  const fetchFollowingList = async () => {
-    if (user_id) {
-      try {
-        const response = await getFollowingList(parseInt(user_id, 10));
-        setFollowingList(response.data);
-        console.log(response);
-      } catch (error) {
-        console.error("팔로잉 목록 조회 실패", error);
-      }
-    }
-  };
-  
   useEffect(() => {
+    const fetchFollowingList = async () => {
+      if (userId) {
+        try {
+          const response = await getFollowingList(parseInt(userId, 10));
+          setFollowingList(response.data);
+          console.log(response);
+        } catch (error) {
+          console.error("팔로잉 목록 조회 실패", error);
+        }
+      }
+    };
+
     fetchFollowingList();
-  }, [user_id]);
+  }, [userId]);
 
   return (
     <div className="mt-4">

@@ -13,7 +13,10 @@ export const logoutApi = () => {
 
 // 비밀번호 찾기 인증번호 발송
 export const sendVerificationPassword = (nickname: string, email: string) => {
-  return request("post", "/user/pw/sendVerification", undefined, { email, nickname });
+  return request("post", "/user/pw/sendVerification", undefined, {
+    email,
+    nickname,
+  });
 };
 
 // 비밀번호 찾기 인증번호 확인
@@ -22,8 +25,8 @@ export const checkCodePassword = (email: string, code: string) => {
 };
 
 // 회원 정보 조회
-export const checkUserInfo = (userId: number) => {
-  return request("get", `/user/${userId}/profile`, undefined, { userId });
+export const checkUserInfo = (userId: number, targetId: number) => {
+  return authenticatedRequest("get", `/user/${userId}/profile/${targetId}`, undefined);
 };
 
 // 이메일 중복 체크
@@ -56,8 +59,6 @@ export const socialSignup = (userId: number, userData: any) => {
   return request("put", `/user/${userId}/oauthSignup`, userData, { userId });
 };
 
-
-
 // 전체 회원 정보 수정
 export const editUserInfo = (userData: any) => {
   return authenticatedRequest("put", "/user/profile", userData);
@@ -65,10 +66,17 @@ export const editUserInfo = (userData: any) => {
 
 // 프로필 사진 변경하기
 
-
 // 비밀번호 변경
-export const changePassword = (email: string, oldPassword: string, newPassword: string) => {
-  return authenticatedRequest("put", "/user/pw/update", undefined, { email, oldPassword, newPassword });
+export const changePassword = (
+  email: string,
+  oldPassword: string,
+  newPassword: string
+) => {
+  return authenticatedRequest("put", "/user/pw/update", undefined, {
+    email,
+    oldPassword,
+    newPassword,
+  });
 };
 
 // 회원 탈퇴
@@ -80,4 +88,3 @@ export const deleteId = (email: string) => {
 export const getMytag = (userId: number) => {
   return authenticatedRequest("get", `/user/${userId}/tags`);
 };
-

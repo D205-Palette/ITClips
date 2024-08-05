@@ -100,6 +100,7 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
         <BookmarkListEditModal
           isOpen={isEditModalOpen}
           onClose={() => setIsEditModalOpen(false)}
+          id={id}
         />
       )}
 

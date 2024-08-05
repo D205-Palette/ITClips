@@ -23,6 +23,7 @@ const MyBookmark = () => {
   const params = useParams();
 
   const tempListId = params.bookmarklistId;
+
   let listId = 0;
   if (tempListId) {
     listId = parseInt(tempListId);
@@ -41,6 +42,8 @@ const MyBookmark = () => {
   const [isEditModal, tabEditModal] = useState(false);
   const [isAddModal, tabAddModal] = useState(false);
   const { userId, token } = authStore();
+
+  const [canEdit, setCanEdit] = useState(false)
 
 
   // 메인으로 쓸것들
@@ -62,8 +65,6 @@ const MyBookmark = () => {
       .then((res) => {
         const newCatId = res.data.categories.filter((cat:CategoryType)=>cat.categoryName===whatCategory.categoryName)[0].categoryId
         changeCategory({categoryId:newCatId, categoryName:whatCategory.categoryName})
-        console.log(`웟 카테고리`)
-        console.log(whatCategory)
       })
       .catch((err) => {
         console.error(err);
@@ -86,7 +87,8 @@ const MyBookmark = () => {
         .then((res) => {
           setBookmarkList(res.data);
           setBookmarks(res.data.bookmarks)
-          setTempCategories(res.data.categories)
+          setTempCategories(res.data.categories)       
+          res.data.users.map((user:{id:number,nickName:string})=>(user.id===userId? setCanEdit(true):''))
         })
         .catch((err) => {
           console.error(err);
@@ -94,7 +96,6 @@ const MyBookmark = () => {
     }
     fetchData();
   }, []);
-
 
   return (
     <>
@@ -191,12 +192,12 @@ const MyBookmark = () => {
                   className="hover:cursor-pointer hover:text-slate-500"
                 />
               </div>
-            ) : (
+            ) : ( canEdit ? 
               <FaEdit
                 size={50}
                 onClick={() => toggleMode(true)}
                 className="hover:cursor-pointer hover:text-sky-600"
-              />
+              /> : <></>
             )}
           </div>
         </div>

@@ -51,7 +51,7 @@ const SearchView = () => {
               { whatCategory === "유저" && <SearchUser /> }
               { whatCategory === "북마크리스트" && <SearchBookmarkList keyword={keyword} /> }
               { whatCategory === "로드맵" && <SearchRoadmap keyword={keyword} /> }
-              { whatCategory === "태그" && <SearchTag /> }
+              { whatCategory === "태그" && <SearchTag keyword={keyword} /> }
             </div>
           </div>
         </div>

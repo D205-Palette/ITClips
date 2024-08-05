@@ -15,9 +15,11 @@ export default function Oauth2() {
     const id = urlParams.get("userId");
 
     if (token && id) {
-      setAccessToken(token);
       const userIdNumber = parseInt(id, 10);
       setUserId(userIdNumber);
+      fetchUserId(userIdNumber); // 스토리지에 유저 아이디 갱신
+          fetchUserToken(token); // 스토리지에 액세스 토큰 갱신
+      setAccessToken(token);
 
       checkUserInfo(userIdNumber)
         .then((response) => {

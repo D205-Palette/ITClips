@@ -14,11 +14,6 @@ import RealtimeSidebar from "../components/search/layout/RealtimeSidebar";
 // stores
 import { asideStore } from "../stores/asideStore";
 
-interface SearchInfo {
-  category: string;
-  keyword: string;
-}
-
 const SearchView = () => {
 
   const isMessageOpen = asideStore(state => state.isMessageOpen);
@@ -54,7 +49,7 @@ const SearchView = () => {
               {/* 검색 버튼을 눌렀을 때 적용되게 */}
               { whatCategory === "카테고리" && <SearchMain /> }
               { whatCategory === "유저" && <SearchUser /> }
-              { whatCategory === "북마크리스트" && <SearchBookmarkList /> }
+              { whatCategory === "북마크리스트" && <SearchBookmarkList keyword={keyword} /> }
               { whatCategory === "로드맵" && <SearchRoadmap /> }
               { whatCategory === "태그" && <SearchTag /> }
             </div>

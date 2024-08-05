@@ -7,14 +7,25 @@ import SearchItemKebabDropdown from "./SearchItemKebabDropdown";
 // images (임시)
 import image from "../../../assets/images/profile_image.png";
 
+interface Tag {
+  title: string;
+}
+
+interface User {
+  id: number;
+  nickName: string;
+}
+
 interface BookmarkListItem {
   id: number;
   title: string;
-  username: string;
-  bookmarks: number;
-  likes: number;
-  createdAt: string;
-  thumbnailUrl: string;
+  description: string;
+  bookmarkCount: number;
+  likeCount: number;
+  image: string;
+  isLiked: boolean;
+  tags: Tag[];
+  users: User[];
 }
 
 interface BookmarkListItemProps {
@@ -27,6 +38,13 @@ const SearchBookmarkListItemGrid: React.FC<BookmarkListItemProps> = ({ item }) =
   const handleNavLink = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+  };
+
+  // users의 nickName을 처리하는 함수
+  const getUserNames = (users: User[]) => {
+    if (users.length === 0) return "";
+    if (users.length === 1) return users[0].nickName;
+    return users.map(user => user.nickName).join(", ");
   };
 
   return (
@@ -45,11 +63,11 @@ const SearchBookmarkListItemGrid: React.FC<BookmarkListItemProps> = ({ item }) =
           <div className="flex flex-col">
             <h3 className="text-lg font-semibold truncate mb-1">{item.title}</h3>
             <div className="flex items-center text-gray-600 text-sm">
-              <span className="mr-2 font-bold text-sky-500">{item.bookmarks}개</span>
-              <p className="truncate text-gray-400">{item.username} 생성</p>
+              <span className="mr-2 font-bold text-sky-500">{item.bookmarkCount}개</span>
+              <p className="truncate text-gray-400">{getUserNames(item.users)} 생성</p>
             </div>
             <div className="flex justify-end mt-2">
-              <button className="btn btn-ghost btn-xs" onClick={handleNavLink}>❤️ {item.likes}</button>
+              <button className="btn btn-ghost btn-xs" onClick={handleNavLink}>❤️ {item.likeCount}</button>
             </div>
           </div>
         </div>

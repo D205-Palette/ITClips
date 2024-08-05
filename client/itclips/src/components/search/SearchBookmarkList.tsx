@@ -45,7 +45,7 @@ const SearchBookmarkList: React.FC<SearchBookmarkListProps> = ({ keyword }) => {
 
   const [ viewMode, setViewMode ] = useState<'grid' | 'list'>('list');
   const [ sortBy, setSortBy ] = useState<"조회수" | "스크랩수" | "좋아요수">("조회수");
-  const [bookmarkListItems, setBookmarkListItems] = useState<BookmarkListItem[]>([]);
+  const [ bookmarkListItems, setBookmarkListItems ] = useState<BookmarkListItem[]>([]);
 
   const tabList = () => {
     setViewMode("list");

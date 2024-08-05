@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // components
 import SearchRoadmapItemsContainer from "./layout/SearchRoadmapItemsContainer";
@@ -8,20 +8,47 @@ import { FaList } from "react-icons/fa";
 import { CiBoxList } from "react-icons/ci";
 import { HiOutlineSquares2X2, HiMiniSquares2X2 } from "react-icons/hi2";
 
-interface RoadmapItem {
+// apis
+import { roadmapSearch } from "../../api/searchApi";
+
+// stores
+import { authStore } from "../../stores/authStore";
+
+interface Step {
   id: number;
-  title: string;
-  username: string;
-  bookmarks: number;
-  likes: number;
-  createdAt: string;
-  thumbnailUrl: string;
+  listId: number;
+  listTitle: string;
+  order: string;
+  check: boolean;
 }
 
-const SearchRoadmap = () => {
+interface RoadmapItem {
+  id: number;
+  userId: number;
+  userName: string;
+  title: string;
+  description: string;
+  image: string;
+  isPublic: number;
+  createdAt: string;
+  stepCnt: number;
+  checkCnt: number;
+  likeCnt: number;
+  steps: Step[];
+  isLiked: boolean;
+}
+
+interface SearchRoadmapProps {
+  keyword: string;
+}
+
+const SearchRoadmap: React.FC<SearchRoadmapProps> = ({ keyword }) => {
+
+  const userId = authStore(state => state.userId)
 
   const [ viewMode, setViewMode ] = useState<'grid' | 'list'>('list');
-  const [ sortBy, setSortBy ] = useState<'views' | 'bookmarks' | 'likes'>('views');
+  const [ sortBy, setSortBy ] = useState<"조회수" | "스크랩수" | "좋아요수">("조회수");
+  const [ roadmapItems, setRoadmapItems ] = useState<RoadmapItem[]>([]);
 
   const tabList = () => {
     setViewMode("list");
@@ -31,14 +58,18 @@ const SearchRoadmap = () => {
     setViewMode("grid");
   };
 
-  // 더미 데이터
-  const data: RoadmapItem[] = [
-    { id: 1, title: "로드맵_01", username: "고양양", bookmarks: 12, likes: 10, createdAt: "2024-01-01", thumbnailUrl: "" },
-    { id: 2, title: "로드맵_02", username: "고양양", bookmarks: 12, likes: 10, createdAt: "2024-01-01", thumbnailUrl: "" },
-    { id: 3, title: "로드맵_03", username: "고양양", bookmarks: 12, likes: 10, createdAt: "2024-01-01", thumbnailUrl: "" },
-    { id: 4, title: "로드맵_04", username: "고양양", bookmarks: 12, likes: 10, createdAt: "2024-01-01", thumbnailUrl: "" },
-    { id: 5, title: "로드맵_05", username: "고양양", bookmarks: 12, likes: 10, createdAt: "2024-01-01", thumbnailUrl: "" },
-  ]
+  useEffect(() => {
+    const fetchRoadmap = async () => {
+      try {
+        const response = await roadmapSearch(userId, 1, sortBy, keyword);
+        setRoadmapItems(response.data);
+      } catch (error) {
+        console.error("북마크 리스트 검색 중 오류 발생:", error);
+      }
+    };
+
+    fetchRoadmap();
+  }, [userId, sortBy, keyword]);
 
   return (
     <div className="mt-4">
@@ -53,20 +84,20 @@ const SearchRoadmap = () => {
       <div className="flex justify-between mb-4">
         <div className="space-x-2">
           <button 
-            className={`px-4 py-2 rounded-full ${sortBy === 'views' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-            onClick={() => setSortBy('views')}
+            className={`px-4 py-2 rounded-full ${sortBy === "조회수" ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+            onClick={() => setSortBy("조회수")}
           >
             조회수
           </button>
           <button 
-            className={`px-4 py-2 rounded-full ${sortBy === 'bookmarks' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-            onClick={() => setSortBy('bookmarks')}
+            className={`px-4 py-2 rounded-full ${sortBy === "스크랩수" ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+            onClick={() => setSortBy("스크랩수")}
           >
             스크랩수
           </button>
           <button 
-            className={`px-4 py-2 rounded-full ${sortBy === 'likes' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-            onClick={() => setSortBy('likes')}
+            className={`px-4 py-2 rounded-full ${sortBy === "좋아요수" ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+            onClick={() => setSortBy("좋아요수")}
           >
             좋아요수
           </button>
@@ -74,7 +105,7 @@ const SearchRoadmap = () => {
       </div>
       {/* 검색 결과 */}
       <SearchRoadmapItemsContainer
-        items={data}
+        items={roadmapItems}
         viewMode={viewMode}
       />
     </div>

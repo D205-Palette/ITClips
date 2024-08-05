@@ -22,7 +22,7 @@ const UserActivityInfo: React.FC<InfoCounts> = (follow) => {
       <div className="grid grid-cols-12">
         <div className="col-start-3 col-span-5 text-start text-gray-500">팔로워</div>
         <div className="col-start-9">
-          <NavLink to={`/user/${params.user_id}/follow/follower`}>
+          <NavLink to={`/user/${params.userId}/follow/follower`}>
             <button id="followers" className="text-start font-bold hover:bg-sky-200 hover:rounded">{follow.followerCount}</button>
           </NavLink>
         </div>
@@ -30,7 +30,7 @@ const UserActivityInfo: React.FC<InfoCounts> = (follow) => {
       <div className="grid grid-cols-12">
         <div className="col-start-3 col-span-5 text-start text-gray-500">팔로잉</div>
         <div className="col-start-9">
-          <NavLink to={`/user/${params.user_id}/follow/following`}>
+          <NavLink to={`/user/${params.userId}/follow/following`}>
             <button id="following" className="text-start font-bold hover:bg-sky-200 hover:rounded">{follow.followingCount}</button>
           </NavLink>
         </div>

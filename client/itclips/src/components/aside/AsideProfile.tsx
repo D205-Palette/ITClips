@@ -37,8 +37,8 @@ const AsideProfile = () => {
   const myInfo = authStore(state => state.userInfo);
 
   // url에서 user_id 가져오기
-  const params = useParams<{ user_id?: string }>();
-  const urlUserId = params.user_id ? parseInt(params.user_id, 10) : undefined;
+  const params = useParams<{ userId?: string }>();
+  const urlUserId = params.userId ? parseInt(params.userId, 10) : undefined;
   
   const { setUrlUserInfo, urlUserInfo } = profileStore();
   const { followerCount, followingCount, setFollowerCount, setFollowingCount } = useFollowStore();
@@ -54,6 +54,7 @@ const AsideProfile = () => {
   };
 
   useEffect(() => {
+    console.log(urlUserId);
     // url 유저 정보 조회
     const fetchUserInfo = async (userId: number) => {
       try {

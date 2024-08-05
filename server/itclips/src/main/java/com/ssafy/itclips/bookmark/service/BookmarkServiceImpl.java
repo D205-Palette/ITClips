@@ -43,22 +43,43 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     @Override
     @Transactional
-    public void createBookmark(Long listId, Long categoryId, BookmarkRequestDTO bookmarkRequestDTO) throws RuntimeException {
-        BookmarkList existingBookmarkList = bookmarkListRepository.findById(listId)
-                .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND));
-        Category existingCategory = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CustomException(ErrorCode.CATEGORY_NOT_FOUND));
-        Integer count = bookmarkCategoryRepository.countByCategoryId(categoryId);
-        //dto entity 넣기
+    public void createBookmark(Long listId, Long categoryId, BookmarkRequestDTO bookmarkRequestDTO) {
+        BookmarkList existingBookmarkList = getExistingBookmarkList(listId);
+        Integer count = getBookmarkCount(categoryId);
+
         Bookmark bookmark = buildBookmark(bookmarkRequestDTO, count);
         bookmark.addBookmarkList(existingBookmarkList);
         bookmarkRepository.save(bookmark);
 
-        BookmarkCategory bookmarkCategory = new BookmarkCategory();
-        bookmarkCategory.addBookmarkCategory(bookmark,existingCategory);
-        bookmarkCategoryRepository.save(bookmarkCategory);
+        if (categoryId != null) {
+            Category existingCategory = getExistingCategory(categoryId);
+            saveBookmarkCategory(bookmark, existingCategory);
+        }
 
         saveBookmarkTags(bookmarkRequestDTO, bookmark);
+    }
+
+    private BookmarkList getExistingBookmarkList(Long listId) {
+        return bookmarkListRepository.findById(listId)
+                .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND));
+    }
+
+    private Integer getBookmarkCount(Long categoryId) {
+        if (categoryId == null) {
+            return 1;
+        }
+        return bookmarkCategoryRepository.countByCategoryId(categoryId);
+    }
+
+    private Category getExistingCategory(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CustomException(ErrorCode.CATEGORY_NOT_FOUND));
+    }
+
+    private void saveBookmarkCategory(Bookmark bookmark, Category existingCategory) {
+        BookmarkCategory bookmarkCategory = new BookmarkCategory();
+        bookmarkCategory.addBookmarkCategory(bookmark, existingCategory);
+        bookmarkCategoryRepository.save(bookmarkCategory);
     }
 
     @Override

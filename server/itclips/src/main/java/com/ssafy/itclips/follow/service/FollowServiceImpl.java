@@ -124,4 +124,14 @@ public class FollowServiceImpl implements FollowService {
         }
         return followRepository.countByFrom(user);
     }
+
+    @Override
+    public boolean isFollowing(User currentUser, User targetUser) {
+        return followRepository.existsByFromUserAndToUser(currentUser, targetUser);
+    }
+
+    @Override
+    public boolean isFollowedBy(User targetUser, User currentUser) {
+        return followRepository.existsByFromUserAndToUser(targetUser, currentUser);
+    }
 }

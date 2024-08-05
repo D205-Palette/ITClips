@@ -22,4 +22,8 @@ public interface FollowService {
 
     long getFollowingCount(User user) throws RuntimeException;
 
+    boolean isFollowing(User currentUser, User targetUser);
+
+    boolean isFollowedBy(User targetUser, User currentUser);
+
 }

@@ -23,11 +23,32 @@ public class UserInfoDetailDTO {
     private int roadmapCount;
     private long followerCount;
     private long followingCount;
+    private boolean isFollowing;
+    private boolean isFollowers;
+
+//    @Builder
+//    public UserInfoDetailDTO(Long id, String email, String nickname, LocalDate birth, String job, Boolean gender, Boolean darkMode, String bio,
+//                             int bookmarkListCount, int roadmapCount,
+//                             long followerCount, long followingCount) {
+//        this.id = id;
+//        this.email = email;
+//        this.nickname = nickname;
+//        this.birth = birth;
+//        this.job = job;
+//        this.gender = gender;
+//        this.darkMode = darkMode;
+//        this.bio = bio;
+//        this.bookmarkListCount = bookmarkListCount;
+//        this.roadmapCount = roadmapCount;
+//        this.followerCount = followerCount;
+//        this.followingCount = followingCount;
+//    }
 
     @Builder
     public UserInfoDetailDTO(Long id, String email, String nickname, LocalDate birth, String job, Boolean gender, Boolean darkMode, String bio,
                              int bookmarkListCount, int roadmapCount,
-                             long followerCount, long followingCount) {
+                             long followerCount, long followingCount,
+                             boolean isFollowing, boolean isFollowers) {
         this.id = id;
         this.email = email;
         this.nickname = nickname;
@@ -40,6 +61,8 @@ public class UserInfoDetailDTO {
         this.roadmapCount = roadmapCount;
         this.followerCount = followerCount;
         this.followingCount = followingCount;
+        this.isFollowing = isFollowing;
+        this.isFollowers = isFollowers;
     }
 
 }

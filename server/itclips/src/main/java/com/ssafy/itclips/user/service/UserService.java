@@ -28,6 +28,8 @@ public interface UserService {
 
     User getUserByNickname(String nickname);
 
+    Long getUserIdByNickname(String nickname);
+
     User findUserByEmail(String email);
 
     User updateUserByEmail(String email, User user);

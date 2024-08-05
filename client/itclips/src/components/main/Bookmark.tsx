@@ -1,5 +1,5 @@
 // 이미지 , 리스트명, 북마크 개수, 태그, 설명, 좋아요 버튼&좋아요 수, 리스트 세부 조작 버튼
-import { useState, FC,useEffect } from "react";
+import { useState, FC, useEffect } from "react";
 import KebabDropdown from "../common/KebabDropdown(Bookmark)";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import darkModeStore from "../../stores/darkModeStore";
@@ -13,6 +13,7 @@ import axios from "axios";
 import { authStore } from "../../stores/authStore";
 import { API_BASE_URL } from "../../config";
 import EditTag from "./Bookmark(Tag)";
+import { LINKPREVIEW_API_KEY } from "../../config"; 
 
 // const bookmarks = {
 //     title: string,
@@ -37,21 +38,40 @@ const Bookmark: FC<Props> = ({
   editBookmarksIndex,
   changeEditBookmarksIndex,
 }) => {
-
   const [tempBookmark, editTempBookmark] = useState<BookmarkType>(bookmark);
-  const [tempTitle, editTempTitle] = useState<string>('');
+  const [tempTitle, editTempTitle] = useState<string>("");
   const [tempTags, editTempTags] = useState(bookmark.tags);
   const [tempTag, editTempTag] = useState("");
 
   useEffect(() => {
     async function fetchData() {
-      editTempBookmark(bookmark)
-      editTempTitle(bookmark.title)
-      editTempTags(bookmark.tags)
-      editTempTag("")
+      editTempBookmark(bookmark);
+      editTempTitle(bookmark.title);
+      editTempTags(bookmark.tags);
+      editTempTag("");
     }
     fetchData();
   }, []);
+
+  // 북마크 썸네일 불러오기
+  const [ogImage, setOgImage] = useState("");
+  
+
+  useEffect(() => {
+    async function fetchOpenGraphData() {
+      try {
+        const response = await axios.get(
+          `https://api.linkpreview.net/?key=${LINKPREVIEW_API_KEY}&q=${bookmark.url}`
+        );
+        setOgImage(response.data.image);
+        console.log(ogImage)
+      } catch (error) {
+        console.error("Error fetching Open Graph data:", error);
+      }
+    }
+
+    fetchOpenGraphData();
+  }, [bookmark.url]);
 
   const [isLike, toggleLike] = useState(bookmark.isLiked);
   const [likeCount, setLikeCount] = useState(bookmark.likeCount);
@@ -62,8 +82,6 @@ const Bookmark: FC<Props> = ({
   const [isAiOpen, setIsAIOpen] = useState(false);
   // 그냥 더미. 있어야됨. 삭제 ㄴㄴ
   const [nothingMode, tabNothing] = useState(false);
-
-
 
   const { userId, token } = authStore();
 
@@ -96,7 +114,7 @@ const Bookmark: FC<Props> = ({
   function submitTag(): void {
     // tempBookmark를 formData로 해서 put 요청
     editTempTags([...tempTags, { title: tempTag }]);
-    
+
     editTempTag("");
     toggleTagEdit(false);
   }
@@ -105,20 +123,19 @@ const Bookmark: FC<Props> = ({
   function completeEdit(): void {
     toggleEdit(false);
     // editTempBookmark({ ...tempBookmark, title: tempTitle, tags: tempTags });
-    editTempBookmark({...tempBookmark, title:tempTitle})
+    editTempBookmark({ ...tempBookmark, title: tempTitle });
     //  /bookmark /update/{bookmarkId} 로 put요청
     axios.put(`${API_BASE_URL}/api/bookmark/update/${bookmark.id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-        url:bookmark.url,
-        title:tempTitle,
-        tags:tempTags,
-        content:bookmark.content,
-      
+      url: bookmark.url,
+      title: tempTitle,
+      tags: tempTags,
+      content: bookmark.content,
     });
   }
-  
+
   return (
     <>
       <div
@@ -130,6 +147,9 @@ const Bookmark: FC<Props> = ({
         <>
           <div className="card-body flex flex-row items-center">
             {/* 주소에 https 포함 여부 확인해야할듯 */}
+
+            <img src={ogImage || 'default-image.jpg'} alt={bookmark.url} className="h-full" />
+
             <div
               className="flex flex-col flex-auto justify-around"
               onClick={() => {
@@ -139,7 +159,7 @@ const Bookmark: FC<Props> = ({
               <div>
                 {isEdit ? (
                   <input
-                    type="text" 
+                    type="text"
                     value={tempTitle}
                     onChange={(e) => editTempTitle(e.target.value)}
                     className="text-xl font-bold border-slate-400 border rounded-md"

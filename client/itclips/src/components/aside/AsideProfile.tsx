@@ -135,14 +135,20 @@ const AsideProfile = () => {
 
   return (
     <div className={`${ isDark ? "bg-base-300" : "bg-sky-100" } rounded-3xl w-80 p-8 flex flex-col items-center`}>
-      {/* 다른 유저일때 채팅하기 버튼 또는 환경설정 활성화 */}
-      {myInfo.id !== urlUserId ? (
-        <button className="btn btn-ghost btn-circle ms-16" onClick={onClickStartChat}>
-          <IoChatboxEllipsesOutline className="h-8 w-8" />
-        </button>
+      {/* 피드 페이지일때 유저 id가 없으므로 urlUserId가 undefined면 무조건 설정 아이콘 뜨게 */}
+      {urlUserId ? (
+        myInfo.id !== urlUserId ? (
+          <button className="btn btn-ghost btn-circle ms-16" onClick={onClickStartChat}>
+            <IoChatboxEllipsesOutline className="h-8 w-8" />
+          </button>
+        ) : (
+          <button className="btn btn-ghost btn-circle ms-16" onClick={openModal}>
+            <IoSettingsOutline className="h-6 w-6" />
+          </button>
+        )
       ) : (
         <button className="btn btn-ghost btn-circle ms-16" onClick={openModal}>
-          <IoSettingsOutline className="h-6 w-6" />
+            <IoSettingsOutline className="h-6 w-6" />
         </button>
       )}
       {/* 프로필 이미지 컨테이너 */}

@@ -220,9 +220,9 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOpen, onC
       setGlobalNotification({ message: "사용자 정보가 없습니다.", type: 'error' });
       return;
     }
-
-    // 닉네임 중복 확인 여부 체크
-    if (isDuplicateNickname === null || isDuplicateNickname === true || nickname !== userInfo.nickname) {
+  
+    // 닉네임이 변경되었고, 중복 확인이 되지 않았을 때만 체크
+    if (nickname !== userInfo.nickname && (isDuplicateNickname === null || isDuplicateNickname === true)) {
       setGlobalNotification({ message: "닉네임 중복 확인을 해주세요.", type: 'error' });
       return;
     }

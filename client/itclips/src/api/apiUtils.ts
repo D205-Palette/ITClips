@@ -11,8 +11,8 @@ export const authenticatedRequest = (method: string, url: string, data?: any, pa
   });
 };
 
-// 인증된 요청과 프로필 수정을 위한 유틸리티 함수
-export const authenticatedUserSettingRequest = (method: string, url: string, data?: any, params?: any) => {
+// 인증된 요청과 raw json 전송을 위한 유틸리티 함수
+export const authenticatedRawJsonRequest = (method: string, url: string, data?: any, params?: any) => {
   return api({
     method,
     url,

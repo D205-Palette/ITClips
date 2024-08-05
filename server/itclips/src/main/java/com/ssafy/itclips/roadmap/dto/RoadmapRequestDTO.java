@@ -40,6 +40,7 @@ public class RoadmapRequestDTO {
                 .description(description)
                 .image(image)
                 .isPublic(isPublic)
+                .hit(0L)
                 .build();
     }
     // TODO: toDto 만들기

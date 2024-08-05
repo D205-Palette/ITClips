@@ -68,21 +68,15 @@ public class NotificationServiceImpl implements NotificationService{
 
     // 읽음 처리
     @Override
-    public void readAll(NotifyReadDTO notifyReadDTO) {
+    public void readAll(Long userId) {
         //알림 아이디 목록 받아옴
-        List<Long> ids = notifyReadDTO.getNotificationIds();
-
-        for (Long id : ids) {
-            // 알림 찾아옴
-            Notification notification = notificationRepository.findById(id).orElse(null);
-            if (notification != null) {
-                // 읽음 처리 ㅇ
-                notification.setRead(true);
-            }
+        List<Notification> notificationList = notificationRepository.findByUserId(userId);
+        for (Notification notification : notificationList) {
+            // 알림읽음 처리
+            notification.setRead(true);
             //저장
             notificationRepository.save(notification);
         }
-
     }
 
 

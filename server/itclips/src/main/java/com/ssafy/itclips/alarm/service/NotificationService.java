@@ -20,7 +20,7 @@ public interface NotificationService {
     List<Notification> findUserList(Long userId);
 
     // 알림 읽음 처리
-    void readAll(NotifyReadDTO notifyReadDTO);
+    void readAll(Long userId);
 
     // 좋아요 알림
     //보내는 사람 id, 받는 사람 id , 타입, 보내는 사람 닉네임

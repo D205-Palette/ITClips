@@ -56,15 +56,20 @@ public class NotificationController {
     }
 
     //알림 읽음
-    @PutMapping("/read")
+    @PutMapping("/read/{userId}")
     @Operation(summary = "알림 읽음 처리", description = "알림 읽음 처리 ")
-    public ResponseEntity<?> read(@RequestBody NotifyReadDTO notifyReadDTO) {
-        notificationService.readAll(notifyReadDTO);
-        return new ResponseEntity(HttpStatus.OK);
+    public ResponseEntity<?> read(@PathVariable("userId")Long userId) {
+        notificationService.readAll(userId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
     //알림 삭제
+    @DeleteMapping("/{alarmId}")
+    @Operation(summary = "알림 삭제 ", description = "알림 삭제 ")
+    public ResponseEntity<?> delete(@PathVariable("alarmId") Long alarmId) {
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 
 }

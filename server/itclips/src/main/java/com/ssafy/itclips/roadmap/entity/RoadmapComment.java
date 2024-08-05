@@ -39,9 +39,8 @@ public class RoadmapComment {
     @Column(name = "contents", nullable = false)
     private String contents;
 
-    @NotNull
     @CreationTimestamp
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @UpdateTimestamp

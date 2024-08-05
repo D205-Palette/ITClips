@@ -286,7 +286,7 @@ public class RoadmapServiceImpl implements RoadmapService {
             Roadmap originRoadmap = roadmapRepository.findById(roadmap.getOrigin()).orElse(null);
             if(originRoadmap!=null){
 
-                notificationService.deleteNotification(userId, originRoadmap.getUser().getId(),roadmapId,NotificationType.ROADMAP_SCRAP);
+                notificationService.deleteNotification(userId, originRoadmap.getUser().getId(),roadmap.getOrigin(),NotificationType.ROADMAP_SCRAP);
             }
         }
 

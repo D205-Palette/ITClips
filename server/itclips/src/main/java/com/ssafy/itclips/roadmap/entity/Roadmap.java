@@ -46,9 +46,8 @@ public class Roadmap {
     @Column(name = "description")
     private String description;
 
-    @NotNull
     @CreationTimestamp
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @UpdateTimestamp

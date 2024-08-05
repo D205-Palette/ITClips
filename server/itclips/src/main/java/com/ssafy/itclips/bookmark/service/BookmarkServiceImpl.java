@@ -26,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -153,7 +154,9 @@ public class BookmarkServiceImpl implements BookmarkService {
     }
 
     @Override
+    @Cacheable(value = "bookmarks", key="#bookmarkId")
     public BookmarkSummaryDTO getUrlSummary(Long bookmarkId) throws RuntimeException {
+        log.info("summarizing");
         Bookmark bookmark = bookmarkRepository.findById(bookmarkId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_NOT_FOUND));
         String prompt = bookmark.getUrl() + "을 다른 말과 번호 없이 개조식으로 3줄로 요약 해 줘";

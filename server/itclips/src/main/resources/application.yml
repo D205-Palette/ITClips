@@ -26,6 +26,9 @@ spring:
       host: ${DB_HOST}
       port: 6379
 
+  cache:
+    type: redis
+
   config:
     import: optional:classpath:application-secret.yml
 

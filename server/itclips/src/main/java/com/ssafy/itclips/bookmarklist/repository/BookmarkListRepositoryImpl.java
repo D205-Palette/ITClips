@@ -161,6 +161,12 @@ public class BookmarkListRepositoryImpl implements BookmarkListRepositoryCustom 
         for(Tuple tuple : results) {
             Bookmark bookmark = tuple.get(qbookmark);
             Category category = tuple.get(qcategory);
+
+            if(category == null) {
+                category = Category.builder()
+                        .name("")
+                        .build();
+            }
             BookmarkDetailDTO dto = BookmarkDetailDTO.toDTO(bookmark,category);
             bookmarkDetailDTOs.add(dto);
         }

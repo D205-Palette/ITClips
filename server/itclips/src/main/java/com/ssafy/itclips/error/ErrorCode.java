@@ -14,6 +14,7 @@ public enum ErrorCode {
     LIST_ALREADY_SCRAPPED(HttpStatus.BAD_REQUEST,"BL-004","이미 스크랩 한 리스트입니다."),
     LIST_NOT_SCRAPPED(HttpStatus.NOT_FOUND,"BL-004","스크랩하지 않은 글입니다."),
     CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND,"CAT-001","카테고리를 찾을 수 없습니다."),
+    CATEGORY_ALREADY_EXIST(HttpStatus.BAD_REQUEST,"CAT-002","카테고리 이름이 이미 존재합니다."),
     BOOKMARK_NOT_FOUND(HttpStatus.NOT_FOUND,"BM-001","북마크를 찾을 수 없습니다."),
     BOOKMARK_LIKE_ALREADY_EXIST(HttpStatus.BAD_REQUEST,"BM-002", "이미 좋아요 한 북마크입니다."),
     BOOKMARK_LIKE_NOT_FOUND(HttpStatus.NOT_FOUND,"BM-003","좋아요하지 않은 북마크입니다"),

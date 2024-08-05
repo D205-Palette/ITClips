@@ -26,6 +26,12 @@ public class CategoryServiceImpl implements CategoryService {
         // 기존 북마크 목록을 조회
         BookmarkList existingBookmarkList = bookmarkListRepository.findById(listId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND));
+        Category existingCategory = categoryRepository.findByName(categoryRequestDTO.getCategoryName());
+
+        if(existingCategory != null){
+            throw new CustomException(ErrorCode.CATEGORY_ALREADY_EXIST);
+        }
+
         Category category = Category.builder()
                 .name(categoryRequestDTO.getCategoryName())
                 .build();

@@ -83,10 +83,13 @@ public class RoadmapServiceImpl implements RoadmapService {
             // 체크한단계 수
             Long checkCnt = roadmapStepRepository.countByRoadmapIdAndCheck(roadmap.getId(), true);
 
+            //이미지 url 생성
+            String imageUrl = fileService.getPresignedUrl("images", roadmap.getImage(), false).get("url");
+
             // 좋아요 했는지 안했는지
             Boolean isLiked = roadmapLikeRepository.existsByRoadmapIdAndUserId(roadmap.getId(),viewId);
 
-            RoadmapInfoDTO roadmapInfoDTO = RoadmapInfoDTO.toDto(roadmap,steps.size(),checkCnt,likeCnt,steps,isLiked);
+            RoadmapInfoDTO roadmapInfoDTO = RoadmapInfoDTO.toDto(roadmap,steps.size(),checkCnt,likeCnt,steps,isLiked,imageUrl);
             roadmapInfoDTOList.add(roadmapInfoDTO);
         }
 
@@ -116,12 +119,12 @@ public class RoadmapServiceImpl implements RoadmapService {
             Long checkCnt = roadmapStepRepository.countByRoadmapIdAndCheck(roadmap.getId(), true);
             // 좋아요 수
             Long likeCnt = roadmapLikeRepository.countByRoadmapId(roadmap.getId());
-
-
+            //이미지 url 생성
+            String imageUrl = fileService.getPresignedUrl("images", roadmap.getImage(), false).get("url");
             // 좋아요 했는지 안했는지
             Boolean isLiked = roadmapLikeRepository.existsByRoadmapIdAndUserId(roadmap.getId(),viewId);
 
-            RoadmapInfoDTO roadmapInfoDTO = RoadmapInfoDTO.toDto(roadmap,steps.size(),checkCnt,likeCnt,steps,isLiked);
+            RoadmapInfoDTO roadmapInfoDTO = RoadmapInfoDTO.toDto(roadmap,steps.size(),checkCnt,likeCnt,steps,isLiked,imageUrl);
             roadmapInfoDTOList.add(roadmapInfoDTO);
         }
 
@@ -494,11 +497,12 @@ public class RoadmapServiceImpl implements RoadmapService {
 
             // 체크한단계 수
             Long checkCnt = roadmapStepRepository.countByRoadmapIdAndCheck(roadmap.getId(), true);
-
+            //이미지 url 생성
+            String imageUrl = fileService.getPresignedUrl("images", roadmap.getImage(), false).get("url");
             // 좋아요 했는지 안했는지
             Boolean isLiked = roadmapLikeRepository.existsByRoadmapIdAndUserId(roadmap.getId(),userId);
 
-            RoadmapInfoDTO roadmapInfoDTO = RoadmapInfoDTO.toDto(roadmap,steps.size(),checkCnt,likeCnt,steps,isLiked);
+            RoadmapInfoDTO roadmapInfoDTO = RoadmapInfoDTO.toDto(roadmap,steps.size(),checkCnt,likeCnt,steps,isLiked,imageUrl);
             roadmapInfoDTOList.add(roadmapInfoDTO);
         }
 

@@ -43,7 +43,8 @@ public class RoadmapInfoDTO {
     }
 
     // 로드맵 단계 수 진행수 좋아요수 단계리스트
-    public static RoadmapInfoDTO toDto(Roadmap roadmap,Integer stepCnt,Long checkCnt,Long likeCnt, List<StepInfoDTO> steps,Boolean isLiked){
+    public static RoadmapInfoDTO toDto(Roadmap roadmap,Integer stepCnt,Long checkCnt,
+                                       Long likeCnt, List<StepInfoDTO> steps,Boolean isLiked, String imageUrl){
 
         return RoadmapInfoDTO.builder()
                 .id(roadmap.getId())
@@ -51,7 +52,7 @@ public class RoadmapInfoDTO {
                 .userName(roadmap.getUser().getNickname())
                 .title(roadmap.getTitle())
                 .description(roadmap.getDescription())
-                .image(roadmap.getImage())
+                .image(imageUrl)
                 .isPublic(roadmap.getIsPublic())
                 .createdAt(roadmap.getCreatedAt())
                 .stepCnt(stepCnt)

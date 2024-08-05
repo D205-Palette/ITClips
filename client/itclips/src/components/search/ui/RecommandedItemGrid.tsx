@@ -38,7 +38,7 @@ const RecommandedItemGrid: React.FC<RecommandedItemProps> = ({ item }) => {
         <div className="relative">
           <img src={image} alt={item.title} className="w-full h-40 object-cover" />
           <div className="absolute top-2 right-2 z-10" onClick={handleNavLink}>
-            <SearchItemKebabDropdown />
+            <SearchItemKebabDropdown id={item.id} whatContent="리스트"/>
           </div>
         </div>
         <div className="p-3">

@@ -6,7 +6,12 @@ import { VscKebabVertical } from "react-icons/vsc";
 // stores
 import { asideStore } from "../../../stores/asideStore";
 
-const FollowerItemKebabDropdown = () => {
+interface Props {
+  onDeleteFollowing: () => void;
+}
+
+const FollowingItemKebabDropdown: React.FC<Props> = ({ onDeleteFollowing }) => {
+
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -25,7 +30,7 @@ const FollowerItemKebabDropdown = () => {
     if (menu === "메세지 보내기") {
       startSendMessage();
     } else if (menu === "삭제") {
-      // 팔로워 삭제 로직
+      onDeleteFollowing();
     }
     setIsDropdownOpen(false);
   };
@@ -72,4 +77,4 @@ const FollowerItemKebabDropdown = () => {
   );
 };
 
-export default FollowerItemKebabDropdown;
+export default FollowingItemKebabDropdown;

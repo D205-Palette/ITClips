@@ -9,8 +9,10 @@ import axios from "axios";
 import { API_BASE_URL } from "../../config";
 import { authStore } from "../../stores/authStore";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; 
 
 const MyRoadmap: FC = () => {
+  const navigate = useNavigate()
   const {userId, token} = authStore()
   const [roadmaps, setRoadmaps] = useState<RoadmapSumType[]>([])
   const params = useParams()
@@ -63,7 +65,9 @@ const MyRoadmap: FC = () => {
       </div>
       
       {/* 로드맵 추가 버튼 */}
-      <button className="fixed z-20 bottom-10 right-10">
+      <button className="fixed z-20 bottom-10 right-10"
+      onClick={() => navigate('/roadmap/create')}>
+        
         <FaPlus color="skyblue" size={56}/>
       </button>
     </>

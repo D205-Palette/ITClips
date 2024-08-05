@@ -1,6 +1,6 @@
 // stores/asideStore.ts
 
-import create from 'zustand';
+import { create } from 'zustand';
 
 interface AsideState {
   isMessageOpen: boolean;

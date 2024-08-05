@@ -1,28 +1,46 @@
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+
 // components
 import FollowerItem from "./FollowerItem";
 
-interface User {
+// apis
+import { getFollowerList } from "../../api/followApi";
+
+interface Follower {
   id: number;
-  username: string;
-  imageUrl: string;
+  fromUserId: number;
+  toUserId: number;
+  nickname: string;
+  profileImage: string;
   email: string;
-  tag: string;
 }
 
 const FollowerList = () => {
 
-  // 더미 데이터
-  const data: User[] = [
-    { id: 1, username: "고양양", imageUrl: "", email: "abc@gmail.com", tag: "#관심사1 #관심사2 #태그" },
-    { id: 2, username: "고양양", imageUrl: "", email: "abc@gmail.com", tag: "#관심사1 #관심사2 #태그" },
-    { id: 3, username: "고양양", imageUrl: "", email: "abc@gmail.com", tag: "#관심사1 #관심사2 #태그" },
-    { id: 4, username: "고양양", imageUrl: "", email: "abc@gmail.com", tag: "#관심사1 #관심사2 #태그"},
-  ]
+  const [ followerList, setFollowerList ] = useState<Follower[]>([]);
+  const { user_id } = useParams<{ user_id: string }>();
+
+  // 팔로워 목록 조회
+  const fetchFollowerList = async () => {
+    if (user_id) {
+      try {
+        const response = await getFollowerList(parseInt(user_id, 10));
+        setFollowerList(response.data);
+        console.log(response);
+      } catch (error) {
+        console.error("팔로워 목록 조회 실패", error);
+      }
+    }
+  };
+  
+  useEffect(() => {
+    fetchFollowerList();
+  }, [user_id]);
 
   return (
     <div className="mt-4">
-      {/* 추천 결과 */}
-      <FollowerItem items={data} />
+      <FollowerItem items={followerList} />
     </div>
   );
 };

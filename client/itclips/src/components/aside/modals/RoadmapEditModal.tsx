@@ -1,6 +1,6 @@
 // BookmarkListEditModal.tsx 는 AsideBookmarkList.tsx 에서 더보기 메뉴의 '수정하기' 버튼을 눌렀을 때 출력되는 컴포넌트
 
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 
 // icons
 import { IoCloseOutline } from 'react-icons/io5';
@@ -10,13 +10,14 @@ interface EditModalProps {
   onClose: () => void;
 }
 
-const BookmarkListEditModal: React.FC<EditModalProps> = ({ isOpen, onClose }) => {
-  const [ title, setTitle ] = useState<string>('');
-  const [ content, setContent ] = useState<string>('');
-  const [ category, setCategory ] = useState<string[]>([]);
-  const [ newCategory, setNewCategory ] = useState<string>('');
-  const [ imageUrl, setImageUrl ] = useState<string>('');
-  const fileInputRef = useRef<HTMLInputElement>(null);
+const RoadmapEditModal: React.FC<EditModalProps> = ({ isOpen, onClose }) => {
+  const [title, setTitle] = useState<string>('');
+  const [content, setContent] = useState<string>('');
+  const [category, setCategory] = useState<string[]>([]);
+  const [newCategory, setNewCategory] = useState<string>('');
+
+  // 로드맵 이미지 상태
+  const [roadmapImage, setRoadmapImage] = useState<string | null>(null);
 
   const handleAddCategory = () => {
     if (newCategory.trim() !== '') {
@@ -29,19 +30,16 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({ isOpen, onClose }) =>
     setCategory(category.filter((_, i) => i !== index));
   };
 
+  // 프로필 이미지 변경 핸들러
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImageUrl(reader.result as string);
+        setRoadmapImage(reader.result as string);
       };
       reader.readAsDataURL(file);
     }
-  };
-
-  const handleImageClick = () => {
-    fileInputRef.current?.click();
   };
 
   if (!isOpen) return null;
@@ -50,31 +48,17 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({ isOpen, onClose }) =>
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white rounded-lg p-6 w-96">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">북마크 리스트 수정</h2>
+          <h2 className="text-xl font-bold">로드맵 수정</h2>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
             <IoCloseOutline size={24} />
           </button>
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-2">이미지</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">이미지</label>
           <div className="flex items-center space-x-2">
-            <div className="w-16 h-16 bg-gray-200 rounded-full overflow-hidden">
-              {imageUrl ? (
-                <img src={imageUrl} alt="Profile" className="w-full h-full object-cover" />
-              ) : (
-                <div className="w-full h-full bg-gray-200"></div>
-              )}
-            </div>
-            <label className="btn btn-outline btn-sm">
-              변경
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="hidden"
-              />
-            </label>
+            <div className="w-16 h-16 bg-gray-200 rounded-md"></div>
+            <button className="btn btn-outline btn-sm">찾아보기</button>
           </div>
         </div>
 
@@ -89,13 +73,13 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({ isOpen, onClose }) =>
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">리스트명</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">로드맵명</label>
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             className="w-full px-3 py-2 border rounded-md"
-            placeholder="리스트명을 입력하세요"
+            placeholder="로드맵명을 입력하세요"
           />
         </div>
 
@@ -105,7 +89,7 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({ isOpen, onClose }) =>
             value={content}
             onChange={(e) => setContent(e.target.value)}
             className="w-full px-3 py-2 border rounded-md resize-none"
-            placeholder="리스트 내용을 입력하세요"
+            placeholder="로드맵 내용을 입력하세요"
             rows={3}
           />
         </div>
@@ -140,4 +124,4 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({ isOpen, onClose }) =>
   );
 };
 
-export default BookmarkListEditModal;
+export default RoadmapEditModal;

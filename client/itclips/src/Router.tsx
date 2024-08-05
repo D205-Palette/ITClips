@@ -15,10 +15,11 @@ import MyGroupBookmarkList from "./pages/ProfileView/MyGroupBookmarkList";
 import MyFavorites from "./pages/ProfileView/MyFavorites";
 import MyRoadmap from "./pages/ProfileView/MyRoadmap";
 import FollowView from "./pages/ProfileView/FollowView";
-import Follower from "./pages/ProfileView/FollowFollower";
-import Following from "./pages/ProfileView/FollowFollowing";
+import Follower from "./components/follow/FollowerList";
+import Following from "./components/follow/FollowingList";
 import MyBookmark from "./pages/BookmarkView";
 import RoadmapView from "./pages/RoadmapDetailView";
+import RoadmapCreateView from "./pages/RoadmapCreateView";
 
 // Components
 import App from "./App";
@@ -79,11 +80,17 @@ const router = createBrowserRouter([
           },
         ],
       },
+      // 로드맵 생성 페이지
+      {
+        path: "roadmap/create",
+        element: <RoadmapCreateView/>
+      },
       // 로드맵 상세 페이지
       {
         path: "roadmap/:roadmapId",
         element: <RoadmapView />,
       },
+      
       // 북마크리스트 상세 페이지
       {
         path: "bookmarklist/:bookmarklistId",

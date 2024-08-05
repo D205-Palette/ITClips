@@ -16,7 +16,7 @@ interface Props {
   id:number;
 }
 
-const AsideKebabDropdown :FC<Props> = (isRoadmap, id) => {
+const AsideBookmarkListKebabDropdown :FC<Props> = (isRoadmap, id) => {
   const [ isEditModalOpen, setIsEditModalOpen ] = useState<boolean>(false);
   const [ isDeleteModalOpen, setIsDeleteModalOpen ] = useState<boolean>(false);
   const [ isUrlCopyModalOpen, setIsUrlCopyModalOpen ] = useState<boolean>(false);
@@ -106,4 +106,4 @@ const AsideKebabDropdown :FC<Props> = (isRoadmap, id) => {
   );
 };
 
-export default AsideKebabDropdown;
+export default AsideBookmarkListKebabDropdown;

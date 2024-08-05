@@ -7,6 +7,7 @@ import com.ssafy.itclips.bookmarklist.service.BookmarkListServiceImpl;
 import com.ssafy.itclips.feed.repository.FeedRepository;
 import com.ssafy.itclips.follow.entity.Follow;
 import com.ssafy.itclips.follow.repository.FollowRepository;
+import com.ssafy.itclips.global.file.FileService;
 import com.ssafy.itclips.roadmap.dto.RoadmapInfoDTO;
 import com.ssafy.itclips.roadmap.dto.StepInfoDTO;
 import com.ssafy.itclips.roadmap.entity.Roadmap;
@@ -35,6 +36,7 @@ public class FeedServiceImpl implements FeedService{
     private final FollowRepository followRepository;
     private final BookmarkListServiceImpl bookmarkListService;
     private final BookmarkListRepository bookmarkListRepository;
+    private final FileService fileService;
 
     // 로드맵 피드 출력
     @Transactional
@@ -63,12 +65,13 @@ public class FeedServiceImpl implements FeedService{
                 Long checkCnt = roadmapStepRepository.countByRoadmapIdAndCheck(roadmap.get().getId(), true);
                 // 좋아요 수
                 Long likeCnt = roadmapLikeRepository.countByRoadmapId(roadmap.get().getId());
-
+                //이미지 url 생성
+                String imageUrl = fileService.getPresignedUrl("images", roadmap.get().getImage(), false).get("url");
                 // 좋아요 했는지 안했는지
                 Boolean isLiked = roadmapLikeRepository.existsByRoadmapIdAndUserId(roadmap.get().getId(),userId);
 
 
-                RoadmapInfoDTO roadmapInfoDTO = RoadmapInfoDTO.toDto(roadmap.get(),steps.size(),checkCnt,likeCnt,steps,isLiked);
+                RoadmapInfoDTO roadmapInfoDTO = RoadmapInfoDTO.toDto(roadmap.get(),steps.size(),checkCnt,likeCnt,steps,isLiked,imageUrl);
                 roadmapInfoDTOList.add(roadmapInfoDTO);
             }
 

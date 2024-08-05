@@ -1,6 +1,7 @@
 package com.ssafy.itclips.bookmark.service;
 
 import com.ssafy.itclips.bookmark.dto.BookmarkRequestDTO;
+import com.ssafy.itclips.bookmark.dto.BookmarkSummaryDTO;
 import com.ssafy.itclips.bookmark.entity.Bookmark;
 import com.ssafy.itclips.bookmark.entity.BookmarkLike;
 import com.ssafy.itclips.bookmark.repository.BookmarkLikeRepository;
@@ -13,6 +14,8 @@ import com.ssafy.itclips.category.entity.Category;
 import com.ssafy.itclips.category.repository.CategoryRepository;
 import com.ssafy.itclips.error.CustomException;
 import com.ssafy.itclips.error.ErrorCode;
+import com.ssafy.itclips.global.gpt.ChatGPTRequest;
+import com.ssafy.itclips.global.gpt.ChatGPTResponse;
 import com.ssafy.itclips.tag.entity.BookmarkTag;
 import com.ssafy.itclips.tag.entity.Tag;
 import com.ssafy.itclips.tag.repository.BookmarkTagRepository;
@@ -21,8 +24,11 @@ import com.ssafy.itclips.user.entity.User;
 import com.ssafy.itclips.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +46,13 @@ public class BookmarkServiceImpl implements BookmarkService {
     private final CategoryRepository categoryRepository;
     private final BookmarkCategoryRepository bookmarkCategoryRepository;
     private final BookmarkTagRepository bookmarkTagRepository;
+    private final RestTemplate template;
+
+    @Value("${openai.model}")
+    private String model;
+
+    @Value("${openai.api.url}")
+    private String apiURL;
 
     @Override
     @Transactional
@@ -118,6 +131,18 @@ public class BookmarkServiceImpl implements BookmarkService {
        bookmarkLikeRepository.delete(bookmarkLike);
     }
 
+    @Override
+    public BookmarkSummaryDTO getUrlSummary(Long bookmarkId) throws RuntimeException {
+        Bookmark bookmark = bookmarkRepository.findById(bookmarkId)
+                .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_NOT_FOUND));
+        String prompt = bookmark.getUrl() + "을 다른 말과 번호 없이 개조식으로 3줄로 요약 해 줘";
+        ChatGPTRequest request = new ChatGPTRequest(model,prompt);
+        ChatGPTResponse response = template.postForObject(apiURL, request, ChatGPTResponse.class);
+        if(response == null) {
+            throw new CustomException(ErrorCode.BOOKMARK_SUMMARY_FAILED);
+        }
+        return BookmarkSummaryDTO.of(response);
+    }
 
     private void createTags(BookmarkRequestDTO bookmarkRequestDTO, Bookmark bookmark, List<BookmarkTag> bookmarkTags) {
         List<Tag> tags = tagService.saveTags(bookmarkRequestDTO.getTags());

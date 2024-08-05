@@ -71,6 +71,12 @@ cloud:
   s3:
     bucket: ${S3_BUCKET}
 
+openai:
+  model: gpt-4o
+  api:
+    key: ${GPT_KEY}
+    url: https://api.openai.com/v1/chat/completions
+
 #spring:
 #  profiles:
 #    active: alpha

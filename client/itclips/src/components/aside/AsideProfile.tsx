@@ -44,7 +44,7 @@ const AsideProfile = () => {
   const urlUserId = params.userId ? parseInt(params.userId, 10) : undefined;
   const { urlUserInfo, setUrlUserInfo, updateFollowCount } = profileStore();
   const isDark = darkModeStore(state => state.isDark);
-  const [ isModalOpen, setIsModalOpen ] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [ globalNotification, setGlobalNotification ] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
   
   // 팔로우 상태인지?
@@ -138,22 +138,15 @@ const AsideProfile = () => {
   };
 
   return (
-    <div
-      className={`${
-        isDark ? "bg-base-300" : "bg-sky-100"
-      } rounded-3xl w-80 p-8 flex flex-col items-center`}
-    >
+    <div className={`${ isDark ? "bg-base-300" : "bg-sky-100" } rounded-3xl w-80 p-8 flex flex-col items-center`}>
       {/* 다른 유저일때 채팅하기 버튼 또는 환경설정 활성화 */}
       {myInfo.id !== urlUserId ? (
-        <button
-          className="btn btn-ghost btn-circle ms-16"
-          onClick={onClickStartChat}
-        >
+        <button className="btn btn-ghost btn-circle ms-16" onClick={onClickStartChat}>
           <IoChatboxEllipsesOutline className="h-8 w-8" />
         </button>
       ) : (
         <button className="btn btn-ghost btn-circle ms-16" onClick={openModal}>
-          <IoSettingsOutline className="h-6 w-6" />
+            <IoSettingsOutline className="h-6 w-6" />
         </button>
       )}
       {/* 프로필 이미지 컨테이너 */}

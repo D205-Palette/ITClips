@@ -158,6 +158,13 @@ public class RoadmapController {
             return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping("/comment/count/{roadmapId}")
+    public ResponseEntity<?> getCommentCount(@PathVariable Long roadmapId){
+        Integer count = roadmapService.getCommentCount(roadmapId);
+
+        return new ResponseEntity<>(count,HttpStatus.OK);
+    }
+
     // 로드맵 좋아요 인기순위
     @GetMapping("/rank/like")
     @Operation(summary = "로드맵 좋아요 인기순위 ", description = "로드맵 좋아요 인기순위")

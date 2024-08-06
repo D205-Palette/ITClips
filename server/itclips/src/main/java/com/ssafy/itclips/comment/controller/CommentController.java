@@ -81,4 +81,12 @@ public class CommentController {
         commentService.updateComment(userId,commentId,commentDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @GetMapping("/count/{listId}")
+    @Operation(summary = "댓글 갯수", description = "북마크리스트 댓글을 갯수를 가져옵니다")
+    public ResponseEntity<?> getCommentCount(@PathVariable Long listId) {
+        Integer count = commentService.getCommentCount(listId);
+
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
 }

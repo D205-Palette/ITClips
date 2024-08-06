@@ -107,6 +107,11 @@ public class CommentServiceImpl implements CommentService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public Integer getCommentCount(Long listId) throws RuntimeException {
+        return commentRepository.countBookmarkListCommentByBookmarkListId(listId);
+    }
+
     private CommentResponseDTO convertToCommentResponseDTO(BookmarkListComment comment) {
         return CommentResponseDTO.builder()
                 .commentId(comment.getId())

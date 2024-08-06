@@ -485,6 +485,10 @@ public class RoadmapServiceImpl implements RoadmapService {
 
     }
 
+    @Override
+    public Integer getCommentCount(Long roadmapId) throws RuntimeException {
+        return roadmapCommentRepository.countByRoadmapId(roadmapId);
+    }
 
     //좋아요 랭킹
     @Override

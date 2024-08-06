@@ -182,34 +182,36 @@ const CommentsContainer :FC<Props> = ({ id }) => {
               ) : (
                 <p className="text-sm flex-grow px-4">{comment.comment}</p>
               )}
-              <div className="flex space-x-1">
-                {editingId === comment.commentId ? (
-                  <>
-                    <button onClick={() => handleSaveComment(comment.commentId)} className="p-1 hover:bg-gray-100 rounded-full">
-                      <MdCheck className="h-4 w-4 text-green-500" />
-                    </button>
-                    <button onClick={handleEditCancelComment} className="p-1 hover:bg-gray-100 rounded-full">
-                      <MdClose className="h-4 w-4 text-red-500" />
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <button onClick={() => handleEdit(comment.commentId, comment.comment)} className="p-1 hover:bg-gray-100 rounded-full">
-                      <MdOutlineEdit className="h-4 w-4 text-gray-500" />
-                    </button>
-                    <button onClick={() => handleDeleteComment(comment.commentId)} className="p-1 hover:bg-gray-100 rounded-full">
-                      <MdDelete className="h-4 w-4 text-gray-500" />
-                    </button>
-                  </>
-                )}
-              </div>
+              {userInfo && userInfo.id === comment.commentUser.id && (
+                <div className="flex space-x-1">
+                  {editingId === comment.commentId ? (
+                    <>
+                      <button onClick={() => handleSaveComment(comment.commentId)} className="p-1 hover:bg-gray-100 rounded-full">
+                        <MdCheck className="h-4 w-4 text-green-500" />
+                      </button>
+                      <button onClick={handleEditCancelComment} className="p-1 hover:bg-gray-100 rounded-full">
+                        <MdClose className="h-4 w-4 text-red-500" />
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button onClick={() => handleEdit(comment.commentId, comment.comment)} className="p-1 hover:bg-gray-100 rounded-full">
+                        <MdOutlineEdit className="h-4 w-4 text-gray-500" />
+                      </button>
+                      <button onClick={() => handleDeleteComment(comment.commentId)} className="p-1 hover:bg-gray-100 rounded-full">
+                        <MdDelete className="h-4 w-4 text-gray-500" />
+                      </button>
+                    </>
+                  )}
+                </div>
+              )}
             </div>
           ))}
         </div>
       </div>
       {/* 댓글 작성 칸 */}
       <CommentWrite onCommentSubmit={handleCommentSubmit} />
-
+      
       {notification && (
         <div 
           className={`fixed bottom-4 left-1/2 transform -translate-x-1/2 p-4 rounded-md ${
@@ -223,7 +225,6 @@ const CommentsContainer :FC<Props> = ({ id }) => {
           {notification.message}
         </div>
       )}
-
     </div>
   );
 };

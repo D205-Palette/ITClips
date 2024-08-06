@@ -15,6 +15,6 @@ public interface MessageJPARepository extends JpaRepository<Message,Long> {
     @Query("SELECT m FROM Message m WHERE m.chat.room.id = :roomId ORDER BY m.createdAt DESC")
     List<Message> findMessagesByRoomId(@Param("roomId") Long roomId);
 
-    @Query("SELECT m FROM Message m WHERE m.chat.room.id = :roomId ORDER BY m.createdAt DESC LIMIT 1")
+    @Query("SELECT m FROM Message m WHERE m.chat.room.id = :roomId ORDER BY m.createdAt DESC , m.id DESC LIMIT 1")
     Optional<Message> findLastMessageByChatRoomId(@Param("roomId") Long roomId);
 }

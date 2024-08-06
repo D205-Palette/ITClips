@@ -66,12 +66,15 @@ const AsideProfile = () => {
   };
 
   useEffect(() => {
-    console.log(urlUserId);
     // url 유저 정보 조회
     const fetchUserInfo = async (userId: number) => {
       try {
         if (urlUserId) {
           const response = await checkUserInfo(userId, urlUserId);
+          setUrlUserInfo(response.data);
+          console.log(response);
+        } else {
+          const response = await checkUserInfo(userId, userId);
           setUrlUserInfo(response.data);
           console.log(response);
         }
@@ -97,6 +100,9 @@ const AsideProfile = () => {
 
     if (urlUserId) {
       fetchUserInfo(urlUserId);
+      checkFollowStatus();
+    } else if (myInfo.id) {
+      fetchUserInfo(myInfo.id);
       checkFollowStatus();
     }
   }, [urlUserId, myInfo.id]); // urlUserId와 myInfo.id가 변경될 때마다 호출
@@ -139,8 +145,9 @@ const AsideProfile = () => {
 
   return (
     <div className={`${ isDark ? "bg-base-300" : "bg-sky-100" } rounded-3xl w-80 p-8 flex flex-col items-center`}>
+      {/* 피드 페이지에서 urlUserId가 undefined이므로 예외처리 */}
       {/* 다른 유저일때 채팅하기 버튼 또는 환경설정 활성화 */}
-      {myInfo.id !== urlUserId ? (
+      {(myInfo.id !== urlUserId) && (urlUserId !== undefined) ? (
         <button className="btn btn-ghost btn-circle ms-16" onClick={onClickStartChat}>
           <IoChatboxEllipsesOutline className="h-8 w-8" />
         </button>
@@ -154,7 +161,7 @@ const AsideProfile = () => {
       {/* 닉네임, 이메일, 소개글 정보 컨테이너 */}
       {myInfo && <UserDetailInfo {...urlUserInfo} />}
       {/* 자기인지 아닌지에 따라 활성화되는 팔로우 버튼 */}
-      {myInfo.id !== urlUserId ? (
+      {(myInfo.id !== urlUserId) && (urlUserId !== undefined) ? (
         <button
           className={`text-white btn ${isFollow ? "btn-error" : "btn-info"}`}
           onClick={onClickFollow}

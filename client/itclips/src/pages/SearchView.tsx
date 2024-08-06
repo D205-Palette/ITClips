@@ -48,7 +48,7 @@ const SearchView = () => {
               {/* 카테고리 조건에 따라 검색 컴포넌트 변경 */}
               {/* 검색 버튼을 눌렀을 때 적용되게 */}
               { whatCategory === "카테고리" && <SearchMain /> }
-              { whatCategory === "유저" && <SearchUser /> }
+              { whatCategory === "유저" && <SearchUser keyword={keyword} /> }
               { whatCategory === "북마크리스트" && <SearchBookmarkList keyword={keyword} /> }
               { whatCategory === "로드맵" && <SearchRoadmap keyword={keyword} /> }
               { whatCategory === "태그" && <SearchTag keyword={keyword} /> }

@@ -94,6 +94,12 @@ const RoadmapCreateView: React.FC = () => {
     }
   };
 
+  // 선택된 이미지 내리기
+  const handleImageRemove = () => {
+    setRoadmapImage(null);
+    setPreviewImageUrl("default");
+  };
+  
   useEffect(() => {
     if (!dataLoaded) {
       fetchData();
@@ -177,18 +183,11 @@ const RoadmapCreateView: React.FC = () => {
   }) => {
     const roadmapData = {
       title: values.title,
-      description: values.description,      
-      image: roadmapImage ? `${values.title}-${userId}` : 'default', 
+      description: values.description,
+      image: roadmapImage ? `${values.title}-${userId}` : "default",
       isPublic: isPublic ? 1 : 0,
       stepList: roadmap.map((item) => Number(item.originalId)),
     };
-
-    // if (roadmapImage) {
-    //   roadmapData.image = `${values.title}-${userId}`;
-    // }
-
-    console.log(roadmapData.image)
-
     try {
       const roadmapCreateResponse = await axios.post(
         `${API_BASE_URL}/api/roadmap/${userId}`,
@@ -198,8 +197,8 @@ const RoadmapCreateView: React.FC = () => {
         }
       );
       console.log("S3 URL : ", roadmapCreateResponse.data.url);
-      console.log("보내야 되는 이미지 : ", roadmapCreateResponse.data.img);      
-      console.log("로드맵 이미지 파일 : ", roadmapImage)
+      console.log("보내야 되는 이미지 : ", roadmapCreateResponse.data.img);
+      console.log("로드맵 이미지 파일 : ", roadmapImage);
 
       if (roadmapImage) {
         await axios.put(`${roadmapCreateResponse.data.url}`, roadmapImage, {
@@ -226,9 +225,7 @@ const RoadmapCreateView: React.FC = () => {
 
   return (
     <div className="grid grid-cols-12 flex-col justify-center gap-x-6 gap-y-5">
-      <h1 className="col-start-3 col-span-3 text-3xl font-bold">
-        로드맵 생성
-      </h1>
+      <h1 className="col-start-3 col-span-3 text-3xl font-bold">로드맵 생성</h1>
 
       <DragDropContext onDragEnd={onDragEnd}>
         {/* 좌측 */}
@@ -373,6 +370,17 @@ const RoadmapCreateView: React.FC = () => {
                             />
                           )}
                         </div>
+
+                        {previewImageUrl && (
+                          <button
+                            type="button"
+                            onClick={handleImageRemove}
+                            className="btn btn-outline btn-xs mt-2"
+                          >
+                            이미지 삭제
+                          </button>
+                        )}
+
                         <label className="btn btn-primary btn-outline btn-xs">
                           이미지 업로드
                           <input

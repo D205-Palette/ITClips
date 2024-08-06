@@ -14,7 +14,7 @@ import CommentWrite from "../ui/CommentWrite";
 import { authStore } from "../../../stores/authStore";
 
 // apis
-import { getBookmarkListComments, writeBookmarkListComment, editBookmarkListComment } from "../../../api/bookmarkListApi";
+import { getBookmarkListComments, writeBookmarkListComment, editBookmarkListComment, deleteBookmarkListComment } from "../../../api/bookmarkListApi";
 
 type Comment = {
   commentId: number;
@@ -36,6 +36,17 @@ const CommentsContainer :FC<Props> = ({ id }) => {
   const [ comments, setComments ] = useState<Comment[]>([])
   const [ editingId, setEditingId ] = useState<number | null>(null);
   const [ editContent, setEditContent ] = useState("");
+  const [ notification, setNotification ] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
+
+  // 토스트 메세지는 3초간 떠있음
+  useEffect(() => {
+    if (notification) {
+      const timer = setTimeout(() => {
+        setNotification(null);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [notification]);
 
   // 댓글 가져오기
   useEffect(() => {
@@ -120,8 +131,29 @@ const CommentsContainer :FC<Props> = ({ id }) => {
     setEditingId(null);
   };
 
-  const handleDeleteComment = (id: number) => {
-    // 댓글 삭제 로직
+  // 댓글 삭제 로직
+  const handleDeleteComment = async (commentId: number) => {
+    if (!userInfo || !userInfo.id) {
+      console.error("사용자 정보가 없습니다.");
+      return;
+    }
+
+    try {
+      await deleteBookmarkListComment(userInfo.id, commentId);
+      
+      // 로컬 상태 업데이트
+      setComments(prevComments => prevComments.filter(comment => comment.commentId !== commentId));
+      
+      // 토스트 메시지 설정
+      setNotification({ message: "댓글이 삭제되었습니다.", type: 'success' });
+    } catch (error) {
+      console.error("댓글 삭제 중 오류가 발생했습니다:", error);
+      if (axios.isAxiosError(error)) {
+        console.error("에러 응답:", error.response?.data);
+      }
+      // 에러 토스트 메시지 설정
+      setNotification({ message: "댓글 삭제에 실패했습니다.", type: 'error' });
+    }
   };
 
   return (
@@ -177,6 +209,21 @@ const CommentsContainer :FC<Props> = ({ id }) => {
       </div>
       {/* 댓글 작성 칸 */}
       <CommentWrite onCommentSubmit={handleCommentSubmit} />
+
+      {notification && (
+        <div 
+          className={`fixed bottom-4 left-1/2 transform -translate-x-1/2 p-4 rounded-md ${
+            notification.type === 'success' ? 'bg-green-500' : 'bg-red-500'
+          } text-white shadow-lg z-50 transition-opacity duration-300`}
+          style={{
+            opacity: notification ? 1 : 0,
+            visibility: notification ? 'visible' : 'hidden',
+          }}
+        >
+          {notification.message}
+        </div>
+      )}
+
     </div>
   );
 };

@@ -5,12 +5,15 @@ import KebabDropdown from "../common/KebabDropdown";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import darkModeStore from "../../stores/darkModeStore";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { authStore } from "../../stores/authStore";
+import { API_BASE_URL } from "../../config";
 
 interface Props {
   list: {
     id: number;
     roadmapId: number;
-    bookmarkListResponseDTO: {
+    bookmarkListRoadmapDTO: {
       id: number;
       title: string;
       description: string;
@@ -31,11 +34,7 @@ interface Props {
 const ListItem: FC<Props> = ({ list,changeCount }) => {
 
   const navigate = useNavigate();
-  const [isLike, setIsLike] = useState(false);
-  const clickHeart = (): void => {
-    setIsLike(!isLike);
-    //여기에 좋아요 api호출
-  };
+  const {userId, token} = authStore()
   const isDark = darkModeStore((state) => state.isDark);
 
   function toggleCheck(isCheck:boolean): void {
@@ -43,15 +42,19 @@ const ListItem: FC<Props> = ({ list,changeCount }) => {
     if(isCheck){
       changeCount((state) => state - 1)
       list.check = false
+      axios.put(`${API_BASE_URL}/api/roadmap/step/${list.id}/${userId}`,{headers: {
+        Authorization: `Bearer ${token}`,
+      },})
     } else {
       changeCount((state) => state + 1)
       list.check = true
+      axios.put(`${API_BASE_URL}/api/roadmap/step/${list.id}/${userId}`,{headers: {
+        Authorization: `Bearer ${token}`,
+      },})
     }
-    //  여기에 토글하는 api 호출
-    //  /roadmap/step/{stepId == list.id}/{userId} 경로로 put 요청
+
   }
   
-
   return (
     <>
       <div
@@ -62,20 +65,20 @@ const ListItem: FC<Props> = ({ list,changeCount }) => {
       >
         <>
           <figure
-            onClick={() => navigate("/bookmarklist/:bookmarklist_id")}
+            onClick={() => navigate(`/bookmarklist/${list.bookmarkListRoadmapDTO.id}`)}
             className="hover:cursor-pointer hidden lg:inline "
           >
             <img
-              src="https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp"
+              src={list.bookmarkListRoadmapDTO.image}
               alt="Movie"
               className="size-28 hidden lg:inline "
             />
           </figure>
 
           <div className="card-body flex flex-row justify-between">
-            <div className="flex flex-row items-center " onClick={() => navigate("/bookmarklist/:bookmarklist_id")}>
+            <div className="flex flex-row items-center " onClick={() => navigate(`/bookmarklist/${list.bookmarkListRoadmapDTO.id}`)}>
                 <h4 className="card-title hover:cursor-pointer text-sm md:text-md lg:text-xl">
-                  {list.bookmarkListResponseDTO.title}
+                  {list.bookmarkListRoadmapDTO.title}
                 </h4>
             </div>
             {/* 체크박스 */}

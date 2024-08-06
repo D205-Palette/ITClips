@@ -24,6 +24,7 @@ const App = () => {
       <main className="absolute top-16 w-full">
         <Outlet />
       </main>
+
     </div>
   );
 };

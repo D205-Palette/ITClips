@@ -1,47 +1,40 @@
+// 북마크리스트 세부 보기 창에서 + 버튼을 누르면 뜨는 북마크 생성용 모달
+
 import React from "react";
 import { FC, useState, useRef } from "react";
 import { IoClose } from "react-icons/io5";
+import axios from "axios";
 import { FaPlus } from "react-icons/fa6";
 import { API_BASE_URL } from "../../../config";
 import { authStore } from "../../../stores/authStore";
 import mainTabStore from "../../../stores/mainTabStore";
-import axios from "axios";
+import mainStore from "../../../stores/mainStore";
 
 interface move {
-  moveBookmarks: number[];
   tabModal: React.Dispatch<React.SetStateAction<boolean>>;
   toggleMode: React.Dispatch<React.SetStateAction<boolean>>;
   listId: number;
 }
 
-const AddBookmarkListModal: FC<move> = ({
-  moveBookmarks,
+interface tagType {
+  title: string;
+}
+
+const AddBookmarkModal: FC<move> = ({
   tabModal,
   toggleMode,
   listId,
 }) => {
-  // 편의상 하나만 했지만, 나중에 내 북리, 그룹 북리 다 가져와서 선택해서 넣게
-
   const { userId, token } = authStore();
   const inputRef = useRef<HTMLInputElement>(null);
   const whatCategory = mainTabStore((state) => state.whatCategory);
+  const changeCategory = mainTabStore((state) => state.changeCategory);
 
   function clickCreateBtn() {
     if (inputRef.current !== null) {
       inputRef.current.disabled = false; //input 비활성화 해제
       inputRef.current.focus(); //input에 focus
     }
-  }
-
-  function endMoving(): any {
-    // moveBookmarks.map((bookmark) => )
-    tabModal(false);
-    toggleMode(false);
-    ///여기에 api호출로 북마크 생성
-  }
-
-  interface tagType {
-    title: string;
   }
 
   const [tempTitle, setTempTitle] = useState("");
@@ -52,28 +45,52 @@ const AddBookmarkListModal: FC<move> = ({
   const [createMode, changeCreateMode] = useState(false);
 
   const handleSubmit = () => {
-    console.log(tempUrl);
-    console.log(tempTitle);
-    console.log(tempTags);
-    console.log(tempContent);
-    axios({
-      method: "post",
-      url: `${API_BASE_URL}/api/bookmark/add/${listId}/${whatCategory.categoryId}`,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      data: {
-        url: tempUrl,
-        title: tempTitle,
-        tags: tempTags,
-        content: tempContent,
-      },
-    })
-      .then((res) => {})
-      .catch((err) => {
-        console.error(err);
-      });
-    endMoving();
+    console.log(whatCategory);
+    // 카테고리가 있냐 없냐에 따라 분기
+    if (whatCategory.categoryId) {
+      axios({
+        method: "post",
+        url: `${API_BASE_URL}/api/bookmark/add/${listId}/${whatCategory.categoryId}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: {
+          url: tempUrl,
+          title: tempTitle,
+          tags: tempTags,
+          content: tempContent,
+        },
+      })
+        .then((res) => {})
+        .catch((err) => {
+          console.error(err);
+        });
+    } else {
+      axios({
+        method: "post",
+        url: `${API_BASE_URL}/api/bookmark/add/${listId}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: {
+          url: tempUrl,
+          title: tempTitle,
+          tags: tempTags,
+          content: tempContent,
+        },
+      })
+        .then((res) => {
+              // 카테고리 초기화
+    changeCategory({ categoryId: 0, categoryName: "" });
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+    // 모달 다 끄기
+    tabModal(false);
+    toggleMode(false);
+
   };
 
   // 태그 추가하는 input 컨포넌트
@@ -190,4 +207,4 @@ const AddBookmarkListModal: FC<move> = ({
   );
 };
 
-export default AddBookmarkListModal;
+export default AddBookmarkModal;

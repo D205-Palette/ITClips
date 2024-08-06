@@ -14,7 +14,7 @@ import CommentWrite from "../ui/CommentWrite";
 import { authStore } from "../../../stores/authStore";
 
 // apis
-import { getBookmarkListComments, writeBookmarkListComment } from "../../../api/bookmarkListApi";
+import { getBookmarkListComments, writeBookmarkListComment, editBookmarkListComment } from "../../../api/bookmarkListApi";
 
 type Comment = {
   commentId: number;
@@ -52,7 +52,7 @@ const CommentsContainer :FC<Props> = ({ id }) => {
   }, [id]);
 
   
-  // 댓글 수정 로직(임시)
+  // 댓글 수정창
   const handleEdit = (id: number, content: string) => {
     setEditingId(id);
     setEditContent(content);
@@ -86,9 +86,33 @@ const CommentsContainer :FC<Props> = ({ id }) => {
     }
   };
 
-  const handleSaveComment = (id: number) => {
-    // 수정한 댓글 저장 로직
-    setEditingId(null);
+  // 댓글 수정 로직
+  const handleSaveComment = async (commentId: number) => {
+    if (!userInfo || !userInfo.id) {
+      console.error("사용자 정보가 없습니다.");
+      return;
+    }
+
+    try {
+      await editBookmarkListComment(userInfo.id, commentId, editContent);
+      
+      // 로컬 상태 업데이트
+      setComments(prevComments => 
+        prevComments.map(comment => 
+          comment.commentId === commentId 
+            ? { ...comment, comment: editContent }
+            : comment
+        )
+      );
+      
+      setEditingId(null);
+      setEditContent("");
+    } catch (error) {
+      console.error("댓글 수정 중 오류가 발생했습니다:", error);
+      if (axios.isAxiosError(error)) {
+        console.error("에러 응답:", error.response?.data);
+      }
+    }
   };
 
   const handleEditCancelComment = () => {

@@ -15,6 +15,7 @@ import { API_BASE_URL } from "../../config";
 import EditTag from "./Bookmark(Tag)";
 import { LINKPREVIEW_API_KEY } from "../../config"; 
 
+import mainTabStore from '../../stores/mainTabStore'
 // const bookmarks = {
 //     title: string,
 //     url: string,
@@ -83,6 +84,8 @@ const Bookmark: FC<Props> = ({
   // 그냥 더미. 있어야됨. 삭제 ㄴㄴ
   const [nothingMode, tabNothing] = useState(false);
 
+
+  const {whatCategory} = mainTabStore()
   const { userId, token } = authStore();
 
   //좋아요
@@ -153,7 +156,7 @@ const Bookmark: FC<Props> = ({
             <div
               className="flex flex-col flex-auto justify-around"
               onClick={() => {
-                !isEdit && window.open(`https://${bookmark.url}`);
+                !isEdit && window.open( (bookmark.url.includes('https') ? `${bookmark.url}` : `https://${bookmark.url}`));
               }}
             >
               <div>
@@ -216,8 +219,8 @@ const Bookmark: FC<Props> = ({
                   수정
                 </button>
               ) : (
+                // 북마크 전용 드롭다운
                 <KebabDropdown
-                  whatMenu="북마크"
                   bookmark={bookmark}
                   isEdit={isEdit}
                   toggleEdit={toggleEdit}

@@ -22,6 +22,7 @@ export default function MyView() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState<boolean>(false);
   const { token, userId } = authStore();
 
+
   // 리스트형으로 볼지 앨범형으로 볼지
   function tabList(): void {
     setTab(true);
@@ -32,6 +33,7 @@ export default function MyView() {
 
   const filterdLists = lists.filter((list) => list.title.includes(filterText));
   const params = useParams()
+  const nowUserId = parseInt(params.userId!)
 
   // 마운트할때 유저의 북마크 리스트들 요약
   useEffect(() => {
@@ -55,6 +57,12 @@ export default function MyView() {
     }
     fetchData();
   }, []);
+
+  // if(typeof(params.userId)==='number'){
+  //   setNowUserId(params.userId)
+  //   console.log(nowUserId)
+  //   console.log(userId)
+  // }
 
   return (
     <>
@@ -129,14 +137,15 @@ export default function MyView() {
           </>
         )}
       </div>
-
+  
       {/* 리스트 생성 버튼 */}
       <button
-        className="fixed z-20 bottom-10 right-10"
+        className={(nowUserId!==userId? "hidden": "" ) + " fixed z-20 bottom-10 right-10"}
         onClick={() => setIsCreateModalOpen(true)}
       >
         <FaPlus color="skyblue" size={56} />
       </button>
+     
       {/* 북마크리스트 생성 모달 */}
       <BookmarkListCreateModal
         isOpen={isCreateModalOpen}

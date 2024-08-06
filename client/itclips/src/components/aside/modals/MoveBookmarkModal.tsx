@@ -1,29 +1,18 @@
 // DeleteBookmarkListModal.tsx 는 AsideBookmarkList.tsx 에서 더보기 메뉴의 '삭제하기' 버튼을 눌렀을 때 출력되는 컴포넌트
 
-import React from "react";
+import React, { useEffect } from "react";
 import { FC, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import mainStore from "../../../stores/mainStore";
 import axios from "axios";
 import { API_BASE_URL } from "../../../config";
-
-interface BookmarkType {
-  id: number;
-  category: string;
-  title: string;
-  url: string;
-  tags: {
-    title: string;
-  }[];
-
-  content: string;
-  isLiked: boolean;
-  likeCount: number;
-}
-interface BookmarksType extends Array<BookmarkType> {}
-
+import type { BookmarkType } from "../../../types/BookmarkType";
+import { useParams } from "react-router-dom";
+import type { CategoryType } from "../../../types/BookmarkListType";
+import { authStore } from "../../../stores/authStore";
+import type { BookmarkListSumType } from "../../../types/BookmarkListType";
 interface Move {
-  editBookmarks: BookmarksType;
+  editBookmarks: BookmarkType[];
   changeEditBookmarksIndex: React.Dispatch<React.SetStateAction<number[]>>;
   tabModal: React.Dispatch<React.SetStateAction<boolean>>;
   toggleMode: React.Dispatch<React.SetStateAction<boolean>>;
@@ -39,66 +28,90 @@ const MoveBookmarkModal: FC<Move> = ({
   whatMenu,
 }) => {
   // 편의상 하나만 했지만, 나중에 내 북리, 그룹 북리 다 가져와서 선택해서 넣게
-  interface CategoryType {
-    categoryId: number;
-    categoryName: string;
-  }
-  interface CategoriesTypes extends Array<CategoryType> {}
 
-  const lists = mainStore((state) => state.lists);
+  const params = useParams();
+  const { userId, token } = authStore();
 
   const [clickedIndex, changeClickedIndex] = useState<number>(0);
 
   /// 최종적으로 북마크들 이동시킬 카테고리
   const [selectCategory, setSelectCategory] = useState<number>(0);
   const [selectListId, setSelectListId] = useState<number>();
+  const [tempCategories, setTempCategories] = useState<CategoryType[]>([]);
+  const [lists, setLists] = useState<BookmarkListSumType[]>([]);
 
   function endMoving(): any {
+    // 이거를 선택 안해도 그냥 0번으로 이동시켜도 될듯???
     if (selectCategory === 0) {
       window.alert("북마크를 이동할 리스트와 카테고리를 선택해 주세요");
     } else {
-      // moveBookmarks.map((bookmark) => )
       tabModal(false);
       toggleMode(false);
-    }
-    changeEditBookmarksIndex([]);
-    ///여기에 api호출로 이동
-    /// 추가하고 삭제하던 or 복사해서 추가만 하던 그때그때마다
-    /// 옮길 북마크들은 editbookmarks에 있고, 옮길 리스트id 랑 selectCategory로 post
-    editBookmarks.map((editBookmark) =>
-      axios.post(`${API_BASE_URL}/api/bookmark/add/${selectListId}/${selectCategory}`, editBookmark)
-    );
-
-    if (whatMenu === "이동") {
+      /// 추가면 복사 처럼 원본도 남기고, 이동이면 원본 삭제하는 식으로
       editBookmarks.map((editBookmark) =>
-        axios.delete(`${API_BASE_URL}/api/bookmark/delete/${editBookmark.id}`)
+        axios.post(
+          `${API_BASE_URL}/api/bookmark/add/${selectListId}/${selectCategory}`,
+          editBookmark
+        )
       );
+
+      if (whatMenu === "이동") {
+        editBookmarks.map((editBookmark) =>
+          axios.delete(`${API_BASE_URL}/api/bookmark/delete/${editBookmark.id}`)
+        );
+        changeEditBookmarksIndex([]);
+      }
     }
   }
 
-  //임시값
-  const tempCategories: CategoriesTypes = [
-    {
-      categoryId: 1,
-      categoryName: "카테고리1",
-    },
-    {
-      categoryId: 2,
-      categoryName: "카테고리2",
-    },
-  ];
+  // 유저가 가진 리스트들  lists
+  useEffect(() => {
+    async function fetchData() {
+      axios({
+        method: "get",
+        url: `${API_BASE_URL}/api/list/personal/${userId}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          viewerId: userId,
+        },
+      })
+        .then((res) => {
+          setLists(res.data);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+    fetchData();
+  }, []);
+
+  // 리스트 눌렀을때, 속한 임시 카테고리  tempcategories
+  useEffect(() => {
+    async function fetchData() {
+      axios({
+        method: "get",
+        url: `${API_BASE_URL}/api/list/${selectListId}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          userId: userId,
+        },
+      })
+        .then((res) => {
+          setTempCategories(res.data.categories);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+    fetchData();
+  }, [selectListId]);
 
   interface Props {
-    list: {
-      id: number;
-      image: string;
-      bookmarks: object[];
-      title: string;
-      tags: string[];
-      description: string;
-      likeCount: number;
-      isCompleted: boolean;
-    };
+    list: BookmarkListSumType;
     clickedIndex: number;
     changeClickedIndex: React.Dispatch<React.SetStateAction<number>>;
     selectCategory: number;
@@ -112,17 +125,16 @@ const MoveBookmarkModal: FC<Move> = ({
     selectCategory,
     setSelectCategory,
   }): any => {
-    // const [categories, changeCategories] = useState<CategoriesTypes>([]);
 
     const [isOpen, toggleOpen] = useState(
       clickedIndex === list.id ? true : false
     );
 
     const clickEvent = async (listId: number): Promise<void> => {
-      // 임시 카테고리들
+      
       setSelectListId(listId);
-
       changeClickedIndex(listId);
+
       if (clickedIndex === listId) {
         toggleOpen(!isOpen);
       } else {

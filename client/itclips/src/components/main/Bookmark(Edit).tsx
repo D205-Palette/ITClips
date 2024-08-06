@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { LuChevronsUpDown } from "react-icons/lu";
 import MoveBookmarkModal from "../aside/modals/MoveBookmarkModal";
 import type { BookmarkType } from "../../types/BookmarkType";
+import mainTabStore from '../../stores/mainTabStore'
 
 interface Props {
 
@@ -31,7 +32,7 @@ const Bookmark: FC<Props> = ({
   const navigate = useNavigate();
 
   const [isLike, setIsLike] = useState(false);
-
+  const {whatCategory} = mainTabStore()
   
   const clickHeart = (): void => {
     setIsLike(!isLike);
@@ -56,7 +57,7 @@ const Bookmark: FC<Props> = ({
   return (
     <>
       <div
-        className={
+        className={(whatCategory.categoryName===bookmark.category || whatCategory.categoryName===""? "":"hidden ") +
           (isDark ? "hover:bg-slate-700" : "hover:bg-slate-100") +
           " card card-side bg-base-100 shadow-xl hover:cursor-pointer h-28 my-1"
         }

@@ -3,6 +3,7 @@ package com.ssafy.itclips.user.service;
 import com.ssafy.itclips.error.CustomException;
 import com.ssafy.itclips.error.ErrorCode;
 import com.ssafy.itclips.follow.repository.FollowRepository;
+import com.ssafy.itclips.global.file.DataResponseDto;
 import com.ssafy.itclips.global.file.FileService;
 import com.ssafy.itclips.global.jwt.JwtToken;
 import com.ssafy.itclips.global.jwt.JwtTokenProvider;
@@ -20,15 +21,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -131,29 +127,23 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void updateProfileImage(String email, MultipartFile profileImage) throws IOException {
+    public DataResponseDto updateProfileImage(String email, String profileImage) throws IOException {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."));
+        // 이미지 S3 경로로 저장
+        boolean isDefaultImage = "default".equals(profileImage);
 
-        setImageUrl(profileImage, user);
+        DataResponseDto imageInfo = isDefaultImage ?
+                DataResponseDto.builder()
+                        .image(profileImage)
+                        .url(profileImage)
+                        .build() :
+                DataResponseDto.of(fileService.getPresignedUrl("images", profileImage, true));
+        user.setImageToS3FileName(imageInfo.getImage());
         userRepository.save(user);
+        return imageInfo;
     }
 
-    private void setImageUrl(MultipartFile profileImage, User user) throws IOException {
-        String baseUrl = "http://localhost:80/images/profile/";
-
-        if (profileImage != null && !profileImage.isEmpty()) {
-            String filename = generateUniqueFilename(Objects.requireNonNull(profileImage.getOriginalFilename()));
-            String filePath = Paths.get(uploadPath, filename).toString();
-            Files.copy(profileImage.getInputStream(), Paths.get(filePath));
-            user.setProfileImage(baseUrl + filename);
-        } else {
-            String defaultImageFilename = generateUniqueFilename("profile.png");
-            String filePath = Paths.get(uploadPath, defaultImageFilename).toString();
-            Files.copy(Paths.get(defaultProfileImage), Paths.get(filePath));
-            user.setProfileImage(baseUrl + defaultImageFilename);
-        }
-    }
 
     @Override
     public Long findIDByEmail(String email) {
@@ -286,7 +276,7 @@ public class UserServiceImpl implements UserService {
 
     private String getImageUrl(User targetUser) {
         String imageUrl = targetUser.getProfileImage();
-        if(imageUrl != null) {
+        if(imageUrl != null && !"default".equals(imageUrl) ) {
             imageUrl = fileService.getPresignedUrl("images", targetUser.getProfileImage(), false).get("url");
         }
         return imageUrl;

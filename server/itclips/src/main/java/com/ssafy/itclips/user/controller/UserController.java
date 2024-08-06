@@ -1,6 +1,7 @@
 package com.ssafy.itclips.user.controller;
 
 import com.ssafy.itclips.follow.service.FollowService;
+import com.ssafy.itclips.global.file.DataResponseDto;
 import com.ssafy.itclips.global.file.FileService;
 import com.ssafy.itclips.global.jwt.JwtToken;
 import com.ssafy.itclips.global.jwt.JwtTokenProvider;
@@ -135,7 +136,7 @@ public class UserController {
         return "jwtTest 요청 성공";
     }
 
-    @PostMapping(value = "/profile/img", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/profile/img")
     @Operation(summary = "프로필 이미지 업데이트", description = "사용자의 프로필 이미지를 업데이트합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "프로필 이미지 업데이트 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
@@ -143,14 +144,14 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "파일 업로드 중 오류 발생", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
     })
     public ResponseEntity<?> updateProfileImage(@RequestParam("email") String email,
-                                                @RequestPart("profileImage") MultipartFile profileImage) throws IOException {
+                                                @RequestParam("profileImage") String profileImage) throws IOException {
         if (!isAuthenticated()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(UNAUTHORIZED_MESSAGE);
         }
 
         try {
-            userService.updateProfileImage(email, profileImage);
-            return ResponseEntity.ok().body(PROFILE_IMAGE_UPDATE_SUCCESS);
+            DataResponseDto image = userService.updateProfileImage(email, profileImage);
+            return new ResponseEntity<>(image, HttpStatus.OK);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 업로드 중 오류가 발생했습니다.");
         }

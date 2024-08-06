@@ -203,4 +203,8 @@ public class User {
                 .followingCount(followingCount)
                 .build();
     }
+
+    public void setImageToS3FileName(String fileName) {
+        this.profileImage=fileName;
+    }
 }

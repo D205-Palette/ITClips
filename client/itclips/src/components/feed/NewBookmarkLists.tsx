@@ -1,9 +1,24 @@
 import React, { useEffect } from "react";
 import { feedStore } from "../../stores/feedStore";
-import ListsItem from "./ListsItem(Feed)";
+import { authStore } from "../../stores/authStore";
 
+import ListsItem from "./ListsItem(Feed)";
+import { API_BASE_URL } from "../../config";
+import axios from "axios";
 const NewBookmarkLists = () => {
+  const { userId, token } = authStore()
+
+  useEffect(() => {
+    const feedApiBookmarklistResponse = axios.get(`${API_BASE_URL}/api/feed/list/${userId}`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+
+    console.log(feedApiBookmarklistResponse)
+  })
+
+  
   const { axiosResult } = feedStore();
+
 
   return (
     <>

@@ -1,5 +1,5 @@
 // AsideMessageDetail.tsx 는 메세지창의 메세지 목록 중 하나를 클릭했을 때 그 메세지의 상세창 컴포넌트
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 // components
 import MessageBackButton from "./ui/MessageBackButton";
@@ -36,6 +36,16 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
   const [ messages, setMessages ] = useState<Message[]>([]);
   const { isConnected, subscribe, stompClient } = useWebSocketStore();
 
+  // 메시지 컨테이너에 대한 ref 생성
+  const messageContainerRef = useRef<HTMLDivElement>(null);
+
+  // 스크롤을 아래로 내리는 함수
+  const scrollToBottom = () => {
+    if (messageContainerRef.current) {
+      messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+    }
+  };
+
   // 메세지 내용 조회
   useEffect(() => {
     console.log(`채팅방 번호 : ${roomId}`);
@@ -43,6 +53,8 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
       try {
         const response = await getChatRoomMessages(roomId);
         setMessages(response.data);
+        // 메세지를 가져오고 스크롤 아래로 이동
+        setTimeout(scrollToBottom, 0);
       } catch (error) {
         console.error("메세지 불러오기 실패:", error);
       }
@@ -57,13 +69,15 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
       unsubscribe = subscribe(`/api/sub/chat/room/${roomId}`, (message) => {
         const newMessage = JSON.parse(message.body);
         setMessages(prevMessages => [...prevMessages, newMessage]);
+        // 새 채팅이 올 때 스크롤 가장 아래로 내려서 최신 메세지 볼 수 있도록
+        setTimeout(scrollToBottom, 0);
       });
     }
 
     return () => {
       unsubscribe();
     };
-  }, [roomId, isConnected, stompClient]);
+  }, [roomId, isConnected, subscribe]);
 
   // 메세지 전송 버튼을 눌렀을 때 동작
   const handleSendMessage = () => {
@@ -96,7 +110,9 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
         <MessageInviteButton />
       </div>
       {/* 채팅 메시지 영역 */}
-      <MessageContainer messages={messages} />
+      <div ref={messageContainerRef} className="flex-1 overflow-y-auto">
+        <MessageContainer messages={messages} />
+      </div>
       {/* 메시지 입력 영역 */}
       <div className="flex items-center">
         <input

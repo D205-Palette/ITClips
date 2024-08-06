@@ -17,7 +17,13 @@ interface ChildComponentProps {
 const MessageContainer: React.FC<ChildComponentProps> = ({ rooms, onClickMessage }) => {
   return (
     <div>
-      <ul className="space-y-4 h-[26rem] overflow-y-auto">
+      <ul
+        className="space-y-4 h-[26rem] overflow-y-auto"
+        style={{
+          scrollbarWidth: "thin",
+          scrollbarColor: "#CBD5E0 #EDF2F7"
+        }}  
+      >
         {rooms.map((room: ChatRoom) => (
           <li key={room.id} className="flex justify-between items-center bg-base-100 rounded w-100 px-3 py-2" onClick={() => onClickMessage(room.id)}>
             <div className="p-3">

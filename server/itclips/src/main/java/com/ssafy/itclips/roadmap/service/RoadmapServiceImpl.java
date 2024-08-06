@@ -106,7 +106,8 @@ public class RoadmapServiceImpl implements RoadmapService {
 
     private String getImageURL(Roadmap roadmap) {
         String imageUrl = roadmap.getImage();
-        if(imageUrl != null || !"default".equals(imageUrl)) {
+        log.info(imageUrl);
+        if(imageUrl != null && !"default".equals(imageUrl)) {
             imageUrl = fileService.getPresignedUrl("images", roadmap.getImage(), false).get("url");
         }
         return imageUrl;

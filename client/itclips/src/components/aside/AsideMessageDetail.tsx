@@ -52,6 +52,7 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
 
     let unsubscribe: () => void = () => {};
 
+    // 채팅방 연결 안되어있을 때 stomp와 연결
     if (isConnected) {
       unsubscribe = subscribe(`/api/sub/chat/room/${roomId}`, (message) => {
         const newMessage = JSON.parse(message.body);

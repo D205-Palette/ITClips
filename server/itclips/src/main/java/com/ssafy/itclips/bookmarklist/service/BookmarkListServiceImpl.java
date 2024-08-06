@@ -76,7 +76,17 @@ public class BookmarkListServiceImpl implements BookmarkListService {
     public DataResponseDto createBookmarkList(Long userId, BookmarkListDTO bookmarkListDTO) throws RuntimeException {
         User user = userRepository.findById(userId)
                 .orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
-        DataResponseDto imageInfo = DataResponseDto.of(fileService.getPresignedUrl("images",bookmarkListDTO.getImage(),true));
+        // 이미지 S3 경로로 저장
+        String image = bookmarkListDTO.getImage();
+        boolean isDefaultImage = "default".equals(image);
+
+        DataResponseDto imageInfo = isDefaultImage ?
+                DataResponseDto.builder()
+                        .image(image)
+                        .url(image)
+                        .build() :
+                DataResponseDto.of(fileService.getPresignedUrl("images", image, true));
+
         bookmarkListDTO.setImageToS3FileName(imageInfo.getImage());
 
         List<Tag> tags = tagService.saveTags(bookmarkListDTO.getTags());
@@ -111,7 +121,17 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         BookmarkList existingBookmarkList = bookmarkListRepository.findById(listId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND));
         // 업데이트할 내용 설정
-        DataResponseDto imageInfo = DataResponseDto.of(fileService.getPresignedUrl("images",bookmarkListDTO.getImage(),true));
+        // 이미지 S3 경로로 저장
+        String image = bookmarkListDTO.getImage();
+        boolean isDefaultImage = "default".equals(image);
+
+        DataResponseDto imageInfo = isDefaultImage ?
+                DataResponseDto.builder()
+                        .image(image)
+                        .url(image)
+                        .build() :
+                DataResponseDto.of(fileService.getPresignedUrl("images", image, true));
+
         bookmarkListDTO.setImageToS3FileName(imageInfo.getImage());
         existingBookmarkList.updateBookmarkList(bookmarkListDTO);
         // 기존 태그, 카테고리, 그룹 삭제

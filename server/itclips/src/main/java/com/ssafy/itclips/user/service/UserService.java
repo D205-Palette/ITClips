@@ -1,10 +1,9 @@
 package com.ssafy.itclips.user.service;
 
-import com.ssafy.itclips.global.jwt.JwtToken;
+import com.ssafy.itclips.global.file.DataResponseDto;
 import com.ssafy.itclips.user.dto.UserInfoDTO;
 import com.ssafy.itclips.user.dto.UserInfoDetailDTO;
 import com.ssafy.itclips.user.entity.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,7 +19,7 @@ public interface UserService {
 
     boolean checkEmailExists(String email);
 
-    void updateProfileImage(String email, MultipartFile profileImage) throws IOException;
+    DataResponseDto updateProfileImage(String email, String profileImage) throws IOException;
 
     Long findIDByEmail(String email);
 

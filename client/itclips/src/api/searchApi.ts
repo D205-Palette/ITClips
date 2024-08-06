@@ -1,4 +1,4 @@
-import { authenticatedRequest, authenticatedRawJsonRequest } from "./apiUtils";
+import { authenticatedRequest } from "./apiUtils";
 
 interface Tag {
   title: string;
@@ -21,5 +21,5 @@ export const roadmapSearch = (userId: number, page: number, searchType: string, 
 
 // 태그 검색
 export const tagSearch = (userId: number, page: number, tags: Tag[]) => {
-  return authenticatedRawJsonRequest("post", `/list/search/tag/${page}`, { tags }, { page, userId });
+  return authenticatedRequest("post", `/list/search/tag/${page}`, { tags }, { page, userId });
 };

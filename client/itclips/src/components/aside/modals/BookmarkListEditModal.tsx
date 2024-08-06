@@ -81,39 +81,12 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
           categories: tempCategories,
           users: [],
           tags: tempTags,
-          imageToS3FileName: 'imageToS3FileName',
         },
       })
       .then((res) => {
         onClose();
       });
   };
-
-  //   axios({
-  //     method: "put",
-  //     url: `${API_BASE_URL}/api/list/update/${userId}/${id}`,
-  //     headers: {
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //     data: {
-  //       title: tempTitle,
-  //       description: tempDescription,
-  //       image: "string",
-  //       isPublic: isPublic,
-  //       categories: tempCategories,
-  //       users: [],
-  //       tags: tempTags,
-  //       imageToS3FileName: imageToS3FileName,
-  //     },
-  //   })
-  //     .then((res) => {
-  //       onClose()
-  //     })
-  //     .catch((err) => {
-  //       console.error(err);
-  //     });
-
-  // };
 
   if (!isOpen) return null;
 

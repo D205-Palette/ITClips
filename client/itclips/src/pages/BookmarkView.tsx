@@ -52,6 +52,8 @@ const MyBookmark = () => {
 
   // 북마크 추가 버튼 누를 시, 임시로 잡아줬던 whatCategory의 id값을 갱신해줘야됨 
   const addBookmark =  () => {
+    // 임시의 카테고리면 id가 필요하니까 받아오는 거
+    if(whatCategory.categoryId===0){
     axios({
       method: "get",
       url: `${API_BASE_URL}/api/list/${listId}`,
@@ -64,11 +66,14 @@ const MyBookmark = () => {
     })
       .then((res) => {
         const newCatId = res.data.categories.filter((cat:CategoryType)=>cat.categoryName===whatCategory.categoryName)[0].categoryId
+        console.log(newCatId)
+        console.log(whatCategory.categoryName)
         changeCategory({categoryId:newCatId, categoryName:whatCategory.categoryName})
       })
       .catch((err) => {
         console.error(err);
       });
+    }
   }
 
   // 북마크들
@@ -219,7 +224,6 @@ const MyBookmark = () => {
           tabModal={tabAddModal}
           toggleMode={toggleMode}
           listId={listId}
-          categoryId = {whatCategory.categoryId}
         />
       )}
     </>

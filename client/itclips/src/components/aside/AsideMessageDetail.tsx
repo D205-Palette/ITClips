@@ -1,5 +1,4 @@
 // AsideMessageDetail.tsx 는 메세지창의 메세지 목록 중 하나를 클릭했을 때 그 메세지의 상세창 컴포넌트
-
 import React, { useState, useEffect } from "react";
 
 // components
@@ -10,6 +9,10 @@ import MessageContainer from "./layout/MessageContainer";
 // apis
 import { getChatRoomMessages } from "../../api/messageApi";
 
+// stores
+import { authStore } from "../../stores/authStore";
+import { useWebSocketStore } from "../../stores/webSocketStore";
+
 interface Message {
   roomId: number;
   senderId: string;
@@ -18,12 +21,20 @@ interface Message {
   createdAt: string;
 }
 
+interface AsideMessageDetailProps {
+  roomId: number;
+  onBack: () => void;
+}
+
 // AsideMessage에서 id값을가지고 데이터를 꺼내서 라우터로 AsideMessageDetail 컴포넌트로 넘겨줌
 
-const AsideMessageDetail = ({ roomId, onBack }: any) => {
+const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack }) => {
+
+  const userInfo = authStore(state => state.userInfo)
   
   const [ inputMessage, setInputMessage  ] = useState('');
   const [ messages, setMessages ] = useState<Message[]>([]);
+  const { isConnected, subscribe, stompClient } = useWebSocketStore();
 
   // 메세지 내용 조회
   useEffect(() => {
@@ -38,14 +49,36 @@ const AsideMessageDetail = ({ roomId, onBack }: any) => {
     };
 
     fetchMessages();
-  }, [roomId]);
+
+    let unsubscribe: () => void = () => {};
+
+    if (isConnected) {
+      unsubscribe = subscribe(`/api/sub/chat/room/${roomId}`, (message) => {
+        const newMessage = JSON.parse(message.body);
+        setMessages(prevMessages => [...prevMessages, newMessage]);
+      });
+    }
+
+    return () => {
+      unsubscribe();
+    };
+  }, [roomId, isConnected, stompClient]);
 
   // 메세지 전송 버튼을 눌렀을 때 동작
   const handleSendMessage = () => {
-    if (inputMessage.trim()) {
-      // 여기에 메시지 전송 로직을 구현할 수 있습니다.
-      // 예: sendMessage(roomId, inputMessage);
+    if (isConnected && stompClient && roomId && userInfo.id && inputMessage.trim()) {
+      stompClient.publish({
+        destination: `/api/pub/chat/message`,
+        body: JSON.stringify({
+          roomId: roomId,
+          senderId: userInfo.id,
+          senderName: userInfo.nickname,
+          message: inputMessage.trim()
+        })
+      });
       setInputMessage('');
+    } else {
+      alert('메시지를 전송할 수 없습니다. 연결 상태를 확인해주세요.');
     }
   };
 

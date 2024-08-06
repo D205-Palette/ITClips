@@ -48,7 +48,7 @@ const MyRoadmap: FC = () => {
 
   return (
     <>
-      <div className="fixed z-10 w-7/12 bg-white">
+      <div className="fixed z-10 w-7/12 bg-base-100">
         <MainTab />
         <SearchBar
           whatSearch={"로드맵"}

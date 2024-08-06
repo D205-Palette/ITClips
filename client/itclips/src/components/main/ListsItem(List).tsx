@@ -47,7 +47,7 @@ const ListItem: FC<Props> = ({ list }) => {
       <div
         className={
           (isDark ? "hover:bg-slate-700" : "hover:bg-slate-100") +
-          " card card-side bg-base-100   h-28"
+          " card card-side bg-base-100 h-28 "
         }
       >
         <>
@@ -99,6 +99,7 @@ const ListItem: FC<Props> = ({ list }) => {
           </div>
         </>
       </div>
+      <div className={(isDark? "border-b-slate-600":"border-b-slate-200") +" h-1 border-b"}></div>
     </>
   );
 };

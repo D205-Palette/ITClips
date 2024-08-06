@@ -130,7 +130,7 @@ const MyBookmark = () => {
           id="Main"
           className="xl:col-start-5 xl:col-span-7 col-start-3 col-span-8 gap-4"
         >
-          <div className={(isDark? "": "bg-white") + " fixed z-10 w-full"} >
+          <div className=" bg-base-100 fixed z-10 w-full" >
           {/* 상단바 */}
           {editMode ? (
             <div className="flex flex-row justify-end pe-5 my-5">

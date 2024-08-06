@@ -14,7 +14,6 @@ import { FaPlus } from "react-icons/fa6";
 import BookmarkListCreateModal from "../../components/aside/modals/BookmarkListCreateModal";
 import { API_BASE_URL } from "../../config";
 import { useParams } from "react-router-dom";
-import { deleteStore } from "../../stores/deleteStore";
 
 export default function MyView() {
   const [isList, setTab] = useState(true);
@@ -23,7 +22,7 @@ export default function MyView() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState<boolean>(false);
   const { token, userId } = authStore();
 
-  const {deletedBookmarkList} = deleteStore()
+
   // 리스트형으로 볼지 앨범형으로 볼지
   function tabList(): void {
     setTab(true);
@@ -32,8 +31,7 @@ export default function MyView() {
     setTab(false);
   }
 
-  const filterdLists = lists.filter((list) => list.title.includes(filterText)&&!deletedBookmarkList.includes(list.id));
-
+  const filterdLists = lists.filter((list) => list.title.includes(filterText));
   const params = useParams()
   const nowUserId = parseInt(params.userId!)
 
@@ -51,7 +49,6 @@ export default function MyView() {
         },
         })
           .then((res) => {
-            console.log(res.data)
           setLists(res.data);
         })
         .catch((err) => {
@@ -71,7 +68,7 @@ export default function MyView() {
     <>
       {/* 화면에 고정시킬 우측 상단들 */}
       <div className="fixed z-10 w-7/12">
-        <div className="bg-white">
+        <div className="bg-base-100">
           <MainTab />
           {/* 상단 검색바 */}
           <SearchBar

@@ -53,7 +53,7 @@ const MyGroupBookmarkList = () => {
   return (
     <>
     <div className="fixed z-10 w-7/12">
-    <div className="bg-white">
+    <div className="bg-base-100">
       <MainTab />
       <SearchBar whatSearch={'즐겨찾기'} filterText={filterText} changeFilterText={changeFilterText}/>
       </div>

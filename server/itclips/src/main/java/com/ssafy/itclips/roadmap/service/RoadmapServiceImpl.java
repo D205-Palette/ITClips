@@ -173,8 +173,16 @@ public class RoadmapServiceImpl implements RoadmapService {
 
         checkUser(roadmap, userId);
 
-        //이미지 s3 경로로 저장
-        DataResponseDto imageInfo = DataResponseDto.of(fileService.getPresignedUrl("images",roadmapRequestDTO.getImage(),true));
+        // 이미지 S3 경로로 저장
+        String image = roadmapRequestDTO.getImage();
+        boolean isDefaultImage = "default".equals(image);
+
+        DataResponseDto imageInfo = isDefaultImage ?
+                DataResponseDto.builder()
+                        .image(image)
+                        .url(image)
+                        .build() :
+                DataResponseDto.of(fileService.getPresignedUrl("images", image, true));
         roadmapRequestDTO.setImageToS3FileName(imageInfo.getImage());
 
         // step에 넣을 bookmark list

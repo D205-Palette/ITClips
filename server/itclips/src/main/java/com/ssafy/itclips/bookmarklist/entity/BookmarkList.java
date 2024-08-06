@@ -136,6 +136,7 @@ public class BookmarkList {
                 .tags(tags)
                 .isLiked(isLiked)
                 .likeCount(likeCount)
+                .createdAt(this.createdAt)
                 .build();
     }
 

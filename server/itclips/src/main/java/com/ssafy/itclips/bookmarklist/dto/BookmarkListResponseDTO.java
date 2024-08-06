@@ -4,6 +4,7 @@ import com.ssafy.itclips.tag.dto.TagDTO;
 import com.ssafy.itclips.user.dto.UserTitleDTO;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -16,6 +17,7 @@ public class BookmarkListResponseDTO {
     private String title;
     private String description;
     private Integer bookmarkCount;
+    private LocalDateTime createdAt;
     private Integer likeCount;
     private String image;
     private Boolean isLiked;
@@ -24,7 +26,7 @@ public class BookmarkListResponseDTO {
 
     @Builder
     public BookmarkListResponseDTO(Long id, String title, String description, Integer bookmarkCount,
-                                   Integer likeCount, String image, Boolean isLiked, Set<TagDTO> tags, List<UserTitleDTO> users) {
+                                   Integer likeCount, String image, Boolean isLiked, Set<TagDTO> tags, List<UserTitleDTO> users, LocalDateTime createdAt) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -34,6 +36,7 @@ public class BookmarkListResponseDTO {
         this.isLiked = isLiked;
         this.tags = tags;
         this.users = users;
+        this.createdAt = createdAt;
     }
 
 

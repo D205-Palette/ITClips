@@ -46,7 +46,7 @@ const MessageLayout = () => {
         <AsideMessage onSelectChat={handleSelectChat} onShowInvite={handleNewChat} />
       )}
       {selectedChat !== null && showInvite === null && (
-        <AsideMessageDetail chatId={selectedChat} onBack={handleBackToList} />
+        <AsideMessageDetail roomId={selectedChat} onBack={handleBackToList} />
       )}
       {selectedChat === null && showInvite !== null && (
         <AsideStartNewMessage onStartChat={handleChatStart} onBack={handleBackToList} />

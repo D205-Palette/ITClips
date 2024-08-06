@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { feedStore } from "../stores/feedStore";
 import { Outlet } from "react-router-dom";
 import axios from "axios";
+import { API_BASE_URL } from "../config";
 
 import { asideStore } from "../stores/asideStore";
 import MessageLayout from "../components/aside/MessageLayout";
@@ -39,6 +40,9 @@ export default function FeedView() {
   const { setAxiosResult } = feedStore();
 
   useEffect(() => {
+    // const feedApiResponse = axios.get(`${API_BASE_URL}/api/`)
+
+    
     // axiosResult를 설정 (여기서는 하드코딩된 값을 사용)
     const result = {
       lists: [

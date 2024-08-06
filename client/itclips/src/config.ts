@@ -7,6 +7,8 @@ export const GITHUB_API_KEY = process.env.REACT_APP_GITHUB_API_KEY || 'default-g
 export const GOOGLE_API_KEY = process.env.REACT_APP_GOOGLE_API_KEY || 'default-google-api-key';
 export const NAVER_API_KEY = process.env.REACT_APP_NAVER_API_KEY || 'default-naver-api-key';
 export const KAKAO_API_KEY = process.env.REACT_APP_KAKAO_API_KEY || 'default-kakao-api-key';
+export const LINKPREVIEW_API_KEY = process.env.REACT_APP_LINKPREVIEW_API_KEY || 'default-linkpreview-api-key';
+
 
 // REDIRECT_URL
 export const GOOGLE_REDIRECT_URI = process.env.REACT_APP_GOOGLE_REDIRECT_URI || 'http://default-google-redirect-url.com';

@@ -10,6 +10,7 @@ import type { RoadmapSumType } from "../../types/RoadmapType";
 import axios from "axios";
 import { authStore } from "../../stores/authStore";
 import { API_BASE_URL } from "../../config";
+import noImg from "../../assets/images/noImg.gif"
 
 interface Props {
   roadmap: RoadmapSumType;
@@ -54,7 +55,7 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
         <>
           <div className="w-28 z-20  hidden lg:inline rounded-s-2xl">
             <img
-              src={roadmap.image}
+              src={roadmap.image === "default" ? noImg : roadmap.image}
               alt="Movie"
               className="h-full w-full hidden lg:inline  rounded-s-2xl"
             />

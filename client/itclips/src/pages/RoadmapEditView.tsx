@@ -23,7 +23,7 @@ interface Item extends BookmarkListSumType {
   originalId?: string; // 원본 아이디를 저장할 수 있는 필드
 }
 
-interface RoadampItem extends RoadmapDetailType {}
+interface RoadmapItem extends RoadmapDetailType {}
 
 // 각 탭의 초기값 (더미데이터는 이제 빈 배열로 초기화)
 const initialItems: { [key: string]: Item[] } = {
@@ -33,20 +33,18 @@ const initialItems: { [key: string]: Item[] } = {
 };
 
 const RoadmapEditView: React.FC = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { userId, token } = authStore();
   const [activeTab, setActiveTab] = useState<string>("bookmarks");
   const [items, setItems] = useState<Item[]>(initialItems[activeTab]);
   const [roadmap, setRoadmap] = useState<Item[]>([]);
   const [dataLoaded, setDataLoaded] = useState<boolean>(false);
   const [isPublic, setIsPublic] = useState<boolean>(true);
-  const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [roadmapImage, setRoadmapImage] = useState<File | null>(null);
+  const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
   const activeButton = "text-sky-500";
-  const [roadmapItem, setRoadmapItem] = useState<RoadampItem | null>(null);
+  const [roadmapItem, setRoadmapItem] = useState<RoadmapItem | null>(null);
   const { roadmapId } = useParams<{ roadmapId: string }>();
-
-  // const urlParams = new URLSearchParams(window.location.search);
-  // const roadmapId = urlParams.get("roadmapId");
 
   // API로부터 데이터 불러오기
   const fetchData = async () => {
@@ -70,7 +68,6 @@ const RoadmapEditView: React.FC = () => {
       const roadmapResponse = await axios.get(
         `${API_BASE_URL}/api/roadmap/${roadmapId}?viewId=${userId}`
       );
-      console.log(roadmapResponse.data);
       setRoadmapItem(roadmapResponse.data);
 
       // 데이터 가공하여 설정
@@ -98,7 +95,6 @@ const RoadmapEditView: React.FC = () => {
       initialItems.groupBookmarks = processItems(groupResponse.data);
       initialItems.favorites = processItems(scrapResponse.data);
 
-      console.log(initialItems);
       // 활성화된 탭에 따라 items 설정
       setItems(initialItems[activeTab]);
 
@@ -160,15 +156,21 @@ const RoadmapEditView: React.FC = () => {
     setItems(initialItems[tab]);
   };
 
-  // 프로필 이미지 변경 핸들러
+  // 로드맵 이미지 변경 핸들러
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
+    const file = event.target.files?.[0]; // 파일이 선택되지 않았을 때 null 처리
     if (file) {
+      setRoadmapImage(file); // 파일 자체를 상태에 저장
+
+      // 미리보기 URL 생성
       const reader = new FileReader();
       reader.onloadend = () => {
-        setProfileImage(reader.result as string);
+        setPreviewImageUrl(reader.result as string);
       };
       reader.readAsDataURL(file);
+    } else {
+      setRoadmapImage(null);
+      setPreviewImageUrl(null);
     }
   };
 
@@ -186,13 +188,13 @@ const RoadmapEditView: React.FC = () => {
     const roadmapData = {
       title: values.title,
       description: values.description,
-      image: profileImage,
+      image: roadmapImage ? `${values.title}-${userId}` : "default",
       isPublic: isPublic ? 1 : 0,
       stepList: roadmap.map((item) => Number(item.originalId)),
-      imageToS3FileName: "string",
     };
+    console.log(roadmapData.image)
+
     try {
-      console.log("수정해야될 로드맵 정보:", roadmapData);
       const roadmapCreateResponse = await axios.put(
         `${API_BASE_URL}/api/roadmap/${roadmapId}/${userId}`,
         roadmapData,
@@ -200,9 +202,17 @@ const RoadmapEditView: React.FC = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+
+      if (roadmapImage) {        
+        await axios.put(`${roadmapCreateResponse.data.url}`, roadmapImage, {
+          headers: {
+            "Content-Type": roadmapImage.type,
+          }, // 파일의 MIME 타입 설정
+        });
+      }
+
       window.alert("로드맵을 수정하였습니다.");
       navigate(`/user/${userId}/roadmap`);
-      console.log(roadmapCreateResponse.data); // 일단 생성 잘됨
     } catch (error) {
       console.error(error);
     }
@@ -216,14 +226,19 @@ const RoadmapEditView: React.FC = () => {
 
   const validationSchema = Yup.object({
     title: Yup.string().required("로드맵 제목을 입력해주세요."),
-    description: Yup.string().required("로드맵 내용을 입력해주세요."),
   });
+
+  // 선택된 이미지 내리기
+  const handleImageRemove = () => {
+    setRoadmapImage(null);
+    setPreviewImageUrl('default');
+  };
 
   // useEffect를 사용해 불러온 데이터를 상태에 설정
   useEffect(() => {
     if (roadmapItem) {
       setIsPublic(roadmapItem.isPublic === 1);
-      setProfileImage(roadmapItem.image);
+      setPreviewImageUrl(roadmapItem.image);
       const processedRoadmap = roadmapItem.stepList.map((item: any, index) => ({
         id: index,
         originalId: item.bookmarkListRoadmapDTO.id,
@@ -237,9 +252,6 @@ const RoadmapEditView: React.FC = () => {
         users: item.bookmarkListRoadmapDTO.users,
       }));
       setRoadmap(processedRoadmap);
-
-      console.log(roadmapItem);
-      console.log("로드맵 : ", roadmap);
     }
   }, [roadmapItem]);
 
@@ -335,18 +347,6 @@ const RoadmapEditView: React.FC = () => {
                               </h4>
                               <p className="line-clamp-1">{item.description}</p>
                             </div>
-                            <div className="flex w-40 gap-1 overflow-hidden whitespace-nowrap">
-                              {/* <div className="flex-grow overflow-hidden text-ellipsis">
-                                {item.tags.map((tag) => (
-                                  <span
-                                    key={tag.id}
-                                    className="text-sm text-gray-500"
-                                  >
-                                    #{tag.title}
-                                  </span>
-                                ))}
-                              </div> */}
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -367,7 +367,7 @@ const RoadmapEditView: React.FC = () => {
             onSubmit={handleCreateRoadmap}
             enableReinitialize // roadmapItem 변경 시 초기값 업데이트
           >
-            {({ handleSubmit, setFieldValue }) => (
+            {({ handleSubmit, setFieldValue, values, errors, isValid }) => (
               <Form onSubmit={handleSubmit}>
                 {/* 로드맵 Info 입력 */}
                 <div className="flex justify-center items-center gap-x-6 w-full">
@@ -375,36 +375,37 @@ const RoadmapEditView: React.FC = () => {
                   <div className="flex flex-col gap-x justify-center">
                     <div className="flex flex-col gap-y-2">
                       <div className="border w-32 h-32 bg-gray-200 rounded-lg overflow-hidden">
-                        {profileImage ? (
-                          <img
-                            src={profileImage}
-                            alt="Profile"
-                            className="border w-full h-full object-cover"
-                          />
-                        ) : (
+                        {previewImageUrl === "default" ? (
                           <img
                             src={noImg}
                             alt="noImg"
                             className=" w-full h-full object-cover"
                           />
+                        ) : (
+                          <img
+                            src={previewImageUrl || ""}
+                            alt="roadmapImg"
+                            className="border w-full h-full object-cover"
+                          />
                         )}
                       </div>
+
+                      {previewImageUrl && (
+                        <button
+                          type="button"
+                          onClick={handleImageRemove}
+                          className="btn btn-outline btn-xs mt-2"
+                        >
+                          이미지 삭제
+                        </button>
+                      )}
+
                       <label className="btn btn-primary btn-outline btn-xs">
                         이미지 업로드
                         <input
                           type="file"
                           accept="image/*"
-                          onChange={(event) => {
-                            const file = event.target.files?.[0];
-                            if (file) {
-                              const reader = new FileReader();
-                              reader.onloadend = () => {
-                                setProfileImage(reader.result as string);
-                                setFieldValue("image", reader.result);
-                              };
-                              reader.readAsDataURL(file);
-                            }
-                          }}
+                          onChange={handleImageChange}
                           className="hidden"
                         />
                       </label>
@@ -522,7 +523,11 @@ const RoadmapEditView: React.FC = () => {
                     </div>
                   )}
                 </Droppable>
-                <button type="submit" className="btn btn-primary btn-outline">
+                <button
+                  type="submit"
+                  className="btn btn-primary btn-outline"
+                  disabled={!isValid || !values.title || roadmap.length === 0} // 필수 조건 체크
+                >
                   로드맵 수정하기
                 </button>
               </Form>

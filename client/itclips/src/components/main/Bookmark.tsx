@@ -57,22 +57,9 @@ const Bookmark: FC<Props> = ({
   // 북마크 썸네일 불러오기
   const [ogImage, setOgImage] = useState("");
   
-
-  useEffect(() => {
-    async function fetchOpenGraphData() {
-      try {
-        const response = await axios.get(
-          `https://api.linkpreview.net/?key=${LINKPREVIEW_API_KEY}&q=${bookmark.url}`
-        );
-        setOgImage(response.data.image);
-        console.log(ogImage)
-      } catch (error) {
-        console.error("Error fetching Open Graph data:", error);
-      }
-    }
-
-    fetchOpenGraphData();
-  }, [bookmark.url]);
+  useEffect(()=>{
+    setOgImage(`https://www.google.com/s2/favicons?sz=64&domain_url=${bookmark.url}`)
+  })
 
   const [isLike, toggleLike] = useState(bookmark.isLiked);
   const [likeCount, setLikeCount] = useState(bookmark.likeCount);

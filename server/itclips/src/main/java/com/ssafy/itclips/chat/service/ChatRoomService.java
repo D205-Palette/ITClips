@@ -24,9 +24,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -43,7 +41,7 @@ public class ChatRoomService {
 
     //방 생성
     @Transactional
-    public void createChatRoom(Long user1Id, Long user2Id) {
+    public Map<String, Long> createChatRoom(Long user1Id, Long user2Id) {
         User user1 = userRepository.findById(user1Id).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
         User user2 = userRepository.findById(user2Id).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
 
@@ -62,11 +60,14 @@ public class ChatRoomService {
 
         //topic생성
         chatRoomRepository.enterChatRoom(savedChatRoom.getId());
+        Map<String, Long> result = new HashMap<>();
+        result.put("chatRoomId", savedChatRoom.getId());
+        return result;
     }
 
     //그룹 채팅방 생성
     @Transactional
-    public void chatGroupRoom(GroupRoomDTO groupRoomDTO){
+    public Map<String,Long> chatGroupRoom(GroupRoomDTO groupRoomDTO){
         //채팅방 생성
         ChatRoom chatRoom = ChatRoom.builder()
                 .name(groupRoomDTO.getName())
@@ -83,6 +84,9 @@ public class ChatRoomService {
 
         //topic생성
         chatRoomRepository.enterChatRoom(savedChatRoom.getId());
+        Map<String, Long> result = new HashMap<>();
+        result.put("chatRoomId", savedChatRoom.getId());
+        return result;
     }
 
     // 채팅방 레디스 생성

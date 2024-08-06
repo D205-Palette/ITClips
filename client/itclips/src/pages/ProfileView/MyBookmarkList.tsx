@@ -14,6 +14,7 @@ import { FaPlus } from "react-icons/fa6";
 import BookmarkListCreateModal from "../../components/aside/modals/BookmarkListCreateModal";
 import { API_BASE_URL } from "../../config";
 import { useParams } from "react-router-dom";
+import { deleteStore } from "../../stores/deleteStore";
 
 export default function MyView() {
   const [isList, setTab] = useState(true);
@@ -22,7 +23,7 @@ export default function MyView() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState<boolean>(false);
   const { token, userId } = authStore();
 
-
+  const {deletedBookmarkList} = deleteStore()
   // 리스트형으로 볼지 앨범형으로 볼지
   function tabList(): void {
     setTab(true);
@@ -31,7 +32,8 @@ export default function MyView() {
     setTab(false);
   }
 
-  const filterdLists = lists.filter((list) => list.title.includes(filterText));
+  const filterdLists = lists.filter((list) => list.title.includes(filterText)&&!deletedBookmarkList.includes(list.id));
+
   const params = useParams()
   const nowUserId = parseInt(params.userId!)
 
@@ -49,6 +51,7 @@ export default function MyView() {
         },
         })
           .then((res) => {
+            console.log(res.data)
           setLists(res.data);
         })
         .catch((err) => {

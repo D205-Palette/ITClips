@@ -16,6 +16,7 @@ const MyRoadmap: FC = () => {
   const {userId, token} = authStore()
   const [roadmaps, setRoadmaps] = useState<RoadmapSumType[]>([])
   const params = useParams()
+  const [deletedIndex, setDeletedIndex] = useState<number[]>([])
   // 로드맵 요약 불러오기
   useEffect(() => {
 		async function fetchData() {
@@ -59,7 +60,7 @@ const MyRoadmap: FC = () => {
       {/* 로드맵들 */}
       <div className="absolute top-32 z-0 w-7/12">
       {filterdRoadmaps.length === 0 ? <NoContent content={"로드맵"}/> : <>
-        {filterdRoadmaps.map((roadmap) => (
+        {filterdRoadmaps.map((roadmap,index) => (
           <Roadmap roadmap={roadmap} />
         ))}</>}
       </div>

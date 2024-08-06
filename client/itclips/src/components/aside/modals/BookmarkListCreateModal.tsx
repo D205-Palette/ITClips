@@ -154,7 +154,7 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
               value={tempTag}
               onChange={(e) => setTempTag(e.target.value)}
               className="flex-grow px-3 py-2 border rounded-l-md"
-              placeholder="새 카테고리 입력"
+              placeholder="새 태그 입력"
             />
             <button
               onClick={handleAddTag}

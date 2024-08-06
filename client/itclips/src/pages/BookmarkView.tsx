@@ -18,10 +18,11 @@ import type { BookmarkListDetailType } from "../types/BookmarkListType";
 import { useParams } from "react-router-dom";
 import { API_BASE_URL } from "../config";
 import { authStore } from "../stores/authStore";
+import darkModeStore from "../stores/darkModeStore";
 
 const MyBookmark = () => {
   const params = useParams();
-
+  const {isDark} = darkModeStore()
   const tempListId = params.bookmarklistId;
 
   let listId = 0;
@@ -52,6 +53,8 @@ const MyBookmark = () => {
 
   // 북마크 추가 버튼 누를 시, 임시로 잡아줬던 whatCategory의 id값을 갱신해줘야됨 
   const addBookmark =  () => {
+    // 임시의 카테고리면 id가 필요하니까 받아오는 거
+    if(whatCategory.categoryId===0){
     axios({
       method: "get",
       url: `${API_BASE_URL}/api/list/${listId}`,
@@ -69,6 +72,7 @@ const MyBookmark = () => {
       .catch((err) => {
         console.error(err);
       });
+    }
   }
 
   // 북마크들
@@ -109,7 +113,7 @@ const MyBookmark = () => {
           <div id="aside" className="absolute col-start-2 col-span-3 z-50">
             <div className="fixed">{isMessageOpen && <MessageLayout />}</div>
           </div>
-          <div className="fixed">
+          <div className="fixed z-50">
             {bookmarkList ? (
               <AsideBookmarkList bookmarkList={bookmarkList} />
             ) : (
@@ -123,6 +127,7 @@ const MyBookmark = () => {
           id="Main"
           className="xl:col-start-5 xl:col-span-7 col-start-3 col-span-8 gap-4"
         >
+          <div className={(isDark? "aside-dark": "bg-white") + " fixed z-10 w-full"} color="asideDark">
           {/* 상단바 */}
           {editMode ? (
             <div className="flex flex-row justify-end pe-5 my-5">
@@ -145,7 +150,9 @@ const MyBookmark = () => {
            : 
             <></>
           )}
+</div>
           {/* 북마크들 */}
+          <div className="absolute top-24 w-7/12">
           {bookmarks ? (
             bookmarks.map((bookmark) =>
               editMode ? (
@@ -169,6 +176,7 @@ const MyBookmark = () => {
           ) : (
             <></>
           )}
+          </div>
 
           {/* 에디터 모드 전환 버튼 */}
           <div className="fixed bottom-10 right-10">
@@ -219,7 +227,6 @@ const MyBookmark = () => {
           tabModal={tabAddModal}
           toggleMode={toggleMode}
           listId={listId}
-          categoryId = {whatCategory.categoryId}
         />
       )}
     </>

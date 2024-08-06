@@ -111,6 +111,7 @@ const Bookmark: FC<Props> = ({
 
   // 최종 수정
   function completeEdit(): void {
+  
     toggleEdit(false);
     // editTempBookmark({ ...tempBookmark, title: tempTitle, tags: tempTags });
     editTempBookmark({ ...tempBookmark, title: tempTitle });

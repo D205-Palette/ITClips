@@ -70,6 +70,7 @@ const CategoryTab: FC<Props> = ({ listId }) => {
     const [inputValue, changeInputValue] = useState<string>("");
 
     const createCategory = (): void => {
+      addTempCategories({categoryId:0,categoryName:inputValue})
       // 카테고리 추가 api
       axios({
         method: "post",
@@ -82,7 +83,7 @@ const CategoryTab: FC<Props> = ({ listId }) => {
         }
       })
         .then((res) => {
-          addTempCategories({categoryId:0,categoryName:inputValue})
+        
         })
         .catch((err) => {
           console.error(err);

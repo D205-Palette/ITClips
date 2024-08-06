@@ -60,4 +60,6 @@ public interface RoadmapService {
     List<RankDTO> getListsRankingByScrap();
 
     List<RoadmapInfoDTO> searchRoadMaps(Integer page, String searchType, Long userId, String title) throws RuntimeException;
+
+    Integer getCommentCount(Long roadmapId) throws RuntimeException;
 }

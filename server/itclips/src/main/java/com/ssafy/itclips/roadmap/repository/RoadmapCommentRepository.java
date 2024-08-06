@@ -9,4 +9,5 @@ import java.util.List;
 public interface RoadmapCommentRepository extends JpaRepository<RoadmapComment, Long> {
     // 로드맵 댓글 찾기
     List<RoadmapComment> findByRoadmapId(Long roadmapId);
+    Integer countByRoadmapId(Long roadmapId);
 }

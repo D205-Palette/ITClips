@@ -16,7 +16,7 @@ interface Props {
   id:number;
 }
 
-const AsideBookmarkListKebabDropdown :FC<Props> = (isRoadmap, id) => {
+const AsideBookmarkListKebabDropdown :FC<Props> = ({isRoadmap, id}) => {
   const [ isEditModalOpen, setIsEditModalOpen ] = useState<boolean>(false);
   const [ isDeleteModalOpen, setIsDeleteModalOpen ] = useState<boolean>(false);
   const [ isUrlCopyModalOpen, setIsUrlCopyModalOpen ] = useState<boolean>(false);
@@ -33,6 +33,7 @@ const AsideBookmarkListKebabDropdown :FC<Props> = (isRoadmap, id) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsDropdownOpen(false);
       }
+      console.log(id)
     };
 
     document.addEventListener('mousedown', handleClickOutside);
@@ -44,7 +45,7 @@ const AsideBookmarkListKebabDropdown :FC<Props> = (isRoadmap, id) => {
   const toggleDropdown = (): void => setIsDropdownOpen(!isDropdownOpen);
 
   // 로드맵 or 북마크리스트
-  const categories: string[] = (isRoadmap.isRoadmap? ["수정하기", "삭제하기", "url복사", '스크랩']: ["수정하기", "삭제하기", "url복사",'즐겨찾기', "신고하기"])
+  const categories: string[] = (isRoadmap? ["수정하기", "삭제하기", "url복사", '스크랩']: ["수정하기", "삭제하기", "url복사",'즐겨찾기', "신고하기"])
   const handleCopyClipBoard = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);

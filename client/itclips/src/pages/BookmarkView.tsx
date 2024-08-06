@@ -18,10 +18,11 @@ import type { BookmarkListDetailType } from "../types/BookmarkListType";
 import { useParams } from "react-router-dom";
 import { API_BASE_URL } from "../config";
 import { authStore } from "../stores/authStore";
+import darkModeStore from "../stores/darkModeStore";
 
 const MyBookmark = () => {
   const params = useParams();
-
+  const {isDark} = darkModeStore()
   const tempListId = params.bookmarklistId;
 
   let listId = 0;
@@ -66,8 +67,6 @@ const MyBookmark = () => {
     })
       .then((res) => {
         const newCatId = res.data.categories.filter((cat:CategoryType)=>cat.categoryName===whatCategory.categoryName)[0].categoryId
-        console.log(newCatId)
-        console.log(whatCategory.categoryName)
         changeCategory({categoryId:newCatId, categoryName:whatCategory.categoryName})
       })
       .catch((err) => {
@@ -114,7 +113,7 @@ const MyBookmark = () => {
           <div id="aside" className="absolute col-start-2 col-span-3 z-50">
             <div className="fixed">{isMessageOpen && <MessageLayout />}</div>
           </div>
-          <div className="fixed">
+          <div className="fixed z-50">
             {bookmarkList ? (
               <AsideBookmarkList bookmarkList={bookmarkList} />
             ) : (
@@ -128,6 +127,7 @@ const MyBookmark = () => {
           id="Main"
           className="xl:col-start-5 xl:col-span-7 col-start-3 col-span-8 gap-4"
         >
+          <div className={(isDark? "aside-dark": "bg-white") + " fixed z-10 w-full"} color="asideDark">
           {/* 상단바 */}
           {editMode ? (
             <div className="flex flex-row justify-end pe-5 my-5">
@@ -150,7 +150,9 @@ const MyBookmark = () => {
            : 
             <></>
           )}
+</div>
           {/* 북마크들 */}
+          <div className="absolute top-24 w-7/12">
           {bookmarks ? (
             bookmarks.map((bookmark) =>
               editMode ? (
@@ -174,6 +176,7 @@ const MyBookmark = () => {
           ) : (
             <></>
           )}
+          </div>
 
           {/* 에디터 모드 전환 버튼 */}
           <div className="fixed bottom-10 right-10">

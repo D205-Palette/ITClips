@@ -128,7 +128,7 @@ const AddBookmarkModal: FC<move> = ({
         </div>
 
         <h3 className="font-bold text-xl flex flex-row justify-center">
-          북마크 추가{whatCategory.categoryId}
+          북마크 추가
         </h3>
 
         {/* 입력받는 형식들 */}

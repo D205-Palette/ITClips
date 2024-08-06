@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { IoClose } from "react-icons/io5";
+
 import {
   DragDropContext,
   Droppable,
@@ -192,7 +194,7 @@ const RoadmapEditView: React.FC = () => {
       isPublic: isPublic ? 1 : 0,
       stepList: roadmap.map((item) => Number(item.originalId)),
     };
-    console.log(roadmapData.image)
+    console.log(roadmapData.image);
 
     try {
       const roadmapCreateResponse = await axios.put(
@@ -203,7 +205,7 @@ const RoadmapEditView: React.FC = () => {
         }
       );
 
-      if (roadmapImage) {        
+      if (roadmapImage) {
         await axios.put(`${roadmapCreateResponse.data.url}`, roadmapImage, {
           headers: {
             "Content-Type": roadmapImage.type,
@@ -231,7 +233,7 @@ const RoadmapEditView: React.FC = () => {
   // 선택된 이미지 내리기
   const handleImageRemove = () => {
     setRoadmapImage(null);
-    setPreviewImageUrl('default');
+    setPreviewImageUrl("default");
   };
 
   // useEffect를 사용해 불러온 데이터를 상태에 설정
@@ -535,6 +537,17 @@ const RoadmapEditView: React.FC = () => {
           </Formik>
         </div>
       </DragDropContext>
+
+      {/* 뒤로가기 버튼 */}
+      <button
+        className="fixed bottom-10 right-10"
+        onClick={() => {
+          navigate(-1);
+        }}
+      >
+        <IoClose size={56} />
+      </button>
+      
     </div>
   );
 };

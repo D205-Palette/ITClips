@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { IoClose } from "react-icons/io5";
 import {
   DragDropContext,
   Droppable,
@@ -99,7 +100,7 @@ const RoadmapCreateView: React.FC = () => {
     setRoadmapImage(null);
     setPreviewImageUrl("default");
   };
-  
+
   useEffect(() => {
     if (!dataLoaded) {
       fetchData();
@@ -522,6 +523,16 @@ const RoadmapCreateView: React.FC = () => {
           </Formik>
         </div>
       </DragDropContext>
+
+      {/* 뒤로가기 버튼 */}
+      <button
+        className="fixed bottom-10 right-10"
+        onClick={() => {
+          navigate(-1);
+        }}
+      >
+        <IoClose size={56} />
+      </button>
     </div>
   );
 };

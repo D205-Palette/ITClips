@@ -52,8 +52,11 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
     const fetchMessages = async () => {
       try {
         const response = await getChatRoomMessages(roomId);
-        setMessages(response.data);
-        // 메세지를 가져오고 스크롤 아래로 이동
+        // 받아온 메시지를 날짜 기준으로 오름차순 정렬 (오래된 메시지가 위로)
+        const sortedMessages = response.data.sort((a: Message, b: Message) => 
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
+        setMessages(sortedMessages);
         setTimeout(scrollToBottom, 0);
       } catch (error) {
         console.error("메세지 불러오기 실패:", error);
@@ -64,12 +67,11 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
 
     let unsubscribe: () => void = () => {};
 
-    // 채팅방 연결 안되어있을 때 stomp와 연결
     if (isConnected) {
       unsubscribe = subscribe(`/api/sub/chat/room/${roomId}`, (message) => {
         const newMessage = JSON.parse(message.body);
+        // 새 메시지를 배열의 끝에 추가
         setMessages(prevMessages => [...prevMessages, newMessage]);
-        // 새 채팅이 올 때 스크롤 가장 아래로 내려서 최신 메세지 볼 수 있도록
         setTimeout(scrollToBottom, 0);
       });
     }
@@ -110,7 +112,14 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
         <MessageInviteButton />
       </div>
       {/* 채팅 메시지 영역 */}
-      <div ref={messageContainerRef} className="flex-1 overflow-y-auto">
+      <div
+        ref={messageContainerRef}
+        className="flex-1 overflow-y-auto"
+        style={{
+          scrollbarWidth: "thin",
+          scrollbarColor: "#CBD5E0 #EDF2F7"
+        }}
+      >
         <MessageContainer messages={messages} />
       </div>
       {/* 메시지 입력 영역 */}

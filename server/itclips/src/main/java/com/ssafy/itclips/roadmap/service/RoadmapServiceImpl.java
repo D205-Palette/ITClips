@@ -106,7 +106,8 @@ public class RoadmapServiceImpl implements RoadmapService {
 
     private String getImageURL(Roadmap roadmap) {
         String imageUrl = roadmap.getImage();
-        if(imageUrl != null) {
+        log.info(imageUrl);
+        if(imageUrl != null && !"default".equals(imageUrl)) {
             imageUrl = fileService.getPresignedUrl("images", roadmap.getImage(), false).get("url");
         }
         return imageUrl;
@@ -131,10 +132,18 @@ public class RoadmapServiceImpl implements RoadmapService {
         // 생성자
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        //이미지 s3 경로로 저장
-        DataResponseDto imageInfo = DataResponseDto.of(fileService.getPresignedUrl("images",roadmapRequestDTO.getImage(),true));
-        roadmapRequestDTO.setImageToS3FileName(imageInfo.getImage());
+        // 이미지 S3 경로로 저장
+        String image = roadmapRequestDTO.getImage();
+        boolean isDefaultImage = "default".equals(image);
 
+        DataResponseDto imageInfo = isDefaultImage ?
+                DataResponseDto.builder()
+                        .image(image)
+                        .url(image)
+                        .build() :
+                DataResponseDto.of(fileService.getPresignedUrl("images", image, true));
+
+        roadmapRequestDTO.setImageToS3FileName(imageInfo.getImage());
         // step에 넣을 bookmark list
         List<Long> listIds = roadmapRequestDTO.getStepList();
         if(listIds.isEmpty()){

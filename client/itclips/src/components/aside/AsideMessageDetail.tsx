@@ -1,6 +1,5 @@
 // AsideMessageDetail.tsx 는 메세지창의 메세지 목록 중 하나를 클릭했을 때 그 메세지의 상세창 컴포넌트
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 // components
 import MessageBackButton from "./ui/MessageBackButton";
@@ -10,32 +9,76 @@ import MessageContainer from "./layout/MessageContainer";
 // apis
 import { getChatRoomMessages } from "../../api/messageApi";
 
+// stores
+import { authStore } from "../../stores/authStore";
+import { useWebSocketStore } from "../../stores/webSocketStore";
+
 interface Message {
-  id: number;
-  content: string;
-  isSent?: boolean;
+  roomId: number;
+  senderId: string;
+  senderName: string;
+  message: string;
+  createdAt: string;
+}
+
+interface AsideMessageDetailProps {
+  roomId: number;
+  onBack: () => void;
 }
 
 // AsideMessage에서 id값을가지고 데이터를 꺼내서 라우터로 AsideMessageDetail 컴포넌트로 넘겨줌
 
-const AsideMessageDetail = ({ roomId, onBack }: any) => {
-  // chatId는 넘겨받아서 axios로 데이터 다시 호출
-  // chatId나 다른 데이터 넘겨받아서 axios로 채팅 내용 호출받으면 됨
+const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack }) => {
+
+  const userInfo = authStore(state => state.userInfo)
   
-  // 더미 데이터
-  const [messages, setMessages] = useState<Message[]>([
-    { id: 1, content: '안녕하세요!', isSent: false },
-    { id: 2, content: '안녕하세요~', isSent: true },
-    { id: 3, content: '왜 연락하셨나요?', isSent: true },
-    { id: 4, content: '궁금한게 있습니다!', isSent: false },
-  ]);
-  const [inputMessage, setInputMessage] = useState('');
+  const [ inputMessage, setInputMessage  ] = useState('');
+  const [ messages, setMessages ] = useState<Message[]>([]);
+  const { isConnected, subscribe, stompClient } = useWebSocketStore();
+
+  // 메세지 내용 조회
+  useEffect(() => {
+    console.log(`채팅방 번호 : ${roomId}`);
+    const fetchMessages = async () => {
+      try {
+        const response = await getChatRoomMessages(roomId);
+        setMessages(response.data);
+      } catch (error) {
+        console.error("메세지 불러오기 실패:", error);
+      }
+    };
+
+    fetchMessages();
+
+    let unsubscribe: () => void = () => {};
+
+    if (isConnected) {
+      unsubscribe = subscribe(`/api/sub/chat/room/${roomId}`, (message) => {
+        const newMessage = JSON.parse(message.body);
+        setMessages(prevMessages => [...prevMessages, newMessage]);
+      });
+    }
+
+    return () => {
+      unsubscribe();
+    };
+  }, [roomId, isConnected, stompClient]);
 
   // 메세지 전송 버튼을 눌렀을 때 동작
   const handleSendMessage = () => {
-    if (inputMessage.trim()) {
-      setMessages([...messages, { id: messages.length + 1, content: inputMessage, isSent: true }]);
+    if (isConnected && stompClient && roomId && userInfo.id && inputMessage.trim()) {
+      stompClient.publish({
+        destination: `/api/pub/chat/message`,
+        body: JSON.stringify({
+          roomId: roomId,
+          senderId: userInfo.id,
+          senderName: userInfo.nickname,
+          message: inputMessage.trim()
+        })
+      });
       setInputMessage('');
+    } else {
+      alert('메시지를 전송할 수 없습니다. 연결 상태를 확인해주세요.');
     }
   };
 

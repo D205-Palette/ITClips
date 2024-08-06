@@ -1,4 +1,11 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { Client } from '@stomp/stompjs';
+import { API_BASE_URL } from "../../config";
+
+// socket
+import SockJS from 'sockjs-client';
+
+// components
 import AsideMessage from "./AsideMessage";
 import AsideMessageDetail from "./AsideMessageDetail";
 import AsideStartNewMessage from "./AsideStartNewMessage";
@@ -6,6 +13,7 @@ import AsideStartNewMessage from "./AsideStartNewMessage";
 // stores
 import darkModeStore from "../../stores/darkModeStore";
 import { asideStore } from "../../stores/asideStore";
+import { useWebSocketStore } from "../../stores/webSocketStore";
 
 const MessageLayout = () => {
 
@@ -14,6 +22,17 @@ const MessageLayout = () => {
   const selectedChat = asideStore(state => state.selectedChat);
   const isMessageOpen = asideStore(state => state.isMessageOpen);
   const setSelectedChat = asideStore(state => state.setSelectedChat);
+  const { stompClient, isConnected, connect, disconnect } = useWebSocketStore();
+
+  // 소켓 연결
+  // 소켓 연결
+  useEffect(() => {
+    connect();
+
+    return () => {
+      disconnect();
+    };
+  }, [connect, disconnect]);
 
   const handleSelectChat = (roomId: any) => {
     setSelectedChat(roomId);
@@ -43,10 +62,16 @@ const MessageLayout = () => {
   return (
     <div className={`${ isDark ? "bg-base-300" : "bg-sky-100" } rounded-3xl w-80 h-[35rem]`}>
       {selectedChat === null && showInvite === null && (
-        <AsideMessage onSelectChat={handleSelectChat} onShowInvite={handleNewChat} />
+        <AsideMessage
+          onSelectChat={handleSelectChat}
+          onShowInvite={handleNewChat}
+        />
       )}
       {selectedChat !== null && showInvite === null && (
-        <AsideMessageDetail chatId={selectedChat} onBack={handleBackToList} />
+        <AsideMessageDetail
+          roomId={selectedChat}
+          onBack={handleBackToList}
+        />
       )}
       {selectedChat === null && showInvite !== null && (
         <AsideStartNewMessage onStartChat={handleChatStart} onBack={handleBackToList} />

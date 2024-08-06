@@ -5,12 +5,19 @@ import SearchUserItem from "../ui/SearchUserItem";
 
 interface User {
   id: number;
-  username: string;
   email: string;
-  followers: number;
-  following: number;
-  listCount: number;
+  nickname: string;
+  birth: string;
+  job: string;
+  gender: boolean;
+  bio: string;
+  image: string;
+  bookmarkListCount: number;
   roadmapCount: number;
+  followerCount: number;
+  followingCount: number;
+  following: boolean;
+  followers: boolean;
 }
 
 interface UserProps {

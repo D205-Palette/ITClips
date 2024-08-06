@@ -1,24 +1,41 @@
 import { NavLink } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // images (임시)
 import image from "../../../assets/images/profile_image.png";
 
+// apis
+import { follow, unfollow } from "../../../api/followApi";
+
+// stores
+import { authStore } from "../../../stores/authStore";
+
 interface User {
   id: number;
-  username: string;
   email: string;
-  followers: number;
-  following: number;
-  listCount: number;
+  nickname: string;
+  birth: string;
+  job: string;
+  gender: boolean;
+  bio: string;
+  image: string;
+  bookmarkListCount: number;
   roadmapCount: number;
+  followerCount: number;
+  followingCount: number;
+  following: boolean;
+  followers: boolean;
 }
 
 interface SearchUserItemProps {
   item: User;
 }
 
-const SearchUserItem: React.FC<SearchUserItemProps> = ({ item }) => {
+const SearchUserItem: React.FC<SearchUserItemProps> = ({ item: initialItem }) => {
+
+  const myUserId = authStore(state => state.userId);
+  const [item, setItem] = useState(initialItem);
+  const [toast, setToast] = useState<{ message: string; type: 'error' | 'success' } | null>(null);
 
   // 버튼 기능이 NavLink와 안겹치게 설정
   const handleNavLink = (e: React.MouseEvent) => {
@@ -26,12 +43,42 @@ const SearchUserItem: React.FC<SearchUserItemProps> = ({ item }) => {
     e.stopPropagation();
   };
 
-  const [isFollow, setIsFollow] = useState(false);
-
-  const toggleFollow = (e: React.MouseEvent) => {
+  const toggleFollow = async (e: React.MouseEvent) => {
     handleNavLink(e);
-    setIsFollow(!isFollow);
+    try {
+      if (item.following) {
+        await unfollow(myUserId, item.id);
+        setItem(prev => ({
+          ...prev,
+          following: false,
+          followerCount: prev.followerCount - 1
+        }));
+      } else {
+        await follow(myUserId, item.id);
+        setItem(prev => ({
+          ...prev,
+          following: true,
+          followerCount: prev.followerCount + 1
+        }));
+      }
+    } catch (error) {
+      console.error("팔로우/언팔로우 중 오류 발생:", error);
+      setToast({ 
+        message: `${item.following ? '언팔로우' : '팔로우'} 작업 중 오류가 발생했습니다.`, 
+        type: 'error' 
+      });
+    }
   };
+
+  // 토스트 알람
+  useEffect(() => {
+    if (toast) {
+      const timer = setTimeout(() => {
+        setToast(null);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [toast]);
 
   return(
     <div>
@@ -44,35 +91,47 @@ const SearchUserItem: React.FC<SearchUserItemProps> = ({ item }) => {
             <div className="flex items-center space-x-3">
               <div className="placeholder">
                 <div className="bg-neutral-focus text-neutral-content rounded-full w-10">
-                  <img src={image} alt={item.username} className="w-full object-cover" />
+                  <img src={image} alt={item.nickname} className="w-full object-cover" />
                 </div>
               </div>
               <div>
-                <h2 className="font-bold text-lg">{item.username}</h2>
+                <h2 className="font-bold text-lg">{item.nickname}</h2>
                 <p className="text-xs text-gray-500">{item.email}</p>
               </div>
             </div>
             {/* 팔로우 버튼 */}
             <button 
-            className={`btn btn-sm ${isFollow ? 'btn-error' : 'btn-primary'}`} 
-            onClick={toggleFollow}
-          >
-            {isFollow ? '언팔로우' : '팔로우'}
-          </button>
+              className={`btn btn-sm ${item.following ? 'text-base-100 btn-error' : 'btn-primary'}`} 
+              onClick={toggleFollow}
+            >
+              {item.following ? '언팔로우' : '팔로우'}
+            </button>
           </div>
-          <p className="text-sm mt-2 flex justify-center">안녕하세요 고양친구입니다~</p>
+          <p className="text-sm mt-2 flex justify-center">{item.bio}</p>
           <div className="grid grid-cols-8 gap-2 mt-2 text-sm">
             <div className="col-start-2 col-span-4">
-              <p className="text-gray-500 mb-2">팔로워 <span className="font-bold text-black">{item.followers}</span></p>
-              <p className="text-gray-500">리스트 <span className="font-bold text-black">{item.listCount}</span></p>
+              <p className="text-gray-500 mb-2">팔로워 <span className="font-bold text-black">{item.followerCount}</span></p>
+              <p className="text-gray-500">리스트 <span className="font-bold text-black">{item.bookmarkListCount}</span></p>
             </div>
             <div className="col-start-6 col-span-8">
-              <p className="text-gray-500 mb-2">팔로잉 <span className="font-bold text-black">{item.following}</span></p>
+              <p className="text-gray-500 mb-2">팔로잉 <span className="font-bold text-black">{item.followingCount}</span></p>
               <p className="text-gray-500">로드맵 <span className="font-bold text-black">{item.roadmapCount}</span></p>
             </div>
           </div>
         </div>
       </NavLink>
+
+      {/* 토스트 알람 */}
+      {toast && (
+        <div 
+          className={`fixed bottom-4 left-1/2 transform -translate-x-1/2 p-4 rounded-md ${
+            toast.type === 'success' ? 'bg-green-500' : 'bg-red-500'
+          } text-white shadow-lg z-50 transition-opacity duration-300`}
+        >
+          {toast.message}
+        </div>
+      )}
+
     </div>
   );
 };

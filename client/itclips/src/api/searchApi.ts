@@ -1,4 +1,4 @@
-import { authenticatedRequest, authenticatedRawJsonRequest } from "./apiUtils";
+import { authenticatedRequest } from "./apiUtils";
 
 interface Tag {
   title: string;
@@ -9,8 +9,9 @@ export const bookmarkSearch = (userId: number, page: number, searchType: string,
   return authenticatedRequest("get", `/list/search/${page}/${searchType}/${title}`, undefined, { page, searchType, title, userId });
 };
 
-// 유저 검색 (아직 api 구현 안됨)
-export const userSearch = () => {
+// 유저 검색
+export const userSearch = (userId: number, page: number, title: string) => {
+  return authenticatedRequest("get", `/user/search/${page}/${title}`, undefined, { page, title, userId });
 };
 
 // 로드맵 검색
@@ -20,5 +21,5 @@ export const roadmapSearch = (userId: number, page: number, searchType: string, 
 
 // 태그 검색
 export const tagSearch = (userId: number, page: number, tags: Tag[]) => {
-  return authenticatedRawJsonRequest("post", `/list/search/tag/${page}`, { tags }, { page, userId });
+  return authenticatedRequest("post", `/list/search/tag/${page}`, { tags }, { page, userId });
 };

@@ -34,3 +34,8 @@ export const inviteToChatRoom = (roomId: number, userId: number) => {
 export const createGroupChatRoom = (roomInfo: RoomInfo) => {
   return authenticatedRequest("post", `/chat/room`, roomInfo, undefined);
 };
+
+// 채팅방 정보 조회
+export const getChatRoomInfo = (roomId: number) => {
+  return authenticatedRequest("get", `/chat/room/info/${roomId}`, undefined, { roomId });
+};

@@ -1,5 +1,6 @@
 package com.ssafy.itclips.user.controller;
 
+import com.ssafy.itclips.error.CustomException;
 import com.ssafy.itclips.follow.service.FollowService;
 import com.ssafy.itclips.global.file.DataResponseDto;
 import com.ssafy.itclips.global.file.FileService;
@@ -30,6 +31,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.List;
@@ -367,42 +369,42 @@ public class UserController {
     }
 
     @PostMapping("/pw/verifyCode")
-    @Operation(summary = "비밀번호 찾기 인증 코드 확인", description = "이메일로 받은 인증 코드를 확인합니다.")
+    @Operation(summary = "비밀번호 찾기 인증 코드 확인", description = "코드를 확인하고, 임시 비밀번호를 발송합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "인증 성공"),
+            @ApiResponse(responseCode = "200", description = "임시 비밀번호가 발송되었습니다."),
             @ApiResponse(responseCode = "400", description = "잘못된 인증 코드"),
             @ApiResponse(responseCode = "404", description = "이메일을 찾을 수 없음")
     })
-    public ResponseEntity<?> verifyPasswordResetCode(@RequestParam("email") String email, @RequestParam("code") String code) {
-        String storedCode = passwordResetCodes.get(email);
-        if (storedCode == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("이메일을 찾을 수 없습니다.");
-        }
-        if (storedCode.equals(code)) {
-            passwordResetCodes.remove(email);
-            return ResponseEntity.ok("인증 성공");
-        } else {
+    public ResponseEntity<String> verifyPasswordResetCode(@RequestParam("email") String email, @RequestParam("code") String code) {
+        // 유저 존재 확인
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."));
+
+        // 인증 코드 검증
+        if (!isCodeValid(email, code)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잘못된 인증 코드입니다.");
         }
+
+        // 임시 비밀번호 생성 및 업데이트
+        String temporaryPassword = generateTemporaryPassword();
+        userService.updatePassword(user, temporaryPassword);
+
+        // 임시 비밀번호 이메일 발송
+        try {
+            mailService.sendTemporaryPassword(email, temporaryPassword);
+        } catch (MessagingException e) {
+            // 예외 처리 로직 추가
+            throw new RuntimeException("임시 비밀번호 발송 중 오류가 발생했습니다.", e);
+        }
+
+        // 인증 성공 응답
+        return ResponseEntity.ok("임시 비밀번호가 발송되었습니다.");
     }
 
-    @PostMapping("/password/reset")
-    @Operation(summary = "비밀번호 초기화", description = "인증 코드 확인 후 임시 비밀번호를 이메일로 발송합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "임시 비밀번호 발송 성공"),
-            @ApiResponse(responseCode = "404", description = "사용자 정보를 찾을 수 없음"),
-            @ApiResponse(responseCode = "500", description = "임시 비밀번호 발송 중 오류 발생")
-    })
-    public ResponseEntity<?> resetPassword(@RequestParam("email") String email) {
-        User user = userRepository.findByEmail(email).get();
-        try {
-            String temporaryPassword = generateTemporaryPassword();
-            userService.updatePassword(user, temporaryPassword);
-            mailService.sendTemporaryPassword(email, temporaryPassword);
-            return ResponseEntity.ok("임시 비밀번호가 발송되었습니다.");
-        } catch (MessagingException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("임시 비밀번호 발송 중 오류가 발생했습니다.");
-        }
+    // 인증 코드 유효성 검사 메서드
+    private boolean isCodeValid(String email, String code) {
+        String storedCode = passwordResetCodes.get(email);
+        return storedCode != null && storedCode.equals(code);
     }
 
     @PutMapping("/pw/update")

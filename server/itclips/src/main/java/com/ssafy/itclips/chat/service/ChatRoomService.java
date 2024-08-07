@@ -135,6 +135,13 @@ public class ChatRoomService {
         Chat chat = chatJPARepository.findByUserIdAndRoomId(message.getSenderId(), message.getRoomId())
                 .orElseThrow(()-> new CustomException(ErrorCode.CHAT_NOT_FOUND));
 
+        List<Chat> chatList = chatJPARepository.findByRoomId(message.getRoomId())
+                .orElseThrow(()-> new CustomException(ErrorCode.CHAT_NOT_FOUND));
+        for(Chat chat2 : chatList){
+            //안읽은 메세지 +1
+            chat2.cnt();
+        }
+
         // mysql 메세지 저장
         Message saveMessage = message.toEntity(chat);
         messageJPARepository.save(saveMessage);
@@ -172,11 +179,18 @@ public class ChatRoomService {
                 //레디스 저장
                 chatRoomRepository.createChatRoom(chatRoomDTO);
             }
+
+            //마지막 메세지
             Optional<Message> lastMessage = messageJPARepository.findLastMessageByChatRoomId(chatRoomDTO.getId());
             if(lastMessage.isPresent()) {
+                //마지막 메세지
                 chatRoomDTO.setLastMessage(lastMessage.get().getMessage());
-
+                //마지막으로 온 시간
+                chatRoomDTO.setLastModified(lastMessage.get().getCreatedAt());
             }
+
+            //안읽은 메세지수
+            chatRoomDTO.setMessageCnt(chat.getMessageCnt());
             chatRoomDTOList.add(chatRoomDTO);
 
         }
@@ -232,4 +246,15 @@ public class ChatRoomService {
             chatJPARepository.save(chat);
         }
     }
+
+    //안읽은 메세지 0으로 세팅
+    @Transactional
+    public void setZero(Long roomId, Long userId){
+        Chat chat = chatJPARepository.findByUserIdAndRoomId(userId,roomId)
+                .orElseThrow(()->new CustomException(ErrorCode.CHAT_NOT_FOUND));
+
+        chat.setZero();
+
+    }
+
 }

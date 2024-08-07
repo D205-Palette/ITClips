@@ -20,13 +20,15 @@ public class ChatRoomDTO implements Serializable {
     private String name;
     private String lastMessage;
     private LocalDateTime lastModified;
+    private Long messageCnt;
 
     @Builder
-    public ChatRoomDTO(Long roomId, String name,String lastMessage,LocalDateTime lastModified) {
+    public ChatRoomDTO(Long roomId, String name,String lastMessage,LocalDateTime lastModified,Long messageCnt) {
         this.id = roomId;
         this.name = name;
         this.lastMessage = lastMessage;
         this.lastModified = lastModified;
+        this.messageCnt = messageCnt;
     }
 
     public static ChatRoomDTO toDto(ChatRoom chatRoom) {
@@ -34,7 +36,6 @@ public class ChatRoomDTO implements Serializable {
                 .roomId(chatRoom.getId())
                 .name(chatRoom.getName())
                 .lastMessage(chatRoom.getLastMessage())
-                .lastModified(chatRoom.getLastModified())
                 .build();
     }
 }

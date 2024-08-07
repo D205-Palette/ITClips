@@ -3,11 +3,12 @@ import React, { useState, useEffect, useRef } from "react";
 
 // components
 import MessageBackButton from "./ui/MessageBackButton";
-import MessageInviteButton from "./ui/MessageInviteButton";
 import MessageContainer from "./layout/MessageContainer";
+import AsideMessageKebabDropdown from "./ui/AsideMessageKebabDropdown";
+import MessageInviteModal from "./modals/MessageInviteModal";
 
 // apis
-import { getChatRoomMessages, getChatRoomInfo } from "../../api/messageApi";
+import { getChatRoomMessages, getChatRoomInfo, leaveChatRoom } from "../../api/messageApi";
 
 // stores
 import { authStore } from "../../stores/authStore";
@@ -46,6 +47,7 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
   const [ messages, setMessages ] = useState<Message[]>([]);
   const { isConnected, subscribe, stompClient } = useWebSocketStore();
   const [ notification, setNotification ] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
+  const [ isInviteModalOpen, setIsInviteModalOpen ] = useState(false);
 
   // 메시지 컨테이너에 대한 ref 생성
   const messageContainerRef = useRef<HTMLDivElement>(null);
@@ -70,6 +72,32 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
 
     fetchRoomInfo();
   }, [roomId]);
+
+  // 채팅방 나가기
+  const handleLeaveChat = async () => {
+    if (userInfo.id && roomInfo) {
+      try {
+        await leaveChatRoom(userInfo.id, roomId);
+        setNotification({ message: `${roomInfo.roomName} 채팅방을 나갔습니다.`, type: 'success' });
+        onBack(); // AsideMessage 창으로 이동
+      } catch (error) {
+        console.error("채팅방 나가기 실패:", error);
+        setNotification({ message: "채팅방을 나가는데 실패했습니다.", type: 'error' });
+      }
+    }
+  };
+
+  const handleKebabMenuAction = (action: string) => {
+    if (action === "초대하기") {
+      setIsInviteModalOpen(true);
+    } else if (action === "채팅방 나가기") {
+      handleLeaveChat();
+    }
+  };
+
+  const handleCloseInviteModal = () => {
+    setIsInviteModalOpen(false);
+  };
 
   // 메세지 내용 조회
   useEffect(() => {
@@ -133,8 +161,11 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
           {/* 채팅 제목(상대유저 이름) */}
           <h2 className="text-xl font-bold ml-2 truncate flex-shrink min-w-0 max-w-[180px]">{roomInfo?.roomName}</h2>
         </div>
-        {/* 초대하기 버튼 */}
-        <MessageInviteButton roomId={roomId} setNotification={setNotification} />
+        {/* 더보기 버튼 */}
+        <AsideMessageKebabDropdown
+          roomId={roomId}
+          onMenuItemClick={handleKebabMenuAction}
+        />
       </div>
       {/* 채팅 메시지 영역 */}
       <div
@@ -158,7 +189,15 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
         />
         <button onClick={handleSendMessage} className="btn btn-primary">전송</button>
       </div>
-
+      {/* 채팅방 초대 모달 */}
+      {isInviteModalOpen && (
+        <MessageInviteModal
+          roomId={roomId}
+          setNotification={setNotification}
+          onClose={handleCloseInviteModal}
+          isOpen={isInviteModalOpen}
+        />
+      )}
       {notification && (
         <div 
           className={`fixed bottom-4 left-1/2 transform -translate-x-1/2 p-4 rounded-md ${

@@ -1,9 +1,6 @@
-// MessageInviteButton.tsx 는 AsideMessageDetail.tsx 컴포넌트에서 사용하는 + 버튼(초대)
+// MessageInviteButton.tsx 는 채팅방으로 유저를 초대하는 창을 출력하는 모달
 
 import React, { useState, useRef, RefObject, useEffect } from "react";
-
-// icons
-import { FaPlus } from "react-icons/fa6";
 
 // apis
 import { userSearch } from "../../../api/searchApi";
@@ -43,12 +40,14 @@ interface ChatRoomInfo {
   }[];
 }
 
-interface MessageInviteButtonProps {
+interface MessageInviteModalProps {
   roomId: number;
   setNotification: (notification: { message: string, type: 'success' | 'error' } | null) => void;
+  onClose: () => void;
+  isOpen: boolean;
 }
 
-const MessageInviteButton: React.FC<MessageInviteButtonProps> = ({ roomId, setNotification }) => {
+const MessageInviteModal: React.FC<MessageInviteModalProps> = ({ roomId, setNotification, onClose, isOpen  }) => {
 
   const userInfo = authStore(state => state.userInfo);
 
@@ -56,34 +55,42 @@ const MessageInviteButton: React.FC<MessageInviteButtonProps> = ({ roomId, setNo
   const [ keyword, setKeyword ] = useState("");
   const [ searchResults, setSearchResults ] = useState<SearchUser[]>([]);
   const [ selectedUser, setSelectedUser ] = useState<InviteUser | null>(null);
-  const [ isModalOpen, setIsModalOpen ] = useState(false);
   const [ roomUsers, setRoomUsers ] = useState<number[]>([]);
   const [ errorMessage, setErrorMessage ] = useState<string | null>(null);
 
-  const openModal = async () => {
-    setIsModalOpen(true);
-    modalRef.current?.showModal();
-    setErrorMessage(null);
-
-    // 모달이 열릴때 채팅방 정보 조회
-    try {
-      const response = await getChatRoomInfo(roomId);
-      const roomInfo: ChatRoomInfo = response.data;
-      setRoomUsers(roomInfo.userTitles.map(user => user.id));
-    } catch (error) {
-      console.error("채팅방 정보 조회 실패:", error);
+  // 모달을 열고 닫는 로직
+  useEffect(() => {
+    if (isOpen) {
+      modalRef.current?.showModal();
+    } else {
+      modalRef.current?.close();
     }
-  };
+  }, [isOpen]);
 
   // 모달이 열릴 때 상태 초기화
   useEffect(() => {
-    if (isModalOpen) {
+    const initializeModal = async () => {
       setKeyword("");
       setSearchResults([]);
       setSelectedUser(null);
       setErrorMessage(null);
-    }
-  }, [isModalOpen]);
+
+      try {
+        const response = await getChatRoomInfo(roomId);
+        const roomInfo: ChatRoomInfo = response.data;
+        setRoomUsers(roomInfo.userTitles.map(user => user.id));
+      } catch (error) {
+        console.error("채팅방 정보 조회 실패:", error);
+      }
+    };
+
+    initializeModal();
+    modalRef.current?.showModal();
+
+    return () => {
+      modalRef.current?.close();
+    };
+  }, [roomId]);
 
   // 검색어가 변경될 때마다 에러 메시지 초기화
   useEffect(() => {
@@ -143,6 +150,7 @@ const MessageInviteButton: React.FC<MessageInviteButtonProps> = ({ roomId, setNo
         modalRef.current?.close();
         setSelectedUser(null);
         setNotification({ message: "사용자를 성공적으로 초대했습니다.", type: 'success' });
+        onClose();  // 초대 후 모달 닫기
       } catch (error) {
         console.error("사용자 초대 실패:", error);
         setNotification({ message: "사용자 초대에 실패했습니다.", type: 'error' });
@@ -152,13 +160,17 @@ const MessageInviteButton: React.FC<MessageInviteButtonProps> = ({ roomId, setNo
 
   return (
     <div>
-      <button className="btn btn-ghost btn-circle" onClick={openModal}>
-        <FaPlus />
-      </button>
-      <dialog ref={modalRef} className="modal" onClose={() => setIsModalOpen(false)}>
+      <dialog ref={modalRef} className="modal">
         <div className="modal-box max-h-[80vh] flex flex-col">
           <form method="dialog">
-            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            <button
+              className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+              onClick={() => {
+                onClose();
+              }}
+            >
+              ✕
+            </button>
           </form>
           <h3 className="font-bold text-lg mb-4">초대하기</h3>
           <div className="flex-grow flex flex-col overflow-hidden">
@@ -214,4 +226,4 @@ const MessageInviteButton: React.FC<MessageInviteButtonProps> = ({ roomId, setNo
   );
 };
 
-export default MessageInviteButton;
+export default MessageInviteModal;

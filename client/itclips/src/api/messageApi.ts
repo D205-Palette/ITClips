@@ -21,7 +21,7 @@ export const createPrivateChatRoom = (user1Id: number, user2Id: number) => {
 };
 
 // 채팅방 나가기
-export const deleteChatRoom = (roomId: number, userId: number) => {
+export const leaveChatRoom = (roomId: number, userId: number) => {
   return authenticatedRequest("delete", `/chat/room/${roomId}/${userId}`, undefined, { roomId, userId });
 };
 

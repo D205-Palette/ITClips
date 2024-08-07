@@ -392,7 +392,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
 
     private String getImageUrl(BookmarkList bookmarkList) {
         String imageUrl = bookmarkList.getImage();
-        if(imageUrl != null) {
+        if(!"default".equals(imageUrl)) {
             imageUrl = fileService.getPresignedUrl("images", bookmarkList.getImage(), false).get("url");
         }
         return imageUrl;

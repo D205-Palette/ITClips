@@ -206,7 +206,7 @@ public class UserController {
 
     private String getImageUrl(User targetUser) {
         String imageUrl = targetUser.getProfileImage();
-        if(imageUrl != null) {
+        if(imageUrl != null && !"default".equals(imageUrl)) {
             imageUrl = fileService.getPresignedUrl("images", targetUser.getProfileImage(), false).get("url");
         }
         return imageUrl;

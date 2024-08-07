@@ -23,7 +23,6 @@ import java.util.Map;
 @Tag(name = "Chat Controller", description = "채팅 관련 API")
 public class ChatRoomController {
 
-    private final ChatRoomRepository chatRoomRepository;
     private final ChatRoomService chatRoomService;
 
     //채팅 방 만들기
@@ -79,6 +78,14 @@ public class ChatRoomController {
     @Operation(summary = "채팅방 초대", description = "채팅방 초대")
     public ResponseEntity<?> inviteUser(@PathVariable("roomId")Long roomId,@PathVariable("userId")Long userId) {
         chatRoomService.inviteUser(roomId,userId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // 읽음 처리
+    @GetMapping("/messages/readAll/{roomId}/{userId}")
+    @Operation(summary = "해당 방 안 읽은 메세지 모두 읽음처리", description = "안읽은 메세지 모두 읽음으로 처리")
+    public ResponseEntity<?> readAll(@PathVariable("roomId")Long roomId,@PathVariable("userId")Long userId) {
+        chatRoomService.setZero(roomId, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

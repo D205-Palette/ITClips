@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -33,6 +34,10 @@ public class Chat {
     @JoinColumn(name = "room_id", nullable = false)
     private ChatRoom room;
 
+    @ColumnDefault("0")
+    @JoinColumn(name = "message_cnt", nullable = false)
+    private Long messageCnt = 0L;
+
     public void setUser(User user) {
         this.user = user;
         if(!user.getChatList().contains(this)){
@@ -50,10 +55,18 @@ public class Chat {
     }
 
     @Builder
-    public Chat(Long id, User user, ChatRoom room) {
+    public Chat(Long id, User user, ChatRoom room, Long messageCnt) {
         this.id = id;
         this.user = user;
         this.room = room;
+        this.messageCnt = messageCnt;
     }
 
+    public void cnt(){
+        messageCnt++;
+    }
+
+    public void setZero(){
+        messageCnt=0L;
+    }
 }

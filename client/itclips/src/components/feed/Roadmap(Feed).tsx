@@ -5,20 +5,10 @@ import { useNavigate } from "react-router-dom";
 import KebabDropdown from "./KebabDropdown(Feed)";
 import darkModeStore from "../../stores/darkModeStore";
 import profile_img from "../../assets/images/profile_image.png";
+import type { RoadmapSumType } from "../../types/RoadmapType";
 
 interface Props {
-  roadmap: {
-    id: number;
-    userName: string;
-    title: string;
-    description: string;
-    image: string;
-    isPublic: number;
-    createdAt: string;
-    stepCnt: number; // 단계수
-    checkCnt: number; // 체크된 단계수
-    likeCnt: number; // 좋아요 수
-  };
+  roadmap: RoadmapSumType;
 }
 
 const RoadMap: FC<Props> = ({ roadmap }) => {
@@ -47,6 +37,7 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
   const getRelativeTime = (createdAt: string) => {
     const now = new Date();
     const createdDate = new Date(createdAt);
+    createdDate.setHours(createdDate.getHours() + 9);
     const diffInMs = now.getTime() - createdDate.getTime();
     const diffInMinutes = diffInMs / (1000 * 60);
     const diffInHours = diffInMs / (1000 * 60 * 60);
@@ -107,7 +98,10 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
 
       <div className="card-body">
         <h2 className="card-title">{roadmap.title}</h2>
-        <p className="text-sm md:text-base line-clamp-3"> {roadmap.description}</p>
+        <p className="text-sm md:text-base line-clamp-3">
+          {" "}
+          {roadmap.description}
+        </p>
 
         <div className="card-actions justify-end flex items-center relative mt-2">
           <button onClick={clickHeart} className="btn btn-ghost z-0">

@@ -25,8 +25,8 @@ import RoadmapEditView from "./pages/RoadmapEditView";
 // Components
 import App from "./App";
 import Oauth2 from "./components/login/oauth/Oauth2";
-import NewBookmarkLists from "./components/feed/NewBookmarkLists";
-import NewRoadmaps from "./components/feed/NewRoadmaps";
+import FeedBookmarkLists from "./components/feed/FeedBookmarkLists";
+import FeedRoadmaps from "./components/feed/FeedRoadmaps";
 
 const router = createBrowserRouter([
   {
@@ -108,15 +108,15 @@ const router = createBrowserRouter([
         children: [
           {
             path: "",
-            element: <NewBookmarkLists />,
+            element: <FeedBookmarkLists />,
           },
           {
-            path: "newBookmarkLists",
-            element: <NewBookmarkLists />,
+            path: "BookmarkLists",
+            element: <FeedBookmarkLists />,
           },
           {
-            path: "newRoadmaps",
-            element: <NewRoadmaps />,
+            path: "Roadmaps",
+            element: <FeedRoadmaps />,
           },
         ],
       },

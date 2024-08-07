@@ -54,7 +54,7 @@ public class Roadmap {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @Size(max = 255)
+    @Size(max = 511)
     @Column(name = "image")
     private String image;
 

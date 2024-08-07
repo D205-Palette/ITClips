@@ -54,7 +54,7 @@ public class User {
     @Column(name = "nickname", nullable = false, length = 50)
     private String nickname;
 
-    @Size(max = 255)
+    @Size(max = 511)
     @Column(name = "profile_image")
     private String profileImage;
 

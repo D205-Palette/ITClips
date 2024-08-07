@@ -11,7 +11,7 @@ import lombok.Setter;
 public class SimilarBookmarkResponse {
 
     @JsonProperty("bookmark_list_id")
-    private Integer bookmarkListId;
+    private Long bookmarkListId;
 
     @JsonProperty("similarity_score")
     private Double similarityScore;

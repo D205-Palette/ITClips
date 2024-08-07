@@ -4,6 +4,7 @@ import com.ssafy.itclips.bookmarklist.dto.BookmarkListDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListDetailDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListRoadmapDTO;
+import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
 import com.ssafy.itclips.global.file.DataResponseDto;
 import com.ssafy.itclips.global.rank.RankDTO;
 import com.ssafy.itclips.tag.dto.TagSearchDTO;
@@ -30,6 +31,8 @@ public interface BookmarkListService {
     List<BookmarkListResponseDTO> getScrapedLists(Long userId, Long viewerId) throws RuntimeException;
 
     BookmarkListDetailDTO getListDetail(Long userId, Long listId) throws RuntimeException;
+
+    BookmarkListResponseDTO convertToBookmarkListResponseDTO(BookmarkList bookmarkList, Long viewerId);
 
     BookmarkListRoadmapDTO getBookmarkListResponseDTO(Long listId) throws RuntimeException;
 

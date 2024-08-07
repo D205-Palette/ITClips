@@ -56,7 +56,10 @@ public enum ErrorCode {
     INVALID_FOLLOW_REQUEST(HttpStatus.BAD_REQUEST, "FOLLOW-003", "잘못된 팔로우 요청입니다."),
 
     //feed
-    FEED_NOT_FOUND(HttpStatus.NOT_FOUND, "FNF-001","피드가 없습니다.")
+    FEED_NOT_FOUND(HttpStatus.NOT_FOUND, "FNF-001","피드가 없습니다."),
+
+    //recommendation
+    RECOMMEND_NOT_FOUND(HttpStatus.NOT_FOUND,"REC-001","추천 피드가 없습니다.")
     ;
 
     private final HttpStatus httpStatus;

@@ -1,12 +1,14 @@
 package com.ssafy.itclips.recommend.controller;
 
-import com.ssafy.itclips.recommend.dto.SimilarBookmarkResponse;
+import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
 import com.ssafy.itclips.recommend.service.RecommendationServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,7 +29,8 @@ public class RecommendationController {
             @ApiResponse(responseCode = "200", description = "추천 북마크 리스트가 성공적으로 반환되었습니다."),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
     })
-    public List<SimilarBookmarkResponse> getRecommendations(@PathVariable Long userId) {
-        return recommendationService.getPythonRecommendBookmarks(userId);
+    public ResponseEntity<?> getRecommendations(@PathVariable Long userId) {
+        List<BookmarkListResponseDTO> lists =  recommendationService.getPythonRecommendBookmarks(userId);
+        return new ResponseEntity<>(lists, HttpStatus.OK);
     }
 }

@@ -13,6 +13,11 @@ import { createPrivateChatRoom, createGroupChatRoom } from "../../api/messageApi
 // stores
 import { authStore } from "../../stores/authStore";
 
+interface Notification {
+  message: string;
+  type: 'success' | 'error';
+}
+
 interface SearchUser {
   id: number;
   email: string;
@@ -47,6 +52,18 @@ const AsideStartNewMessage: React.FC<InviteProps> = ({ onStartChat, onBack }) =>
   const [ inviteUsers, setInviteUsers ] = useState<InviteUser[]>([]);
   const [ inputName, setInputName ] = useState("");
   const [ searchResults, setSearchResults ] = useState<SearchUser[]>([]);
+  const [ notification, setNotification ] = useState<Notification | null>(null);
+
+  // 토스트 메세지 3초뒤 종료
+  useEffect(() => {
+    if (notification) {
+      const timer = setTimeout(() => {
+        setNotification(null);
+      }, 3000);  // 3초 후 메시지 제거
+
+      return () => clearTimeout(timer);
+    }
+  }, [notification]);
 
   // 유저검색
   useEffect(() => {
@@ -100,20 +117,30 @@ const AsideStartNewMessage: React.FC<InviteProps> = ({ onStartChat, onBack }) =>
   const handleStartChat = async () => {
     if (inviteUsers.length === 0 || !myInfo?.id) return;
 
-    let roomId;
-    if (inviteUsers.length === 1) {
-      const result = await createPrivateChatRoom(myInfo.id, inviteUsers[0].id);
-      roomId = result.data.roomId;
-    } else {
-      const userIds = [myInfo.id, ...inviteUsers.map(user => user.id)];
-      const result = await createGroupChatRoom({
-        name: `그룹채팅방${Date.now()}`,
-        userIds: userIds
-      });
-      roomId = result.data.roomId;
-    }
+    try {
+      let roomId;
+      if (inviteUsers.length === 1) {
+        const result = await createPrivateChatRoom(myInfo.id, inviteUsers[0].id);
+        roomId = result.data.roomId;
+      } else {
+        const userIds = [myInfo.id, ...inviteUsers.map(user => user.id)];
 
-    onStartChat(roomId);
+        // 그룹 채팅방 이름 생성
+        const roomName = userIds.join(',');
+
+        const result = await createGroupChatRoom({
+          name: `그룹채팅방(${roomName})`,
+          userIds: userIds
+        });
+        roomId = result.data.roomId;
+      }
+
+      onStartChat(roomId);
+      setNotification({ message: "채팅방이 생성되었습니다.", type: 'success' });
+    } catch (error) {
+      console.error("채팅방 생성 중 오류 발생:", error);
+      setNotification({ message: "채팅방 생성에 실패했습니다.", type: 'error' });
+    }
   };
 
   return (
@@ -185,6 +212,17 @@ const AsideStartNewMessage: React.FC<InviteProps> = ({ onStartChat, onBack }) =>
           시작
         </button>
       </div>
+
+      {/* 알림 메시지 */}
+      {notification && (
+        <div 
+          className={`fixed bottom-4 left-1/2 transform -translate-x-1/2 p-4 rounded-md ${
+            notification.type === 'success' ? 'bg-green-500' : 'bg-red-500'
+          } text-white shadow-lg z-50 transition-opacity duration-300`}
+        >
+          {notification.message}
+        </div>
+      )}
     </div>
   );
 };

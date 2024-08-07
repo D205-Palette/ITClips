@@ -35,8 +35,8 @@ public class SwaggerConfig {
 
     private Info apiInfo() {
         return new Info()
-                .title("Spring Boot REST API Specifications")
-                .description("Specification")
+                .title("Itclips API 명세서")
+                .description("Itclips API Reference for Developers</h3>SSAFY 공통 PJT A205")
                 .version("1.0.0");
     }
 }

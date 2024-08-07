@@ -28,7 +28,7 @@ const MessageContainer: React.FC<ChildComponentProps> = ({ rooms, onClickMessage
         {rooms.map((room: ChatRoom) => (
           <li 
             key={room.id} 
-            className="flex justify-between items-center bg-white hover:bg-sky-100 transition-colors duration-200 rounded-lg shadow-sm w-full px-3 py-2 cursor-pointer" 
+            className="flex justify-between items-center bg-base-100 hover:bg-sky-100 transition-colors duration-200 rounded-lg shadow-sm w-full px-3 py-2 cursor-pointer" 
             onClick={() => onClickMessage(room.id)}
           >
             <div className="p-3">

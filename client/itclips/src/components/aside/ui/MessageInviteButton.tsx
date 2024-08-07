@@ -7,7 +7,7 @@ import { FaPlus } from "react-icons/fa6";
 
 // apis
 import { userSearch } from "../../../api/searchApi";
-import { inviteToChatRoom } from "../../../api/messageApi";
+import { inviteToChatRoom, getChatRoomInfo } from "../../../api/messageApi";
 
 // stores
 import { authStore } from "../../../stores/authStore";

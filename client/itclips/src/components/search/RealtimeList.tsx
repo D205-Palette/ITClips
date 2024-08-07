@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 
+// apis
+import { getBookmarkListScrapRank, getBookmarkListHitRank, getBookmarkListLinkRank, getRoadmapHitRank, getRoadmapLikeRank, getRoadmapScrapRank } from '../../api/rankApi';
+
 interface RealtimeItem {
   id: number;
   title: string;

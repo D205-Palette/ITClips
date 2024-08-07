@@ -1,7 +1,6 @@
 import { authenticatedRequest } from "./apiUtils";
 
 interface RoomInfo {
-  id: number;
   name: string;
   userIds: number[];
 }
@@ -33,5 +32,5 @@ export const inviteToChatRoom = (roomId: number, userId: number) => {
 
 // 그룹 채팅방 만들기
 export const createGroupChatRoom = (roomInfo: RoomInfo) => {
-  return authenticatedRequest("post", `/chat/room`, { roomInfo }, undefined);
+  return authenticatedRequest("post", `/chat/room`, roomInfo, undefined);
 };

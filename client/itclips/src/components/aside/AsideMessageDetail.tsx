@@ -7,7 +7,7 @@ import MessageInviteButton from "./ui/MessageInviteButton";
 import MessageContainer from "./layout/MessageContainer";
 
 // apis
-import { getChatRoomMessages } from "../../api/messageApi";
+import { getChatRoomMessages, getChatRoomInfo } from "../../api/messageApi";
 
 // stores
 import { authStore } from "../../stores/authStore";
@@ -21,6 +21,15 @@ interface Message {
   createdAt: string;
 }
 
+interface ChatRoomInfo {
+  roomId: number;
+  roomName: string;
+  userTitles: {
+    id: number;
+    nickName: string;
+  }[];
+}
+
 interface AsideMessageDetailProps {
   roomId: number;
   onBack: () => void;
@@ -32,6 +41,7 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
 
   const userInfo = authStore(state => state.userInfo)
   
+  const [ roomInfo, setRoomInfo ] = useState<ChatRoomInfo | null>(null);
   const [ inputMessage, setInputMessage  ] = useState('');
   const [ messages, setMessages ] = useState<Message[]>([]);
   const { isConnected, subscribe, stompClient } = useWebSocketStore();
@@ -46,6 +56,20 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
       messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
     }
   };
+
+  // 현재 채팅방 정보 조회
+  useEffect(() => {
+    const fetchRoomInfo = async () => {
+      try {
+        const response = await getChatRoomInfo(roomId);
+        setRoomInfo(response.data);
+      } catch (error) {
+        console.error("채팅방 정보 불러오기 실패:", error);
+      }
+    };
+
+    fetchRoomInfo();
+  }, [roomId]);
 
   // 메세지 내용 조회
   useEffect(() => {
@@ -107,7 +131,7 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
           {/* 뒤로가기 버튼 */}
           <MessageBackButton onBack={ onBack }/>
           {/* 채팅 제목(상대유저 이름) */}
-          <h2 className="text-xl font-bold ml-2">고양친구</h2>
+          <h2 className="text-xl font-bold ml-2 truncate flex-shrink min-w-0 max-w-[180px]">{roomInfo?.roomName}</h2>
         </div>
         {/* 초대하기 버튼 */}
         <MessageInviteButton roomId={roomId} setNotification={setNotification} />

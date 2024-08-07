@@ -121,6 +121,7 @@ public class ChatRoomService {
         Chat chat1 = Chat.builder()
                 .room(savedChatRoom)
                 .user(user1)
+                .messageCnt(0L)
                 .build();
         chatJPARepository.save(chat1);
     }

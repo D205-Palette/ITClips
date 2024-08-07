@@ -34,10 +34,9 @@ public class Chat {
     @JoinColumn(name = "room_id", nullable = false)
     private ChatRoom room;
 
-    @NotNull
     @ColumnDefault("0")
     @JoinColumn(name = "message_cnt", nullable = false)
-    private Long messageCnt;
+    private Long messageCnt = 0L;
 
     public void setUser(User user) {
         this.user = user;

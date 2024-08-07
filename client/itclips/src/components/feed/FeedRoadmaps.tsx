@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { authStore } from "../../stores/authStore";
 import { feedStore } from "../../stores/feedStore";
-// import Roadmap from "./Roadmap(Feed)";
+import Roadmap from "./Roadmap(Feed)";
 import axios from "axios";
 import { API_BASE_URL } from "../../config";
+import { IoIosWarning } from "react-icons/io";
 
 const FeedRoadmaps = () => {
   const [dataLoaded, setDataLoaded] = useState<boolean>(false);
@@ -36,15 +37,22 @@ const FeedRoadmaps = () => {
       {/* 피드 로드맵 목록 */}
       <div id="feedRoadmaps">
         <div className="flex flex-col gap-3">
-          {!dataLoaded ? (
-            <p>로딩 중 입니다.</p>
-          ) : feedRoadmap.length !== 0 ? (
-            feedRoadmap?.map((roadmap) => (
-              <div>{/* <Roadmap roadmap={roadmap} /> */}</div>
-            ))
-          ) : (
-            <p>컨텐츠가 없습니다.</p>
-          )}
+          <div className="flex justify-center items-center h-full">
+            {!dataLoaded ? (
+              <p>로딩 중 입니다.</p>
+            ) : feedRoadmap.length !== 0 ? (
+              feedRoadmap?.map((roadmap) => (
+                <div>
+                  <Roadmap roadmap={roadmap} />
+                </div>
+              ))
+            ) : (
+              <div className="flex">
+                <IoIosWarning color="skyblue" size={20} />
+                <p className="ms-3 text-sm font-bold">컨텐츠가 없습니다!</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </>

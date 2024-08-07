@@ -77,7 +77,7 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
   const handleLeaveChat = async () => {
     if (userInfo.id && roomInfo) {
       try {
-        await leaveChatRoom(userInfo.id, roomId);
+        await leaveChatRoom(roomId, userInfo.id);
         setNotification({ message: `${roomInfo.roomName} 채팅방을 나갔습니다.`, type: 'success' });
         onBack(); // AsideMessage 창으로 이동
       } catch (error) {

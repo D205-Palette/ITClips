@@ -34,9 +34,9 @@ const EmailLoginModal: React.FC = () => {
           fetchUserId(response.data.userId) // 로컬 스토리지에 유저 아이디 업데이트
           const userInfoResponse = await checkUserInfo(response.data.userId, response.data.userId);          
           fetchUserInfo(userInfoResponse.data); // 로컬 스토리지에 유저 정보 업데이트
-          window.alert(`환영합니다 ${userInfoResponse.data.nickname}님!`);
           login(); // 로그인 상태 업데이트          
           navigate(`/user/${response.data.userId}`); // 로그인 후 페이지 이동
+          window.alert(`환영합니다 ${userInfoResponse.data.nickname}님!`);
         } else {
           throw new Error('로그인에 실패했습니다.');
         }

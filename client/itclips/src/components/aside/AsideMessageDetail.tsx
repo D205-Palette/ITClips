@@ -109,7 +109,7 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
           <h2 className="text-xl font-bold ml-2">고양친구</h2>
         </div>
         {/* 초대하기 버튼 */}
-        <MessageInviteButton />
+        <MessageInviteButton roomId={roomId} />
       </div>
       {/* 채팅 메시지 영역 */}
       <div

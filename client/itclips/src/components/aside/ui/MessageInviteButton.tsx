@@ -34,40 +34,68 @@ interface InviteUser {
   name: string;
 }
 
-interface MessageInviteButtonProps {
+interface ChatRoomInfo {
   roomId: number;
+  roomName: string;
+  userTitles: {
+    id: number;
+    nickName: string;
+  }[];
 }
 
-const MessageInviteButton: React.FC<MessageInviteButtonProps> = ({ roomId }) => {
+interface MessageInviteButtonProps {
+  roomId: number;
+  setNotification: (notification: { message: string, type: 'success' | 'error' } | null) => void;
+}
+
+const MessageInviteButton: React.FC<MessageInviteButtonProps> = ({ roomId, setNotification }) => {
 
   const userInfo = authStore(state => state.userInfo);
 
   const modalRef: RefObject<HTMLDialogElement> = useRef(null);
-  const [ searchTerm, setSearchTerm ] = useState("");
+  const [ keyword, setKeyword ] = useState("");
   const [ searchResults, setSearchResults ] = useState<SearchUser[]>([]);
   const [ selectedUser, setSelectedUser ] = useState<InviteUser | null>(null);
   const [ isModalOpen, setIsModalOpen ] = useState(false);
+  const [ roomUsers, setRoomUsers ] = useState<number[]>([]);
+  const [ errorMessage, setErrorMessage ] = useState<string | null>(null);
 
-  const openModal = () => {
+  const openModal = async () => {
     setIsModalOpen(true);
     modalRef.current?.showModal();
+    setErrorMessage(null);
+
+    // 모달이 열릴때 채팅방 정보 조회
+    try {
+      const response = await getChatRoomInfo(roomId);
+      const roomInfo: ChatRoomInfo = response.data;
+      setRoomUsers(roomInfo.userTitles.map(user => user.id));
+    } catch (error) {
+      console.error("채팅방 정보 조회 실패:", error);
+    }
   };
 
   // 모달이 열릴 때 상태 초기화
   useEffect(() => {
     if (isModalOpen) {
-      setSearchTerm("");
+      setKeyword("");
       setSearchResults([]);
       setSelectedUser(null);
+      setErrorMessage(null);
     }
   }, [isModalOpen]);
+
+  // 검색어가 변경될 때마다 에러 메시지 초기화
+  useEffect(() => {
+    setErrorMessage(null);
+  }, [keyword]);
 
   // 유저 검색 로직
   useEffect(() => {
     const searchUsers = async () => {
-      if (searchTerm.trim() && userInfo?.id) {
+      if (keyword.trim() && userInfo?.id) {
         try {
-          const results = await userSearch(userInfo.id, 1, searchTerm);
+          const results = await userSearch(userInfo.id, 1, keyword);
           setSearchResults(results.data || []);
         } catch (error) {
           console.error("사용자 검색 실패:", error);
@@ -80,7 +108,7 @@ const MessageInviteButton: React.FC<MessageInviteButtonProps> = ({ roomId }) => 
 
     const debounceTimer = setTimeout(searchUsers, 300);
     return () => clearTimeout(debounceTimer);
-  }, [searchTerm, userInfo?.id]);
+  }, [keyword, userInfo?.id]);
 
   // 검색결과 유저 정보를 간단한 초대 정보로 변환
   const convertToInviteUser = (user: SearchUser): InviteUser => {
@@ -92,25 +120,32 @@ const MessageInviteButton: React.FC<MessageInviteButtonProps> = ({ roomId }) => 
 
   // 유저 검색 결과에서 유저 선택해서 저장하는 로직
   const handleUserSelect = (user: SearchUser) => {
+    if (roomUsers.includes(user.id)) {
+      setErrorMessage("이미 현재 채팅방에 있는 유저입니다.");
+      return;
+    }
     const parseUser = convertToInviteUser(user);
     setSelectedUser(parseUser);
-    setSearchTerm("");
+    setKeyword("");
     setSearchResults([]);
+    setErrorMessage(null);
   };
 
   // 초대했을 때 동작
   const handleInvite = async () => {
     if (selectedUser) {
+      if (roomUsers.includes(selectedUser.id)) {
+        setNotification({ message: "이미 현재 채팅방에 있는 유저입니다.", type: 'error' });
+        return;
+      }
       try {
-        // 현재 채팅방 정보를 조회하는 로직을 추가해서 중복된 사용자 있는지 봐야됨
-
         await inviteToChatRoom(roomId, selectedUser.id);
         modalRef.current?.close();
         setSelectedUser(null);
-        // 토스트메세지("사용자를 성공적으로 초대했습니다.");
+        setNotification({ message: "사용자를 성공적으로 초대했습니다.", type: 'success' });
       } catch (error) {
         console.error("사용자 초대 실패:", error);
-        // 토스트메세지("사용자 초대에 실패했습니다.");
+        setNotification({ message: "사용자 초대에 실패했습니다.", type: 'error' });
       }
     }
   };
@@ -129,11 +164,14 @@ const MessageInviteButton: React.FC<MessageInviteButtonProps> = ({ roomId }) => 
           <div className="flex-grow flex flex-col overflow-hidden">
             <input
               type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
               placeholder="초대할 상대의 이름을 입력해주세요."
               className="input input-bordered w-full mb-2"
             />
+            {errorMessage && (
+              <p className="text-error text-sm mb-2">{errorMessage}</p>
+            )}
             <div className="flex-grow overflow-y-auto mb-2">
               {searchResults.length > 0 ? (
                 searchResults.map((user) => (
@@ -151,7 +189,7 @@ const MessageInviteButton: React.FC<MessageInviteButtonProps> = ({ roomId }) => 
                     </div>
                   </div>
                 ))
-              ) : searchTerm.trim() !== "" ? (
+              ) : keyword.trim() !== "" ? (
                 <div className="text-center py-2 text-gray-500">
                   검색결과가 없습니다
                 </div>

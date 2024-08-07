@@ -35,6 +35,7 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
   const [ inputMessage, setInputMessage  ] = useState('');
   const [ messages, setMessages ] = useState<Message[]>([]);
   const { isConnected, subscribe, stompClient } = useWebSocketStore();
+  const [ notification, setNotification ] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
 
   // 메시지 컨테이너에 대한 ref 생성
   const messageContainerRef = useRef<HTMLDivElement>(null);
@@ -109,7 +110,7 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
           <h2 className="text-xl font-bold ml-2">고양친구</h2>
         </div>
         {/* 초대하기 버튼 */}
-        <MessageInviteButton roomId={roomId} />
+        <MessageInviteButton roomId={roomId} setNotification={setNotification} />
       </div>
       {/* 채팅 메시지 영역 */}
       <div
@@ -133,6 +134,20 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
         />
         <button onClick={handleSendMessage} className="btn btn-primary">전송</button>
       </div>
+
+      {notification && (
+        <div 
+          className={`fixed bottom-4 left-1/2 transform -translate-x-1/2 p-4 rounded-md ${
+            notification.type === 'success' ? 'bg-green-500' : 'bg-red-500'
+          } text-white shadow-lg z-50 transition-opacity duration-300`}
+          style={{
+            opacity: notification ? 1 : 0,
+            visibility: notification ? 'visible' : 'hidden',
+          }}
+        >
+          {notification.message}
+        </div>
+      )}
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { IoClose } from "react-icons/io5";
+import { IoIosWarning } from "react-icons/io";
 
 import {
   DragDropContext,
@@ -61,11 +62,22 @@ const RoadmapEditView: React.FC = () => {
         `${API_BASE_URL}/api/list/group/${userId}?viewerId=${userId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
+
       // 즐겨찾기 조회
-      const scrapResponse = await axios.get(
-        `${API_BASE_URL}/api/list/scrap/${userId}?viewerId=${userId}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      let scrapResponse;
+      try {
+        scrapResponse = await axios.get(
+          `${API_BASE_URL}/api/list/scrap/${userId}?viewerId=${userId}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+      } catch (error: any) {
+        if (error.response && error.response.status === 404) {
+          scrapResponse = { data: [] }; // 404 에러가 발생했을 때 빈 배열로 설정
+        } else {
+          throw error; // 다른 에러는 다시 던짐
+        }
+      }
+
       // 기존 로드맵 정보 조회
       const roadmapResponse = await axios.get(
         `${API_BASE_URL}/api/roadmap/${roadmapId}?viewId=${userId}`
@@ -313,48 +325,59 @@ const RoadmapEditView: React.FC = () => {
                   scrollbarWidth: "thin",
                 }}
               >
-                {items.map((item, index) => (
-                  <Draggable
-                    key={item.id}
-                    draggableId={item.id.toString()}
-                    index={index}
-                  >
-                    {(provided, snapshot) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        className="mx-1 mb-2 p-2 bg-base-100 border border-gray-300 rounded-lg shadow-sm"
-                        style={{
-                          ...provided.draggableProps.style,
-                          ...(snapshot.isDragging
-                            ? { backgroundColor: "#e2e8f0" }
-                            : {}),
-                        }}
-                      >
-                        <div className="flex items-center">
-                          {item.image?.trim() !== "" ? (
-                            <img
-                              src={item.image}
-                              alt="img"
-                              className="w-16 h-16 border object-cover mr-4"
-                            />
-                          ) : (
-                            <div className="w-16 h-16 border bg-base-100 mr-4"></div>
-                          )}
-                          <div className="flex w-full items-center justify-between me-3">
-                            <div>
-                              <h4 className="text-lg font-bold">
-                                {item.title}
-                              </h4>
-                              <p className="line-clamp-1">{item.description}</p>
+                {items.length === 0 ? (
+                  <div className="flex justify-center items-center h-full">
+                    <IoIosWarning color="skyblue" size={20} />
+                    <p className="ms-3 text-sm font-bold">
+                      컨텐츠가 없습니다!
+                    </p>
+                  </div>
+                ) : (
+                  items.map((item, index) => (
+                    <Draggable
+                      key={item.id}
+                      draggableId={item.id.toString()}
+                      index={index}
+                    >
+                      {(provided, snapshot) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          className="mx-1 mb-2 p-2 bg-base-100 border border-gray-300 rounded-lg shadow-sm"
+                          style={{
+                            ...provided.draggableProps.style,
+                            ...(snapshot.isDragging
+                              ? { backgroundColor: "#e2e8f0" }
+                              : {}),
+                          }}
+                        >
+                          <div className="flex items-center">
+                            {item.image?.trim() !== "" ? (
+                              <img
+                                src={item.image}
+                                alt="img"
+                                className="w-16 h-16 border object-cover mr-4"
+                              />
+                            ) : (
+                              <div className="w-16 h-16 border bg-base-100 mr-4"></div>
+                            )}
+                            <div className="flex w-full items-center justify-between me-3">
+                              <div>
+                                <h4 className="text-lg font-bold">
+                                  {item.title}
+                                </h4>
+                                <p className="line-clamp-1">
+                                  {item.description}
+                                </p>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
+                      )}
+                    </Draggable>
+                  ))
+                )}
                 {provided.placeholder}
               </div>
             )}
@@ -377,7 +400,8 @@ const RoadmapEditView: React.FC = () => {
                   <div className="flex flex-col gap-x justify-center">
                     <div className="flex flex-col gap-y-2">
                       <div className="border w-32 h-32 bg-gray-200 rounded-lg overflow-hidden">
-                        {previewImageUrl === "default" || previewImageUrl === null ? (
+                        {previewImageUrl === "default" ||
+                        previewImageUrl === null ? (
                           <img
                             src={noImg}
                             alt="noImg"
@@ -547,7 +571,6 @@ const RoadmapEditView: React.FC = () => {
       >
         <IoClose size={56} />
       </button>
-      
     </div>
   );
 };

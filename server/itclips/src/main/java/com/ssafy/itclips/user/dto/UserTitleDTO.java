@@ -1,5 +1,6 @@
 package com.ssafy.itclips.user.dto;
 
+import com.ssafy.itclips.user.entity.User;
 import lombok.*;
 
 @Getter
@@ -14,5 +15,12 @@ public class UserTitleDTO {
     public UserTitleDTO(Long id, String nickName) {
         this.id = id;
         this.nickName = nickName;
+    }
+
+    public static UserTitleDTO toDTO(User user) {
+        return UserTitleDTO.builder()
+                .id(user.getId())
+                .nickName(user.getNickname())
+                .build();
     }
 }

@@ -1,5 +1,6 @@
 package com.ssafy.itclips.chat.service;
 
+import com.ssafy.itclips.chat.dto.ChatRoomInfoDTO;
 import com.ssafy.itclips.chat.dto.GroupRoomDTO;
 import com.ssafy.itclips.chat.dto.MessageDTO;
 import com.ssafy.itclips.chat.dto.ChatRoomDTO;
@@ -12,6 +13,8 @@ import com.ssafy.itclips.chat.repository.ChatRoomRepository;
 import com.ssafy.itclips.chat.repository.MessageJPARepository;
 import com.ssafy.itclips.error.CustomException;
 import com.ssafy.itclips.error.ErrorCode;
+import com.ssafy.itclips.user.dto.UserInfoDTO;
+import com.ssafy.itclips.user.dto.UserTitleDTO;
 import com.ssafy.itclips.user.entity.User;
 import com.ssafy.itclips.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -87,6 +90,19 @@ public class ChatRoomService {
         Map<String, Long> result = new HashMap<>();
         result.put("chatRoomId", savedChatRoom.getId());
         return result;
+    }
+
+    //채팅방 정보
+    public ChatRoomInfoDTO getRoomInfo(Long roomId){
+        List<Chat> chats = chatJPARepository.findByRoomId(roomId)
+                .orElseThrow(()-> new CustomException(ErrorCode.CHAT_NOT_FOUND));
+        List<UserTitleDTO> userTitleDTOS = new ArrayList<>();
+        for(Chat chat : chats){
+            UserTitleDTO userInfoDTO = UserTitleDTO.toDTO(chat.getUser());
+            userTitleDTOS.add(userInfoDTO);
+        }
+
+        return ChatRoomInfoDTO.toDTO(chats.get(0),userTitleDTOS);
     }
 
     // 채팅방 레디스 생성

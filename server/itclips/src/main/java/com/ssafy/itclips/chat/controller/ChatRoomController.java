@@ -1,10 +1,12 @@
 package com.ssafy.itclips.chat.controller;
 
+import com.ssafy.itclips.chat.dto.ChatRoomInfoDTO;
 import com.ssafy.itclips.chat.dto.GroupRoomDTO;
 import com.ssafy.itclips.chat.dto.MessageDTO;
 import com.ssafy.itclips.chat.dto.ChatRoomDTO;
 import com.ssafy.itclips.chat.repository.ChatRoomRepository;
 import com.ssafy.itclips.chat.service.ChatRoomService;
+import com.ssafy.itclips.user.dto.UserTitleDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +41,14 @@ public class ChatRoomController {
         return new ResponseEntity<>(roomId, HttpStatus.OK);
     }
 
+    // 채팅방 정보
+    @Operation(summary = "채팅방 정보 ", description = "채팅방 제목, 채팅방에 속한 사람을 알 수 있습니다.")
+    @GetMapping("/room/info/{roomId}")
+    public ResponseEntity<?> getRoomInfo(@PathVariable("roomId") Long roomId) {
+        ChatRoomInfoDTO info = chatRoomService.getRoomInfo(roomId);
+        return new ResponseEntity<>(info,HttpStatus.OK);
+
+    }
     // 내가 속한 채팅방 리스트
     @GetMapping("/rooms/{userId}")
     @Operation(summary = "특정 유저가 속한 채팅방 목록" ,description = "해당 유저가 속한 모든 채팅방 목록")

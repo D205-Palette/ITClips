@@ -126,12 +126,12 @@ const MessageInviteButton: React.FC<MessageInviteButtonProps> = ({ roomId }) => 
         <FaPlus />
       </button>
       <dialog ref={modalRef} className="modal" onClose={() => setIsModalOpen(false)}>
-        <div className="modal-box">
+        <div className="modal-box max-h-[80vh] flex flex-col">
           <form method="dialog">
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
           </form>
-          <h3 className="font-bold text-lg">초대하기</h3>
-          <div className="modal-action flex-col">
+          <h3 className="font-bold text-lg mb-4">초대하기</h3>
+          <div className="flex-grow flex flex-col overflow-hidden">
             <input
               type="text"
               value={searchTerm}
@@ -139,7 +139,7 @@ const MessageInviteButton: React.FC<MessageInviteButtonProps> = ({ roomId }) => 
               placeholder="초대할 상대의 이름을 입력해주세요."
               className="input input-bordered w-full mb-2"
             />
-            <div className="max-h-40 overflow-y-auto mb-2">
+            <div className="flex-grow overflow-y-auto mb-2">
               {searchResults.map((user) => (
                 <div
                   key={user.id}
@@ -160,7 +160,7 @@ const MessageInviteButton: React.FC<MessageInviteButtonProps> = ({ roomId }) => 
             )}
             <button
               onClick={handleInvite}
-              className="btn btn-primary w-full"
+              className="btn btn-primary w-full mt-2"
               disabled={!selectedUser}
             >
               초대

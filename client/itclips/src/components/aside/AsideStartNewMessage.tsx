@@ -105,11 +105,11 @@ const AsideStartNewMessage: React.FC<InviteProps> = ({ onStartChat, onBack }) =>
   };
 
   return (
-    <div className="p-4 max-w-sm mx-auto h-[35rem] flex flex-col">
+    <div className="p-4 max-w-sm mx-auto h-[35rem] flex flex-col bg-sky-50">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center">
           <MessageBackButton onBack={onBack} />
-          <h2 className="text-xl font-bold ml-2">메세지 보낼 상대</h2>
+          <h2 className="text-xl font-bold ml-2 text-sky-700">메세지 보낼 상대</h2>
         </div>
       </div>
       <div className="flex items-center mb-4">
@@ -118,32 +118,54 @@ const AsideStartNewMessage: React.FC<InviteProps> = ({ onStartChat, onBack }) =>
           value={inputName}
           onChange={(e) => setInputName(e.target.value)}
           placeholder="메세지 보낼 상대 이름"
-          className="input input-bordered flex-1 mr-2"
+          className="input input-bordered w-full bg-white border-sky-200 focus:border-sky-400 focus:ring-2 focus:ring-sky-200"
         />
       </div>
-      <div className="flex flex-col space-y-2 mb-4 max-h-40 overflow-y-auto">
+      <div
+        className="flex flex-col space-y-2 mb-4 max-h-40 overflow-y-auto"
+        style={{
+          scrollbarWidth: "thin",
+          scrollbarColor: "#CBD5E0 #EDF2F7"
+        }}  
+      >
         {searchResults.map((user) => (
-          <div key={user.id} className="flex items-center justify-between">
-            <div>
-              <span className="font-bold">{user.nickname}</span>
-              <span className="text-sm text-gray-500 ml-2">{user.email}</span>
+          <div 
+            key={user.id} 
+            className="flex items-center justify-between cursor-pointer hover:bg-sky-100 p-2 rounded transition duration-200"
+            onClick={() => handleAddInviteUser(user)}
+          >
+            <div className="flex items-center">
+              <img src={user.image} alt={user.nickname} className="w-8 h-8 rounded-full mr-2 border-2 border-sky-300" />
+              <div>
+                <span className="font-bold text-sky-800">{user.nickname}</span>
+                <span className="text-sm text-sky-600 ml-2">{user.email}</span>
+              </div>
             </div>
-            <button onClick={() => handleAddInviteUser(user)} className="btn btn-primary btn-sm">추가</button>
           </div>
         ))}
       </div>
       <div className="flex flex-col space-y-2 mb-4">
         {inviteUsers.map((user) => (
-          <div key={user.id} className="flex items-center justify-between">
+          <div key={user.id} className="flex items-center justify-between bg-sky-100 p-2 rounded">
             <div className="flex items-center">
-              <span>{user.name}</span>
+              <span className="font-bold text-sky-800">{user.name}</span>
             </div>
-            <button onClick={() => handleRemoveInviteUser(user.id)} className="btn btn-error btn-sm">x</button>
+            <button 
+              onClick={() => handleRemoveInviteUser(user.id)} 
+              className="btn btn-sm bg-sky-500 hover:bg-sky-600 text-white border-none"
+            >
+              x
+            </button>
           </div>
         ))}
       </div>
       <div className="mt-auto">
-        <button onClick={handleStartChat} className="btn btn-primary w-full">시작</button>
+        <button 
+          onClick={handleStartChat} 
+          className="btn w-full bg-sky-500 hover:bg-sky-600 text-white border-none"
+        >
+          시작
+        </button>
       </div>
     </div>
   );

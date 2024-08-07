@@ -358,18 +358,18 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
               <div className="flex items-start space-x-4">
                 {" "}
                 {/* items-center에서 items-start로 변경 */}
-                <div className="w-24 h-24 bg-gray-200 rounded-full overflow-hidden">
+                <div className="w-24 h-24 border bg-gray-200 rounded-full overflow-hidden">
                   {profileImage === "default" || profileImage === null ? (
                     <img
                       src={noImg}
                       alt="noImg"
-                      className=" w-full h-full object-cover"
+                      className="w-full h-full object-cover"
                     />
                   ) : (
                     <img
                       src={profileImage}
                       alt="profileImg"
-                      className="border w-full h-full object-cover"
+                      className="w-full h-full object-cover"
                     />
                   )}
                 </div>

@@ -98,7 +98,7 @@ const RoadmapCreateView: React.FC = () => {
   // 선택된 이미지 내리기
   const handleImageRemove = () => {
     setRoadmapImage(null);
-    setPreviewImageUrl("default");
+    setPreviewImageUrl(null);
   };
 
   useEffect(() => {
@@ -357,42 +357,42 @@ const RoadmapCreateView: React.FC = () => {
                     <div className="flex flex-col gap-x justify-center">
                       <div className="flex flex-col gap-y-2">
                         <div className="border w-32 h-32 bg-gray-200 rounded-lg overflow-hidden">
-                          {previewImageUrl ? (
-                            <img
-                              src={previewImageUrl}
-                              alt="roadmapImg"
-                              className="border w-full h-full object-cover"
-                            />
-                          ) : (
-                            <img
-                              src={noImg}
-                              alt="noImg"
-                              className=" w-full h-full object-cover"
-                            />
-                          )}
-                        </div>
-
-                        {previewImageUrl && (
-                          <button
-                            type="button"
-                            onClick={handleImageRemove}
-                            className="btn btn-outline btn-xs mt-2"
-                          >
-                            이미지 삭제
-                          </button>
-                        )}
-
-                        <label className="btn btn-primary btn-outline btn-xs">
-                          이미지 업로드
-                          <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleImageChange}
-                            className="hidden"
+                        {previewImageUrl === "default" || previewImageUrl === null ? (
+                          <img
+                            src={noImg}
+                            alt="noImg"
+                            className=" w-full h-full object-cover"
                           />
-                        </label>
+                        ) : (
+                          <img
+                            src={previewImageUrl || ""}
+                            alt="roadmapImg"
+                            className="border w-full h-full object-cover"
+                          />
+                        )}
                       </div>
+
+                      {previewImageUrl && (
+                        <button
+                          type="button"
+                          onClick={handleImageRemove}
+                          className="btn btn-outline btn-xs mt-2"
+                        >
+                          이미지 삭제
+                        </button>
+                      )}
+
+                      <label className="btn btn-primary btn-outline btn-xs">
+                        이미지 업로드
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageChange}
+                          className="hidden"
+                        />
+                      </label>
                     </div>
+                  </div>
 
                     {/* 로드맵 타이틀 & 내용 입력 */}
                     <div className="flex flex-col gap-2 w-full">

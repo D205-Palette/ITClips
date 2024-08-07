@@ -233,7 +233,7 @@ const RoadmapEditView: React.FC = () => {
   // 선택된 이미지 내리기
   const handleImageRemove = () => {
     setRoadmapImage(null);
-    setPreviewImageUrl("default");
+    setPreviewImageUrl(null);
   };
 
   // useEffect를 사용해 불러온 데이터를 상태에 설정
@@ -377,7 +377,7 @@ const RoadmapEditView: React.FC = () => {
                   <div className="flex flex-col gap-x justify-center">
                     <div className="flex flex-col gap-y-2">
                       <div className="border w-32 h-32 bg-gray-200 rounded-lg overflow-hidden">
-                        {previewImageUrl === "default" ? (
+                        {previewImageUrl === "default" || previewImageUrl === null ? (
                           <img
                             src={noImg}
                             alt="noImg"
@@ -392,7 +392,7 @@ const RoadmapEditView: React.FC = () => {
                         )}
                       </div>
 
-                      {previewImageUrl && (
+                      {previewImageUrl && previewImageUrl !== "default" && (
                         <button
                           type="button"
                           onClick={handleImageRemove}

@@ -197,9 +197,6 @@ const RoadmapCreateView: React.FC = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      console.log("S3 URL : ", roadmapCreateResponse.data.url);
-      console.log("보내야 되는 이미지 : ", roadmapCreateResponse.data.img);
-      console.log("로드맵 이미지 파일 : ", roadmapImage);
 
       if (roadmapImage) {
         await axios.put(`${roadmapCreateResponse.data.url}`, roadmapImage, {

@@ -1,6 +1,6 @@
 // BookmarkListEditModal.tsx 는 AsideBookmarkList.tsx 에서 더보기 메뉴의 '수정하기' 버튼을 눌렀을 때 출력되는 컴포넌트
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../../../config";
 import { authStore } from "../../../stores/authStore";
@@ -8,34 +8,46 @@ import { authStore } from "../../../stores/authStore";
 // icons
 import { IoCloseOutline } from "react-icons/io5";
 
+// 기본 이미지
+import noImg from "../../../assets/images/noImg.gif";
+
 interface EditModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const BookmarkListEditModal: React.FC<EditModalProps> = ({
+const BookmarkListCreateModal: React.FC<EditModalProps> = ({
   isOpen,
   onClose,
 }) => {
   const [tempTitle, setTempTitle] = useState<string>("");
   const [tempDescription, setTempDescription] = useState<string>("");
-  const [tempTag, setTempTag] = useState("")
-  const [tempTags, setTempTags] = useState<{title:string}[]>([]);
+  const [tempTag, setTempTag] = useState("");
+  const [tempTags, setTempTags] = useState<{ title: string }[]>([]);
   const [tempCategories, setTempCategories] = useState<string[]>([]);
   // user 설정이랑 isPublic 해ㅇ줘야하나?
-  const [isPublic, setIsPublic] = useState(false)
-  const [imageToS3FileName, setImageToS3FileName] = useState("")
+  const [isPublic, setIsPublic] = useState(false);
+  const [imageToS3FileName, setImageToS3FileName] = useState("");
   const { userId, token } = authStore();
+  // 이미지 업로드 상태 관리
+  const [bookmarklistImage, setBookmarklistImage] = useState<File | null>(null);
+  const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
 
   const handleAddTag = () => {
     if (tempTag.trim() !== "") {
-      setTempTags([...tempTags, {title:tempTag.trim()}]);
+      setTempTags([...tempTags, { title: tempTag.trim() }]);
       setTempTag("");
     }
   };
 
   const handleRemoveTag = (inputText: string) => {
     setTempTags(tempTags.filter((tag) => tag.title !== inputText));
+  };
+
+  const handleCloseModal = () => {
+    onClose()
+    setBookmarklistImage(null);
+    setPreviewImageUrl(null);
   };
 
   const endCreate = () => {
@@ -48,32 +60,63 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
       data: {
         title: tempTitle,
         description: tempDescription,
-        image: "string",
+        image: bookmarklistImage ? `${tempTitle}-${userId}` : "default",
         isPublic: isPublic,
         categories: tempCategories,
         users: [],
-        tags: tempTags,
-        imageToS3FileName: imageToS3FileName,
+        tags: tempTags,        
       },
     })
       .then((res) => {
-        onClose()
+        if (bookmarklistImage) {
+          axios.put(`${res.data.url}`, bookmarklistImage, {
+            headers: {
+              "Content-Type": bookmarklistImage.type,
+            }, // 파일의 MIME 타입 설정
+          });
+        }
+        console.log(res.data.url)
+        window.alert("북마크리스트를 생성하였습니다.");
+        onClose();
       })
       .catch((err) => {
         console.error(err);
       });
+  };
 
+  // 북마크리스트 이미지 변경 핸들러
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]; // 파일이 선택되지 않았을 때 null 처리
+    if (file) {
+      setBookmarklistImage(file); // 파일 자체를 상태에 저장
+
+      // 미리보기 URL 생성
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImageUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setBookmarklistImage(null);
+      setPreviewImageUrl(null);
+    }
+  };
+
+  // 선택된 이미지 내리기
+  const handleImageRemove = () => {
+    setBookmarklistImage(null);
+    setPreviewImageUrl(null);
   };
 
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white rounded-lg p-6 w-96">
+      <div className="bg-white rounded-lg p-6 w-96 ">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">북마크 리스트 생성</h2>
           <button
-            onClick={onClose}
+            onClick={handleCloseModal}
             className="text-gray-500 hover:text-gray-700"
           >
             <IoCloseOutline size={24} />
@@ -84,22 +127,48 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
           <label className="block text-sm font-medium text-gray-700 mb-2">
             이미지
           </label>
-          <div className="flex items-center space-x-2">
-            <div className="w-16 h-16 bg-gray-200 rounded-md"></div>
-            <button className="btn btn-outline btn-sm">찾아보기</button>
+          {/* 북마크리스트 이미지 설정 */}
+          <div className="flex flex-col justify-center">
+            <div className="flex gap-x-5">
+              {/* 이미지 */}
+              <div className="border w-32 h-32 bg-gray-200 rounded-lg overflow-hidden">
+                {previewImageUrl === "default" || previewImageUrl === null ? (
+                  <img
+                    src={noImg}
+                    alt="noImg"
+                    className=" w-full h-full object-cover"
+                  />
+                ) : (
+                  <img
+                    src={previewImageUrl || ""}
+                    alt="roadmapImg"
+                    className="border w-full h-full object-cover"
+                  />
+                )}
+              </div>
+              {/* 이미지 컨트롤러 */}
+              <div className="flex flex-col gap-y-2">
+                <label className="btn btn-primary btn-outline">
+                  이미지 업로드
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="hidden"
+                  />
+                </label>
+                {previewImageUrl && (
+                  <button
+                    type="button"
+                    onClick={handleImageRemove}
+                    className="btn btn-outline"
+                  >
+                    이미지 삭제
+                  </button>
+                )}
+              </div>
+            </div>
           </div>
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            유저
-          </label>
-          <input
-            type="text"
-            value="고양양"
-            readOnly
-            className="w-full px-3 py-2 border rounded-md bg-gray-100"
-          />
         </div>
 
         <div className="mb-4">
@@ -173,4 +242,4 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
   );
 };
 
-export default BookmarkListEditModal;
+export default BookmarkListCreateModal;

@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { authStore } from "../../stores/authStore";
 import { API_BASE_URL } from "../../config";
+import noImg from "../../assets/images/noImg.gif"
+
 
 interface Props {
   list: {
@@ -68,8 +70,8 @@ const ListItem: FC<Props> = ({ list,changeCount }) => {
             onClick={() => navigate(`/bookmarklist/${list.bookmarkListRoadmapDTO.id}`)}
             className="hover:cursor-pointer hidden lg:inline "
           >
-            <img
-              src={list.bookmarkListRoadmapDTO.image}
+            <img              
+              src={list.bookmarkListRoadmapDTO.image === "default" ? noImg : list.bookmarkListRoadmapDTO.image}
               alt="Movie"
               className="size-28 hidden lg:inline "
             />

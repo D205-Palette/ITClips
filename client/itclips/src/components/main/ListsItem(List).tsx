@@ -9,6 +9,7 @@ import axios from "axios";
 import type { BookmarkListSumType } from "../../types/BookmarkListType";
 import { API_BASE_URL } from "../../config";
 import { authStore } from "../../stores/authStore";
+import noImg from "../../assets/images/noImg.gif"
 
 interface Props {
   list: BookmarkListSumType;
@@ -55,8 +56,8 @@ const ListItem: FC<Props> = ({ list }) => {
             onClick={() => navigate(`/bookmarklist/${list.id}`)}
             className="hover:cursor-pointer w-1/6"
           >
-            <img
-              src={`${list.image}`}
+            <img              
+              src={list.image === "default" ? noImg : list.image}
               alt="Movie"
               className="size-28 object-cover"
             />

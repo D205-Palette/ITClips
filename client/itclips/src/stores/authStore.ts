@@ -9,7 +9,7 @@ interface AuthStore {
   token: string;
   fetchUserToken: (inputUserToken: string) => void;
   userInfo: UserInfo;
-  fetchUserInfo: (inputUserInfo: object) => void;
+  fetchUserInfo: (inputUserInfo: UserInfo) => void;
   userId: number;
   fetchUserId: (inputUserId: number) => void;
 }

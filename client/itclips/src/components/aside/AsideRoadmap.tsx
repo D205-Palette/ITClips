@@ -30,7 +30,7 @@ const AsideRoadmap :  React.FC<Props> = ({roadmap}) => {
       {/* 더보기 버튼 */}
       { !isMessageOpen && <AsideRoadmapKebabDropdown isRoadmap={true} id={roadmap.id}/> }
       {/* 북마크리스트 썸네일 */}
-      <ImageContainer />
+      <ImageContainer src={roadmap.image} whatContent="로드맵" />
       {/* 북마크리스트 정보 */}
       {/* <ItemDetailInfo {...roadmapInfo} /> */}
       {/* 좋아요, 즐겨찾기 칸 */}

@@ -8,6 +8,7 @@ interface User {
   job?: string;
   gender?: boolean;
   darkMode?: boolean;
+  image?:string;
   bio?: string;
   bookmarkListCount?: number;
   roadmapCount?: number;

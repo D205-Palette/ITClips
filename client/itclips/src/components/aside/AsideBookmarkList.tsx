@@ -32,7 +32,7 @@ const AsideBookmarkList : React.FC<ItemProps> = ({bookmarkList}) => {
       {/* 더보기 버튼 */}
       { !isMessageOpen && <AsideBookmarkListKebabDropdown isRoadmap={false} id={bookmarkList.id}/> }
       {/* 북마크리스트 썸네일 */}
-      <ImageContainer />
+      <ImageContainer src={bookmarkList.image} whatContent="북마크리스트"/>
       {/* 북마크리스트 정보 */}
       <ItemDetailInfo {...bookmarkList} />
       {/* 좋아요, 즐겨찾기 칸 */}

@@ -12,8 +12,6 @@ import { authStore } from "../../stores/authStore";
 import noImg from "../../assets/images/noImg.gif"
 import BookmarkListEditModal from "../aside/modals/BookmarkListEditModal";
 
-import noImg from "../../assets/images/noImg.gif"
-
 interface Props {
   list: BookmarkListSumType;
 }

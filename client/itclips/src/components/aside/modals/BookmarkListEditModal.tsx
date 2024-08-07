@@ -26,6 +26,11 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
 }) => {
   const { userId, token } = authStore();
   const [tempCategories, setTempCategories] = useState<string[]>([]);
+  // 이미지 업로드 상태 관리
+  const [bookmarklistImage, setBookmarklistImage] = useState<File | null>(null);
+  const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
+
+  const {isDark}= darkModeStore()
   useEffect(() => {
     async function fetchData() {
       axios({
@@ -205,18 +210,6 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
 
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            유저
-          </label>
-          <input
-            type="text"
-            value="고양양"
-            readOnly
-            className="w-full px-3 py-2 border rounded-md bg-gray-100"
-          />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-sm font-medium  mb-2">
             리스트명
           </label>
           <input

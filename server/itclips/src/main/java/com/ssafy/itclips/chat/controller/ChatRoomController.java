@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -27,15 +28,15 @@ public class ChatRoomController {
     @Operation(summary = "1:1 채팅방 만들기 ", description = "채팅방을 만듭니다")
     @PostMapping("/room/{user1Id}/{user2Id}")
     public ResponseEntity<?> createRoom(@PathVariable("user1Id")Long user1Id, @PathVariable("user2Id")Long user2Id) {
-        chatRoomService.createChatRoom(user1Id, user2Id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        Map<String,Long> roomId = chatRoomService.createChatRoom(user1Id, user2Id);
+        return new ResponseEntity<>(roomId,HttpStatus.OK);
     }
     // 그룹 채팅 방 만들기
     @Operation(summary = "그룹 채팅방 만들기" , description = "그룹 채팅방을 만듭니다.")
     @PostMapping("/room")
     public ResponseEntity<?> createGroupRoom(@RequestBody GroupRoomDTO groupRoomDTO) {
-        chatRoomService.chatGroupRoom(groupRoomDTO);
-        return new ResponseEntity<>(HttpStatus.OK);
+        Map<String,Long> roomId = chatRoomService.chatGroupRoom(groupRoomDTO);
+        return new ResponseEntity<>(roomId, HttpStatus.OK);
     }
 
     // 내가 속한 채팅방 리스트

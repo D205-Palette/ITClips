@@ -64,7 +64,7 @@ public class ChatRoomService {
         //topic생성
         chatRoomRepository.enterChatRoom(savedChatRoom.getId());
         Map<String, Long> result = new HashMap<>();
-        result.put("chatRoomId", savedChatRoom.getId());
+        result.put("roomId", savedChatRoom.getId());
         return result;
     }
 
@@ -88,7 +88,7 @@ public class ChatRoomService {
         //topic생성
         chatRoomRepository.enterChatRoom(savedChatRoom.getId());
         Map<String, Long> result = new HashMap<>();
-        result.put("chatRoomId", savedChatRoom.getId());
+        result.put("roomId", savedChatRoom.getId());
         return result;
     }
 

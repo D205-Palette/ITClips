@@ -7,6 +7,7 @@ import ReportModal from "../aside/modals/ReportModal";
 import DeleteBookmarkListModal from "../aside/modals/DeleteContentModal";
 import UrlCopyModal from "./UrlCopyModal";
 import ScrapConfirmationModal from "../aside/modals/ScrapComfirmModal";
+import { deleteStore } from "../../stores/deleteStore";
 
 // 무슨 탭에서 눌렀는지 받는 인자
 // 리스트, 즐겨찾기, 로드맵, 북마크 4가지로 받을예정. 그룹 리스트랑 그냥 리스트는 차이 없음
@@ -40,6 +41,7 @@ const KebabDropdown: FC<Props> = ({
   const [isFavoriteModalOpen, setIsFavoriteModalOpen] =
     useState<boolean>(false);
 
+    const {setDeletedBookmark} = deleteStore()
   return (
     <>
       <div className="dropdown dropdown-bottom dropdown-end ">

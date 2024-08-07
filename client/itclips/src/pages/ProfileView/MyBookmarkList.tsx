@@ -68,7 +68,7 @@ export default function MyView() {
     <>
       {/* 화면에 고정시킬 우측 상단들 */}
       <div className="fixed z-10 w-7/12">
-        <div className="bg-white">
+        <div className="bg-base-100">
           <MainTab />
           {/* 상단 검색바 */}
           <SearchBar

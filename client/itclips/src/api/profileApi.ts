@@ -1,4 +1,4 @@
-import { authenticatedRequest, authenticatedRawJsonRequest, request } from "./apiUtils";
+import { authenticatedRequest, request } from "./apiUtils";
 
 interface updatedUserInfo {
   id?: number;
@@ -13,7 +13,7 @@ interface updatedUserInfo {
 
 // 회원 정보 수정(닉네임, 소개글, 생년월일, 직업, 성별)
 export const updateUserInfo = (userId: number, newInfo: updatedUserInfo) => {
-  return authenticatedRawJsonRequest("put", `/user/${userId}/profile`, newInfo, undefined);
+  return authenticatedRequest("put", `/user/${userId}/profile`, newInfo, undefined);
 };
 
 // 비밀번호 변경

@@ -4,6 +4,7 @@ import React from 'react';
 import axios from 'axios';
 import { API_BASE_URL } from '../../../config';
 import { authStore } from '../../../stores/authStore';
+import { deleteStore } from '../../../stores/deleteStore';
 
 interface DeleteConfirmModalProps {
   isOpen: boolean;
@@ -17,6 +18,7 @@ interface DeleteConfirmModalProps {
 const DeleteContentModal: React.FC<DeleteConfirmModalProps> = ({ isOpen, onClose,whatContent,id }) => {
   if (!isOpen) return null;
 
+  const {setDeletedBookmarkList, setDeletedBookmark, setDeletedRoadmap} = deleteStore()
   // 임시이긴한데 스토리지에 박아둔 값 가져와서 할 예정
   // 아니면 필요한 곳에서먄 ?치고 prop때려도 ㄱㅊ
   const {userId, token} = authStore()
@@ -26,20 +28,25 @@ const DeleteContentModal: React.FC<DeleteConfirmModalProps> = ({ isOpen, onClose
     axios.delete(`${API_BASE_URL}/api/list/delete/${userId}/${id}`,
       {headers: {
       Authorization: `Bearer ${token}`,
-    },},
+    }
+  },
   )
+    setDeletedBookmarkList(id)
+  
     } else if(whatContent==='북마크'){
       axios.delete(`${API_BASE_URL}/api/bookmark/delete/${id}`,
         {headers: {
           Authorization: `Bearer ${token}`,
         },},
       )
+      setDeletedBookmark(id)
     } else if (whatContent==='즐겨찾기'){
       axios.delete(`${API_BASE_URL}/api/list/scrap/${id}`,
         {headers: {
           Authorization: `Bearer ${token}`,
         },},
       )
+      setDeletedBookmarkList(id)
     } else if (whatContent==='로드맵'){
       axios.delete(`${API_BASE_URL}/api/roadmap/${id}/${userId}`,
         {headers: {
@@ -47,6 +54,7 @@ const DeleteContentModal: React.FC<DeleteConfirmModalProps> = ({ isOpen, onClose
         },},
       )
     } 
+    setDeletedBookmarkList(id)
   }
 
 

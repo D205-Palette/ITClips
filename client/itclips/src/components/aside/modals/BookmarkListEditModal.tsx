@@ -21,7 +21,7 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
   id,
 }) => {
   const { userId, token } = authStore();
-
+  const [tempCategories, setTempCategories] = useState<string[]>([]);
   useEffect(() => {
     async function fetchData() {
       axios({
@@ -37,33 +37,37 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
         .then((res) => {
           setTempTitle(res.data.title);
           setTempDescription(res.data.description);
-          setTempTags(res.data.tags); 
+          setTempTags(res.data.tags);
           setTempImage(res.data.image);
           // 이미지 없다
-          setTotalCategories(res.data.categories)
-          // res.data.categories.map((cat:CategoryType) =>  {setTempCategories([...tempCategories, cat.categoryName]); console.log()})
-        })
-        .then(()=>{
-          totalCategories.map((cat:CategoryType) =>  {setTempCategories([...tempCategories, cat.categoryName]); console.log(tempCategories);})
+          const catArr = [];
+          for (var ele of res.data.categories) {
+            catArr.push(ele.categoryName);
+          }
+          setTempCategories(catArr);
+
+          const userArr = [];
+          for (var ele of res.data.users) {
+            userArr.push(ele.nickName);
+          }
+          setTempUser(userArr);
         })
         .catch((err) => {
           console.error(err);
         });
-    } 
+    }
     fetchData();
-    console.log('랜더링때')
-    console.log(tempCategories)
   }, []);
-  const [totalCategories, setTotalCategories] = useState([])
 
   const [tempTitle, setTempTitle] = useState<string>("");
   const [tempDescription, setTempDescription] = useState<string>("");
   const [tempTag, setTempTag] = useState("");
   const [tempTags, setTempTags] = useState<{ title: string }[]>([]);
-  const [tempCategories, setTempCategories] = useState<string[]>([]);
+
+  // 수정할 이미지?
   const [tempImage, setTempImage] = useState("");
-  // user 설정이랑 이미지 해ㅇ줘야하나?
   const [isPublic, setIsPublic] = useState(false);
+  const [tempUser, setTempUser] = useState<string[]>([]);
 
   const handleAddTag = () => {
     if (tempTag.trim() !== "") {
@@ -75,26 +79,26 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
   const handleRemoveTag = (inputText: string) => {
     setTempTags(tempTags.filter((tag) => tag.title !== inputText));
   };
-
+  
   const endEdit = () => {
-    console.log('실행전')
-    console.log(tempCategories)
+    console.log("api때");
+    console.log(tempCategories);
     const formData = {
       title: tempTitle,
       description: tempDescription,
-      image: "",
+      image: tempImage,
       isPublic: isPublic,
       categories: tempCategories,
-      users: [],
-      tags: tempTags
+      users: tempUser,
+      tags: tempTags,
     };
 
     axios
-      .put(`${API_BASE_URL}/api/list/update/${userId}/${id}`, formData,{
+      .put(`${API_BASE_URL}/api/list/update/${userId}/${id}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      },)
+      })
       .then((res) => {
         onClose();
       })

@@ -19,10 +19,12 @@ import { useParams } from "react-router-dom";
 import { API_BASE_URL } from "../config";
 import { authStore } from "../stores/authStore";
 import darkModeStore from "../stores/darkModeStore";
+import { deleteStore } from "../stores/deleteStore";
 
 const MyBookmark = () => {
   const params = useParams();
   const {isDark} = darkModeStore()
+  const {deletedBookmark} = deleteStore()
   const tempListId = params.bookmarklistId;
 
   let listId = 0;
@@ -101,6 +103,7 @@ const MyBookmark = () => {
     fetchData();
   }, []);
 
+  const filterdBookmarks = bookmarks.filter((bookmark) => !deletedBookmark.includes(bookmark.id))
   return (
     <>
       <div id="Body" className="grid grid-cols-12 gap-5">
@@ -127,7 +130,7 @@ const MyBookmark = () => {
           id="Main"
           className="xl:col-start-5 xl:col-span-7 col-start-3 col-span-8 gap-4"
         >
-          <div className={(isDark? "aside-dark": "bg-white") + " fixed z-10 w-full"} color="asideDark">
+          <div className=" bg-base-100 fixed z-10 w-full" >
           {/* 상단바 */}
           {editMode ? (
             <div className="flex flex-row justify-end pe-5 my-5">
@@ -153,8 +156,8 @@ const MyBookmark = () => {
 </div>
           {/* 북마크들 */}
           <div className="absolute top-24 w-7/12">
-          {bookmarks ? (
-            bookmarks.map((bookmark) =>
+          {filterdBookmarks ? (
+            filterdBookmarks.map((bookmark) =>
               editMode ? (
                 <BookmarkEdit
                   bookmark={bookmark}

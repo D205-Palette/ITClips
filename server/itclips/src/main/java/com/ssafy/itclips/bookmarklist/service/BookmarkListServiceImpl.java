@@ -519,16 +519,15 @@ public class BookmarkListServiceImpl implements BookmarkListService {
                         (existing, replacement) -> existing // Handle duplicates by keeping the existing tagDTO
                 ))
                 .values());
-
+        String imageUrl = getImageUrl(bookmarkList);
         return BookmarkListRoadmapDTO.builder()
                 .id(bookmarkList.getId())
                 .title(bookmarkList.getTitle())
-                .image(bookmarkList.getImage())
+                .image(imageUrl)
                 .description(bookmarkList.getDescription())
                 .bookmarkCount(bookmarkList.getBookmarks().size())
                 .users(users)
                 .tags(tags)
-                .likeCount(1)  // This seems to be hardcoded, consider fetching the actual like count if possible.
                 .build();
 
     }
@@ -536,7 +535,6 @@ public class BookmarkListServiceImpl implements BookmarkListService {
     @Override
     public BookmarkListRoadmapDTO getBookmarkListResponseDTO(Long listId) {
         BookmarkList bookmarkList = bookmarkListRepository.findById(listId).orElseThrow();
-
         return toDto(bookmarkList);
     }
 

@@ -385,7 +385,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
                   </label>
                   <button
                     onClick={handleImageChange}
-                    className="btn btn-sm btn-primary w-full"
+                    className="btn btn-sm bg-sky-500 text-slate-100 hover:bg-sky-700 w-full"
                     disabled={!selectedFile}
                   >
                     변경
@@ -546,9 +546,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
               <label className="block text-sm font-medium mb-2">성별</label>
               <div className="flex items-center gap-4">
                 <button
-                  className={`btn ${
-                    genderBoolean ? "btn-primary" : "btn-outline"
-                  } flex-1`}
+                  className={`btn ${genderBoolean ? "btn bg-sky-500 hover:bg-sky-700 text-slate-100" : "btn"} flex-1`}
                   onClick={(event) => {
                     event.preventDefault();
                     setGenderBoolean(true);
@@ -558,9 +556,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
                   남성
                 </button>
                 <button
-                  className={`btn ${
-                    !genderBoolean ? "btn-primary" : "btn-outline"
-                  } flex-1`}
+                  className={`btn ${!genderBoolean ? "btn  bg-sky-500 hover:bg-sky-700 text-slate-100" : "btn"} flex-1`}
                   onClick={(event) => {
                     event.preventDefault();
                     setGenderBoolean(false);
@@ -576,9 +572,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
 
         {/* 변경완료 버튼 */}
         <div className="flex justify-end items-center mt-6">
-          <button className="btn btn-primary" onClick={handleUpdateProfile}>
-            변경 완료
-          </button>
+          <button className="btn btn-primary" onClick={handleUpdateProfile}>변경 완료</button>
         </div>
 
         {/* 비밀번호 변경 모달 */}

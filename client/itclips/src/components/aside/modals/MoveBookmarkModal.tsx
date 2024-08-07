@@ -41,12 +41,23 @@ const MoveBookmarkModal: FC<Move> = ({
   const [lists, setLists] = useState<BookmarkListSumType[]>([]);
 
   function endMoving(): any {
-    // 이거를 선택 안해도 그냥 0번으로 이동시켜도 될듯???
+    tabModal(false);
+    toggleMode(false);
+    // 카테고리 선택 안했으면 그냥 보내기
     if (selectCategory === 0) {
-      window.alert("북마크를 이동할 리스트와 카테고리를 선택해 주세요");
+      editBookmarks.map((editBookmark) =>
+        axios.post(
+          `${API_BASE_URL}/api/bookmark/add/${selectListId}`,
+          editBookmark
+        )
+      );
+      if (whatMenu === "이동") {
+        editBookmarks.map((editBookmark) =>
+          axios.delete(`${API_BASE_URL}/api/bookmark/delete/${editBookmark.id}`)
+        );
+        changeEditBookmarksIndex([]);
+      }
     } else {
-      tabModal(false);
-      toggleMode(false);
       /// 추가면 복사 처럼 원본도 남기고, 이동이면 원본 삭제하는 식으로
       editBookmarks.map((editBookmark) =>
         axios.post(
@@ -89,6 +100,7 @@ const MoveBookmarkModal: FC<Move> = ({
 
   // 리스트 눌렀을때, 속한 임시 카테고리  tempcategories
   useEffect(() => {
+    setTempCategories([])
     async function fetchData() {
       axios({
         method: "get",
@@ -152,8 +164,8 @@ const MoveBookmarkModal: FC<Move> = ({
           }
           onClick={() => clickEvent(list.id)}
         >
-          <div className="h-20 w-1/5 overflow-hidden">
-            <img src={list.image} alt="#" className="object-cover" />
+          <div className="h-20 w-1/5 overflow-hidden ">
+            <img src={list.image} alt="#" className="object-contain" />
           </div>
           <h4 className="flex flex-row items-center w-4/5 ps-5">
             {list.title}

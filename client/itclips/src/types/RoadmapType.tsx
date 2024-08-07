@@ -2,29 +2,14 @@
 type RoadmapDetailType = {
   id: number;
   userId: number;
-  origin:any
+  origin: any;
   userName: string;
   title: string;
   description: string;
   createdAt: string;
   image: string;
   isPublic: number;
-  stepList: {
-    id: number;
-    roadmapId: number;
-    bookmarkListResponseDTO: {
-      id: number;
-      title: string;
-      description: string;
-      bookmarkCount: number;
-      likeCount: number;
-      image: string;
-      tags: {title:string}[];
-      users: {id:number, nickName:string}[];
-    };
-    check: boolean;
-    order: number;
-  }[];
+  stepList: StepListType[];
   commentList: {
     id: number;
     comment: string;
@@ -36,16 +21,26 @@ type RoadmapDetailType = {
 
   likeCnt: number;
   scrapCnt: number;
-  isLiked:boolean;
+  isLiked: boolean;
 };
 
-type StepType = {
+type StepListType = {
   id: number;
-  listId: number;
-  listTitle: string;
-  order: number;
+  roadmapId: number;
+  bookmarkListRoadmapDTO: {
+    id: number;
+    title: string;
+    description: string;
+    bookmarkCount: number;
+    likeCount: number;
+    image: string;
+    tags: { title: string }[];
+    users: { id: number; nickName: string }[];
+  };
   check: boolean;
+  order: number;
 };
+
 // 로드맵 간략 보기 데이터
 type RoadmapSumType = {
   id: number;
@@ -63,4 +58,11 @@ type RoadmapSumType = {
   isLiked: boolean;
 };
 
-export type { RoadmapDetailType, RoadmapSumType };
+type StepType = {
+  id: number;
+  listId: number;
+  listTitle: string;
+  order: number;
+  check: boolean;
+};
+export type { RoadmapDetailType, RoadmapSumType, StepListType, StepType };

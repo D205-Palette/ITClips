@@ -10,6 +10,9 @@ import type { BookmarkListSumType } from "../../types/BookmarkListType";
 import { API_BASE_URL } from "../../config";
 import { authStore } from "../../stores/authStore";
 import noImg from "../../assets/images/noImg.gif"
+import BookmarkListEditModal from "../aside/modals/BookmarkListEditModal";
+
+import noImg from "../../assets/images/noImg.gif"
 
 interface Props {
   list: BookmarkListSumType;
@@ -20,7 +23,7 @@ const ListItem: FC<Props> = ({ list }) => {
   const navigate = useNavigate();
   const [isLike, setIsLike] = useState(list.isLiked);
   const [likeCount, changeLikeCount] = useState(list.likeCount);
-
+  const [isEditModalOpen,setIsEditModalOpen] = useState(false)
   // 좋아요
   const clickHeart = (): void => {
     if (isLike) {
@@ -93,9 +96,9 @@ const ListItem: FC<Props> = ({ list }) => {
                 {isLike ? <FaHeart color="red" /> : <FaRegHeart />}
                 {likeCount}
               </button>
-              <button className="md:block hidden">
+              <div className="md:block hidden">
                 <KebabDropdown whatMenu="리스트" id={list.id} />
-              </button>
+              </div>
             </div>
           </div>
         </>

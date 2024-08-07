@@ -16,11 +16,11 @@ import type { RoadmapDetailType } from "../../types/RoadmapType";
 
 
 interface Props {
-  roadmap:RoadmapDetailType;
+  roadmapId:number;
 }
 
 
-const AsideRoadmap :  React.FC<Props> = ({roadmap}) => {
+const AsideRoadmap :  React.FC<Props> = ({roadmapId}) => {
 
   const isDark = darkModeStore(state => state.isDark);
   const isMessageOpen = asideStore(state => state.isMessageOpen);
@@ -28,7 +28,7 @@ const AsideRoadmap :  React.FC<Props> = ({roadmap}) => {
   return (
     <div className={`${ isDark ? "bg-base-300" : "bg-sky-100" } rounded-3xl w-80 p-8 flex flex-col items-center`}>
       {/* 더보기 버튼 */}
-      { !isMessageOpen && <AsideRoadmapKebabDropdown isRoadmap={true} id={roadmap.id}/> }
+      { !isMessageOpen && <AsideRoadmapKebabDropdown isRoadmap={true} id={roadmapId}/> }
       {/* 북마크리스트 썸네일 */}
       <ImageContainer src={roadmap.image} whatContent="로드맵" />
       {/* 북마크리스트 정보 */}
@@ -38,7 +38,7 @@ const AsideRoadmap :  React.FC<Props> = ({roadmap}) => {
       {/* 태그 창 */}
       {/* <Tags {...roadmapInfo} /> */}
       {/* 댓글 창 */}
-      <CommentsContainer id={roadmap.id} />
+      <CommentsContainer id={roadmapId} />
     </div>
   );
 };

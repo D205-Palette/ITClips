@@ -30,7 +30,7 @@ export default function MyView() {
               { isMessageOpen && <MessageLayout /> }
             </div>
           </div>
-          <div className="fixed z-20">
+          <div className="fixed z-30">
             <AsideProfile />
           </div>
         </div>

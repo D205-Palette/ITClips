@@ -5,7 +5,7 @@ import axios from 'axios';
 import { API_BASE_URL } from '../../../config';
 import { authStore } from '../../../stores/authStore';
 import { deleteStore } from '../../../stores/deleteStore';
-
+import { useNavigate } from 'react-router-dom';
 interface DeleteConfirmModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -15,7 +15,9 @@ interface DeleteConfirmModalProps {
   // 로드맵 스탭 삭제할때 필요한 stepId
 }
 
+
 const DeleteContentModal: React.FC<DeleteConfirmModalProps> = ({ isOpen, onClose,whatContent,id }) => {
+  const navigate = useNavigate()
   if (!isOpen) return null;
 
   const {setDeletedBookmarkList, setDeletedBookmark, setDeletedRoadmap} = deleteStore()
@@ -52,7 +54,10 @@ const DeleteContentModal: React.FC<DeleteConfirmModalProps> = ({ isOpen, onClose
         {headers: {
           Authorization: `Bearer ${token}`,
         },},
-      )
+      ).then(()=>{
+        navigate(`/user/${userId}/roadmap`)
+      })
+      
     } 
     setDeletedBookmarkList(id)
   }
@@ -64,9 +69,9 @@ const DeleteContentModal: React.FC<DeleteConfirmModalProps> = ({ isOpen, onClose
         <h3 className="font-bold text-lg">삭제하시겠습니까?</h3>
         <div className="modal-action">
           <button className="btn" onClick={onClose}>아니오</button>
-          <button className="btn btn-primary" onClick={() => {
+          <button className="btn bg-sky-500 hover:bg-sky-700 text-slate-100" onClick={() => {
             // 삭제 로직 구현
-            deleteApi()
+            deleteApi();
             onClose();
           }}>예</button>
         </div>

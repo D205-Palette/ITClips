@@ -11,6 +11,7 @@ import { IoCloseOutline } from "react-icons/io5";
 // 기본 이미지
 import noImg from "../../../assets/images/noImg.gif";
 
+import darkModeStore from "../../../stores/darkModeStore";
 import type { CategoryType } from "../../../types/BookmarkListType";
 interface EditModalProps {
   isOpen: boolean;
@@ -25,10 +26,6 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
 }) => {
   const { userId, token } = authStore();
   const [tempCategories, setTempCategories] = useState<string[]>([]);
-  // 이미지 업로드 상태 관리
-  const [bookmarklistImage, setBookmarklistImage] = useState<File | null>(null);
-  const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
-
   useEffect(() => {
     async function fetchData() {
       axios({
@@ -147,7 +144,7 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white rounded-lg p-6 w-96">
+      <div className="bg-base-100 rounded-lg p-6 w-96 fixed z-50">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">북마크 리스트 수정</h2>
           <button
@@ -159,7 +156,7 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium  mb-2">
             이미지
           </label>
           {/* 북마크리스트 이미지 설정 */}
@@ -208,6 +205,18 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
 
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-2">
+            유저
+          </label>
+          <input
+            type="text"
+            value="고양양"
+            readOnly
+            className="w-full px-3 py-2 border rounded-md bg-gray-100"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium  mb-2">
             리스트명
           </label>
           <input
@@ -220,7 +229,7 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium mb-2">
             내용
           </label>
           <textarea
@@ -233,7 +242,7 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium  mb-2">
             태그
           </label>
           <div className="flex flex-wrap gap-2 mb-2">
@@ -262,14 +271,14 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
             />
             <button
               onClick={handleAddTag}
-              className="btn btn-primary rounded-l-none"
+              className="btn bg-sky-500 hover:bg-sky-700 text-slate-100 rounded-l-none"
             >
               +
             </button>
           </div>
         </div>
 
-        <button className="btn btn-primary w-full" onClick={() => endEdit()}>
+        <button className="btn text-slate-100 bg-sky-500 hover:bg-sky-700 w-full" onClick={() => endEdit()}>
           수정
         </button>
       </div>

@@ -49,11 +49,11 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
       <div
         className={
           (isDark ? "hover:bg-slate-700" : "hover:bg-slate-100") +
-          " card card-side bg-base-100 hover:cursor-pointer h-32 my-1"
+          " card card-side bg-base-100 hover:cursor-pointer h-32 my-1 static z-0"
         }
       >
         <>
-          <div className="w-28 z-20  hidden lg:inline rounded-s-2xl">
+          <div className="w-28 z-10  hidden lg:inline rounded-s-2xl">
             <img
               src={roadmap.image === "default" ? noImg : roadmap.image}
               alt="Movie"
@@ -66,7 +66,7 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
               className={
                 (!isDark
                   ? percentage == "100.0"
-                    ? "bg-green-200"
+                    ? "bg-green-100"
                     : "bg-sky-100"
                   : percentage == "100.0"
                   ? "bg-green-900"
@@ -77,7 +77,7 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
               onClick={() => navigate(`/roadmap/${roadmap.id}`)}
             ></div>
             <div
-              className="flex flex-col justify-around z-20 "
+              className="flex flex-col justify-around z-10 "
               onClick={() => navigate(`/roadmap/${roadmap.id}`)}
             >
               <div>
@@ -94,7 +94,7 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
                 className={
                   !isDark
                     ? percentage == "100.0"
-                      ? "text-green-500"
+                      ? "text-green-400"
                       : "text-blue-400"
                     : percentage == "100.0"
                     ? "text-green-200"
@@ -110,9 +110,9 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
                 {isLike ? <FaHeart color="red"/> : <FaRegHeart />}
                 {likeCount}{" "}
               </button>
-              <button className="hidden md:inline">
+              <div className="hidden md:inline">
                 <KebabDropdown whatMenu="로드맵" id={roadmap.id} />
-              </button>
+              </div>
             </div>
           </div>
         </>

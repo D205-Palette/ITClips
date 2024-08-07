@@ -48,7 +48,7 @@ const MyRoadmap: FC = () => {
 
   return (
     <>
-      <div className="fixed z-10 w-7/12 bg-base-100">
+      <div className="fixed z-20 w-7/12 bg-base-100">
         <MainTab />
         <SearchBar
           whatSearch={"로드맵"}
@@ -58,7 +58,7 @@ const MyRoadmap: FC = () => {
       </div>
       
       {/* 로드맵들 */}
-      <div className="absolute top-32 z-0 w-7/12">
+      <div className="absolute top-32  w-7/12 ">
       {filterdRoadmaps.length === 0 ? <NoContent content={"로드맵"}/> : <>
         {filterdRoadmaps.map((roadmap,index) => (
           <Roadmap roadmap={roadmap} />
@@ -66,7 +66,7 @@ const MyRoadmap: FC = () => {
       </div>
       
       {/* 로드맵 추가 버튼 */}
-      <button className="fixed z-20 bottom-10 right-10"
+      <button className="fixed z-0 bottom-10 right-10"
       onClick={() => navigate('/roadmap/create')}>
         
         <FaPlus color="skyblue" size={56}/>

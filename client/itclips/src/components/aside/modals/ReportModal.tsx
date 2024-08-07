@@ -4,6 +4,7 @@ import React, { useState } from "react";
 
 // components
 import ReportConfirmModal from "./ReportConfirmModal";
+import ReportErrorModal from "./ReportErrorModal";
 import axios from "axios";
 import { API_BASE_URL } from "../../../config";
 import { authStore } from "../../../stores/authStore";
@@ -24,45 +25,73 @@ const ReportModal: React.FC<ReportModalProps> = ({
   const [reportContent, setReportContent] = useState<string>("");
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] =
     useState<boolean>(false);
-
+    const [isErrorModalOpen, setIsErrorModalOpen] =
+    useState<boolean>(false);
+    const [formCertified, setFormCertified] = useState(false)
+    const { userId, token } = authStore();
+  
   if (!isOpen) return null;
-
-  const {userId, token} = authStore()
 
   const handleReport = () => {
     // 신고 처리 API
+    if(reportType&&reportContent){
     if (whatContent === "북마크") {
-      axios.post(`${API_BASE_URL}/api/report/bookmark/${userId}/${id}`,
-        {headers: {
+      axios({
+        method: "post",
+        url: `${API_BASE_URL}/api/report/bookmark/${userId}/${id}`,
+        headers: {
           Authorization: `Bearer ${token}`,
-        },},
-        {
-          data:{
-            category:{reportType},
-            reason:{reportContent},
-          },
-        }
-      );
+        },
+        data: {
+          category: reportType,
+          reason: reportContent,
+        },
+      })
+        .then(() => {
+          setIsConfirmationModalOpen(true);
+        })
+        .catch((err) => {
+          if (err.response.status === 400) {
+            setIsErrorModalOpen(true)
+          } 
+          
+        });
     } else {
-      axios.post(`${API_BASE_URL}/api/report/list/${userId}/${id}`,
-        {headers: {
+      axios({
+        method: "post",
+        url: `${API_BASE_URL}/api/report/list/${userId}/${id}`,
+        headers: {
           Authorization: `Bearer ${token}`,
-        },},
-        {
-          data:{
-            category:{reportType},
-            reason:{reportContent},
-          },
-        }
-      );
+        },
+        data: {
+          category: reportType,
+          reason: reportContent,
+        },
+      })
+        .then(() => {
+          setIsConfirmationModalOpen(true);
+        })
+        .catch((err) => {
+          console.log(err.response.status)
+          if (err.response.status === 400) {
+            setIsErrorModalOpen(true)
+            
+          } 
+         
+        });
+    }} else{
+      setFormCertified(true)
     }
 
     // 신고 처리 후 확인 모달
-    setIsConfirmationModalOpen(true);
   };
 
   const handleConfirmationClose = () => {
     setIsConfirmationModalOpen(false);
+    onClose(); // 신고 모달 전부 닫기
+  };
+  const handleErrorClose = () => {
+    setIsErrorModalOpen(false);
     onClose(); // 신고 모달 전부 닫기
   };
 
@@ -76,16 +105,16 @@ const ReportModal: React.FC<ReportModalProps> = ({
               <span className="label-text">신고내역</span>
             </label>
             <select
-              className="select select-bordered"
+              className={(formCertified&&!reportType?"border-2 border-red-600": "") + " select select-bordered "}
               value={reportType}
               onChange={(e) => setReportType(e.target.value)}
             >
               <option disabled value="">
                 선택해주세요
               </option>
-              <option value="spam">스팸</option>
-              <option value="inappropriate">부적절한 내용</option>
-              <option value="copyright">저작권 침해</option>
+              <option value="AD">광고성 게시물</option>
+              <option value="COPY_RIGHT">저작권 침해</option>
+              <option value="ETC">기타</option>
             </select>
           </div>
           <div className="form-control">
@@ -93,16 +122,22 @@ const ReportModal: React.FC<ReportModalProps> = ({
               <span className="label-text">신고내용</span>
             </label>
             <textarea
-              className="textarea textarea-bordered h-24 resize-none"
+              className={(formCertified&&!reportContent?"border-2 border-red-600": "") + " textarea textarea-bordered h-24 resize-none"}
               value={reportContent}
               onChange={(e) => setReportContent(e.target.value)}
             ></textarea>
+          </div>
+        <div className={formCertified?"my-2 text-red-600" : "hidden"}>
+          <p>항목을 기입해주세요</p>
           </div>
           <div className="modal-action">
             <button className="btn" onClick={onClose}>
               취소
             </button>
-            <button className="btn btn-primary" onClick={handleReport}>
+            <button
+              className="btn bg-sky-500 hover:bg-sky-700 text-slate-100"
+              onClick={handleReport}
+            >
               신고하기
             </button>
           </div>
@@ -111,6 +146,10 @@ const ReportModal: React.FC<ReportModalProps> = ({
       <ReportConfirmModal
         isOpen={isConfirmationModalOpen}
         onClose={handleConfirmationClose}
+      />
+      <ReportErrorModal
+        isOpen={isErrorModalOpen}
+        onClose={handleErrorClose}
       />
     </>
   );

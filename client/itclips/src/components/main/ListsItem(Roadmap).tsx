@@ -8,24 +8,9 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { authStore } from "../../stores/authStore";
 import { API_BASE_URL } from "../../config";
-
+import type { StepListType } from "../../types/RoadmapType";
 interface Props {
-  list: {
-    id: number;
-    roadmapId: number;
-    bookmarkListRoadmapDTO: {
-      id: number;
-      title: string;
-      description: string;
-      bookmarkCount: number;
-      likeCount: number;
-      image: string;
-      tags: {title:string}[];
-      users: {id:number, nickName:string}[];
-    };
-    check: boolean;
-    order: number;
-  };
+  list:StepListType
   changeCount: React.Dispatch<React.SetStateAction<number>>;
 }
 
@@ -60,7 +45,7 @@ const ListItem: FC<Props> = ({ list,changeCount }) => {
       <div
         className={
           (isDark ? "hover:brightness-125" : "hover:brightness-95") +
-          " card card-side bg-base-100  h-28 col-span-4 odd:col-start-1  even:col-start-4 mb-10 z-10"
+          " card card-side bg-slate-50  h-28 col-span-4 odd:col-start-1  even:col-start-4 mb-10 z-10"
         }
       >
         <>

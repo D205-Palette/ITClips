@@ -5,24 +5,13 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import darkModeStore from "../../stores/darkModeStore";
 import { FaPlus } from "react-icons/fa6";
 import type { BookmarkType } from "../../types/BookmarkType";
-import HoverTag from "./Bookmark(Tag)";
-import AISummary from "./BookmarkAISummary";
-import { RiRobot3Line } from "react-icons/ri";
-import { IoIosArrowUp } from "react-icons/io";
 import axios from "axios";
 import { authStore } from "../../stores/authStore";
 import { API_BASE_URL } from "../../config";
 import EditTag from "./Bookmark(Tag)";
 import { LINKPREVIEW_API_KEY } from "../../config"; 
-
+import AIContent from "./Bookmark(AI)";
 import mainTabStore from '../../stores/mainTabStore'
-// const bookmarks = {
-//     title: string,
-//     url: string,
-//     description: string,
-//     bookmark_like: number,
-//     category: string,
-//   }
 
 interface Props {
   bookmark: BookmarkType;
@@ -39,20 +28,11 @@ const Bookmark: FC<Props> = ({
   editBookmarksIndex,
   changeEditBookmarksIndex,
 }) => {
+  
   const [tempBookmark, editTempBookmark] = useState<BookmarkType>(bookmark);
-  const [tempTitle, editTempTitle] = useState<string>("");
+  const [tempTitle, editTempTitle] = useState<string>(bookmark.title);
   const [tempTags, editTempTags] = useState(bookmark.tags);
   const [tempTag, editTempTag] = useState("");
-
-  useEffect(() => {
-    async function fetchData() {
-      editTempBookmark(bookmark);
-      editTempTitle(bookmark.title);
-      editTempTags(bookmark.tags);
-      editTempTag("");
-    }
-    fetchData();
-  }, []);
 
   // 북마크 썸네일 불러오기
   const [ogImage, setOgImage] = useState("");
@@ -66,7 +46,6 @@ const Bookmark: FC<Props> = ({
   const [isEdit, toggleEdit] = useState(false);
   const [isTagEdit, toggleTagEdit] = useState(false);
   const [editModal, tabEditModal] = useState(false);
-  const [isHoverTag, setIsHoverTag] = useState(false);
   const [isAiOpen, setIsAIOpen] = useState(false);
   // 그냥 더미. 있어야됨. 삭제 ㄴㄴ
   const [nothingMode, tabNothing] = useState(false);
@@ -132,6 +111,7 @@ const Bookmark: FC<Props> = ({
       <div
         className={
           (isDark ? "hover:bg-slate-700" : "hover:bg-slate-100") +
+          (whatCategory.categoryName===bookmark.category || whatCategory.categoryName==="" ? " " : " hidden")+
           " card card-side bg-base-100 shadow-sm hover:cursor-pointer h-28 my-1"
         }
       >
@@ -160,7 +140,7 @@ const Bookmark: FC<Props> = ({
                 )}
               </div>
               <div className="underline underline-offset-1">
-                {tempBookmark.url}
+                {bookmark.url}
               </div>
             </div>
 
@@ -227,14 +207,10 @@ const Bookmark: FC<Props> = ({
       </div>
 
       {/* AI요약 탭 열리는 위치 */}
-      <div className="ps-8 pe-12 mt-3 bg-sky-100">
+      <div className={(isAiOpen&&"py-5") + " ps-9 pe-12 mt-3 bg-sky-100"}>
         {isAiOpen ? (
           <>
-            <div className="flex flex-row justify-between">
-              <RiRobot3Line size={24} />
-              <IoIosArrowUp />
-            </div>
-            <p>AI 요약입니다ㅏㅏㅏ</p>
+            <AIContent bookmarkId={bookmark.id} setIsAIOpen={setIsAIOpen}/>
           </>
         ) : (
           <></>

@@ -56,6 +56,7 @@ const RoadmapView = () => {
           .then((res) => {
           setRoadmap(res.data);
           console.log(res)
+          
         })
         .catch((err) => {
           console.error(err);
@@ -96,7 +97,7 @@ const RoadmapView = () => {
   { isMessageOpen && <MessageLayout /> }
   </div>
   <div className="fixed z-20">
-    {roadmap?<AsideRoadmap roadmap={roadmap} />:<></>}
+    {roadmap?<AsideRoadmap roadmapId={roadmap.id} />:<></>}
   </div>
 </div>                                        
 

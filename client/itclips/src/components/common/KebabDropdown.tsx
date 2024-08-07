@@ -2,6 +2,7 @@ import { VscKebabVertical } from "react-icons/vsc";
 import { FC, useState } from "react";
 import BookmarkListEditModal from "../aside/modals/BookmarkListEditModal";
 import FavoriteConfirmationModal from "../aside/modals/FavoriteConfirmModal";
+import FavoriteDeleteModal from "../aside/modals/FavoriteDeleteModal";
 import ReportModal from "../aside/modals/ReportModal";
 import DeleteBookmarkListModal from "../aside/modals/DeleteContentModal";
 import UrlCopyModal from "./UrlCopyModal";
@@ -24,17 +25,31 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
   const [isUrlCopyModalOpen, setIsUrlCopyModalOpen] = useState<boolean>(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState<boolean>(false);
   const [isFavoriteModalOpen, setIsFavoriteModalOpen] = useState<boolean>(false);
+  const [isDeleteFavoriteModalOpen, setIsDeleteFavoriteModalOpen] = useState<boolean>(false);
   const [isScrapModalOpen, setIsScrapModalOpen] = useState<boolean>(false);
 const navigate = useNavigate()
   // 유저 아이디 임시값. 나중엔 스토리지서 받아오면됨
   const {userId, token} = authStore()
   // 리스트 즐겨찾기
   function addFavorite ():void {
-    axios.post(`${API_BASE_URL}/api/list/scrap/${userId}/${id}`,
-      {headers: {
+    axios({
+      method:'post',
+      url:`${API_BASE_URL}/api/list/scrap/${userId}/${id}`,
+      headers: {
         Authorization: `Bearer ${token}`,
-      },}
-    )
+      },
+    }).then(()=>{
+      setIsFavoriteModalOpen(true);
+    }).catch((err) =>{
+      if(err.response.status === 400){
+        
+      } else{
+
+      }
+    })
+      //  아님 마운트 되는 순간 즐겨찾기 여부 따져서 즐찾/즐찾삭제 부터 다르게 해줘야되나...?
+      // 아님 그냥 즐찾삭제하겠냐는 모달 띄워서 
+    
   }
   // 로드맵 스크랩
   function addScrap ():void {
@@ -80,7 +95,7 @@ const navigate = useNavigate()
             className={
               whatMenu === "로드맵" || whatMenu === "북마크" ? "hidden" : ""
             }
-            onClick={() => {setIsFavoriteModalOpen(true); addFavorite();}}
+            onClick={() => { addFavorite();}}
           >
             {/* 내 즐겨찾기에 있는지 유무 따져서 즐겨찾기 삭제로 출력해주기 */}
             <a>즐겨찾기</a>
@@ -131,6 +146,13 @@ const navigate = useNavigate()
           isOpen={isFavoriteModalOpen}
           onClose={() => setIsFavoriteModalOpen(false)}
         />
+      )}
+      {isDeleteFavoriteModalOpen && (
+          <FavoriteDeleteModal
+            isOpen={isDeleteFavoriteModalOpen}
+            onClose={() => setIsDeleteFavoriteModalOpen(false)}
+            id={id}
+          />
       )}
       {isScrapModalOpen && (
         <ScrapConfirmationModal

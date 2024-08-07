@@ -105,7 +105,7 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
           placeholder="메세지를 입력해주세요"
           className="input input-bordered flex-1 mr-2"
         />
-        <button onClick={handleSendMessage} className="btn btn-primary">전송</button>
+        <button onClick={handleSendMessage} className="btn bg-sky-500 text-slate-100 hover:bg-sky-700">전송</button>
       </div>
     </div>
   );

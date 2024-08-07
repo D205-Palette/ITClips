@@ -53,7 +53,7 @@ const AsideStartNewMessage: React.FC<InviteProps> = ({ onStartChat, onBack }) =>
           placeholder="메세지 보낼 상대 이름"
           className="input input-bordered flex-1 mr-2"
         />
-        <button onClick={handleAddInviteEmail} className="btn btn-primary">추가</button>
+        <button onClick={handleAddInviteEmail} className="btn bg-sky-500 text-slate-100 hover:bg-sky-700">추가</button>
       </div>
       {/* 초대할 상대 리스트 */}
       <div className="flex flex-col space-y-2 mb-4">
@@ -66,7 +66,7 @@ const AsideStartNewMessage: React.FC<InviteProps> = ({ onStartChat, onBack }) =>
       </div>
       {/* 시작 버튼 */}
       <div className="mt-auto">
-        <button onClick={() => handleStartChat(1)} className="btn btn-primary w-full">시작</button>
+        <button onClick={() => handleStartChat(1)} className="btn  bg-sky-500 text-slate-100 hover:bg-sky-700 w-full">시작</button>
       </div>
     </div>
   );

@@ -33,7 +33,6 @@ const AsideBookmarkListKebabDropdown :FC<Props> = ({isRoadmap, id}) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsDropdownOpen(false);
       }
-      console.log(id)
     };
 
     document.addEventListener('mousedown', handleClickOutside);

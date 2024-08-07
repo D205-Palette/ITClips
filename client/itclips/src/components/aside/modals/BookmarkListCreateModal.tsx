@@ -158,14 +158,14 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
             />
             <button
               onClick={handleAddTag}
-              className="btn btn-primary rounded-l-none"
+              className="btn bg-sky-500 hover:bg-sky-700 text-slate-100 rounded-l-none"
             >
               +
             </button>
           </div>
         </div>
 
-        <button className="btn btn-primary w-full" onClick={() => endCreate()}>
+        <button className="btn bg-sky-500 hover:bg-sky-700 text-slate-100 w-full" onClick={() => endCreate()}>
           생성
         </button>
       </div>

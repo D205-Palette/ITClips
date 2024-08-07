@@ -123,7 +123,7 @@ const CategoryTab: FC<Props> = ({ listId }) => {
 
   return (
     <>
-      <div className="flex flex-row m-3 items-centerpy-5 ">
+      <div className="flex flex-row m-3 items-centerpy-5 static z-20">
         <BackButton />
         <div
           className=" flex flex-row  whitespace-nowrap  container overflow-x-scroll "

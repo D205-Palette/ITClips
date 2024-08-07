@@ -17,6 +17,7 @@ import com.ssafy.itclips.error.CustomException;
 import com.ssafy.itclips.error.ErrorCode;
 import com.ssafy.itclips.global.rank.RankDTO;
 import com.ssafy.itclips.group.entity.QUserGroup;
+import com.ssafy.itclips.recommend.dto.SimilarBookmarkResponse;
 import com.ssafy.itclips.tag.dto.TagDTO;
 import com.ssafy.itclips.tag.dto.TagSearchDTO;
 import com.ssafy.itclips.tag.entity.QBookmarkListTag;
@@ -196,6 +197,20 @@ public class BookmarkListRepositoryImpl implements BookmarkListRepositoryCustom 
                 .orderBy(qBookmarkList.hit.desc(), qBookmarkList.createdAt.desc())
                 .offset(offset)
                 .limit(PAGE_SIZE)
+                .fetch();
+    }
+
+    @Override
+    public List<BookmarkList> findBookmarkListByIds(List<SimilarBookmarkResponse> similarLists) {
+        QBookmarkList qBookmarkList = QBookmarkList.bookmarkList;
+
+        List<Long> ids = similarLists.stream()
+                .map(SimilarBookmarkResponse::getBookmarkListId)
+                .collect(Collectors.toList());
+
+        return queryFactory.select(qBookmarkList)
+                .from(qBookmarkList)
+                .where(qBookmarkList.id.in(ids))
                 .fetch();
     }
 }

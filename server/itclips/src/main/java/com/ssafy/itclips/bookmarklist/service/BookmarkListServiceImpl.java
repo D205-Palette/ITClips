@@ -423,6 +423,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
                 .collect(Collectors.toList());
     }
 
+    @Override
     public BookmarkListResponseDTO convertToBookmarkListResponseDTO(BookmarkList bookmarkList, Long viewerId) {
         List<UserTitleDTO> users = getUserTitleDTOs(bookmarkList);
         Set<TagDTO> tags = getTagDTOs(bookmarkList);

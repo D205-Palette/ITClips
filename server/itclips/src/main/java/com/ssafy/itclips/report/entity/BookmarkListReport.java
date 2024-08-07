@@ -35,7 +35,6 @@ public class BookmarkListReport {
     @JoinColumn(name = "bookmark_list_id", nullable = false)
     private BookmarkList bookmarkList;
 
-    @NotNull
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;

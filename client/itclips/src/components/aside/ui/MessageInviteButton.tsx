@@ -53,11 +53,6 @@ const MessageInviteButton: React.FC<MessageInviteButtonProps> = ({ roomId }) => 
     modalRef.current?.showModal();
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-    modalRef.current?.close();
-  };
-
   // 모달이 열릴 때 상태 초기화
   useEffect(() => {
     if (isModalOpen) {
@@ -140,18 +135,27 @@ const MessageInviteButton: React.FC<MessageInviteButtonProps> = ({ roomId }) => 
               className="input input-bordered w-full mb-2"
             />
             <div className="flex-grow overflow-y-auto mb-2">
-              {searchResults.map((user) => (
-                <div
-                  key={user.id}
-                  onClick={() => handleUserSelect(user)}
-                  className="cursor-pointer hover:bg-gray-100 p-2"
-                >
-                  <div>
-                    <span className="font-bold">{user.nickname}</span>
-                    <span className="text-sm text-gray-500 ml-2">{user.email}</span>
+              {searchResults.length > 0 ? (
+                searchResults.map((user) => (
+                  <div
+                    key={user.id}
+                    onClick={() => handleUserSelect(user)}
+                    className="cursor-pointer hover:bg-gray-100 p-2"
+                  >
+                    <div className="flex items-center">
+                      <img src={user.image} alt={user.nickname} className="w-8 h-8 rounded-full mr-2 border-2" />
+                      <div>
+                        <span className="font-bold">{user.nickname}</span>
+                        <span className="text-sm text-gray-600 ml-2">{user.email}</span>
+                      </div>
+                    </div>
                   </div>
+                ))
+              ) : searchTerm.trim() !== "" ? (
+                <div className="text-center py-2 text-gray-500">
+                  검색결과가 없습니다
                 </div>
-              ))}
+              ) : null}
             </div>
             {selectedUser && (
               <div className="mb-2">

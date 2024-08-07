@@ -1,13 +1,14 @@
 // AsideStartNewMessage.tsx 는 메세지창 상단바에서 + 버튼을 눌렀을 때 출력되는 컴포넌트
 
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 // components
 import MessageBackButton from "./ui/MessageBackButton";
 
 // apis
 import { userSearch } from "../../api/searchApi";
-import { createPrivateChatRoom, createGroupChatRoom, inviteToChatRoom } from "../../api/messageApi"; // 1:1 채팅, 그룹 채팅(방만 만들어지고 초대해야함)
+import { createPrivateChatRoom, createGroupChatRoom } from "../../api/messageApi";
 
 // stores
 import { authStore } from "../../stores/authStore";
@@ -47,11 +48,22 @@ const AsideStartNewMessage: React.FC<InviteProps> = ({ onStartChat, onBack }) =>
   const [ inputName, setInputName ] = useState("");
   const [ searchResults, setSearchResults ] = useState<SearchUser[]>([]);
 
+  // 유저검색
   useEffect(() => {
     const searchUsers = async () => {
       if (inputName.trim() && myInfo?.id) {
-        const results = await userSearch(myInfo.id, 1, inputName);
-        setSearchResults(results.data);
+        try {
+          const results = await userSearch(myInfo.id, 1, inputName);
+          setSearchResults(results.data);
+        } catch (error) {
+          if (axios.isAxiosError(error) && error.response?.status === 404) {
+            // 404 에러의 경우 검색 결과가 없다고 간주
+            setSearchResults([]);
+          } else {
+            console.error("검색 중 오류 발생:", error);
+            setSearchResults([]);
+          }
+        }
       } else {
         setSearchResults([]);
       }
@@ -105,7 +117,7 @@ const AsideStartNewMessage: React.FC<InviteProps> = ({ onStartChat, onBack }) =>
   };
 
   return (
-    <div className="p-4 max-w-sm mx-auto h-[35rem] flex flex-col bg-sky-50">
+    <div className="p-4 max-w-sm mx-auto h-[35rem] flex flex-col">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center">
           <MessageBackButton onBack={onBack} />
@@ -128,21 +140,27 @@ const AsideStartNewMessage: React.FC<InviteProps> = ({ onStartChat, onBack }) =>
           scrollbarColor: "#CBD5E0 #EDF2F7"
         }}  
       >
-        {searchResults.map((user) => (
-          <div 
-            key={user.id} 
-            className="flex items-center justify-between cursor-pointer hover:bg-sky-100 p-2 rounded transition duration-200"
-            onClick={() => handleAddInviteUser(user)}
-          >
-            <div className="flex items-center">
-              <img src={user.image} alt={user.nickname} className="w-8 h-8 rounded-full mr-2 border-2 border-sky-300" />
-              <div>
-                <span className="font-bold text-sky-800">{user.nickname}</span>
-                <span className="text-sm text-sky-600 ml-2">{user.email}</span>
+        {searchResults.length > 0 ? (
+          searchResults.map((user) => (
+            <div 
+              key={user.id} 
+              className="flex items-center justify-between cursor-pointer hover:bg-sky-100 p-2 rounded transition duration-200"
+              onClick={() => handleAddInviteUser(user)}
+            >
+              <div className="flex items-center">
+                <img src={user.image} alt={user.nickname} className="w-8 h-8 rounded-full mr-2 border-2 border-sky-300" />
+                <div>
+                  <span className="font-bold text-sky-800">{user.nickname}</span>
+                  <span className="text-sm text-sky-600 ml-2">{user.email}</span>
+                </div>
               </div>
             </div>
+          ))
+        ) : inputName.trim() !== "" ? (
+          <div className="text-center py-2 text-sky-600">
+            검색결과가 없습니다
           </div>
-        ))}
+        ) : null}
       </div>
       <div className="flex flex-col space-y-2 mb-4">
         {inviteUsers.map((user) => (

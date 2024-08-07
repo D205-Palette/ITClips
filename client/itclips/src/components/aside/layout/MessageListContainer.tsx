@@ -15,6 +15,7 @@ interface ChildComponentProps {
 }
 
 const MessageContainer: React.FC<ChildComponentProps> = ({ rooms, onClickMessage }) => {
+  
   return (
     <div>
       <ul
@@ -25,13 +26,17 @@ const MessageContainer: React.FC<ChildComponentProps> = ({ rooms, onClickMessage
         }}  
       >
         {rooms.map((room: ChatRoom) => (
-          <li key={room.id} className="flex justify-between items-center bg-base-100 rounded w-100 px-3 py-2" onClick={() => onClickMessage(room.id)}>
+          <li 
+            key={room.id} 
+            className="flex justify-between items-center bg-white hover:bg-sky-100 transition-colors duration-200 rounded-lg shadow-sm w-full px-3 py-2 cursor-pointer" 
+            onClick={() => onClickMessage(room.id)}
+          >
             <div className="p-3">
               <h3 className="font-semibold text-start">{room.title}</h3>
-              <p className="text-sm text-gray-500 text-start message-content">{room.subtitle}</p>
+              <p className="text-sm text-sky-600 text-start message-content">{room.subtitle}</p>
             </div>
             {room.hasNotification && (
-              <span className="badge badge-sm badge-error m-5"></span>
+              <span className="badge badge-sm bg-sky-500 text-white m-2"></span>
             )}
           </li>
         ))}

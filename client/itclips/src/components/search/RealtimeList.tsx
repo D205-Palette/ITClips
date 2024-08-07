@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 
 // apis
 import { getBookmarkListScrapRank, getBookmarkListHitRank, getBookmarkListLikeRank, getRoadmapHitRank, getRoadmapLikeRank, getRoadmapScrapRank } from '../../api/rankApi';
@@ -8,7 +7,6 @@ interface Item {
   id: number;
   title: string;
   count: number;
-  type: 'bookmark' | 'roadmap';
 }
 
 // map 돌릴때 유일한 key 필요해서 어쩔수 없이 이렇게 만듦;;

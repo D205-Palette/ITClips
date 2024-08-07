@@ -1,48 +1,69 @@
 import React, { useState, useEffect } from "react";
+
+// styles
 import styles from "../styles/RealtimeSidebar.module.css";
 
-interface SearchTerm {
+// apis
+import { getBookmarkListHitRank, getRoadmapHitRank } from "../../../api/rankApi";
+
+interface Item {
   id: number;
-  term: string;
+  title: string;
+  count: number;
+}
+
+// map 돌릴때 유일한 key 필요해서 어쩔수 없이 이렇게 만듦;;
+interface RankItem extends Item {
+  type: 'bookmark' | 'roadmap';
 }
 
 const RealtimeSidebar = () => {
 
+  const [rankItems, setRankItems] = useState<RankItem[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // 더미 데이터
-  const searchTerms: SearchTerm[] = [
-    { id: 1, term: "리눅스 초급자를 위한 리스트" },
-    { id: 2, term: "리눅스 중급자를 위한 리스트" },
-    { id: 3, term: "리눅스 고급자를 위한 리스트" },
-    { id: 4, term: "유닉스 초급자를 위한 리스트" },
-    { id: 5, term: "유닉스 중급자를 위한 리스트" },
-    { id: 6, term: "유닉스 고급자를 위한 리스트" },
-    { id: 7, term: "윈도우 초급자를 위한 리스트" },
-    { id: 8, term: "윈도우 중급자를 위한 리스트" },
-    { id: 9, term: "윈도우 고급자를 위한 리스트" },
-    { id: 10, term: "이재용처럼 부자되는 리스트" },
-  ];
+  useEffect(() => {
+    fetchRankData();
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentIndex((prevIndex) => 
-        prevIndex === searchTerms.length - 1 ? 0 : prevIndex + 1
+        prevIndex === rankItems.length - 1 ? 0 : prevIndex + 1
       );
     }, 3000);
 
     return () => clearInterval(timer);
-  }, [searchTerms.length]);
+  }, [rankItems.length]);
+
+  const fetchRankData = async () => {
+    try {
+      const bookmarkRank: Item[] = (await getBookmarkListHitRank()).data;
+      const roadmapRank: Item[] = (await getRoadmapHitRank()).data;
+
+      const bookmarkData: RankItem[] = bookmarkRank.map(item => ({ ...item, type: 'bookmark' as const }));
+      const roadmapData: RankItem[] = roadmapRank.map(item => ({ ...item, type: 'roadmap' as const }));
+
+      const combinedRank = [...bookmarkData, ...roadmapData]
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 10);
+
+      setRankItems(combinedRank);
+    } catch (error) {
+      console.error("Error fetching rank data:", error);
+      setRankItems([]);
+    }
+  };
 
   return (
     <div className={`bg-base-100 text-base-content ${styles.container}`}>
       <div className={styles.searchTerms}>
-        {searchTerms.map((term, index) => (
+        {rankItems.map((item, index) => (
           <div
-            key={term.id}
+            key={`${item.type}-${item.id}`}
             className={`${styles.term} ${index === currentIndex ? styles.active : ''}`}
           >
-            {index + 1}. {term.term}
+            {index + 1}. {item.title}
           </div>
         ))}
       </div>

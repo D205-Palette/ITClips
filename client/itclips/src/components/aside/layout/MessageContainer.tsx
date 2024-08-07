@@ -21,7 +21,7 @@ const MessageContainer: React.FC<MessageContainerProps> = ({ messages }) => {
   const userInfo = authStore(state => state.userInfo);
 
   return (
-    <div className="flex-1 overflow-y-auto mb-4 space-y-4 p-4">
+    <div className="flex-1 overflow-y-auto mb-4 space-y-4 p-4 flex flex-col">
       {messages.map((message: Message, index: number) => {
         const isMyMessage = message.senderName === userInfo.nickname;
         return (

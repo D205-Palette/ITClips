@@ -31,10 +31,10 @@ const PasswordResetModal: React.FC = () => {
     onSubmit: async (values) => {
       // 폼 제출 시 처리할 로직
       setLoading(true); // 로딩 상태 설정
-      setErrorMessage(""); // 에러 메시지 초기화
+      setErrorMessage(""); // 에러 메시지 초기화      
       
       try {
-        await sendVerificationPassword(values.email, values.nickname); // 이메일과 닉네임 함께 전송
+        await sendVerificationPassword(values.nickname, values.email); // 이메일과 닉네임 함께 전송
         setIsEmailSent(true); // 이메일 발송 상태 업데이트
       } catch (error) {
         setErrorMessage("이메일 발송에 실패했습니다. 다시 시도해 주세요."); // 에러 발생 시 메시지 설정

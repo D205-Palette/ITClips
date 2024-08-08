@@ -1,5 +1,6 @@
 // AsideMessageDetail.tsx 는 메세지창의 메세지 목록 중 하나를 클릭했을 때 그 메세지의 상세창 컴포넌트
 import React, { useState, useEffect, useRef, useCallback } from "react";
+
 // components
 import MessageBackButton from "./ui/MessageBackButton";
 import MessageContainer from "./layout/MessageContainer";
@@ -48,6 +49,37 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack,
   const [ notification, setNotification ] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
   const [ isInviteModalOpen, setIsInviteModalOpen ] = useState(false);
   const [ isInputFocused, setIsInputFocused ] = useState(false);
+  const updateStatusRef = useRef<(() => void) | null>(null); // 최신 updateReadStatus 함수를 참조하는 ref
+
+  // 메세지 읽음 상태를 업데이트
+  const updateReadStatus = useCallback(async () => {
+    if (userInfo?.id) {
+      try {
+        await updateMessageStatus(roomId, userInfo.id);
+      } catch (error) {
+        console.error("Failed to update message status:", error);
+      }
+    }
+  }, [roomId, userInfo?.id, updateMessageStatus]);
+
+  // updateStatusRef.current를 최신 updateReadStatus 함수로 업데이트
+  useEffect(() => {
+    updateStatusRef.current = updateReadStatus;
+  }, [updateReadStatus]);
+
+  // 컴포넌트 언마운트 시 이벤트 리스너 제거 및 읽음 상태 업데이트
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      updateStatusRef.current?.();
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      updateStatusRef.current?.();
+    };
+  }, []);
   
   // 메시지 컨테이너에 대한 ref 생성
   const messageContainerRef = useRef<HTMLDivElement>(null);
@@ -83,10 +115,12 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack,
     };
   }, [roomId, userInfo, fetchMessages, fetchRoomInfo, updateMessageStatus, resetMessageCount]);
 
-  // 뒤로가기 버튼 클릭 핸들러
-  const handleBackClick = () => {
-    onBackWithRead(roomId);  // 읽음 처리와 함께 뒤로가기
-  };
+  // 뒤로가기 버튼 클릭 핸들러 (읽음 상태 업데이트 후 onBackWithRead 호출)
+  const handleBackClick = useCallback(() => {
+    updateReadStatus().then(() => {
+      onBackWithRead(roomId);
+    });
+  }, [updateReadStatus, onBackWithRead, roomId]);
 
   // 엔터 키 입력 처리 함수
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {

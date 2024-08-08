@@ -60,8 +60,8 @@ public enum ErrorCode {
 
     //recommendation
     RECOMMEND_NOT_FOUND(HttpStatus.NOT_FOUND,"REC-001","추천 피드가 없습니다."),
-    RECOMMEND_FAILED(HttpStatus.INTERNAL_SERVER_ERROR,"REC-002" ,"추천 피드 생성에 실패했습니다." );
-
+    RECOMMEND_FOR_STEPS_FAILED(HttpStatus.NOT_FOUND,"REC-002","스탭 추천에 실패했습니다,")
+    ;
 
     private final HttpStatus httpStatus;
     private final String code;

@@ -1,7 +1,7 @@
 package com.ssafy.itclips.bookmark.service;
 
 import com.ssafy.itclips.bookmark.dto.BookmarkRequestDTO;
-import com.ssafy.itclips.bookmark.dto.BookmarkSummaryDTO;
+import com.ssafy.itclips.global.gpt.GPTResponseDTO;
 import com.ssafy.itclips.bookmark.entity.Bookmark;
 import com.ssafy.itclips.bookmark.entity.BookmarkLike;
 import com.ssafy.itclips.bookmark.repository.BookmarkLikeRepository;
@@ -24,7 +24,6 @@ import com.ssafy.itclips.user.entity.User;
 import com.ssafy.itclips.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -155,8 +154,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     @Override
     @Cacheable(value = "bookmarks", key="#bookmarkId")
-    public BookmarkSummaryDTO getUrlSummary(Long bookmarkId) throws RuntimeException {
-        log.info("summarizing");
+    public GPTResponseDTO getUrlSummary(Long bookmarkId) throws RuntimeException {
         Bookmark bookmark = bookmarkRepository.findById(bookmarkId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_NOT_FOUND));
         String prompt = bookmark.getUrl() + "을 다른 말과 번호 없이 개조식으로 3줄로 요약 해 줘";
@@ -165,7 +163,7 @@ public class BookmarkServiceImpl implements BookmarkService {
         if(response == null) {
             throw new CustomException(ErrorCode.BOOKMARK_SUMMARY_FAILED);
         }
-        return BookmarkSummaryDTO.of(response);
+        return GPTResponseDTO.of(response);
     }
 
     private void createTags(BookmarkRequestDTO bookmarkRequestDTO, Bookmark bookmark, List<BookmarkTag> bookmarkTags) {

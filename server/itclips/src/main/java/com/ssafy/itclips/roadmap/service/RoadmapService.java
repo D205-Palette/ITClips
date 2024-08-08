@@ -1,6 +1,7 @@
 package com.ssafy.itclips.roadmap.service;
 
 import com.ssafy.itclips.global.file.DataResponseDto;
+import com.ssafy.itclips.global.gpt.GPTResponseDTO;
 import com.ssafy.itclips.global.rank.RankDTO;
 import com.ssafy.itclips.roadmap.dto.RoadmapCommentRequestDTO;
 import com.ssafy.itclips.roadmap.dto.RoadmapDTO;
@@ -62,4 +63,6 @@ public interface RoadmapService {
     List<RoadmapInfoDTO> searchRoadMaps(Integer page, String searchType, Long userId, String title) throws RuntimeException;
 
     Integer getCommentCount(Long roadmapId) throws RuntimeException;
+
+    GPTResponseDTO getRecommendRoadmapSteps(Long userId, String keyWord) throws RuntimeException;
 }

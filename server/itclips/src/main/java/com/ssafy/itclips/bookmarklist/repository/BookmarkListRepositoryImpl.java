@@ -6,6 +6,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.itclips.bookmark.dto.BookmarkDetailDTO;
 import com.ssafy.itclips.bookmark.entity.Bookmark;
 import com.ssafy.itclips.bookmark.entity.QBookmark;
+import com.ssafy.itclips.bookmarklist.dto.BookmarkListAndTagsDTO;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
 import com.ssafy.itclips.bookmarklist.entity.QBookmarkList;
 import com.ssafy.itclips.bookmarklist.entity.QBookmarkListLike;
@@ -26,7 +27,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Repository
@@ -212,5 +215,64 @@ public class BookmarkListRepositoryImpl implements BookmarkListRepositoryCustom 
                 .from(qBookmarkList)
                 .where(qBookmarkList.id.in(ids))
                 .fetch();
+    }
+
+    @Override
+    public List<BookmarkListAndTagsDTO> findBookmarkListTitleAndTags(Long userId) {
+        QBookmarkList qBookmarkList = QBookmarkList.bookmarkList;
+        QUserGroup qUserGroup = QUserGroup.userGroup;
+        QBookmarkListTag qBookmarkListTag = QBookmarkListTag.bookmarkListTag;
+        QTag qTag = QTag.tag;
+
+        List<Tuple> results = queryFactory
+                .select(qBookmarkList.id, qBookmarkList.title, qTag.title)
+                .from(qBookmarkList)
+                .join(qUserGroup).on(qBookmarkList.id.eq(qUserGroup.bookmarkList.id))
+                .leftJoin(qBookmarkListTag).on(qBookmarkList.id.eq(qBookmarkListTag.bookmarkList.id))
+                .leftJoin(qTag).on(qBookmarkListTag.tag.id.eq(qTag.id))
+                .where(qUserGroup.user.id.eq(userId))
+                .fetch();
+
+        Map<Long, BookmarkListAndTagsDTO> bookmarkMap = getBookmarkListAndTagsDTO(results, qBookmarkList, qTag);
+        return new ArrayList<>(bookmarkMap.values());
+    }
+
+    @Override
+    public List<BookmarkListAndTagsDTO> findScrapedBookmarkListTitleAndTags(Long userId) {
+        QBookmarkList qBookmarkList = QBookmarkList.bookmarkList;
+        QBookmarkListScrap qBookmarkListScrap = QBookmarkListScrap.bookmarkListScrap;
+        QBookmarkListTag qBookmarkListTag = QBookmarkListTag.bookmarkListTag;
+        QTag qTag = QTag.tag;
+
+        List<Tuple> results = queryFactory
+                .select(qBookmarkList.id, qBookmarkList.title, qTag.title)
+                .from(qBookmarkList)
+                .join(qBookmarkListScrap).on(qBookmarkListScrap.bookmarkList.id.eq(qBookmarkList.id))
+                .leftJoin(qBookmarkListTag).on(qBookmarkList.id.eq(qBookmarkListTag.bookmarkList.id))
+                .leftJoin(qTag).on(qBookmarkListTag.tag.id.eq(qTag.id))
+                .where(qBookmarkListScrap.user.id.eq(userId))
+                .fetch();
+
+        Map<Long, BookmarkListAndTagsDTO> bookmarkMap = getBookmarkListAndTagsDTO(results, qBookmarkList, qTag);
+        return new ArrayList<>(bookmarkMap.values());
+
+    }
+
+    private static Map<Long, BookmarkListAndTagsDTO> getBookmarkListAndTagsDTO(List<Tuple> results, QBookmarkList qBookmarkList, QTag qTag) {
+        Map<Long, BookmarkListAndTagsDTO> bookmarkMap = new HashMap<>();
+
+        for (Tuple tuple : results) {
+            Long bookmarkId = tuple.get(qBookmarkList.id);
+            String bookmarkTitle = tuple.get(qBookmarkList.title);
+            String tagTitle = tuple.get(qTag.title);
+
+            BookmarkListAndTagsDTO dto = bookmarkMap.computeIfAbsent(bookmarkId,
+                    id -> new BookmarkListAndTagsDTO(bookmarkId ,bookmarkTitle, new ArrayList<>()));
+
+            if (tagTitle != null) {
+                dto.getTags().add(new TagDTO(tagTitle));
+            }
+        }
+        return bookmarkMap;
     }
 }

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { getChatRooms, getChatRoomMessages, getChatRoomInfo, leaveChatRoom, updateMessageStatusToRead } from "../api/messageApi";
 
+// 채팅방 목록을 호출했을 때 들어오는 정보(getChatRooms)
 interface ChatRoom {
   id: number;
   name: string;
@@ -9,6 +10,7 @@ interface ChatRoom {
   messageCnt: number;
 }
 
+// 메세지
 interface Message {
   id: number;
   roomId: number;
@@ -18,6 +20,7 @@ interface Message {
   createdAt: string;
 }
 
+// 단일 채팅방 정보를 호출했을 때 들어오는 정보(getChatRoomInfo)
 interface ChatRoomInfo {
   roomId: number;
   roomName: string;
@@ -50,6 +53,7 @@ export const chatStore = create<ChatStore>((set, get) => ({
   isLoading: false,
   error: null,
 
+  // 채팅방 조회
   fetchRooms: async (userId: number) => {
     set({ isLoading: true, error: null });
     try {
@@ -60,6 +64,7 @@ export const chatStore = create<ChatStore>((set, get) => ({
     }
   },
 
+  // 메세지 내역 조회
   fetchMessages: async (roomId: number) => {
     set({ isLoading: true, error: null });
     try {
@@ -73,6 +78,7 @@ export const chatStore = create<ChatStore>((set, get) => ({
     }
   },
 
+  // 단일 채팅방 정보 조회
   fetchRoomInfo: async (roomId: number) => {
     set({ isLoading: true, error: null });
     try {
@@ -83,6 +89,7 @@ export const chatStore = create<ChatStore>((set, get) => ({
     }
   },
 
+  // 채팅방 나가기
   leaveRoom: async (roomId: number, userId: number) => {
     set({ isLoading: true, error: null });
     try {
@@ -96,6 +103,7 @@ export const chatStore = create<ChatStore>((set, get) => ({
     }
   },
 
+  // 읽음 처리
   updateMessageStatus: async (roomId: number, userId: number) => {
     try {
       await updateMessageStatusToRead(roomId, userId);
@@ -109,6 +117,7 @@ export const chatStore = create<ChatStore>((set, get) => ({
     }
   },
 
+  // 채팅방 목록 실시간 업데이트를 위한 메서드
   updateRoom: (roomId, updates) =>
     set(state => ({
       rooms: state.rooms.map(room =>
@@ -116,6 +125,7 @@ export const chatStore = create<ChatStore>((set, get) => ({
       )
     })),
 
+  // 메세지 읽음 처리후 프론트 단 초기화
   resetMessageCount: (roomId) =>
     set(state => ({
       rooms: state.rooms.map(room =>
@@ -123,6 +133,7 @@ export const chatStore = create<ChatStore>((set, get) => ({
       )
     })),
 
+  // 새 메세지 프론트 단 추가
   addMessage: (message: Message) =>
     set(state => {
       const existingMessage = state.currentRoomMessages.find(m => m.id === message.id);

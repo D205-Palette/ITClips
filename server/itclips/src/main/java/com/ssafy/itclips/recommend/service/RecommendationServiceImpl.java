@@ -11,8 +11,11 @@ import com.ssafy.itclips.error.ErrorCode;
 import com.ssafy.itclips.recommend.dto.SimilarBookmarkResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -49,8 +52,13 @@ public class RecommendationServiceImpl implements RecommendationService {
                     return convertResponseToListResponseDto(responses,userId);
                 }
             }
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                throw new CustomException(ErrorCode.USER_NOT_FOUND);
+            }
+            throw new CustomException(ErrorCode.RECOMMEND_FAILED);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new CustomException(ErrorCode.RECOMMEND_FAILED);
         }
         return null;
     }

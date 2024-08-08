@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import FileResizer from "react-image-file-resizer";
 // icons
 import { IoCloseOutline } from "react-icons/io5";
 import { FaMale, FaFemale } from "react-icons/fa";
@@ -28,7 +28,7 @@ import { logoutApi, checkUserInfo } from "../../../api/authApi";
 // stores
 import darkModeStore from "../../../stores/darkModeStore";
 import { authStore } from "../../../stores/authStore";
-
+import mainStore from "../../../stores/mainStore";
 // 기본 이미지
 import noImg from "../../../assets/images/noImg.gif";
 
@@ -56,7 +56,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
   const userInfo = authStore((state) => state.userInfo);
   const fetchUserInfo = authStore((state) => state.fetchUserInfo);
   const logout = authStore((state) => state.logout);
-
+  const {setIsProfileChange} = mainStore()
   const [notification, setNotification] = useState<{
     message: string;
     type: "success" | "error";
@@ -98,9 +98,9 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
       setBirthDate(userInfo.birth || "");
       setJob(userInfo.job || "");
       setGenderBoolean(userInfo.gender || false);
-      setProfileImage(userInfo.image);
+      setProfileImage(userInfo.image!);
     }
-  }, [userInfo]);
+  }, []);
 
   // 프로필 이미지 상태
   const [profileImage, setProfileImage] = useState<string | null>(null);
@@ -121,16 +121,36 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
     };
   }, [isOpen]);
 
+  const resizeFile = (file: File): Promise<File> =>
+    new Promise((resolve, reject) => {
+      FileResizer.imageFileResizer(
+        file,
+        200, // 이미지 너비
+        200, // 이미지 높이
+        'SVG', // 파일 형식 - SVG 대신 JPEG로 변경
+        100, // 이미지 퀄리티
+        0,
+        (uri) => {
+          if (uri) {
+            resolve(uri as File); // Promise를 사용하여 비동기 처리
+          } else {
+            reject(new Error('Resizing failed'));
+          }
+        },
+        'file' // 출력 타입
+      );
+    });
   // 프로필 이미지 선택 핸들러
-  const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      setSelectedFile(file);
+      const compressedFile = await resizeFile(file)
+      await setSelectedFile(compressedFile);
       const reader = new FileReader();
       reader.onloadend = () => {
         setProfileImage(reader.result as string);
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(compressedFile);
     }
   };
 
@@ -153,14 +173,10 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
               "Content-Type": selectedFile.type,
             }, // 파일의 MIME 타입 설정
           });
-          // 이미지 변경 후 유저정보 갱신
-          if (userInfo.id !== undefined) {
-            const userInfoResponse = await checkUserInfo(
-              userInfo.id,
-              userInfo.id
-            );
-          }
+   
         }
+        // setIsProfileChange(true);
+
       } catch (error) {
         console.error("프로필 이미지 변경 중 오류가 발생했습니다:", error);
       }
@@ -180,6 +196,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
         setSelectedFile(null);
         window.alert('프로필 이미지가 삭제되었습니다.')
       }
+      // setIsProfileChange(true)
     } catch (error) {
       console.error("프로필 이미지 변경 중 오류가 발생했습니다:", error);
     }
@@ -308,7 +325,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
     try {
       await updateUserInfo(userInfo.id, updatedUserInfo);
       fetchUserInfo(updatedUserInfo);
-      updateAsideInfo(updatedUserInfo);
+      // updateAsideInfo(updatedUserInfo);
       setGlobalNotification({
         message: "프로필 정보가 성공적으로 업데이트되었습니다.",
         type: "success",
@@ -321,13 +338,14 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
         type: "error",
       });
     }
+    setIsProfileChange(true)
   };
 
   const handleCloseModal = async () => {
     // 프로필 수정 후 닫을 때 유저정보 갱신
     if (userInfo.id !== undefined) {
       const userInfoResponse = await checkUserInfo(userInfo.id, userInfo.id);
-
+      setIsProfileChange(true)
       fetchUserInfo(userInfoResponse.data);
     }
     onClose();

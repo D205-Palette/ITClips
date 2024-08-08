@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { IoClose } from "react-icons/io5";
 import { IoIosWarning } from "react-icons/io";
-
 import {
   DragDropContext,
   Droppable,
@@ -20,6 +19,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import noImg from "../assets/images/noImg.gif";
+import FileResizer from "react-image-file-resizer";
 
 // 타입 정의
 interface Item extends BookmarkListSumType {
@@ -43,7 +43,7 @@ const RoadmapEditView: React.FC = () => {
   const [roadmap, setRoadmap] = useState<Item[]>([]);
   const [dataLoaded, setDataLoaded] = useState<boolean>(false);
   const [isPublic, setIsPublic] = useState<boolean>(true);
-  const [roadmapImage, setRoadmapImage] = useState<File | null>(null);
+  const [roadmapImage, setRoadmapImage] = useState<File | null | string>(null);
   const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
   const activeButton = "text-sky-500";
   const [roadmapItem, setRoadmapItem] = useState<RoadmapItem | null>(null);
@@ -81,8 +81,12 @@ const RoadmapEditView: React.FC = () => {
       // 기존 로드맵 정보 조회
       const roadmapResponse = await axios.get(
         `${API_BASE_URL}/api/roadmap/${roadmapId}?viewId=${userId}`
-      );
-      setRoadmapItem(roadmapResponse.data);
+      ).then((res)=>{
+        console.log(res)
+        setRoadmapItem(res.data)
+        setRoadmapImage(res.data.image)
+      });
+    
 
       // 데이터 가공하여 설정
       const processItems = (data: any[]): Item[] =>
@@ -170,21 +174,61 @@ const RoadmapEditView: React.FC = () => {
     setItems(initialItems[tab]);
   };
 
-  // 로드맵 이미지 변경 핸들러
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]; // 파일이 선택되지 않았을 때 null 처리
-    if (file) {
-      setRoadmapImage(file); // 파일 자체를 상태에 저장
+  const resizeFile = (file: File): Promise<File> =>
+    new Promise((resolve, reject) => {
+      FileResizer.imageFileResizer(
+        file,
+        200, // 이미지 너비
+        200, // 이미지 높이
+        "SVG", // 파일 형식 - SVG 대신 JPEG로 변경
+        100, // 이미지 퀄리티
+        0,
+        (uri) => {
+          if (uri) {
+            resolve(uri as File); // Promise를 사용하여 비동기 처리
+          } else {
+            reject(new Error("Resizing failed"));
+          }
+        },
+        "file" // 출력 타입
+      );
+    });
 
-      // 미리보기 URL 생성
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewImageUrl(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+  // 로드맵 이미지 변경 핸들러
+  const handleImageChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0]; // 파일이 선택되지 않았을 때 null 처리
+    console.log(roadmapItem);
+    // console.log(roadmapItem?.image);
+    // 이미 이미지가 있고, 새로 바꾼 이미지가 없으면 변경 X
+    if (file) {
+      try {
+        const compressedFile = await resizeFile(file); // "resizeFile" 함수를 통해서 업로드한 이미지 리사이징 및 인코딩
+        console.log(compressedFile); // 리사이징된 파일을 콘솔에 출력하여 확인
+
+        await setRoadmapImage(compressedFile); // 리사이징된 파일을 상태에 저장
+
+        // 미리보기 URL 생성
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setPreviewImageUrl(reader.result as string); // 미리보기 URL을 상태에 저장
+        };
+        reader.readAsDataURL(compressedFile); // compressedFile을 사용하여 미리보기 URL 생성
+      } catch (error) {
+        // 리사이징에 실패했을 시 console에 출력하게 한다.
+        console.log("file resizing failed", error);
+      }
     } else {
-      setRoadmapImage(null);
-      setPreviewImageUrl(null);
+      if (roadmapItem?.image === "default") {
+    
+        setRoadmapImage(roadmapItem.image)
+      } else {
+        setRoadmapImage(null); // 파일이 없을 경우 상태를 null로 설정
+        setPreviewImageUrl(null); // 미리보기 URL을 null로 설정
+      }
+      console.log("파일 없음");
+      // 수정이라 입력값 없으면 그대로 가면 될듯?
     }
   };
 
@@ -218,10 +262,11 @@ const RoadmapEditView: React.FC = () => {
       );
 
       if (roadmapImage) {
+        console.log(roadmapImage)
         await axios.put(`${roadmapCreateResponse.data.url}`, roadmapImage, {
-          headers: {
-            "Content-Type": roadmapImage.type,
-          }, // 파일의 MIME 타입 설정
+          // headers: {
+          //   "Content-Type": roadmapImage.type,
+          // }, // 파일의 MIME 타입 설정
         });
       }
 
@@ -253,6 +298,7 @@ const RoadmapEditView: React.FC = () => {
     if (roadmapItem) {
       setIsPublic(roadmapItem.isPublic === 1);
       setPreviewImageUrl(roadmapItem.image);
+
       const processedRoadmap = roadmapItem.stepList.map((item: any, index) => ({
         id: index,
         originalId: item.bookmarkListRoadmapDTO.id,
@@ -328,9 +374,7 @@ const RoadmapEditView: React.FC = () => {
                 {items.length === 0 ? (
                   <div className="flex justify-center items-center h-full">
                     <IoIosWarning color="skyblue" size={20} />
-                    <p className="ms-3 text-sm font-bold">
-                      컨텐츠가 없습니다!
-                    </p>
+                    <p className="ms-3 text-sm font-bold">컨텐츠가 없습니다!</p>
                   </div>
                 ) : (
                   items.map((item, index) => (

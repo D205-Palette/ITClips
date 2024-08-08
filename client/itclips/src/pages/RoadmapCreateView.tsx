@@ -17,7 +17,8 @@ import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import noImg from "../assets/images/noImg.gif";
 import { IoIosWarning } from "react-icons/io";
-
+import FileResizer from "react-image-file-resizer";
+import RoadMap from "../components/main/Roadmap";
 // 타입 정의
 interface Item extends BookmarkListSumType {
   originalId?: string; // 원본 아이디를 저장할 수 있는 필드
@@ -174,22 +175,51 @@ const RoadmapCreateView: React.FC = () => {
   };
 
   // 로드맵 이미지 변경 핸들러
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const resizeFile = (file: File): Promise<File> =>
+    new Promise((resolve, reject) => {
+      FileResizer.imageFileResizer(
+        file,
+        200, // 이미지 너비
+        200, // 이미지 높이
+        'SVG', // 파일 형식 - SVG 대신 JPEG로 변경
+        100, // 이미지 퀄리티
+        0,
+        (uri) => {
+          if (uri) {
+            resolve(uri as File); // Promise를 사용하여 비동기 처리
+          } else {
+            reject(new Error('Resizing failed'));
+          }
+        },
+        'file' // 출력 타입
+      );
+    });
+  
+  const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]; // 파일이 선택되지 않았을 때 null 처리
+  
     if (file) {
-      setRoadmapImage(file); // 파일 자체를 상태에 저장
-
-      // 미리보기 URL 생성
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewImageUrl(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+      try {
+        const compressedFile = await resizeFile(file); // "resizeFile" 함수를 통해서 업로드한 이미지 리사이징 및 인코딩
+        console.log(compressedFile); // 리사이징된 파일을 콘솔에 출력하여 확인
+  
+        await setRoadmapImage(compressedFile); // 리사이징된 파일을 상태에 저장
+  
+        // 미리보기 URL 생성
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setPreviewImageUrl(reader.result as string); // 미리보기 URL을 상태에 저장
+        };
+        reader.readAsDataURL(compressedFile); // compressedFile을 사용하여 미리보기 URL 생성
+      } catch (error) {
+        // 리사이징에 실패했을 시 console에 출력하게 한다.
+        console.log('file resizing failed', error);
+      }
     } else {
-      setRoadmapImage(null);
-      setPreviewImageUrl(null);
+      setRoadmapImage(null); // 파일이 없을 경우 상태를 null로 설정
+      setPreviewImageUrl(null); // 미리보기 URL을 null로 설정
     }
-  };
+  }
 
   // 아이템 삭제 핸들러
   const handleDeleteItem = (id: string) => {

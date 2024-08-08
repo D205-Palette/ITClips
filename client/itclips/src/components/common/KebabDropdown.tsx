@@ -11,6 +11,8 @@ import { API_BASE_URL } from "../../config";
 import axios from "axios";
 import { authStore } from "../../stores/authStore";
 import { useNavigate } from "react-router-dom";
+import mainStore from "../../stores/mainStore";
+import { useParams } from "react-router-dom";
 // 무슨 탭에서 눌렀는지 받는 인자
 // 리스트, 즐겨찾기, 로드맵  3가지로 받을예정. 그룹 리스트랑 그냥 리스트는 차이 없음
 interface Props {
@@ -24,43 +26,53 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [isUrlCopyModalOpen, setIsUrlCopyModalOpen] = useState<boolean>(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState<boolean>(false);
-  const [isFavoriteModalOpen, setIsFavoriteModalOpen] = useState<boolean>(false);
-  const [isDeleteFavoriteModalOpen, setIsDeleteFavoriteModalOpen] = useState<boolean>(false);
+  const [isFavoriteModalOpen, setIsFavoriteModalOpen] =
+    useState<boolean>(false);
+  const [isDeleteFavoriteModalOpen, setIsDeleteFavoriteModalOpen] =
+    useState<boolean>(false);
   const [isScrapModalOpen, setIsScrapModalOpen] = useState<boolean>(false);
-const navigate = useNavigate()
+
+  const params = useParams();
+  const nowUserId = params.userId;
+  const navigate = useNavigate();
+  const { setIsRoadmapChange } = mainStore();
   // 유저 아이디 임시값. 나중엔 스토리지서 받아오면됨
-  const {userId, token} = authStore()
+  const { userId, token } = authStore();
   // 리스트 즐겨찾기
-  function addFavorite ():void {
+  function addFavorite(): void {
     axios({
-      method:'post',
-      url:`${API_BASE_URL}/api/list/scrap/${userId}/${id}`,
+      method: "post",
+      url: `${API_BASE_URL}/api/list/scrap/${userId}/${id}`,
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }).then(()=>{
-      setIsFavoriteModalOpen(true);
-    }).catch((err) =>{
-      if(err.response.status === 400){
-        setIsDeleteFavoriteModalOpen(true)
-      } else{
-
-      }
     })
-      //  아님 마운트 되는 순간 즐겨찾기 여부 따져서 즐찾/즐찾삭제 부터 다르게 해줘야되나...?
-      // 아님 그냥 즐찾삭제하겠냐는 모달 띄워서 
-    
+      .then(() => {
+        setIsFavoriteModalOpen(true);
+      })
+      .catch((err) => {
+        if (err.response.status === 400) {
+          setIsDeleteFavoriteModalOpen(true);
+        } else {
+        }
+      });
+    //  아님 마운트 되는 순간 즐겨찾기 여부 따져서 즐찾/즐찾삭제 부터 다르게 해줘야되나...?
+    // 아님 그냥 즐찾삭제하겠냐는 모달 띄워서
   }
   // 로드맵 스크랩
-  function addScrap ():void {
-    axios.post(`${API_BASE_URL}/api/roadmap/scrap/${id}/${userId}`,
-      {headers: {
-        Authorization: `Bearer ${token}`,
-      },}
-    )
+  function addScrap(): void {
+    axios
+      .post(`${API_BASE_URL}/api/roadmap/scrap/${id}/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(() => {
+        setIsRoadmapChange(true);
+      });
   }
 
-  function copyUrl () :void {
+  function copyUrl(): void {
     // 뭐가 들어오는지에 따라 url값이 바뀜
     // navigator.clipboard.writeText(bookmark.url)
     // 이건좀 생각해봐야할듯
@@ -77,35 +89,58 @@ const navigate = useNavigate()
           className="dropdown-content menu bg-base-100 rounded-box w-52 p-2 shadow z-30"
         >
           {/* 수정 삭제는 남꺼일때 안 보이게 */}
-          <li
-            className={whatMenu === "즐겨찾기" ? "hidden" : ""}
-            onClick={() =>{whatMenu==='로드맵'? navigate(`/roadmap/${id}/edit`) : setIsEditModalOpen(true)}}
-          >
-            <a>수정하기</a>
-          </li>
-          <li  onClick={() => setIsDeleteModalOpen(true)}>
-            <a>삭제하기</a>
-          </li>
+          {String(userId) !== nowUserId ? (
+            <></>
+          ) : (
+            <>
+              <li
+                className={whatMenu === "즐겨찾기" ? "hidden" : ""}
+                onClick={() => {
+                  whatMenu === "로드맵"
+                    ? navigate(`/roadmap/${id}/edit`)
+                    : setIsEditModalOpen(true);
+                }}
+              >
+                <a>수정하기</a>
+              </li>
+              <li onClick={() => setIsDeleteModalOpen(true)}>
+                <a>삭제하기</a>
+              </li>
+            </>
+          )}
           {/*  */}
 
-          <li onClick={() => {setIsUrlCopyModalOpen(true);}}>
+          <li
+            onClick={() => {
+              setIsUrlCopyModalOpen(true);
+            }}
+          >
             <a>url 복사</a>
           </li>
           <li
             className={
               whatMenu === "로드맵" || whatMenu === "북마크" ? "hidden" : ""
             }
-            onClick={() => { addFavorite();}}
+            onClick={() => {
+              addFavorite();
+            }}
           >
             {/* 내 즐겨찾기에 있는지 유무 따져서 즐겨찾기 삭제로 출력해주기 */}
             <a>즐겨찾기</a>
           </li>
-          <li className={whatMenu === "로드맵" ? "" : "hidden"}
-          onClick={() => {setIsScrapModalOpen(true); addScrap() }}>
+          <li
+            className={whatMenu === "로드맵" ? "" : "hidden"}
+            onClick={() => {
+              setIsScrapModalOpen(true);
+              addScrap();
+            }}
+          >
             <a>스크랩</a>
           </li>
-          <li className={whatMenu === "로드맵" ? "hidden" : ""}
-          onClick={() => setIsReportModalOpen(true)}>
+          <li
+            className={whatMenu === "로드맵" ? "hidden" : ""}
+            onClick={() => setIsReportModalOpen(true)}
+          >
             <a>신고하기</a>
           </li>
         </ul>
@@ -148,11 +183,11 @@ const navigate = useNavigate()
         />
       )}
       {isDeleteFavoriteModalOpen && (
-          <FavoriteDeleteModal
-            isOpen={isDeleteFavoriteModalOpen}
-            onClose={() => setIsDeleteFavoriteModalOpen(false)}
-            id={id}
-          />
+        <FavoriteDeleteModal
+          isOpen={isDeleteFavoriteModalOpen}
+          onClose={() => setIsDeleteFavoriteModalOpen(false)}
+          id={id}
+        />
       )}
       {isScrapModalOpen && (
         <ScrapConfirmationModal

@@ -19,18 +19,19 @@ import { useParams } from "react-router-dom";
 import { API_BASE_URL } from "../config";
 import { authStore } from "../stores/authStore";
 import darkModeStore from "../stores/darkModeStore";
-import { deleteStore } from "../stores/deleteStore";
+import mainStore from "../stores/mainStore";
 
 const MyBookmark = () => {
   const params = useParams();
   const { isDark } = darkModeStore();
-  const { deletedBookmark } = deleteStore();
   const tempListId = params.bookmarklistId;
+const {isBookmarkListChange, setIsBookmarkListChange} = mainStore()
 
   let listId = 0;
   if (tempListId) {
     listId = parseInt(tempListId);
   }
+
   const { userId, token } = authStore();
   const isMessageOpen = asideStore((state) => state.isMessageOpen);
 
@@ -39,10 +40,11 @@ const MyBookmark = () => {
   const tempCategories = mainTabStore((state) => state.tempCategories);
   const setTempCategories = mainTabStore((state) => state.setTempCategories);
 
-  // 수정용 북마크들
+  // 수정&이동용 북마크 정보들
   const [editBookmarks, changeEditBookmarks] = useState<BookmarkType[]>([]);
   const [editBookmarksIndex, changeEditBookmarksIndex] = useState<number[]>([]);
 
+  // 에디트 모드 전환용 
   const [editMode, setEditMode] = useState(false);
   const [isEditModal, tabEditModal] = useState(false);
   const [isAddModal, tabAddModal] = useState(false);
@@ -54,37 +56,7 @@ const MyBookmark = () => {
   const [bookmarkList, setBookmarkList] = useState<BookmarkListDetailType>();
   const [filterdBookmarks, setFilterdBookmarks] = useState<BookmarkType[]>([]);
 
-  // 북마크 추가 버튼 누를 시, 임시로 잡아줬던 whatCategory의 id값을 갱신해줘야됨
-  const addBookmark = () => {
-    // 임시의 카테고리면 id가 필요하니까 받아오는 거
-    if (whatCategory.categoryId === 0) {
-      axios({
-        method: "get",
-        url: `${API_BASE_URL}/api/list/${listId}`,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        params: {
-          userId: userId,
-        },
-      })
-        .then((res) => {
-          const newCatId = res.data.categories.filter(
-            (cat: CategoryType) =>
-              cat.categoryName === whatCategory.categoryName
-          )[0].categoryId;
-          changeCategory({
-            categoryId: newCatId,
-            categoryName: whatCategory.categoryName,
-          });
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    }
-  };
-
-  // onMount될때 리스트 불러오기
+  // 북마크 리스트 변경될때마다 리스트 불러오기
   useEffect(() => {
     async function fetchData() {
       axios({
@@ -106,38 +78,14 @@ const MyBookmark = () => {
           res.data.users.map((user: { id: number; nickName: string }) =>
             user.id === userId ? setCanEdit(true) : <></>
           );
+          setIsBookmarkListChange(false)
         })
         .catch((err) => {
           console.error(err);
         });
     }
     fetchData();
-  }, []);
-
-
-  // 카테고리 탭 바뀔때 마다 보여줄 북마크들 필터
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     if (bookmarkList) {
-  //       if (whatCategory.categoryName === "") {
-  //         setFilterdBookmarks(
-  //           bookmarkList.bookmarks.filter(
-  //             (bookmark) => !deletedBookmark.includes(bookmark.id)
-  //           )
-  //         );
-  //       } else {
-  //         setFilterdBookmarks(
-  //           bookmarkList.bookmarks.filter(
-  //             (bookmark) =>
-  //               !deletedBookmark.includes(bookmark.id) &&
-  //               bookmark.category === whatCategory.categoryName
-  //           )
-  //         );
-  //       }
-  //     }
-  //   }
-  //   fetchData();
-  // }, [whatCategory.categoryName]);
+  }, [isBookmarkListChange]);
 
   return (
     <>
@@ -178,7 +126,7 @@ const MyBookmark = () => {
               </div>
             ) : bookmarkList ? (
               <div className="static z-50">
-                <CategoryTab listId={bookmarkList.id} />
+                <CategoryTab categories={bookmarkList.categories} listId={bookmarkList.id} canEdit={canEdit}/>
               </div>
             ) : (
               <></>
@@ -216,7 +164,6 @@ const MyBookmark = () => {
                   size={50}
                   onClick={() => {
                     tabAddModal(true);
-                    addBookmark();
                   }}
                   className="hover:cursor-pointer hover:text-sky-600 text-sky-400"
                 />{" "}

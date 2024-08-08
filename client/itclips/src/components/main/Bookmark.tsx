@@ -95,14 +95,18 @@ const Bookmark: FC<Props> = ({
     // editTempBookmark({ ...tempBookmark, title: tempTitle, tags: tempTags });
     editTempBookmark({ ...tempBookmark, title: tempTitle });
     //  /bookmark /update/{bookmarkId} 로 put요청
-    axios.put(`${API_BASE_URL}/api/bookmark/update/${bookmark.id}`, {
+    axios.put(`${API_BASE_URL}/api/bookmark/update/${bookmark.id}`,{url: bookmark.url,
+      title: tempTitle,
+      tags: tempTags,
+      content: bookmark.content,},
+       {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-      url: bookmark.url,
-      title: tempTitle,
-      tags: tempTags,
-      content: bookmark.content,
+      params:{
+        userId:userId,
+      },
+    
     });
   }
 

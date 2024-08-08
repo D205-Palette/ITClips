@@ -19,31 +19,28 @@ import { authStore } from "../../stores/authStore";
 import { API_BASE_URL } from "../../config";
 import { CategoryType } from "../../types/BookmarkListType";
 import Tab from "../../stores/mainTabStore";
+import mainStore from "../../stores/mainStore";
 interface Props {
   // categories: CategoryType[];
-  listId:number
+  listId : number
+  categories:CategoryType[]
+  canEdit:boolean
 }
 
-const CategoryTab: FC<Props> = ({ listId }) => {
+const CategoryTab: FC<Props> = ({ listId,categories,canEdit }) => {
   const {userId, token} = authStore()
   const isDark = darkModeStore((state) => state.isDark);
-
-  // const [tempCategories, setTempCategories] = useState<CategoryType[]>(categories)
-  const {tempCategories, addTempCategories, deleteTempCategories} = Tab()
 
   const [createMode, modeChange] = useState(false);
   const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement>(null);
-
+  const {setIsBookmarkListChange} = mainStore()
   useEffect(() => {
     if (createMode && inputRef.current) {
       inputRef.current.focus();
     }
   }, [createMode]);
   
-  useEffect(()=>{
-
-  }, [])
   // 뒤로가기 버튼
   const BackButton = (): any => {
     return (
@@ -70,7 +67,7 @@ const CategoryTab: FC<Props> = ({ listId }) => {
     const [inputValue, changeInputValue] = useState<string>("");
 
     const createCategory = (): void => {
-      addTempCategories({categoryId:0,categoryName:inputValue})
+
       // 카테고리 추가 api
       axios({
         method: "post",
@@ -78,12 +75,15 @@ const CategoryTab: FC<Props> = ({ listId }) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        params:{
+          userId:userId,
+        },
         data:{
           categoryName:inputValue,
         }
       })
         .then((res) => {
-        
+          setIsBookmarkListChange(true)
         })
         .catch((err) => {
           console.error(err);
@@ -129,14 +129,11 @@ const CategoryTab: FC<Props> = ({ listId }) => {
           className=" flex flex-row  whitespace-nowrap  container overflow-x-scroll "
           onWheel={handleScroll}
         >
-          {tempCategories.map((category) => (
-            <CategorySingleTab tempCategory={category} />
+          {categories.map((category) => (
+            <CategorySingleTab tempCategory={category} canEdit={canEdit} />
           ))}
-          {createMode ? (
-            <CreateCategorySection />
-          ) : (
-            <PlusButton />
-          )}
+          {canEdit? (createMode ? (  <CreateCategorySection />  ) : (<PlusButton /> ) ) :  <></>}
+          
         </div>
       </div>
     </>

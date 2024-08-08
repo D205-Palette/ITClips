@@ -17,7 +17,7 @@ import type { RoadmapDetailType } from "../types/RoadmapType";
 import axios from "axios";
 import { API_BASE_URL } from "../config";
 import { authStore } from "../stores/authStore";
-
+import FileResizer from "react-image-file-resizer";
 type StepTListType = {
     id: number;
     roadmapId: number;
@@ -41,6 +41,7 @@ const RoadmapView = () => {
   const {userId, token} = authStore()
   const [roadmap, setRoadmap] = useState<RoadmapDetailType>()
 
+  const [canEdit, setCanEdit] = useState(false)
   useEffect(() => {
     async function fetchData() {
       axios({
@@ -54,9 +55,13 @@ const RoadmapView = () => {
         },
         })
           .then((res) => {
+            console.log(res.data)
           setRoadmap(res.data);
-          console.log(res)
-          
+          setCheckCount(res.data.stepList.filter((list:any) => list.check===true).length)
+          setTotalCount(res.data.stepList.length)  
+          if(res.data.userId === userId){
+            setCanEdit(true)
+          }
         })
         .catch((err) => {
           console.error(err);
@@ -64,6 +69,7 @@ const RoadmapView = () => {
     }
     fetchData();
   }, []);
+
 
   const bookmarkLists  = roadmap?.stepList 
 
@@ -73,10 +79,18 @@ const RoadmapView = () => {
   const navigate = useNavigate();
   const isDark = darkModeStore((state) => state.isDark);
 
-  const [count, changeCount] = useState<any>(checkedList?.length);
+  const [checkCount, setCheckCount] = useState(0)
+  const [totalCount, setTotalCount] = useState(0)
+  const [percentage, setPercentage] = useState('0')
 
-  // const percentage = ((count * 100) / roadmap?.stepList.length).toFixed(1);
 
+  // 체크된 개수 바뀔때마다 갱신
+  useEffect(()=>{
+
+    setPercentage((checkCount * 100 /totalCount).toFixed(1))
+  
+  }, [checkCount])
+  
 
   const BackButton = (): any => {
     return (
@@ -111,8 +125,8 @@ const RoadmapView = () => {
           <div>
             <BackButton />
           </div>
-          {/* <div
-            className={
+          <div
+            className={(canEdit? "":"hidden ") + 
               (!isDark
                 ? percentage === "100.0"
                   ? "text-green-300"
@@ -123,12 +137,12 @@ const RoadmapView = () => {
             }
           >
             {`${percentage}` + "%"}
-          </div> */}
+          </div>
           {/* 퍼센트 계산 방법이.... 전체 필터걸어서 isCompleted된거 구하는거긴한데... */}
         </div>
        
         {roadmap?.stepList.map((list:any) => (
-          <ListItem list={list} changeCount={changeCount} />
+          <ListItem list={list} count={checkCount} changeCount={setCheckCount} canEdit={canEdit}/>
         ))}
     
       </div>

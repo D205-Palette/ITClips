@@ -28,7 +28,7 @@ type UserInfo = {
     followings?: any[]
     followers?: any[]
     roleKey?: string
-    image: string
+    image?: string
   }
   
   export type { UserInfo };

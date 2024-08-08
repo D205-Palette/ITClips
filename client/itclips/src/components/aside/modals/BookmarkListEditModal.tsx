@@ -8,11 +8,15 @@ import { useEffect } from "react";
 // icons
 import { IoCloseOutline } from "react-icons/io5";
 
-import darkModeStore from "../../../stores/darkModeStore";
+
 // 기본 이미지
 import noImg from "../../../assets/images/noImg.gif";
 
+import darkModeStore from "../../../stores/darkModeStore";
 import type { CategoryType } from "../../../types/BookmarkListType";
+import mainStore from "../../../stores/mainStore";
+import FileResizer from "react-image-file-resizer";
+
 interface EditModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -30,7 +34,7 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
   // 이미지 업로드 상태 관리
   const [bookmarklistImage, setBookmarklistImage] = useState<File | null>(null);
   const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
-
+  const {setIsBookmarkListChange} = mainStore()
   useEffect(() => {
     async function fetchData() {
       axios({
@@ -113,26 +117,48 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
               "Content-Type": bookmarklistImage.type,
             }, // 파일의 MIME 타입 설정
           });
+
         }
         console.log(res.data.url)
         window.alert("북마크리스트를 수정하였습니다.");
+        setIsBookmarkListChange(true)
         onClose();
       })      
       .catch((err) => console.log(err));
   };
-
+  const resizeFile = (file: File): Promise<File> =>
+    new Promise((resolve, reject) => {
+      FileResizer.imageFileResizer(
+        file,
+        200, // 이미지 너비
+        200, // 이미지 높이
+        'SVG', // 파일 형식 - SVG 대신 JPEG로 변경
+        100, // 이미지 퀄리티
+        0,
+        (uri) => {
+          if (uri) {
+            resolve(uri as File); // Promise를 사용하여 비동기 처리
+          } else {
+            reject(new Error('Resizing failed'));
+          }
+        },
+        'file' // 출력 타입
+      );
+    });
   // 북마크리스트 이미지 변경 핸들러
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]; // 파일이 선택되지 않았을 때 null 처리
+    
     if (file) {
-      setBookmarklistImage(file); // 파일 자체를 상태에 저장
+      const compressedFile = await resizeFile(file);
+      await setBookmarklistImage(compressedFile); // 파일 자체를 상태에 저장
 
       // 미리보기 URL 생성
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewImageUrl(reader.result as string);
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(compressedFile);
     } else {
       setBookmarklistImage(null);
       setPreviewImageUrl(null);

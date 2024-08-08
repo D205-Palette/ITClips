@@ -110,12 +110,12 @@ const AsideRoadmapKebabDropdown: FC<Props> = ({ isRoadmap, id }) => {
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
       />
-      <DeleteContentModal
+      {isDeleteModalOpen && <DeleteContentModal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         whatContent="로드맵"
         id={id}
-      />
+      />}
       <UrlCopyModal
         isOpen={isUrlCopyModalOpen}
         onClose={() => setIsUrlCopyModalOpen(false)}

@@ -19,6 +19,7 @@ import ProfileSettingsModal from "./modals/ProfileSettingsModal";
 import darkModeStore from "../../stores/darkModeStore";
 import { authStore } from "../../stores/authStore";
 import { profileStore } from "../../stores/profileStore";
+import mainStore from "../../stores/mainStore";
 
 interface UserInfo {
   id?: number;
@@ -40,6 +41,7 @@ const AsideProfile = () => {
   // 내 정보 가져오기
   const myInfo = authStore((state) => state.userInfo);
 
+  const {isProfileChange, setIsProfileChange} = mainStore()
   // url에서 user_id 가져오기
   const params = useParams<{ userId?: string }>();
   const urlUserId = params.userId ? parseInt(params.userId, 10) : undefined;
@@ -76,10 +78,12 @@ const AsideProfile = () => {
         if (urlUserId) {
           const response = await checkUserInfo(userId, urlUserId);
           setUrlUserInfo(response.data);
+          setIsProfileChange(false)
           console.log(response);
         } else {
           const response = await checkUserInfo(userId, userId);
           setUrlUserInfo(response.data);
+          setIsProfileChange(false)
           console.log(response);
         }
       } catch (error) {
@@ -109,7 +113,7 @@ const AsideProfile = () => {
       fetchUserInfo(myInfo.id);
       checkFollowStatus();
     }
-  }, [urlUserId, myInfo.id]); // urlUserId와 myInfo.id가 변경될 때마다 호출
+  }, [urlUserId, myInfo.id, isProfileChange]); // urlUserId와 myInfo.id가 변경될 때마다 호출
 
   const onClickStartChat = (): void => {
     alert("채팅을 시작합니다.");

@@ -14,12 +14,14 @@ import noImg from "../../assets/images/noImg.gif"
 
 interface Props {
   list:StepListType
+  count:number;
   changeCount: React.Dispatch<React.SetStateAction<number>>;
+  canEdit:boolean
 }
 
 
 
-const ListItem: FC<Props> = ({ list,changeCount }) => {
+const ListItem: FC<Props> = ({ list,changeCount,count,canEdit }) => {
 
   const navigate = useNavigate();
   const {userId, token} = authStore()
@@ -28,13 +30,13 @@ const ListItem: FC<Props> = ({ list,changeCount }) => {
   function toggleCheck(isCheck:boolean): void {
     // 체크박스 눌렀을때 axios로 토글 됐다고 보내기
     if(isCheck){
-      changeCount((state) => state - 1)
+      changeCount(count - 1)
       list.check = false
       axios.put(`${API_BASE_URL}/api/roadmap/step/${list.id}/${userId}`,{headers: {
         Authorization: `Bearer ${token}`,
       },})
     } else {
-      changeCount((state) => state + 1)
+      changeCount(count + 1)
       list.check = true
       axios.put(`${API_BASE_URL}/api/roadmap/step/${list.id}/${userId}`,{headers: {
         Authorization: `Bearer ${token}`,
@@ -70,7 +72,7 @@ const ListItem: FC<Props> = ({ list,changeCount }) => {
                 </h4>
             </div>
             {/* 체크박스 */}
-            <div className="form-control flex flex-row items-center">
+            <div className={(canEdit?"":"hidden ") + "form-control flex flex-row items-center"}>
               <input
                 type="checkbox"
                 defaultChecked={list.check? true : false}

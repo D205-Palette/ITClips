@@ -120,6 +120,9 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         // 기존 북마크 리스트 목록을 조회
         BookmarkList existingBookmarkList = bookmarkListRepository.findById(listId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND));
+        if(existingBookmarkList.getUser().getId() != userId) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+        }
         // 업데이트할 내용 설정
         // 이미지 S3 경로로 저장
         String image = bookmarkListDTO.getImage();
@@ -157,6 +160,9 @@ public class BookmarkListServiceImpl implements BookmarkListService {
     public void deleteBookmarkList(Long userId, Long listId) throws RuntimeException{
         BookmarkList bookmarkList = bookmarkListRepository.findById(listId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND));
+        if(bookmarkList.getUser().getId() != userId) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+        }
 
         List<BookmarkListTag> bookmarkListTags = bookmarkListTagRepository.findByBookmarkListId(bookmarkList.getId());
         bookmarkListTagRepository.deleteAll(bookmarkListTags);

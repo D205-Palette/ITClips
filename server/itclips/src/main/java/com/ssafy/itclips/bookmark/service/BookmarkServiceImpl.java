@@ -56,8 +56,11 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     @Override
     @Transactional
-    public void createBookmark(Long listId, Long categoryId, BookmarkRequestDTO bookmarkRequestDTO) {
+    public void createBookmark(Long userId, Long listId, Long categoryId, BookmarkRequestDTO bookmarkRequestDTO) {
         BookmarkList existingBookmarkList = getExistingBookmarkList(listId);
+        if(existingBookmarkList.getUser().getId() != userId) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+        }
         Integer count = getBookmarkCount(categoryId);
 
         Bookmark bookmark = buildBookmark(bookmarkRequestDTO, count);
@@ -97,9 +100,12 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     @Override
     @Transactional
-    public void updateBookmark(Long bookmarkId, BookmarkRequestDTO bookmarkRequestDTO) throws RuntimeException {
+    public void updateBookmark(Long userId, Long bookmarkId, BookmarkRequestDTO bookmarkRequestDTO) throws RuntimeException {
         Bookmark bookmark = bookmarkRepository.findById(bookmarkId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_NOT_FOUND));
+        if(bookmark.getBookmarklist().getUser().getId() != userId) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+        }
         bookmark.updateBookmark(bookmarkRequestDTO);
         log.info(bookmarkRequestDTO.getTitle());
         log.info(bookmark.getTitle());
@@ -118,9 +124,12 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     @Override
     @Transactional
-    public void deleteBookmark(Long bookmarkId) throws RuntimeException {
+    public void deleteBookmark(Long userId, Long bookmarkId) throws RuntimeException {
         Bookmark bookmark = bookmarkRepository.findById(bookmarkId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_NOT_FOUND));
+        if(bookmark.getBookmarklist().getUser().getId() != userId) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+        }
         bookmarkRepository.deleteById(bookmarkId);
     }
 

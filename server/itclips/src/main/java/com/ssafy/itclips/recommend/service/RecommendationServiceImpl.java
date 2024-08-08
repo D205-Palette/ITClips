@@ -56,9 +56,9 @@ public class RecommendationServiceImpl implements RecommendationService {
             if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
                 throw new CustomException(ErrorCode.USER_NOT_FOUND);
             }
-            throw new CustomException(ErrorCode.RECOMMEND_FAILED);
+            throw new CustomException(ErrorCode.RECOMMEND_NOT_FOUND);
         } catch (IOException e) {
-            throw new CustomException(ErrorCode.RECOMMEND_FAILED);
+            throw new CustomException(ErrorCode.RECOMMEND_NOT_FOUND);
         }
         return null;
     }

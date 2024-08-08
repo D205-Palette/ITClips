@@ -22,10 +22,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
-    public CategoryParamDTO addCategory(Long listId, CategoryRequestDTO categoryRequestDTO) throws RuntimeException{
+    public CategoryParamDTO addCategory(Long userId, Long listId, CategoryRequestDTO categoryRequestDTO) throws RuntimeException{
         // 기존 북마크 목록을 조회
         BookmarkList existingBookmarkList = bookmarkListRepository.findById(listId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND));
+        if(existingBookmarkList.getUser().getId() != userId) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+        }
         Category existingCategory = categoryRepository.findByName(categoryRequestDTO.getCategoryName());
 
         if(existingCategory != null){
@@ -41,18 +44,23 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void deleteCategory(Long categoryId) throws RuntimeException{
+    public void deleteCategory(Long userId, Long categoryId) throws RuntimeException{
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CustomException(ErrorCode.CATEGORY_NOT_FOUND));
+        if(category.getBookmarklist().getUser().getId() != userId) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+        }
 
         categoryRepository.delete(category);
     }
 
     @Override
-    public CategoryParamDTO updateCategory(Long categoryId, CategoryRequestDTO categoryRequestDTO) throws RuntimeException {
+    public CategoryParamDTO updateCategory(Long userId, Long categoryId, CategoryRequestDTO categoryRequestDTO) throws RuntimeException {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CustomException(ErrorCode.CATEGORY_NOT_FOUND));
-
+        if(category.getBookmarklist().getUser().getId() != userId) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+        }
         category.updateCategory(categoryRequestDTO);
         category = categoryRepository.save(category);
         return new CategoryParamDTO(category.getId(),category.getName());

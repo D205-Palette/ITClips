@@ -33,8 +33,9 @@ public class BookmarkController {
     })
     public ResponseEntity<?> createBookmark(@PathVariable @Parameter(description = "리스트 정보", required = true) Long listId,
                                             @PathVariable(required = false) @Parameter(description = "카테고리 정보") Long categoryId,
+                                            @RequestParam Long userId,
                                             @RequestBody @Parameter(description = "북마크 생성 정보", required = true) BookmarkRequestDTO bookmarkRequestDTO) {
-        bookmarkService.createBookmark(listId,categoryId,bookmarkRequestDTO);
+        bookmarkService.createBookmark(userId,listId,categoryId,bookmarkRequestDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -46,9 +47,10 @@ public class BookmarkController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
     })
     public ResponseEntity<?> updateBookmark(@PathVariable @Parameter(description = "북마크 ID", required = true) Long bookmarkId,
+                                            @RequestParam Long userId,
                                             @RequestBody @Parameter(description = "북마크 수정 정보", required = true) BookmarkRequestDTO bookmarkRequestDTO) {
         log.info(bookmarkRequestDTO.toString());
-        bookmarkService.updateBookmark(bookmarkId,bookmarkRequestDTO);
+        bookmarkService.updateBookmark(userId,bookmarkId,bookmarkRequestDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -59,8 +61,9 @@ public class BookmarkController {
             @ApiResponse(responseCode = "404", description = "북마크를 찾을 수 없습니다."),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
     })
-    public ResponseEntity<?> deleteBookmark(@PathVariable @Parameter(description = "북마크 ID", required = true) Long bookmarkId) {
-        bookmarkService.deleteBookmark(bookmarkId);
+    public ResponseEntity<?> deleteBookmark( @RequestParam Long userId,
+                                             @PathVariable @Parameter(description = "북마크 ID", required = true) Long bookmarkId) {
+        bookmarkService.deleteBookmark(userId, bookmarkId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

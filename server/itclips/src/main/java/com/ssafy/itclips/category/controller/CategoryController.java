@@ -30,9 +30,10 @@ public class CategoryController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
     })
     public ResponseEntity<?> addCategory(@PathVariable @Parameter(description = "리스트 ID", required = true) Long listId,
+                                         @RequestParam Long userId,
                                          @RequestBody @Parameter(description = "카테고리 정보", required = true) CategoryRequestDTO categoryRequestDTO) {
 
-        CategoryParamDTO category = categoryService.addCategory(listId, categoryRequestDTO);
+        CategoryParamDTO category = categoryService.addCategory(userId, listId, categoryRequestDTO);
 
         return new ResponseEntity<CategoryParamDTO>(category,HttpStatus.CREATED);
     }
@@ -45,8 +46,9 @@ public class CategoryController {
             @ApiResponse(responseCode = "404", description = "카테고리를 찾을 수 없습니다."),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
     })
-    public ResponseEntity<?> removeCategory(@PathVariable @Parameter(description = "카테고리 ID", required = true) Long categoryId) {
-        categoryService.deleteCategory(categoryId);
+    public ResponseEntity<?> removeCategory(@PathVariable @Parameter(description = "카테고리 ID", required = true) Long categoryId,
+                                            @RequestParam Long userId) {
+        categoryService.deleteCategory(userId, categoryId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -58,9 +60,10 @@ public class CategoryController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
     })
     public ResponseEntity<?> updateCategory(@PathVariable @Parameter(description = "카테고리 ID", required = true) Long categoryId,
+                                            @RequestParam Long userId,
                                             @RequestBody @Parameter(description = "카테고리 수정 정보", required = true) CategoryRequestDTO categoryRequestDTO) {
 
-        CategoryParamDTO category = categoryService.updateCategory(categoryId, categoryRequestDTO);
+        CategoryParamDTO category = categoryService.updateCategory(userId, categoryId, categoryRequestDTO);
 
         return new ResponseEntity<CategoryParamDTO>(category, HttpStatus.OK);
     }

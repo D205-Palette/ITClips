@@ -3,12 +3,14 @@ import { NavLink } from "react-router-dom";
 import { authStore } from "../../stores/authStore";
 import DarkModeToggle from "./DarkModeToggle";
 import NotificationButton from "./NavNotificationButton";
+import MessageLayout from "../aside/MessageLayout";
 
 import HomeButton from "../nav/NavHomeButton";
 import LogoutButton from "../nav/NavLogoutButton";
 import MessageButton from "../nav/NavMessageButton";
 // import tabStore from "../../stores/categoriesStore";
 import darkModeStore from "../../stores/darkModeStore";
+import { asideStore } from "../../stores/asideStore";
 
 const NavBar = () => {
   const { isLoggedIn, userInfo, userId } = authStore();
@@ -16,6 +18,7 @@ const NavBar = () => {
 
   const isDark = darkModeStore((state) => state.isDark);
   const textColor = isDark ? "text-slate-300" : "text-slate-900";
+  const isMessageOpen = asideStore((state) => state.isMessageOpen);
 
   return (
     <>
@@ -88,6 +91,8 @@ const NavBar = () => {
             </>
           )}
         </div>
+        {/* 메세지창 */}
+        {isMessageOpen && <MessageLayout />}
       </nav>
     </>
   );

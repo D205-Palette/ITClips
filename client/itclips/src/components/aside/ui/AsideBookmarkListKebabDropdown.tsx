@@ -96,12 +96,12 @@ const AsideBookmarkListKebabDropdown :FC<Props> = ({isRoadmap, id}) => {
           </ul>
         </div>
       )}
-      <BookmarkListEditModal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} id={id}/>
-      <DeleteBookmarkListModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} whatContent='리스트' id={id}/>
-      <UrlCopyModal isOpen={isUrlCopyModalOpen} onClose={() => setIsUrlCopyModalOpen(false)} />
-      <ReportModal isOpen={isReportModalOpen} onClose={() => setIsReportModalOpen(false)} whatContent='리스트' id={id}/>
-      <FavoriteConfirmationModal isOpen={isFavoriteModalOpen} onClose={() => setIsFavoriteModalOpen(false)}/>
-      <ScrapConfirmationModal isOpen={isScrapModalOpen} onClose={() => setIsScrapModalOpen(false)}/>
+      {isEditModalOpen && <BookmarkListEditModal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} id={id}/>}
+      {isDeleteModalOpen&& <DeleteBookmarkListModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} whatContent='리스트' id={id}/>}
+      {isUrlCopyModalOpen && <UrlCopyModal isOpen={isUrlCopyModalOpen} onClose={() => setIsUrlCopyModalOpen(false)} />}
+      {isReportModalOpen&& <ReportModal isOpen={isReportModalOpen} onClose={() => setIsReportModalOpen(false)} whatContent='리스트' id={id}/>}
+      {isFavoriteModalOpen && <FavoriteConfirmationModal isOpen={isFavoriteModalOpen} onClose={() => setIsFavoriteModalOpen(false)}/>}
+      {isScrapModalOpen && <ScrapConfirmationModal isOpen={isScrapModalOpen} onClose={() => setIsScrapModalOpen(false)}/>}
     </div>
   );
 };

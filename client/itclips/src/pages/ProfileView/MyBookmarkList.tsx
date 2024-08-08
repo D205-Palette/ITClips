@@ -14,6 +14,7 @@ import { FaPlus } from "react-icons/fa6";
 import BookmarkListCreateModal from "../../components/aside/modals/BookmarkListCreateModal";
 import { API_BASE_URL } from "../../config";
 import { useParams } from "react-router-dom";
+import mainStore from "../../stores/mainStore";
 
 export default function MyView() {
   const [isList, setTab] = useState(true);
@@ -22,7 +23,7 @@ export default function MyView() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState<boolean>(false);
   const { token, userId } = authStore();
 
-
+  const {isBookmarkListChange, setIsBookmarkListChange} = mainStore()
   // 리스트형으로 볼지 앨범형으로 볼지
   function tabList(): void {
     setTab(true);
@@ -31,11 +32,13 @@ export default function MyView() {
     setTab(false);
   }
 
-  const filterdLists = lists.filter((list) => list.title.includes(filterText));
+  // const filterdLists = lists.filter((list) => list.title.includes(filterText));
+  const [filterdLists, setFilterdLists] = useState<BookmarkListSumType[]>([])
   const params = useParams()
   const nowUserId = parseInt(params.userId!)
 
-  // 마운트할때 유저의 북마크 리스트들 요약
+  
+  // 북마크 리스트 변화할때 유저의 북마크 리스트들 요약
   useEffect(() => {
     async function fetchData() {
       axios({
@@ -50,19 +53,21 @@ export default function MyView() {
         })
           .then((res) => {
           setLists(res.data);
+          setFilterdLists(res.data.filter((list:any) =>list.title.includes(filterText)))
+          setIsBookmarkListChange(false)
         })
         .catch((err) => {
           console.error(err);
         });
     }
     fetchData();
-  }, []);
+  }, [isBookmarkListChange]);
 
-  // if(typeof(params.userId)==='number'){
-  //   setNowUserId(params.userId)
-  //   console.log(nowUserId)
-  //   console.log(userId)
-  // }
+
+  // 검색어 변경시 리스트 변경
+  useEffect(() => {
+    setFilterdLists(lists.filter((list) =>list.title.includes(filterText)))
+  }, [filterText]);
 
   return (
     <>

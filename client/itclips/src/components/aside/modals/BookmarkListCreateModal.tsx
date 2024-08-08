@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../../../config";
 import { authStore } from "../../../stores/authStore";
-
+import mainStore from "../../../stores/mainStore";
 // icons
 import { IoCloseOutline } from "react-icons/io5";
 
@@ -33,6 +33,7 @@ const BookmarkListCreateModal: React.FC<EditModalProps> = ({
   const [bookmarklistImage, setBookmarklistImage] = useState<File | null>(null);
   const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
 
+  const {isBookmarkListChange, setIsBookmarkListChange} = mainStore()
   const handleAddTag = () => {
     if (tempTag.trim() !== "") {
       setTempTags([...tempTags, { title: tempTag.trim() }]);
@@ -76,6 +77,7 @@ const BookmarkListCreateModal: React.FC<EditModalProps> = ({
           });
         }
         console.log(res.data.url)
+        setIsBookmarkListChange(true)
         window.alert("북마크리스트를 생성하였습니다.");
         onClose();
       })

@@ -20,12 +20,14 @@ import { API_BASE_URL } from "../config";
 import { authStore } from "../stores/authStore";
 import darkModeStore from "../stores/darkModeStore";
 import { deleteStore } from "../stores/deleteStore";
+import mainStore from "../stores/mainStore";
 
 const MyBookmark = () => {
   const params = useParams();
   const { isDark } = darkModeStore();
   const { deletedBookmark } = deleteStore();
   const tempListId = params.bookmarklistId;
+const {isBookmarkListChange, setIsBookmarkListChange} = mainStore()
 
   let listId = 0;
   if (tempListId) {
@@ -84,7 +86,7 @@ const MyBookmark = () => {
     }
   };
 
-  // onMount될때 리스트 불러오기
+  // 북마크 리스트 변경될때마다 리스트 불러오기
   useEffect(() => {
     async function fetchData() {
       axios({
@@ -106,38 +108,14 @@ const MyBookmark = () => {
           res.data.users.map((user: { id: number; nickName: string }) =>
             user.id === userId ? setCanEdit(true) : <></>
           );
+          setIsBookmarkListChange(false)
         })
         .catch((err) => {
           console.error(err);
         });
     }
     fetchData();
-  }, []);
-
-
-  // 카테고리 탭 바뀔때 마다 보여줄 북마크들 필터
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     if (bookmarkList) {
-  //       if (whatCategory.categoryName === "") {
-  //         setFilterdBookmarks(
-  //           bookmarkList.bookmarks.filter(
-  //             (bookmark) => !deletedBookmark.includes(bookmark.id)
-  //           )
-  //         );
-  //       } else {
-  //         setFilterdBookmarks(
-  //           bookmarkList.bookmarks.filter(
-  //             (bookmark) =>
-  //               !deletedBookmark.includes(bookmark.id) &&
-  //               bookmark.category === whatCategory.categoryName
-  //           )
-  //         );
-  //       }
-  //     }
-  //   }
-  //   fetchData();
-  // }, [whatCategory.categoryName]);
+  }, [isBookmarkListChange]);
 
   return (
     <>

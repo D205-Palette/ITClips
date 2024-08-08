@@ -5,6 +5,7 @@ import React from "react";
 import { authStore } from "../../../stores/authStore";
 
 interface Message {
+  id: number;
   roomId: number;
   senderId: number;
   senderName: string;

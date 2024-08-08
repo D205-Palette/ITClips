@@ -17,6 +17,7 @@ import { authStore } from "../../stores/authStore";
 import { useWebSocketStore } from "../../stores/webSocketStore";
 
 interface Message {
+  id: number;
   roomId: number;
   senderId: number;
   senderName: string;

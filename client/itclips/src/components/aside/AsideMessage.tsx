@@ -18,6 +18,7 @@ interface ChatRoom {
   name: string;
   lastMessage: string | null;
   lastModified: string | null;
+  messageCnt: number;
 }
 
 interface MessageListProps {
@@ -59,7 +60,7 @@ const AsideMessage: React.FC<MessageListProps> = ({ onSelectChat, onShowInvite }
           console.log('Message received:', message);
           const messageBody = JSON.parse(message.body);
           console.log('Received message:', messageBody);
-          updateRoomLastMessage(room.id, messageBody.message);
+          updateRoomInfo(room.id, messageBody.message);
         });
         console.log(`Subscribed to room: ${room.id}`);
       });
@@ -68,9 +69,15 @@ const AsideMessage: React.FC<MessageListProps> = ({ onSelectChat, onShowInvite }
     }
   };
 
-  const updateRoomLastMessage = (roomId: number, lastMessage: string) => {
+  const updateRoomInfo = (roomId: number, lastMessage: string) => {
     setData(prevData => prevData.map(room => 
-      room.id === roomId ? { ...room, lastMessage: lastMessage } : room
+      room.id === roomId 
+        ? { 
+            ...room, 
+            lastMessage: lastMessage,
+            messageCnt: room.messageCnt + 1
+          } 
+        : room
     ));
   };
 
@@ -89,11 +96,7 @@ const AsideMessage: React.FC<MessageListProps> = ({ onSelectChat, onShowInvite }
       <MessageHeader onClickInvite={onClickInvite} />
       {/* 받은 메세지 영역 */}
       <MessageListContainer 
-        rooms={data.map(room => ({
-          id: room.id,
-          title: room.name,
-          subtitle: room.lastMessage || '메시지가 없습니다.', // 마지막 메시지가 없을 경우 기본 메시지
-        }))}
+        rooms={data} // 직접 data를 전달
         onClickMessage={onClickMessage}
       />
     </div>

@@ -4,9 +4,10 @@ import React from "react";
 
 interface ChatRoom {
   id: number;
-  title: string;
-  subtitle: string;
-  hasNotification?: boolean;
+  name: string;
+  lastMessage: string | null;
+  lastModified: string | null;
+  messageCnt: number;
 }
 
 interface ChildComponentProps {
@@ -32,11 +33,13 @@ const MessageContainer: React.FC<ChildComponentProps> = ({ rooms, onClickMessage
             onClick={() => onClickMessage(room.id)}
           >
             <div className="p-3">
-              <h3 className="font-semibold text-start">{room.title}</h3>
-              <p className="text-sm text-sky-600 text-start message-content">{room.subtitle}</p>
+              <h3 className="font-semibold text-start">{room.name}</h3>
+              <p className="text-sm text-sky-600 text-start message-content">{room.lastMessage || "메세지가 없습니다."}</p>
             </div>
-            {room.hasNotification && (
-              <span className="badge badge-sm bg-sky-500 text-white m-2"></span>
+            {room.messageCnt > 0 && (
+              <div className="badge badge-error badge-sm text-white min-w-[1.5rem] h-6 flex items-center justify-center">
+                {room.messageCnt}
+              </div>
             )}
           </li>
         ))}

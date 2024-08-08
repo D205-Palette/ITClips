@@ -10,7 +10,7 @@ import AsideMessageKebabDropdown from "./ui/AsideMessageKebabDropdown";
 import MessageInviteModal from "./modals/MessageInviteModal";
 
 // apis
-import { getChatRoomMessages, getChatRoomInfo, leaveChatRoom } from "../../api/messageApi";
+import { getChatRoomMessages, getChatRoomInfo, leaveChatRoom, updateMessageStatusToRead } from "../../api/messageApi";
 
 // stores
 import { authStore } from "../../stores/authStore";
@@ -67,6 +67,28 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
 
   // 메시지 컨테이너에 대한 ref 생성
   const messageContainerRef = useRef<HTMLDivElement>(null);
+
+  // 메시지 읽음 처리 함수
+  const markMessagesAsRead = async () => {
+    if (userInfo.id) {
+      try {
+        await updateMessageStatusToRead(roomId, userInfo.id);
+        console.log("Messages marked as read");
+      } catch (error) {
+        console.error("Failed to mark messages as read:", error);
+      }
+    }
+  };
+
+  // 컴포넌트 마운트 시 메시지 읽음 처리
+  useEffect(() => {
+    markMessagesAsRead();
+
+    // 컴포넌트 언마운트 시 메시지 읽음 처리
+    return () => {
+      markMessagesAsRead();
+    };
+  }, [roomId, userInfo.id]);
 
   // 스크롤을 아래로 내리는 함수
   const scrollToBottom = () => {

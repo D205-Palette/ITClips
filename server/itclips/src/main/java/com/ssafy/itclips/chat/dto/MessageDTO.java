@@ -16,14 +16,16 @@ public class MessageDTO {
     }
 
     @Builder
-    public MessageDTO(Long roomId, Long senderId, String senderName, String message, String createdAt) {
+    public MessageDTO(Long id , Long roomId, Long senderId, String senderName, String message, String createdAt) {
         this.senderId = senderId;
         this.senderName = senderName;
         this.message = message;
         this.roomId = roomId;
         this.createdAt = createdAt;
+        this.id = id;
     }
 
+    private Long id; // id
     private Long roomId; // 방번호
     private Long senderId; // 메시지 보낸사람
     private String senderName;//   보낸사람 이름
@@ -39,6 +41,7 @@ public class MessageDTO {
     }
     public static MessageDTO toDTO(Message message, Chat chat){
         return MessageDTO.builder()
+                .id(message.getId())
                 .message(message.getMessage())
                 .senderId(chat.getUser().getId())
                 .roomId(chat.getRoom().getId())

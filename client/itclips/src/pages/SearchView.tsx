@@ -29,16 +29,10 @@ const SearchView = () => {
 
   return (
     <>
-      <div id='Body' className="grid grid-cols-8 gap-4">
-        <div id="aside" className="col-start-2 col-span-2 hidden xl:block z-40">
-          {/* aside 자리 */}
-          <div id="aside" className="absolute col-start-2 col-span-2 z-50">
-            {isMessageOpen && <MessageLayout />}
-          </div>
-        </div>
+      <div id='Body' className="grid grid-cols-12 gap-4">        
 
         {/* main자리 */}
-        <div id="Main" className="lg:col-start-3 lg:col-span-4 md:col-start-2 md:col-span-5 sm:col-start-2 sm:col-span-6">
+        <div id="Main" className="lg:col-start-2 lg:col-span-8 md:col-start-2 md:col-span-5 sm:col-start-2 sm:col-span-6">
           <div className="container mx-auto p-4">
             <div className=" md:flex-row justify-between gap-4 mb-4">
               {/* 검색 바 */}
@@ -56,7 +50,7 @@ const SearchView = () => {
           </div>
         </div>
 
-        <div className="col-start-7 col-span-2">
+        <div className="col-start-10 col-span-2">
           <div className="my-6">
             <RealtimeSidebar />
           </div>

@@ -52,7 +52,7 @@ const Intro: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center w-full min-h-screen">
+    <div className="flex flex-col items-center w-full min-h-screen ">
       {/* 첫 번째 섹션 */}
       <div
         id="intro1"

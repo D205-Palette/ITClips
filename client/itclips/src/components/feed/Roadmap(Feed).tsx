@@ -4,7 +4,6 @@ import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 import KebabDropdown from "./KebabDropdown(Feed)";
 import darkModeStore from "../../stores/darkModeStore";
-import profile_img from "../../assets/images/profile_image.png";
 import type { RoadmapSumType } from "../../types/RoadmapType";
 
 interface Props {
@@ -31,13 +30,19 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
   ) => {
     event.stopPropagation();
   };
-  // const handleUserInfoClick = (
-  //   navigate(`/user/${roadmap.id}`)
-  // )
+
+  // 닉네임 클릭 시 유저 페이지로 이동
+  const handleNicknameClick = (userId: number) => {
+    return (event: React.MouseEvent<HTMLDivElement>) => {
+      event.stopPropagation();
+      navigate(`/user/${userId}`);
+    };
+  };
+
   const getRelativeTime = (createdAt: string) => {
     const now = new Date();
     const createdDate = new Date(createdAt);
-    createdDate.setHours(createdDate.getHours() + 9);
+    createdDate.setHours(createdDate.getHours()+9);
     const diffInMs = now.getTime() - createdDate.getTime();
     const diffInMinutes = diffInMs / (1000 * 60);
     const diffInHours = diffInMs / (1000 * 60 * 60);
@@ -66,16 +71,17 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
         className="flex justify-between items-center mx-3"
         onClick={handleDropdownClick}
       >
+        {/* 카드 상단 : 유저정보,  */}
         <div
           id="userInfo"
-          className="m-3 flex items-center gap-2"
-          // onClick={handleUserInfoClick}
+          className="m-3 flex items-center gap-2 hover:bg-base-100 rounded-xl p-2"
+          onClick={handleNicknameClick(roadmap.userId)}
         >
           <div className="w-10 h-10 border rounded-full overflow-hidden">
             <img
-              src={profile_img}
+              // src={roadmap.image} 유저의 이미지 추가해야함
               className="w-full h-full object-cover"
-              alt=""
+              alt="로드맵유저이미지"
             />
           </div>
           <h2>{roadmap.userName}</h2>
@@ -83,6 +89,7 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
             {getRelativeTime(roadmap.createdAt)}
           </div>
         </div>
+
         <button className="hidden md:inline" onClick={handleDropdownClick}>
           <KebabDropdown whatMenu="로드맵" id={roadmap.id} />
         </button>

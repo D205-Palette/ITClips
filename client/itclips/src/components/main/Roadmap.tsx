@@ -10,17 +10,16 @@ import type { RoadmapSumType } from "../../types/RoadmapType";
 import axios from "axios";
 import { authStore } from "../../stores/authStore";
 import { API_BASE_URL } from "../../config";
-import noImg from "../../assets/images/noImg.gif"
+import noImg from "../../assets/images/noImg.gif";
 
 interface Props {
   roadmap: RoadmapSumType;
 }
 
 const RoadMap: FC<Props> = ({ roadmap }) => {
-
   const { userId, token } = authStore();
   const [isLike, setIsLike] = useState(roadmap.isLiked);
-  const [likeCount, changeLikeCount] = useState(roadmap.likeCnt)
+  const [likeCount, changeLikeCount] = useState(roadmap.likeCnt);
 
   const clickHeart = (): void => {
     if (isLike) {
@@ -28,7 +27,8 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }); changeLikeCount(likeCount -1 )
+      });
+      changeLikeCount(likeCount - 1);
     } else {
       {
         axios.post(`${API_BASE_URL}/api/roadmap/like/${roadmap.id}/${userId}`, {
@@ -37,8 +37,9 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
           },
         });
       }
-      changeLikeCount(likeCount + 1 )
-    } setIsLike(!isLike);
+      changeLikeCount(likeCount + 1);
+    }
+    setIsLike(!isLike);
   };
   const isDark = darkModeStore((state) => state.isDark);
   const percentage = ((roadmap.checkCnt * 100) / roadmap.stepCnt).toFixed(1);
@@ -53,7 +54,7 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
         }
       >
         <>
-          <div className="w-28 z-10  hidden lg:inline rounded-s-2xl">
+          <div className="w-1/6 z-10 hidden lg:inline rounded-s-2xl">
             <img
               src={roadmap.image === "default" ? noImg : roadmap.image}
               alt="Movie"
@@ -76,8 +77,9 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
               style={{ width: `${percentage}%` }}
               onClick={() => navigate(`/roadmap/${roadmap.id}`)}
             ></div>
+
             <div
-              className="flex flex-col justify-around z-10 "
+              className="flex flex-col justify-around z-10"
               onClick={() => navigate(`/roadmap/${roadmap.id}`)}
             >
               <div>
@@ -89,34 +91,42 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
               </div>
             </div>
 
-            <div className=" items-center text-blue-400 font-bold text-xl z-0 hidden lg:inline-flex">
-              <p
-                className={
-                  !isDark
-                    ? percentage == "100.0"
-                      ? "text-green-400"
-                      : "text-blue-400"
-                    : percentage == "100.0"
-                    ? "text-green-200"
-                    : "text-blue-200"
-                }
-              >
-                {percentage + "%"}
-              </p>
-            </div>
-
-            <div className="card-actions justify-end flex items-center">
-              <button onClick={clickHeart} className="btn btn-ghost z-0 ">
-                {isLike ? <FaHeart color="red"/> : <FaRegHeart />}
-                {likeCount}{" "}
-              </button>
-              <div className="hidden md:inline">
-                <KebabDropdown whatMenu="로드맵" id={roadmap.id} />
+            <div className="flex gap-x-2">
+              <div className=" items-center text-blue-400 font-bold text-xl z-0 hidden lg:inline-flex">
+                <p
+                  className={
+                    !isDark
+                      ? percentage == "100.0"
+                        ? "text-green-400"
+                        : "text-blue-400"
+                      : percentage == "100.0"
+                      ? "text-green-200"
+                      : "text-blue-200"
+                  }
+                >
+                  {percentage + "%"}
+                </p>
               </div>
+              <div className="justify-end flex items-center">
+                <button onClick={clickHeart} className="btn btn-ghost z-0 ">
+                  {isLike ? <FaHeart color="red" /> : <FaRegHeart />}
+                  {likeCount}{" "}
+                </button>
+                <div className="hidden md:inline">
+                  <KebabDropdown whatMenu="로드맵" id={roadmap.id} />
+                </div>                
+              </div>              
             </div>
+            
           </div>
         </>
       </div>
+      <div
+        className={
+          (isDark ? "border-b-slate-600" : "border-b-slate-200") +
+          " h-1 border-b"
+        }
+      ></div>
     </>
   );
 };

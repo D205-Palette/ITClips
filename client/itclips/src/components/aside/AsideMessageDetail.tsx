@@ -1,6 +1,7 @@
 // AsideMessageDetail.tsx 는 메세지창의 메세지 목록 중 하나를 클릭했을 때 그 메세지의 상세창 컴포넌트
 import React, { useState, useEffect, useRef } from "react";
-import { format, toZonedTime } from 'date-fns-tz';
+import { toZonedTime } from 'date-fns-tz';
+import { format, addHours, parseISO } from 'date-fns';
 
 // components
 import MessageBackButton from "./ui/MessageBackButton";
@@ -54,7 +55,14 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
   function formatDateToKST(date: string | Date): string {
     const parsedDate = typeof date === 'string' ? new Date(date) : date;
     const kstDate = toZonedTime(parsedDate, 'Asia/Seoul');
-    return format(kstDate, 'yyyy-MM-dd HH:mm:ss', { timeZone: 'Asia/Seoul' });
+    return format(kstDate, 'yyyy-MM-dd HH:mm');
+  }
+
+  // 서버 시간에서 9시간을 추가하는 함수
+  function addNineHours(dateString: string): string {
+    const date = parseISO(dateString);
+    const sixHoursLater = addHours(date, 9);
+    return format(sixHoursLater, 'yyyy-MM-dd HH:mm');
   }
 
   // 메시지 컨테이너에 대한 ref 생성
@@ -117,7 +125,7 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
         const sortedMessages = response.data
           .map((message: Message) => ({
             ...message,
-            createdAt: formatDateToKST(message.createdAt)
+            createdAt: addNineHours(message.createdAt)
           }))
           .sort((a: Message, b: Message) => 
             new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()

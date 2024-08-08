@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { authStore } from "../../stores/authStore";
 import DarkModeToggle from "./DarkModeToggle";
@@ -13,16 +13,24 @@ import darkModeStore from "../../stores/darkModeStore";
 import { asideStore } from "../../stores/asideStore";
 
 const NavBar = () => {
-  const { isLoggedIn, userInfo, userId } = authStore();
-  const messageRef = useRef<HTMLDivElement>(null);
+  const { isLoggedIn, userId } = authStore();
 
   const isDark = darkModeStore((state) => state.isDark);
   const textColor = isDark ? "text-slate-300" : "text-slate-900";
   const isMessageOpen = asideStore((state) => state.isMessageOpen);
+  const navbarRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    // Navbar의 높이를 계산하여 MessageLayout의 위치를 설정
+    if (navbarRef.current) {
+      const navbarHeight = navbarRef.current.offsetHeight;
+      document.documentElement.style.setProperty('--navbar-height', `${navbarHeight}px`);
+    }
+  }, []);
 
   return (
-    <>
-      <nav className="fixed top-0 left-0 w-full flex justify-between items-center p-4 h-16 bg-base-100 z-20">
+    <div>
+      <nav ref={navbarRef} className="fixed top-0 left-0 w-full flex justify-between items-center p-4 h-16 bg-base-100 z-20">
         {/* 좌측 네비게이션 링크들 */}
         <div className="flex items-center gap-4">
           <HomeButton />
@@ -91,10 +99,14 @@ const NavBar = () => {
             </>
           )}
         </div>
-        {/* 메세지창 */}
-        {isMessageOpen && <MessageLayout />}
       </nav>
-    </>
+      {/* 메세지창 */}
+      {isMessageOpen && (
+        <div className="fixed top-[var(--navbar-height)] right-0 z-50">
+          <MessageLayout />
+        </div>
+      )}
+    </div>
   );
 };
 

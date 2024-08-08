@@ -4,14 +4,11 @@ import { Outlet } from "react-router-dom";
 import axios from "axios";
 import { API_BASE_URL } from "../config";
 
-import { asideStore } from "../stores/asideStore";
-import MessageLayout from "../components/aside/MessageLayout";
 import AsideProfile from "../components/aside/AsideProfile";
 
 import FeedTab from "../components/feed/FeedTab";
 
 export default function FeedView() {
-  const isMessageOpen = asideStore((state) => state.isMessageOpen);
 
   const fetchFeedPosts = (userId: string) => {
     return axios

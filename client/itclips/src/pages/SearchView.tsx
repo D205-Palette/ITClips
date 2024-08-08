@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 
 // components
-import MessageLayout from "../components/aside/MessageLayout";
 import SearchBar from "../components/search/ui/SearchBar";
 import RealtimeList from "../components/search/RealtimeList";
 import SearchMain from "../components/search/SearchMain";
@@ -16,7 +15,6 @@ import { asideStore } from "../stores/asideStore";
 
 const SearchView = () => {
 
-  const isMessageOpen = asideStore(state => state.isMessageOpen);
   const [ whatCategory, setWhatCategory ] = useState("카테고리");
   const [ keyword, setKeyword ] = useState("");
 
@@ -30,12 +28,6 @@ const SearchView = () => {
   return (
     <>
       <div id='Body' className="grid grid-cols-8 gap-4">
-        <div id="aside" className="col-start-2 col-span-2 hidden xl:block z-40">
-          {/* aside 자리 */}
-          <div id="aside" className="absolute col-start-2 col-span-2 z-50">
-            {isMessageOpen && <MessageLayout />}
-          </div>
-        </div>
 
         {/* main자리 */}
         <div id="Main" className="lg:col-start-3 lg:col-span-4 md:col-start-2 md:col-span-5 sm:col-start-2 sm:col-span-6">

@@ -46,7 +46,7 @@ const NavBar = () => {
                 MY
               </NavLink>
               <NavLink
-                to="feed"
+                to="feed/bookmarklists"
                 className={({ isActive }) =>
                   isActive ? "text-sky-500 font-bold" : textColor + " font-bold"
                 }

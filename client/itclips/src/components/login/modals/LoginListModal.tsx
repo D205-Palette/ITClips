@@ -19,7 +19,7 @@ const LoginListModal: React.FC = () => {
           <div className="flex flex-col gap-2 items-center justify-center">
             <GoogleLoginButton />
             <GithubLoginButton />
-            <NaverLoginButton />
+            {/* <NaverLoginButton /> 네이버 */}
             <KakaoLoginButton />
             <EmailLoginButton />
           </div>

@@ -8,7 +8,7 @@ import profile_img from "../../assets/images/profile_image.png";
 import type { BookmarkListSumType } from "../../types/BookmarkListType";
 
 interface BookmarkListSumFeedType extends BookmarkListSumType {
-  createdAt: string;
+  createdAt: string;  
 }
 
 interface Props {
@@ -35,6 +35,14 @@ const ListItem: FC<Props> = ({ list }) => {
   ) => {
     event.stopPropagation();
   };
+
+    // 닉네임 클릭 시 유저 페이지로 이동
+    const handleNicknameClick = (userId: number) => {
+      return (event: React.MouseEvent<HTMLDivElement>) => {
+        event.stopPropagation();
+        navigate(`/user/${userId}`);
+      };
+    };
 
   const getRelativeTime = (createdAt: string) => {
     const now = new Date();    
@@ -70,14 +78,16 @@ const ListItem: FC<Props> = ({ list }) => {
       >
         <div
           id="userInfo"
-          className="m-3 flex items-center gap-2"
-          // onClick={handleUserInfoClick}
+          className="m-3 flex items-center gap-2 hover:bg-base-100 rounded-xl p-2"
+          onClick={handleNicknameClick(list.users[0].id)}
         >
           <div className="w-10 h-10 border rounded-full overflow-hidden">
             <img
-              src={profile_img}
+              src={''
+                // list.users[0].image 유저이미지 오면 받아서 넣어야함.
+              }
               className="w-full h-full object-cover"
-              alt=""
+              alt="리스트유저이미지"
             />
           </div>
           <h2>{list.users[0].nickName}</h2>
@@ -85,6 +95,7 @@ const ListItem: FC<Props> = ({ list }) => {
             {getRelativeTime(list.createdAt)}
           </div>
         </div>
+        
         <button className="hidden md:inline" onClick={handleDropdownClick}>
           <KebabDropdown whatMenu="리스트" id={list.id} />
         </button>

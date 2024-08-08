@@ -96,7 +96,7 @@ const RoadmapView = () => {
   <div id="aside" className="absolute col-start-2 col-span-2 z-50 ">
   { isMessageOpen && <MessageLayout /> }
   </div>
-  <div className="fixed z-20">
+  <div className="sticky top-16">
     {roadmap?<AsideRoadmap roadmap={roadmap} />:<></>}
   </div>
 </div>                                        

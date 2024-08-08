@@ -59,6 +59,7 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack,
     }
   }, []);
 
+  // 마운트 됐을 때 처음에 채팅방 정보 가져오기
   useEffect(() => {
     fetchMessages(roomId);
     fetchRoomInfo(roomId);
@@ -104,6 +105,7 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack,
     setIsInputFocused(false);
   };
 
+  // 스크롤 아래로 내리기
   useEffect(() => {
     scrollToBottom();
   }, [currentRoomMessages, scrollToBottom]);
@@ -167,6 +169,7 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack,
     addMessage(message);
   }, [addMessage]);
 
+  // chatStore에서 메세지와 방 정보 가져오기
   useEffect(() => {
     fetchMessages(roomId);
     fetchRoomInfo(roomId);

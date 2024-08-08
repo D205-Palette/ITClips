@@ -3,7 +3,6 @@
 import React from "react";
 
 // icons
-import { FaPlus } from "react-icons/fa6";
 import { GoPlus } from "react-icons/go";
 
 // components

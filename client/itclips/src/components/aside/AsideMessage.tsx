@@ -81,6 +81,7 @@ const AsideMessage: React.FC<MessageListProps> = ({ onSelectChat, onShowInvite }
     }
   };
 
+  // 채팅방 정보 업데이트
   const updateRoomInfo = (roomId: number, message: Message) => {
     updateRoom(roomId, {
       lastMessage: message.message,

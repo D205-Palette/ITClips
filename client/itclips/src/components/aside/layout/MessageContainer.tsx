@@ -22,23 +22,15 @@ const MessageContainer: React.FC<MessageContainerProps> = ({ messages }) => {
 
   const userInfo = authStore(state => state.userInfo);
 
-  const formatToKST = (dateString: string) => {
-    const date = new Date(dateString);
-    const kstDate = addHours(date, 9);
-    return format(kstDate, 'yyyy-MM-dd HH:mm:ss');
-  };
-
+  // 새 메세지, 오래된 메세지 시간 변환
   const formatMessageTime = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
     const nineHoursAgo = subHours(now, 9);
     
-    // If the message time is after (now - 9 hours), it's a new message
-    // and doesn't need time adjustment
     if (isAfter(date, nineHoursAgo)) {
       return format(date, 'yyyy-MM-dd HH:mm:ss');
     } else {
-      // For older messages, add 9 hours
       const kstDate = addHours(date, 9);
       return format(kstDate, 'yyyy-MM-dd HH:mm:ss');
     }

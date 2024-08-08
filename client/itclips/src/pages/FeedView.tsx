@@ -242,10 +242,6 @@ export default function FeedView() {
         >
           {/* aside 자리 */}
           <AsideProfile />
-          {/* 여기에 프로필이나 메세지일때 넣기 */}
-          <div id="aside" className="absolute col-start-2 col-span-2">
-            {isMessageOpen && <MessageLayout />}
-          </div>
         </div>
 
         {/* main자리 */}

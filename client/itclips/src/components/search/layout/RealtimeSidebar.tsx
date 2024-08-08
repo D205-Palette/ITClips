@@ -58,11 +58,14 @@ const RealtimeSidebar = () => {
 
   return (
     <div className="bg-base-100 text-base-content p-2 mx-auto w-[300px] ml-0">
-      <div className="overflow-hidden h-8">
+      <div className={styles.searchTerms}>
         {rankItems.map((item, index) => (
           <div 
             key={`${item.type}-${item.id}`}
-            className={`transition-all duration-300 ${index === currentIndex ? 'opacity-100' : 'opacity-0 hidden'}`}
+            className={styles.term}
+            style={{
+              top: `${(index - currentIndex) * 100}%`,
+            }}
           >
             <NavLink
               to={item.type === 'bookmark' ? `/bookmarklist/${item.id}` : `/roadmap/${item.id}`}

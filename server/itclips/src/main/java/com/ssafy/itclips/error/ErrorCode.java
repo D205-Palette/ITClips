@@ -59,7 +59,8 @@ public enum ErrorCode {
     FEED_NOT_FOUND(HttpStatus.NOT_FOUND, "FNF-001","피드가 없습니다."),
 
     //recommendation
-    RECOMMEND_NOT_FOUND(HttpStatus.NOT_FOUND,"REC-001","추천 피드가 없습니다.")
+    RECOMMEND_NOT_FOUND(HttpStatus.NOT_FOUND,"REC-001","추천 피드가 없습니다."),
+    RECOMMEND_FOR_STEPS_FAILED(HttpStatus.NOT_FOUND,"REC-002","스탭 추천에 실패했습니다,")
     ;
 
     private final HttpStatus httpStatus;

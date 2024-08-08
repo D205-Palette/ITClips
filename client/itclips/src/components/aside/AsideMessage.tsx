@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 
 // components
 import MessageHeader from "./layout/MessageHeader";
-import MessageListContainer from "./layout/MessageListContainer";
+import ChatRoomListContainer from "./layout/ChatRoomListContainer";
 
 // apis
 import { getChatRooms } from "../../api/messageApi";
@@ -95,7 +95,7 @@ const AsideMessage: React.FC<MessageListProps> = ({ onSelectChat, onShowInvite }
       {/* 메세지 헤더 영역 */}
       <MessageHeader onClickInvite={onClickInvite} />
       {/* 받은 메세지 영역 */}
-      <MessageListContainer 
+      <ChatRoomListContainer 
         rooms={data} // 직접 data를 전달
         onClickMessage={onClickMessage}
       />

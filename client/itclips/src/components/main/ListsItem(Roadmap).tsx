@@ -9,6 +9,9 @@ import axios from "axios";
 import { authStore } from "../../stores/authStore";
 import { API_BASE_URL } from "../../config";
 import type { StepListType } from "../../types/RoadmapType";
+import noImg from "../../assets/images/noImg.gif"
+
+
 interface Props {
   list:StepListType
   changeCount: React.Dispatch<React.SetStateAction<number>>;
@@ -53,8 +56,8 @@ const ListItem: FC<Props> = ({ list,changeCount }) => {
             onClick={() => navigate(`/bookmarklist/${list.bookmarkListRoadmapDTO.id}`)}
             className="hover:cursor-pointer hidden lg:inline "
           >
-            <img
-              src={list.bookmarkListRoadmapDTO.image}
+            <img              
+              src={list.bookmarkListRoadmapDTO.image === "default" ? noImg : list.bookmarkListRoadmapDTO.image}
               alt="Movie"
               className="size-28 hidden lg:inline "
             />

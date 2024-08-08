@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { IoClose } from "react-icons/io5";
 import {
   DragDropContext,
   Droppable,
@@ -54,10 +55,14 @@ const RoadmapCreateView: React.FC = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       // 즐겨찾기 조회
-      const scrapResponse = await axios.get(
-        `${API_BASE_URL}/api/list/scrap/${userId}?viewerId=${userId}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const scrapResponse = await axios
+        .get(`${API_BASE_URL}/api/list/scrap/${userId}?viewerId=${userId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .catch((err) => {
+          // 즐겨찾기 한 글 없으면 404 에러뜸
+          console.log(err);
+        });
 
       // 데이터 가공하여 설정
       const processItems = (data: any[]): Item[] =>
@@ -82,7 +87,7 @@ const RoadmapCreateView: React.FC = () => {
 
       initialItems.bookmarks = processItems(personalResponse.data);
       initialItems.groupBookmarks = processItems(groupResponse.data);
-      initialItems.favorites = processItems(scrapResponse.data);
+      initialItems.favorites = processItems(scrapResponse?.data);
 
       console.log(initialItems);
       // 활성화된 탭에 따라 items 설정
@@ -97,9 +102,9 @@ const RoadmapCreateView: React.FC = () => {
   // 선택된 이미지 내리기
   const handleImageRemove = () => {
     setRoadmapImage(null);
-    setPreviewImageUrl("default");
+    setPreviewImageUrl(null);
   };
-  
+
   useEffect(() => {
     if (!dataLoaded) {
       fetchData();
@@ -196,9 +201,6 @@ const RoadmapCreateView: React.FC = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      console.log("S3 URL : ", roadmapCreateResponse.data.url);
-      console.log("보내야 되는 이미지 : ", roadmapCreateResponse.data.img);
-      console.log("로드맵 이미지 파일 : ", roadmapImage);
 
       if (roadmapImage) {
         await axios.put(`${roadmapCreateResponse.data.url}`, roadmapImage, {
@@ -356,17 +358,18 @@ const RoadmapCreateView: React.FC = () => {
                     <div className="flex flex-col gap-x justify-center">
                       <div className="flex flex-col gap-y-2">
                         <div className="border w-32 h-32 bg-gray-200 rounded-lg overflow-hidden">
-                          {previewImageUrl ? (
-                            <img
-                              src={previewImageUrl}
-                              alt="roadmapImg"
-                              className="border w-full h-full object-cover"
-                            />
-                          ) : (
+                          {previewImageUrl === "default" ||
+                          previewImageUrl === null ? (
                             <img
                               src={noImg}
                               alt="noImg"
                               className=" w-full h-full object-cover"
+                            />
+                          ) : (
+                            <img
+                              src={previewImageUrl || ""}
+                              alt="roadmapImg"
+                              className="border w-full h-full object-cover"
                             />
                           )}
                         </div>
@@ -522,6 +525,16 @@ const RoadmapCreateView: React.FC = () => {
           </Formik>
         </div>
       </DragDropContext>
+
+      {/* 뒤로가기 버튼 */}
+      <button
+        className="fixed bottom-10 right-10"
+        onClick={() => {
+          navigate(-1);
+        }}
+      >
+        <IoClose size={56} />
+      </button>
     </div>
   );
 };

@@ -11,7 +11,7 @@ interface TabState {
   tempCategories: CategoryType[];
   setTempCategories: (cats: CategoryType[]) => void;
   addTempCategories: (cat: CategoryType) => void;
-  deleteTempCategories: (cat: CategoryType) => void;
+  deleteTempCategories: (cat: string) => void;
 }
 
 const Tab = create<TabState>()(
@@ -29,7 +29,7 @@ const Tab = create<TabState>()(
         deleteTempCategories: (cat) =>
           set((state) => ({
             tempCategories: state.tempCategories.filter(
-              (tempCat) => tempCat.categoryName !== cat.categoryName
+              (tempCat) => tempCat.categoryName !== cat
             ),
           })),
       }),

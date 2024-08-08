@@ -1,26 +1,37 @@
 // stores/asideStore.ts
 
-import { create } from 'zustand';
+import { create } from "zustand";
 
 interface DeleteState {
-  deletedBookmarkList:number[];
-  setDeletedBookmarkList: (id:number) => void;
+  deletedBookmarkList: number[];
+  setDeletedBookmarkList: (id: number) => void;
 
-  deletedBookmark:number[];
-  setDeletedBookmark: (id:number) => void;
+  deletedBookmark: number[];
+  setDeletedBookmark: (id: number) => void;
 
-  deletedRoadmap:number[];
-  setDeletedRoadmap: (id:number) => void;
+  deletedRoadmap: number[];
+  setDeletedRoadmap: (id: number) => void;
+
+  deletedCategory: string[];
+  setDeletedCategory: (name: string) => void;
 }
 
 export const deleteStore = create<DeleteState>((set) => ({
-    deletedBookmarkList:[],
-    setDeletedBookmarkList: (id) => set((state) => ({deletedBookmarkList : [...state.deletedBookmarkList, id]})),
-                             
-    deletedBookmark:[],
-    setDeletedBookmark: (id) => set((state) => ({deletedBookmark : [...state.deletedBookmark, id]})),
+  deletedBookmarkList: [],
+  setDeletedBookmarkList: (id) =>
+    set((state) => ({
+      deletedBookmarkList: [...state.deletedBookmarkList, id],
+    })),
 
-    deletedRoadmap:[],
-    setDeletedRoadmap: (id) => set((state) => ({deletedRoadmap : [...state.deletedRoadmap, id]})),
+  deletedBookmark: [],
+  setDeletedBookmark: (id) =>
+    set((state) => ({ deletedBookmark: [...state.deletedBookmark, id] })),
 
+  deletedRoadmap: [],
+  setDeletedRoadmap: (id) =>
+    set((state) => ({ deletedRoadmap: [...state.deletedRoadmap, id] })),
+
+  deletedCategory: [],
+  setDeletedCategory: (name) =>
+    set((state) => ({ deletedCategory: [...state.deletedCategory, name] })),
 }));

@@ -29,8 +29,8 @@ const AIContent: React.FC<Props> = ({ bookmarkId, setIsAIOpen }) => {
             },
             })
               .then((res) => {
-                console.log(res.data)
-                setAIAnswer(JSON.stringify(res.data.summary));
+                const answerList = res.data.summary.split('\n')
+                setAIAnswer(answerList)
             })
             .catch((err) => {
               console.error(err);
@@ -39,7 +39,7 @@ const AIContent: React.FC<Props> = ({ bookmarkId, setIsAIOpen }) => {
         fetchData();
       }, []);
 
-  const [AIAnswer, setAIAnswer] = useState<string>("Loading...");
+  const [AIAnswer, setAIAnswer] = useState<string[]>(["Loading..."]);
 
   const isDark = darkModeStore((state) => state.isDark);
 
@@ -56,7 +56,7 @@ const AIContent: React.FC<Props> = ({ bookmarkId, setIsAIOpen }) => {
           <IoIosArrowUp size={24} />
         </div>
       </div>
-      <p>{AIAnswer}</p>
+      {AIAnswer.map((answer) => <p>{answer}</p>)}
     </>
   );
 };

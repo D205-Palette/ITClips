@@ -28,8 +28,9 @@ export const deleteUserAccount = (userId: number) => {
 
 // 프로필 이미지 변경
 // 주의 : 동작안하면 headers에 'Content-Type': 'multipart/form-data' 붙여서 보내기
+
 export const updateProfileImage = (email: string, profileImage: string) => {
-  return authenticatedRequest("post", "/user/profile/img", profileImage, { email });
+  return authenticatedRequest("post", "/user/profile/img", undefined, { email, profileImage });
 };
 
 // 사용자 관심사 목록 불러오기

@@ -4,7 +4,7 @@
 import AsideRoadmapKebabDropdown from "./ui/AsideRoadmapKebabDropdown";
 import ImageContainer from "./layout/ImageContainer";
 import ItemDetailInfo from "./layout/ItemDetailInfo";
-import LikesFavoritesCount from "./layout/LikesFavoritesCount";
+import LikesFavoritesCount from "./layout/LikesFavoritesCount(Roadmap)";
 import Tags from "./layout/Tags";
 import CommentsContainer from "./layout/CommentsContainer";
 
@@ -16,11 +16,11 @@ import type { RoadmapDetailType } from "../../types/RoadmapType";
 
 
 interface Props {
-  roadmapId:number;
+  roadmap:RoadmapDetailType;
 }
 
 
-const AsideRoadmap :  React.FC<Props> = ({roadmapId}) => {
+const AsideRoadmap :  React.FC<Props> = ({roadmap}) => {
 
   const isDark = darkModeStore(state => state.isDark);
   const isMessageOpen = asideStore(state => state.isMessageOpen);
@@ -28,17 +28,17 @@ const AsideRoadmap :  React.FC<Props> = ({roadmapId}) => {
   return (
     <div className={`${ isDark ? "bg-base-300" : "bg-sky-100" } rounded-3xl w-80 p-8 flex flex-col items-center`}>
       {/* 더보기 버튼 */}
-      { !isMessageOpen && <AsideRoadmapKebabDropdown isRoadmap={true} id={roadmapId}/> }
+      { !isMessageOpen && <AsideRoadmapKebabDropdown isRoadmap={true} id={roadmap.id}/> }
       {/* 북마크리스트 썸네일 */}
-      <ImageContainer />
+      <ImageContainer src={roadmap.image} whatContent="로드맵" />
       {/* 북마크리스트 정보 */}
-      {/* <ItemDetailInfo {...roadmapInfo} /> */}
+      <ItemDetailInfo title={roadmap.title} description={roadmap.description} />
       {/* 좋아요, 즐겨찾기 칸 */}
-      {/* <LikesFavoritesCount {...roadmapInfo} /> */}
+      <LikesFavoritesCount {...roadmap} />
       {/* 태그 창 */}
       {/* <Tags {...roadmapInfo} /> */}
       {/* 댓글 창 */}
-      <CommentsContainer id={roadmapId} />
+      <CommentsContainer id={roadmap.id} />
     </div>
   );
 };

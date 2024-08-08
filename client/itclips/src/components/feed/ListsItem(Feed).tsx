@@ -2,24 +2,18 @@ import { useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
-import useStore from "../../stores/mainStore";
 import KebabDropdown from "./KebabDropdown(Feed)";
 import darkModeStore from "../../stores/darkModeStore";
 import profile_img from "../../assets/images/profile_image.png";
+import type { BookmarkListSumType } from "../../types/BookmarkListType";
+
+interface BookmarkListSumFeedType extends BookmarkListSumType {
+  createdAt: string;
+}
 
 interface Props {
-  list: {
-    id: number;
-    user: string;
-    title: string;
-    description: string;
-    createdAt: string;
-    image: string;
-    bookmarks: object[];
-    bookmark_list_tags: string[];
-    bookmark_list_like: number;
-  };
-}
+  list: BookmarkListSumFeedType;
+  }
 
 const ListItem: FC<Props> = ({ list }) => {
   const [isLike, setIsLike] = useState(false);
@@ -43,8 +37,9 @@ const ListItem: FC<Props> = ({ list }) => {
   };
 
   const getRelativeTime = (createdAt: string) => {
-    const now = new Date();
+    const now = new Date();    
     const createdDate = new Date(createdAt);
+    createdDate.setHours(createdDate.getHours()+9);
     const diffInMs = now.getTime() - createdDate.getTime();
     const diffInMinutes = diffInMs / (1000 * 60);
     const diffInHours = diffInMs / (1000 * 60 * 60);
@@ -85,7 +80,7 @@ const ListItem: FC<Props> = ({ list }) => {
               alt=""
             />
           </div>
-          <h2>{list.user}</h2>
+          <h2>{list.users[0].nickName}</h2>
           <div className="badge badge-secondary">
             {getRelativeTime(list.createdAt)}
           </div>
@@ -110,7 +105,7 @@ const ListItem: FC<Props> = ({ list }) => {
         <div className="card-actions justify-end flex items-center relative mt-2">
           <button onClick={clickHeart} className="btn btn-ghost z-0">
             {isLike ? <FaHeart /> : <FaRegHeart />}
-            {list.bookmark_list_like}
+            {list.likeCount}
           </button>
         </div>
       </div>

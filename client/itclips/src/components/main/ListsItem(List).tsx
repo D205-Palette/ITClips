@@ -10,8 +10,6 @@ import type { BookmarkListSumType } from "../../types/BookmarkListType";
 import { API_BASE_URL } from "../../config";
 import { authStore } from "../../stores/authStore";
 import noImg from "../../assets/images/noImg.gif"
-import BookmarkListEditModal from "../aside/modals/BookmarkListEditModal";
-
 
 interface Props {
   list: BookmarkListSumType;

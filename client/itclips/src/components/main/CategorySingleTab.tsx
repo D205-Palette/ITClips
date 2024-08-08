@@ -61,6 +61,7 @@ const CategorySingleTab: FC<Props> = ({ tempCategory }) => {
   const whatCategory = mainTabStore((state) => state.whatCategory);
   const changeCategory = mainTabStore((state) => state.changeCategory);
 
+  const [isDelete, setIsDelete] = useState(false)
   const DeleteButton = (): any => {
     const [isOpen, setIsOpen] = useState(false)
 
@@ -73,7 +74,7 @@ const CategorySingleTab: FC<Props> = ({ tempCategory }) => {
         <div className="modal-box pt-16 ">
           <h3 className="font-bold text-lg">카테고리를 삭제하시겠습니까?</h3>
           <div className="modal-action">
-            <button className="btn bg-sky-500 text-slate-100 hover:bg-sky-700" onClick={()=>{deleteCategory(); setIsOpen(false)}}>확인</button>
+            <button className="btn bg-sky-500 text-slate-100 hover:bg-sky-700" onClick={()=>{deleteCategory(); setIsOpen(false); setIsDelete(true)}}>확인</button>
             <button className="btn" onClick={()=>{setIsOpen(false)}}>취소</button>
           </div>
         </div>
@@ -90,7 +91,7 @@ const CategorySingleTab: FC<Props> = ({ tempCategory }) => {
         },
       })
         .then((res) => {
-          deleteTempCategories(tempCategory)
+          deleteTempCategories(tempCategory.categoryName)
         })
         .catch((err) => {
           console.error(err);
@@ -114,13 +115,14 @@ const CategorySingleTab: FC<Props> = ({ tempCategory }) => {
     <>
       <button
         className={
+          ( isDelete? "hidden ": " ") +
           (tempCategory.categoryName === whatCategory.categoryName
             ? "bg-sky-500 text-slate-100 border-solid border-sky-500 border-2 p-1"
             : color) + " rounded-2xl mx-2 ps-3"
         }
       >
         <div className="flex flex-row items-center">
-          <div onClick={() => {changeCategory(tempCategory); console.log(tempCategory);console.log(whatCategory)}}
+          <div onClick={() => changeCategory(tempCategory)}
             className="me-2">
             {tempCategory.categoryName}
           </div>{" "}

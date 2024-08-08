@@ -27,18 +27,9 @@ export default function Oauth2() {
           fetchUserToken(token); // 스토리지에 액세스 토큰 갱신
           if (response.data.nickname) {
             fetchUserInfo(response.data); // 스토리지에 유저 정보 갱신
-            login(); // 로그인 처리
-
-            // 부모 창에 로그인 성공 메시지 전송
-            if (window.opener) {
-              window.opener.postMessage(
-                { type: "LOGIN_SUCCESS", data: response.data },
-                window.location.origin
-              );
-              window.close(); // 소셜 로그인 창을 닫음
-            } else {
-              navigate(`/user/${userIdNumber}`); // 로그인 후 이동할 페이지
-            }
+            login(); // 로그인 처리          
+            navigate(`/user/${userIdNumber}`); // 로그인 후 이동할 페이지
+            window.alert(`환영합니다 ${response.data.nickname}님!`);
           } else {
             // 닉네임이 없는 경우: 추가 회원정보를 입력받기 위한 페이지로 리디렉션
             if (window.opener) {

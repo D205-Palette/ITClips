@@ -207,7 +207,7 @@ const Bookmark: FC<Props> = ({
       </div>
 
       {/* AI요약 탭 열리는 위치 */}
-      <div className={(isAiOpen&&"py-5") + " ps-9 pe-12 mt-3 bg-sky-100"}>
+      <div className={(isDark?"bg-sky-950 text-slate-300" :"bg-sky-100" ) + (isAiOpen&&" py-5") + " ps-9 pe-12 mt-3 "}>
         {isAiOpen ? (
           <>
             <AIContent bookmarkId={bookmark.id} setIsAIOpen={setIsAIOpen}/>

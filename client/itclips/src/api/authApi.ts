@@ -64,8 +64,6 @@ export const editUserInfo = (userData: any) => {
   return authenticatedRequest("put", "/user/profile", userData);
 };
 
-// 프로필 사진 변경하기
-
 // 비밀번호 변경
 export const changePassword = (
   email: string,

@@ -15,15 +15,12 @@ interface Tag {
 
 interface Item {
   title: string;
-  email: string;
+  // email: string;
   description: string;
-  like: number;
-  fav: number;
-  tags: Tag[];
-  comments: Comment[];
+
 }
 
-const ItemDetailInfo = (data: BookmarkListDetailType) => {
+const ItemDetailInfo = (data: Item) => {
 
   return (
     <div className="text-center">

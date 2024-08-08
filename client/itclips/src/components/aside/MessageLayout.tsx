@@ -10,9 +10,7 @@ import darkModeStore from "../../stores/darkModeStore";
 import { asideStore } from "../../stores/asideStore";
 import { useWebSocketStore } from "../../stores/webSocketStore";
 import { authStore } from "../../stores/authStore";
-
-// apis
-import { updateMessageStatusToRead } from "../../api/messageApi";
+import { chatStore } from "../../stores/chatStore";
 
 const MessageLayout = () => {
 
@@ -24,6 +22,7 @@ const MessageLayout = () => {
   const isMessageOpen = asideStore(state => state.isMessageOpen);
   const setSelectedChat = asideStore(state => state.setSelectedChat);
   const { connect, disconnect } = useWebSocketStore();
+  const { updateMessageStatus, resetMessageCount } = chatStore();
 
   // 소켓 연결
   useEffect(() => {
@@ -47,7 +46,8 @@ const MessageLayout = () => {
   const handleBackToListFromAsideMessageDetail = (roomId: number) => {
     if (userInfo.id) {
       setSelectedChat(null);
-      updateMessageStatusToRead(roomId, userInfo.id);
+      updateMessageStatus(roomId, userInfo.id);
+      resetMessageCount(roomId);
     }
   }
   

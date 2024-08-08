@@ -1,16 +1,14 @@
 // AsideMessage.tsx 는 메세지 컴포넌트 메인
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 
 // components
 import MessageHeader from "./layout/MessageHeader";
 import ChatRoomListContainer from "./layout/ChatRoomListContainer";
 
-// apis
-import { getChatRooms } from "../../api/messageApi";
-
 // stores
 import { authStore } from "../../stores/authStore";
 import { useWebSocketStore } from "../../stores/webSocketStore";
+import { chatStore } from "../../stores/chatStore";
 
 // 채팅방 인터페이스
 interface ChatRoom {
@@ -21,6 +19,15 @@ interface ChatRoom {
   messageCnt: number;
 }
 
+interface Message {
+  id: number;
+  roomId: number;
+  senderId: number;
+  senderName: string;
+  message: string;
+  createdAt: string;
+}
+
 interface MessageListProps {
   onSelectChat: (id: number) => void;
   onShowInvite: (state: number) => void;
@@ -29,56 +36,57 @@ interface MessageListProps {
 const AsideMessage: React.FC<MessageListProps> = ({ onSelectChat, onShowInvite }) => {
 
   const userId = authStore(state => state.userId);
-  const [data, setData] = useState<ChatRoom[]>([]);
   const { stompClient, isConnected } = useWebSocketStore();
+  const { rooms, fetchRooms, updateRoom } = chatStore();
+
+  // 구독 정보를 저장할 ref
+  const subscriptions = useRef<{ [key: number]: { unsubscribe: () => void } }>({});
 
   useEffect(() => {
-    const fetchChatRooms = async () => {
-      try {
-        const response = await getChatRooms(userId); // 사용자 채팅방 목록 가져오기
-        setData(response.data); // API에서 반환된 데이터의 data 속성 사용
-        subscribeToRooms(response.data);
-      } catch (error) {
-        console.error("Failed to fetch chat rooms:", error);
-      }
-    };
+    fetchRooms(userId);
+  }, [userId, fetchRooms]);
 
-    fetchChatRooms(); // 채팅방 목록 가져오기
-
-    // isConnected가 true가 되면 구독을 시도합니다.
-    if (isConnected) {
-      subscribeToRooms(data);
+  useEffect(() => {
+    if (isConnected && stompClient) {
+      subscribeToRooms(rooms);
     }
-
-  }, [userId, isConnected]); // userId가 변경될 때마다 실행
+    
+    return () => {
+      // 컴포넌트 언마운트 시 안전하게 구독 해제
+      Object.values(subscriptions.current).forEach(subscription => {
+        try {
+          subscription.unsubscribe();
+        } catch (error) {
+          console.error('Error unsubscribing:', error);
+        }
+      });
+      subscriptions.current = {};
+    };
+  }, [isConnected, rooms, stompClient]);
 
   // 채팅방 연결 함수
   const subscribeToRooms = (rooms: ChatRoom[]) => {
     if (stompClient && isConnected) {
       rooms.forEach(room => {
-        stompClient.subscribe(`/api/sub/chat/room/${room.id}`, (message) => {
-          console.log('Message received:', message);
-          const messageBody = JSON.parse(message.body);
-          console.log('Received message:', messageBody);
-          updateRoomInfo(room.id, messageBody.message);
-        });
-        console.log(`Subscribed to room: ${room.id}`);
+        if (!subscriptions.current[room.id]) {
+          const subscription = stompClient.subscribe(`/api/sub/chat/room/${room.id}`, (message) => {
+            const messageBody = JSON.parse(message.body) as Message;
+            updateRoomInfo(room.id, messageBody);
+          });
+          subscriptions.current[room.id] = subscription;
+        }
       });
     } else {
       console.error('Unable to subscribe: STOMP client not connected');
     }
   };
 
-  const updateRoomInfo = (roomId: number, lastMessage: string) => {
-    setData(prevData => prevData.map(room => 
-      room.id === roomId 
-        ? { 
-            ...room, 
-            lastMessage: lastMessage,
-            messageCnt: room.messageCnt + 1
-          } 
-        : room
-    ));
+  const updateRoomInfo = (roomId: number, message: Message) => {
+    updateRoom(roomId, {
+      lastMessage: message.message,
+      lastModified: message.createdAt,
+      messageCnt: (rooms.find(room => room.id === roomId)?.messageCnt || 0) + 1
+    });
   };
 
   const onClickMessage = (roomId: number) => {
@@ -96,7 +104,7 @@ const AsideMessage: React.FC<MessageListProps> = ({ onSelectChat, onShowInvite }
       <MessageHeader onClickInvite={onClickInvite} />
       {/* 받은 메세지 영역 */}
       <ChatRoomListContainer 
-        rooms={data} // 직접 data를 전달
+        rooms={rooms} // 직접 data를 전달
         onClickMessage={onClickMessage}
       />
     </div>

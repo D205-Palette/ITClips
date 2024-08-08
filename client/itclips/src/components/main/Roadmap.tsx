@@ -41,7 +41,8 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
     } setIsLike(!isLike);
   };
   const isDark = darkModeStore((state) => state.isDark);
-  const percentage = ((roadmap.checkCnt * 100) / roadmap.stepCnt).toFixed(1);
+  const percentage =(roadmap.stepCnt===0?  "No List" : 
+    ((roadmap.checkCnt * 100) / roadmap.stepCnt).toFixed(1)+'%')
   const navigate = useNavigate();
 
   return (
@@ -101,7 +102,7 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
                     : "text-blue-200"
                 }
               >
-                {percentage + "%"}
+                {percentage}
               </p>
             </div>
 

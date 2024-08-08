@@ -49,7 +49,7 @@ const SearchRoadmap: React.FC<SearchRoadmapProps> = ({ keyword }) => {
   const userId = authStore(state => state.userId);
 
   const [ viewMode, setViewMode ] = useState<'grid' | 'list'>('list');
-  const [ sortBy, setSortBy ] = useState<"조회수" | "스크랩수" | "좋아요수">("조회수");
+  const [ sortBy, setSortBy ] = useState<"hit" | "scrap" | "like">("hit");
   const [ roadmapItems, setRoadmapItems ] = useState<RoadmapItem[]>([]);
   const [ hasResults, setHasResults ] = useState<boolean>(true);
 
@@ -92,20 +92,20 @@ const SearchRoadmap: React.FC<SearchRoadmapProps> = ({ keyword }) => {
       <div className="flex justify-between mb-4">
         <div className="space-x-2">
           <button 
-            className={`px-4 py-2 rounded-full ${sortBy === "조회수" ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-            onClick={() => setSortBy("조회수")}
+            className={`px-4 py-2 rounded-full ${sortBy === "hit" ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+            onClick={() => setSortBy("hit")}
           >
             조회수
           </button>
           <button 
-            className={`px-4 py-2 rounded-full ${sortBy === "스크랩수" ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-            onClick={() => setSortBy("스크랩수")}
+            className={`px-4 py-2 rounded-full ${sortBy === "scrap" ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+            onClick={() => setSortBy("scrap")}
           >
             스크랩수
           </button>
           <button 
-            className={`px-4 py-2 rounded-full ${sortBy === "좋아요수" ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-            onClick={() => setSortBy("좋아요수")}
+            className={`px-4 py-2 rounded-full ${sortBy === "like" ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+            onClick={() => setSortBy("like")}
           >
             좋아요수
           </button>

@@ -1,5 +1,7 @@
 // AsideMessageDetail.tsx 는 메세지창의 메세지 목록 중 하나를 클릭했을 때 그 메세지의 상세창 컴포넌트
 import React, { useState, useEffect, useRef } from "react";
+import { toZonedTime } from 'date-fns-tz';
+import { format, addHours, parseISO } from 'date-fns';
 
 // components
 import MessageBackButton from "./ui/MessageBackButton";
@@ -8,7 +10,7 @@ import AsideMessageKebabDropdown from "./ui/AsideMessageKebabDropdown";
 import MessageInviteModal from "./modals/MessageInviteModal";
 
 // apis
-import { getChatRoomMessages, getChatRoomInfo, leaveChatRoom } from "../../api/messageApi";
+import { getChatRoomMessages, getChatRoomInfo, leaveChatRoom, updateMessageStatusToRead } from "../../api/messageApi";
 
 // stores
 import { authStore } from "../../stores/authStore";
@@ -16,7 +18,7 @@ import { useWebSocketStore } from "../../stores/webSocketStore";
 
 interface Message {
   roomId: number;
-  senderId: string;
+  senderId: number;
   senderName: string;
   message: string;
   createdAt: string;
@@ -39,7 +41,7 @@ interface AsideMessageDetailProps {
 // AsideMessage에서 id값을가지고 데이터를 꺼내서 라우터로 AsideMessageDetail 컴포넌트로 넘겨줌
 
 const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack }) => {
-
+  
   const userInfo = authStore(state => state.userInfo)
   
   const [ roomInfo, setRoomInfo ] = useState<ChatRoomInfo | null>(null);
@@ -48,9 +50,62 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
   const { isConnected, subscribe, stompClient } = useWebSocketStore();
   const [ notification, setNotification ] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
   const [ isInviteModalOpen, setIsInviteModalOpen ] = useState(false);
+  
+  // 시간 형식 변경
+  function formatDateToKST(date: string | Date): string {
+    const parsedDate = typeof date === 'string' ? new Date(date) : date;
+    const kstDate = toZonedTime(parsedDate, 'Asia/Seoul');
+    return format(kstDate, 'yyyy-MM-dd HH:mm:ss');
+  }
+
+  // 서버 시간에서 9시간을 추가하는 함수
+  function addNineHours(dateString: string | null): string {
+    if (!dateString) {
+      console.warn("Invalid date string received:", dateString);
+      return new Date().toISOString(); // 현재 시간을 반환하거나 다른 기본값 설정
+    }
+    try {
+      const date = parseISO(dateString);
+      const nineHoursLater = addHours(date, 9);
+      return format(nineHoursLater, 'yyyy-MM-dd HH:mm:ss');
+    } catch (error) {
+      console.error("Error parsing date:", error);
+      return new Date().toISOString(); // 오류 발생 시 현재 시간을 반환하거나 다른 기본값 설정
+    }
+  }
 
   // 메시지 컨테이너에 대한 ref 생성
   const messageContainerRef = useRef<HTMLDivElement>(null);
+
+  // 메시지 읽음 처리 함수
+  const markMessagesAsRead = async () => {
+    if (userInfo.id) {
+      try {
+        await updateMessageStatusToRead(roomId, userInfo.id);
+        console.log("Messages marked as read");
+      } catch (error) {
+        console.error("Failed to mark messages as read:", error);
+      }
+    }
+  };
+
+  // 컴포넌트 마운트 시 메시지 읽음 처리
+  useEffect(() => {
+    markMessagesAsRead();
+  
+    return () => {
+      // 컴포넌트 언마운트 시 동기적으로 실행되는 함수
+      const markMessagesAsReadOnUnmount = () => {
+        if (userInfo.id) {
+          updateMessageStatusToRead(roomId, userInfo.id)
+            .then(() => console.log("Messages marked as read on unmount"))
+            .catch((error) => console.error("Failed to mark messages as read on unmount:", error));
+        }
+      };
+  
+      markMessagesAsReadOnUnmount();
+    };
+  }, [roomId, userInfo.id]);
 
   // 스크롤을 아래로 내리는 함수
   const scrollToBottom = () => {
@@ -99,17 +154,17 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
     setIsInviteModalOpen(false);
   };
 
-  // 메세지 내용 조회
+  // 메시지 내용 조회
   useEffect(() => {
     console.log(`채팅방 번호 : ${roomId}`);
     const fetchMessages = async () => {
       try {
         const response = await getChatRoomMessages(roomId);
-        // 받아온 메시지를 날짜 기준으로 오름차순 정렬 (오래된 메시지가 위로)
-        const sortedMessages = response.data.sort((a: Message, b: Message) => 
-          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-        );
-        setMessages(sortedMessages);
+        const updatedMessages = response.data.map((message: Message) => ({
+          ...message,
+          createdAt: addNineHours(message.createdAt)
+        })).filter((message: Message) => message.createdAt !== null);
+        setMessages(updatedMessages.reverse());
         setTimeout(scrollToBottom, 0);
       } catch (error) {
         console.error("메세지 불러오기 실패:", error);
@@ -117,7 +172,10 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
     };
 
     fetchMessages();
+  }, [roomId]); // roomId가 변경될 때만 실행
 
+  // 웹소켓 구독 관리
+  useEffect(() => {
     let unsubscribe: () => void = () => {};
 
     if (isConnected) {
@@ -136,14 +194,18 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
 
   // 메세지 전송 버튼을 눌렀을 때 동작
   const handleSendMessage = () => {
-    if (isConnected && stompClient && roomId && userInfo.id && inputMessage.trim()) {
+    if (isConnected && stompClient && roomId && userInfo.id && userInfo.nickname && inputMessage.trim()) {
+
+      const now = new Date();
+
       stompClient.publish({
         destination: `/api/pub/chat/message`,
         body: JSON.stringify({
           roomId: roomId,
           senderId: userInfo.id,
           senderName: userInfo.nickname,
-          message: inputMessage.trim()
+          message: inputMessage.trim(),
+          createdAt: formatDateToKST(now)
         })
       });
       setInputMessage('');

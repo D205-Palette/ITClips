@@ -6,7 +6,7 @@ import { authStore } from "../../../stores/authStore";
 
 interface Message {
   roomId: number;
-  senderId: string;
+  senderId: number;
   senderName: string;
   message: string;
   createdAt: string;

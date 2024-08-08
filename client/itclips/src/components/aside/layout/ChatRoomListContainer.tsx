@@ -1,4 +1,4 @@
-// MessageListContainer.tsx 는 AsideMessage.tsx 에서 채팅방들을 리스트로 보여주는 컴포넌트
+// ChatRoomListContainer.tsx 는 AsideMessage.tsx 에서 채팅방들을 리스트로 보여주는 컴포넌트
 
 import React from "react";
 
@@ -15,7 +15,7 @@ interface ChildComponentProps {
   onClickMessage: (id: number) => any;
 }
 
-const MessageContainer: React.FC<ChildComponentProps> = ({ rooms, onClickMessage }) => {
+const ChatRoomListContainer: React.FC<ChildComponentProps> = ({ rooms, onClickMessage }) => {
   
   return (
     <div>
@@ -48,4 +48,4 @@ const MessageContainer: React.FC<ChildComponentProps> = ({ rooms, onClickMessage
   );
 };
 
-export default MessageContainer;
+export default ChatRoomListContainer;

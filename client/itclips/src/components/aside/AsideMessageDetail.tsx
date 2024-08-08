@@ -51,6 +51,24 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
   const { isConnected, subscribe, stompClient } = useWebSocketStore();
   const [ notification, setNotification ] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
   const [ isInviteModalOpen, setIsInviteModalOpen ] = useState(false);
+  const [ isInputFocused, setIsInputFocused ] = useState(false);
+
+  // 엔터 키 입력 처리 함수
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter' && !event.shiftKey && isInputFocused) {
+      event.preventDefault(); // 기본 엔터 동작 방지
+      handleSendMessage();
+    }
+  };
+
+  // input 포커스 상태 변경 함수
+  const handleInputFocus = () => {
+    setIsInputFocused(true);
+  };
+
+  const handleInputBlur = () => {
+    setIsInputFocused(false);
+  };
   
   // 시간 형식 변경
   function formatDateToKST(date: string | Date): string {
@@ -258,6 +276,9 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
           type="text"
           value={inputMessage}
           onChange={(e) => setInputMessage(e.target.value)}
+          onKeyDown={handleKeyDown}
+          onFocus={handleInputFocus}
+          onBlur={handleInputBlur}
           placeholder="메세지를 입력해주세요"
           className="input input-bordered flex-1 mr-2"
         />

@@ -1,7 +1,7 @@
 package com.ssafy.itclips.bookmark.service;
 
 import com.ssafy.itclips.bookmark.dto.BookmarkRequestDTO;
-import com.ssafy.itclips.bookmark.dto.BookmarkSummaryDTO;
+import com.ssafy.itclips.global.gpt.GPTResponseDTO;
 
 public interface BookmarkService {
     void createBookmark(Long listId, Long categoryId, BookmarkRequestDTO bookmarkRequestDTO) throws RuntimeException;
@@ -14,5 +14,5 @@ public interface BookmarkService {
 
     void removeLikeBookmark(Long userId, Long bookmarkId) throws RuntimeException;
 
-    BookmarkSummaryDTO getUrlSummary(Long bookmarkId) throws RuntimeException;
+    GPTResponseDTO getUrlSummary(Long bookmarkId) throws RuntimeException;
 }

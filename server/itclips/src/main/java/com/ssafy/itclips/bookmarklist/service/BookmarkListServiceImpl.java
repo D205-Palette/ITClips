@@ -178,10 +178,6 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         List<BookmarkListScrap> bookmarkListScraps = bookmarkListScrapRepository.findByUserId(userId);
         List<BookmarkList> bookmarkLists = getList(bookmarkListScraps);
 
-        if (bookmarkLists.isEmpty()) {
-            throw new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND);
-        }
-
         return bookmarkLists.stream()
                 .map(bookmarkList -> convertToBookmarkListResponseDTO(bookmarkList, viewerId)) // userId를 추가로 전달
                 .collect(Collectors.toList());

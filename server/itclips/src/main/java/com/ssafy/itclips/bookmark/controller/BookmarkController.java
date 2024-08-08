@@ -1,7 +1,7 @@
 package com.ssafy.itclips.bookmark.controller;
 
 import com.ssafy.itclips.bookmark.dto.BookmarkRequestDTO;
-import com.ssafy.itclips.bookmark.dto.BookmarkSummaryDTO;
+import com.ssafy.itclips.global.gpt.GPTResponseDTO;
 import com.ssafy.itclips.bookmark.service.BookmarkService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -95,7 +95,7 @@ public class BookmarkController {
     @Operation(summary = "북마크 url 요약", description = "url 요약을 요청합니다.")
     public ResponseEntity<?> getUrlSummary(@PathVariable Long bookmarkId) {
 
-        BookmarkSummaryDTO summary = bookmarkService.getUrlSummary(bookmarkId);
+        GPTResponseDTO summary = bookmarkService.getUrlSummary(bookmarkId);
         return new ResponseEntity<>(summary, HttpStatus.OK);
     }
 

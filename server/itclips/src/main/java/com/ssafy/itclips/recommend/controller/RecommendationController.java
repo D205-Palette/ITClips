@@ -30,7 +30,7 @@ public class RecommendationController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
     })
     public ResponseEntity<?> getRecommendations(@PathVariable Long userId) {
-        List<BookmarkListResponseDTO> lists =  recommendationService.getPythonRecommendBookmarks(userId);
+        List<BookmarkListResponseDTO> lists = recommendationService.getPythonRecommendBookmarks(userId);
         return new ResponseEntity<>(lists, HttpStatus.OK);
     }
 }

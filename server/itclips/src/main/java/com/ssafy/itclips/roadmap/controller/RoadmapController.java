@@ -3,6 +3,7 @@ package com.ssafy.itclips.roadmap.controller;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
 import com.ssafy.itclips.alarm.service.NotificationService;
 import com.ssafy.itclips.global.file.DataResponseDto;
+import com.ssafy.itclips.global.gpt.GPTResponseDTO;
 import com.ssafy.itclips.global.rank.RankDTO;
 import com.ssafy.itclips.roadmap.dto.RoadmapCommentRequestDTO;
 import com.ssafy.itclips.roadmap.dto.RoadmapDTO;
@@ -188,5 +189,15 @@ public class RoadmapController {
     public ResponseEntity<?> scrapRoadmapRank(){
         List<RankDTO> lists = roadmapService.getListsRankingByScrap();
         return new ResponseEntity<>(lists, HttpStatus.OK);
+    }
+
+    @GetMapping("/recommend/step/{keyWord}")
+    @Operation(summary = "로드맵 gpt 추천 ", description = "로드맵 제작 추천")
+    public ResponseEntity<?> recommendRoadmapSteps(@PathVariable String keyWord,
+                                                   @RequestParam(required = false) Long userId
+                                                   ) {
+        GPTResponseDTO response = roadmapService.getRecommendRoadmapSteps(userId, keyWord);
+        return new ResponseEntity<>(response,HttpStatus.OK);
+
     }
 }

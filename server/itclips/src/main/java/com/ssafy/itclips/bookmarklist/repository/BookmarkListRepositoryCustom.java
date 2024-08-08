@@ -1,6 +1,7 @@
 package com.ssafy.itclips.bookmarklist.repository;
 
 import com.ssafy.itclips.bookmark.dto.BookmarkDetailDTO;
+import com.ssafy.itclips.bookmarklist.dto.BookmarkListAndTagsDTO;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
 import com.ssafy.itclips.global.rank.RankDTO;
 import com.ssafy.itclips.recommend.dto.SimilarBookmarkResponse;
@@ -18,4 +19,6 @@ public interface BookmarkListRepositoryCustom {
     List<BookmarkList> findBookmarkListByTitleAndLike(String title, Integer pageNo);
     List<BookmarkList> findBookmarkListByTags(TagSearchDTO tagSearchDTO, Integer pageNo);
     List<BookmarkList> findBookmarkListByIds(List<SimilarBookmarkResponse> similarLists);
+    List<BookmarkListAndTagsDTO> findBookmarkListTitleAndTags(Long userId);
+    List<BookmarkListAndTagsDTO> findScrapedBookmarkListTitleAndTags(Long userId);
 }

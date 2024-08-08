@@ -3,6 +3,7 @@ package com.ssafy.itclips.roadmap.service;
 import com.ssafy.itclips.alarm.entity.NotificationType;
 import com.ssafy.itclips.alarm.service.NotificationService;
 import com.ssafy.itclips.bookmark.repository.BookmarkRepository;
+import com.ssafy.itclips.bookmarklist.dto.BookmarkListAndTagsDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListRoadmapDTO;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
@@ -13,6 +14,9 @@ import com.ssafy.itclips.error.ErrorCode;
 import com.ssafy.itclips.global.file.DataResponseDto;
 import com.ssafy.itclips.global.file.FileService;
 import com.ssafy.itclips.feed.service.FeedService;
+import com.ssafy.itclips.global.gpt.ChatGPTRequest;
+import com.ssafy.itclips.global.gpt.ChatGPTResponse;
+import com.ssafy.itclips.global.gpt.GPTResponseDTO;
 import com.ssafy.itclips.global.rank.RankDTO;
 import com.ssafy.itclips.roadmap.dto.*;
 import com.ssafy.itclips.roadmap.entity.Roadmap;
@@ -33,8 +37,10 @@ import com.ssafy.itclips.user.entity.UserTag;
 import com.ssafy.itclips.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +63,13 @@ public class RoadmapServiceImpl implements RoadmapService {
     private final FeedService feedService;
     private final FileService fileService;
     private final NotificationService notificationService;
+    private final RestTemplate template;
+
+    @Value("${openai.model}")
+    private String model;
+
+    @Value("${openai.api.url}")
+    private String apiURL;
 
     //전체 로드맵 조회
     @Override
@@ -527,10 +540,49 @@ public class RoadmapServiceImpl implements RoadmapService {
             throw new CustomException(ErrorCode.ROADMAP_NOT_FOUND);
         }
 
-        List<RoadmapInfoDTO> roadmapInfoDTOList = getRoadmapInfoDTOS(userId, roadmapList);
-
-        return roadmapInfoDTOList;
+        return getRoadmapInfoDTOS(userId, roadmapList);
     }
+
+    @Override
+    public GPTResponseDTO getRecommendRoadmapSteps(Long userId, String keyWord) throws RuntimeException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(()->new CustomException(ErrorCode.USER_NOT_FOUND));
+        StringBuilder prompt = new StringBuilder();
+        List<BookmarkListAndTagsDTO> ownList = bookmarkListRepository.findBookmarkListTitleAndTags(userId);
+        List<BookmarkListAndTagsDTO> scrapedList = bookmarkListRepository.findScrapedBookmarkListTitleAndTags(userId);
+
+        makePrompt(keyWord, scrapedList, prompt, ownList);
+
+        ChatGPTRequest request = new ChatGPTRequest(model,prompt.toString());
+        ChatGPTResponse response = template.postForObject(apiURL, request, ChatGPTResponse.class);
+        if(response == null) {
+            throw new CustomException(ErrorCode.RECOMMEND_FOR_STEPS_FAILED);
+        }
+        return GPTResponseDTO.of(response);
+    }
+
+    private static void makePrompt(String keyWord, List<BookmarkListAndTagsDTO> scrapedList, StringBuilder prompt, List<BookmarkListAndTagsDTO> ownList) {
+        for (BookmarkListAndTagsDTO list : scrapedList) {
+            prompt.append(list.getTitle()).append("[tag : ");
+            for(TagDTO tag : list.getTags()){
+                prompt.append(tag.getTitle()).append(", ");
+            }
+            prompt.append("], ");
+        }
+
+        for(BookmarkListAndTagsDTO list : ownList){
+            prompt.append("title : ").append(list.getTitle()).append("[tag : ");
+            for(TagDTO tag : list.getTags()){
+                prompt.append(tag.getTitle()).append(", ");
+            }
+            prompt.append("], ");
+        }
+
+        prompt.append("와 같은 북마크리스트들을 보유중이야.");
+        prompt.append(keyWord).append("에 관해서 공부하고 싶은데, 해당 북마크리스트의 제목과 태그들을 기반으로 북마크리스트를 조합해 로드맵을 만들어 줘.");
+        prompt.append("관련이 없다면 빼도 괜찮아. 다른 말은 빼고 title 정보만으로 {title1}-{title2} 와 같은 형식으로만 출력해줘. tag정보는 표시하지마");
+    }
+
 
     ////////////////// get dto /////////////////////
 

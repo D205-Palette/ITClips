@@ -1,20 +1,38 @@
 import React from "react";
-
+import { API_BASE_URL } from "../../config";
+import { useNavigate } from "react-router-dom";
+import { authStore } from "../../stores/authStore";
 const Footer = () => {
+  const { isLoggedIn, userId } = authStore();
+  const navigate = useNavigate();
+  const handleNavigation = (path:string) => () => {
+    navigate(path);}
   return (
-    <div className="bg-black w-full h-full text-white py-5 px-16 text-left">
+    <div className="bg-black w-full h-full text-white py-5 px-20 text-left">
       <div className="flex justify-between">
         <div className="flex flex-col justify-between">
-          <h1 className="font-extrabold text-2xl"><span className="text-blue-500">IT</span> Clips</h1>
+          <h1 className="font-extrabold text-2xl">
+            <span className="text-sky-500">IT</span> Clips
+          </h1>
           <p>ⓒ ITCLips Corp. All rights reserved.</p>
         </div>
 
-        <div className="flex gap-x-10">
-          <div className="flex flex-col">
+        <div className="flex gap-x-16">
+          <div className="flex flex-col gap-y-1">
             <h3 className="font-bold mb-3">서비스</h3>
-            <a href="">홈</a>
-            <a href="">구글 로그인</a>
-            <a href="">깃허브 로그인</a>
+            {!isLoggedIn ? (
+              <>
+                <button className="text-left hover:underline" onClick={handleNavigation("/")}>홈</button>
+                <button className="text-left hover:underline" onClick={handleNavigation("/login")}>로그인</button>
+                <button className="text-left hover:underline" onClick={handleNavigation("/signup")}>회원가입</button>
+              </>
+            ) : (
+              <>
+                <button className="text-left hover:underline" onClick={handleNavigation(`/user/${userId}`)}>MY</button>
+                <button className="text-left hover:underline" onClick={handleNavigation("/feed/bookmarklists")}>피드</button>
+                <button className="text-left hover:underline" onClick={handleNavigation("/search")}>검색</button>
+              </>
+            )}
           </div>
           <div className="flex flex-col ">
             <h3 className="font-bold mb-3">팀 팔레트</h3>

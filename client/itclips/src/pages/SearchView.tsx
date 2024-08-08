@@ -57,6 +57,7 @@ const SearchView = () => {
         </div>
 
         <div className="col-start-7 col-span-2">
+          {/* 실시간 인기 순위 작은 창 */}
           <div className="my-6">
             <RealtimeSidebar />
           </div>

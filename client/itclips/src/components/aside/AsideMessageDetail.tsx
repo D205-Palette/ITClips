@@ -37,11 +37,12 @@ interface ChatRoomInfo {
 interface AsideMessageDetailProps {
   roomId: number;
   onBack: () => void;
+  onBackWithRead: (roomId: number) => void;
 }
 
 // AsideMessage에서 id값을가지고 데이터를 꺼내서 라우터로 AsideMessageDetail 컴포넌트로 넘겨줌
 
-const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack }) => {
+const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack, onBackWithRead }) => {
   
   const userInfo = authStore(state => state.userInfo)
   
@@ -52,6 +53,11 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
   const [ notification, setNotification ] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
   const [ isInviteModalOpen, setIsInviteModalOpen ] = useState(false);
   const [ isInputFocused, setIsInputFocused ] = useState(false);
+
+  // 뒤로가기 버튼 클릭 핸들러
+  const handleBackClick = () => {
+    onBackWithRead(roomId);  // 읽음 처리와 함께 뒤로가기
+  };
 
   // 엔터 키 입력 처리 함수
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -248,8 +254,8 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
     <div className="p-4 max-w-sm mx-auto h-[35rem] flex flex-col">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center">
-          {/* 뒤로가기 버튼 */}
-          <MessageBackButton onBack={ onBack }/>
+          {/* 뒤로가기 버튼(읽음처리 해야하는 뒤로가기) */}
+          <MessageBackButton onBack={ handleBackClick }/>
           {/* 채팅 제목(상대유저 이름) */}
           <h2 className="text-xl font-bold ml-2 truncate flex-shrink min-w-0 max-w-[180px]">{roomInfo?.roomName}</h2>
         </div>

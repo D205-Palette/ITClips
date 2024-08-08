@@ -143,14 +143,8 @@ const MyBookmark = () => {
     <>
       <div id="Body" className="grid grid-cols-12 gap-5">
         {/* aside 자리 */}
-        <div
-          id="aside"
-          className="xl:col-start-2 xl:col-span-3 hidden xl:block "
-        >
-          {/* 메세지 뜨는 위치 */}
-          <div id="aside" className="absolute col-start-2 col-span-3 z-40">
-            <div className="fixed">{isMessageOpen && <MessageLayout />}</div>
-          </div>
+        <div id="aside" className="xl:col-start-2 xl:col-span-3 hidden xl:block">
+          {isMessageOpen && <MessageLayout />}
           <div className="static">
             {bookmarkList ? (
               <AsideBookmarkList bookmarkList={bookmarkList} />

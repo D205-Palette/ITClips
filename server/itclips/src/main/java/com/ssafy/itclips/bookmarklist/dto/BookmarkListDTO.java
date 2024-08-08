@@ -22,7 +22,7 @@ public class BookmarkListDTO {
     private List<String> users;
     private List<TagDTO> tags;
 
-    public void setImageToS3FileName(String fileName) {
+    public void changeImageToS3FileName(String fileName) {
         this.image=fileName;
     }
 }

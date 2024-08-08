@@ -87,7 +87,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
                         .build() :
                 DataResponseDto.of(fileService.getPresignedUrl("images", image, true));
 
-        bookmarkListDTO.setImageToS3FileName(imageInfo.getImage());
+        bookmarkListDTO.changeImageToS3FileName(imageInfo.getImage());
 
         List<Tag> tags = tagService.saveTags(bookmarkListDTO.getTags());
         List<Category> categories =createNewCategories(bookmarkListDTO.getCategories());
@@ -126,16 +126,14 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         // 업데이트할 내용 설정
         // 이미지 S3 경로로 저장
         String image = bookmarkListDTO.getImage();
-        boolean isDefaultImage = "default".equals(image);
+        DataResponseDto imageInfo = null;
+        if("default".equals(image)) {
+            existingBookmarkList.updateBookmarkListImage(image);
+        }else if(!"edit".equals(image)){
+            imageInfo = DataResponseDto.of(fileService.getPresignedUrl("images", image, true));
+            existingBookmarkList.updateBookmarkListImage(imageInfo.getImage());
+        }
 
-        DataResponseDto imageInfo = isDefaultImage ?
-                DataResponseDto.builder()
-                        .image(image)
-                        .url(image)
-                        .build() :
-                DataResponseDto.of(fileService.getPresignedUrl("images", image, true));
-
-        bookmarkListDTO.setImageToS3FileName(imageInfo.getImage());
         existingBookmarkList.updateBookmarkList(bookmarkListDTO);
         // 기존 태그, 카테고리, 그룹 삭제
         deleteRelations(userId, existingBookmarkList);

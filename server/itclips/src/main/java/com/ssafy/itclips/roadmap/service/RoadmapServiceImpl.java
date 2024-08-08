@@ -107,6 +107,7 @@ public class RoadmapServiceImpl implements RoadmapService {
 
             //이미지 url 생성
             String imageUrl = getImageURL(roadmap.getImage());
+
             //유저 이미지 생성
             String userImage = getImageURL(roadmap.getUser().getProfileImage());
             // 좋아요 했는지 안했는지
@@ -186,24 +187,21 @@ public class RoadmapServiceImpl implements RoadmapService {
 
         checkUser(roadmap, userId);
 
-        // 이미지 S3 경로로 저장
-        String image = roadmapRequestDTO.getImage();
-        boolean isDefaultImage = "default".equals(image);
-
-        DataResponseDto imageInfo = isDefaultImage ?
-                DataResponseDto.builder()
-                        .image(image)
-                        .url(image)
-                        .build() :
-                DataResponseDto.of(fileService.getPresignedUrl("images", image, true));
-        roadmapRequestDTO.setImageToS3FileName(imageInfo.getImage());
-
         // step에 넣을 bookmark list
         List<Long> listIds = roadmapRequestDTO.getStepList();
         if(listIds.isEmpty()){
             throw new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND);
         }
 
+        // 이미지 S3 경로로 저장
+        String image = roadmapRequestDTO.getImage();
+        DataResponseDto imageInfo = null;
+        if("default".equals(image)) {
+            roadmap.updateRoadmapImage(image);
+        }else if(!"edit".equals(image)){
+            imageInfo = DataResponseDto.of(fileService.getPresignedUrl("images", image, true));
+            roadmap.updateRoadmapImage(imageInfo.getImage());
+        }
         // 로드맵 업데이트
         roadmap.updateRoadmap(roadmapRequestDTO);
 
@@ -347,6 +345,7 @@ public class RoadmapServiceImpl implements RoadmapService {
 
         //이미지 url 생성
         String imageUrl = getImageURL(roadmap.getImage());
+
 
         // 좋아요 했는지 안했는지
         Boolean isLiked = roadmapLikeRepository.existsByRoadmapIdAndUserId(roadmap.getId(),viewId);

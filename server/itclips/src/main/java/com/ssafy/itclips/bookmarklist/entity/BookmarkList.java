@@ -119,8 +119,11 @@ public class BookmarkList {
     public void updateBookmarkList(BookmarkListDTO bookmarkListDto) {
         this.title = bookmarkListDto.getTitle();
         this.description = bookmarkListDto.getDescription();
-        this.image = bookmarkListDto.getImage();
         this.isPublic = bookmarkListDto.getIsPublic();
+    }
+
+    public void updateBookmarkListImage(String image) {
+        this.image = image;
     }
 
 

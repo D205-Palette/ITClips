@@ -24,9 +24,10 @@ interface Props {
   // categories: CategoryType[];
   listId : number
   categories:CategoryType[]
+  canEdit:boolean
 }
 
-const CategoryTab: FC<Props> = ({ listId,categories }) => {
+const CategoryTab: FC<Props> = ({ listId,categories,canEdit }) => {
   const {userId, token} = authStore()
   const isDark = darkModeStore((state) => state.isDark);
 
@@ -40,9 +41,6 @@ const CategoryTab: FC<Props> = ({ listId,categories }) => {
     }
   }, [createMode]);
   
-  useEffect(()=>{
-
-  }, [])
   // 뒤로가기 버튼
   const BackButton = (): any => {
     return (
@@ -76,6 +74,9 @@ const CategoryTab: FC<Props> = ({ listId,categories }) => {
         url: `${API_BASE_URL}/api/category/add/${listId}`,
         headers: {
           Authorization: `Bearer ${token}`,
+        },
+        params:{
+          userId:userId,
         },
         data:{
           categoryName:inputValue,
@@ -129,13 +130,10 @@ const CategoryTab: FC<Props> = ({ listId,categories }) => {
           onWheel={handleScroll}
         >
           {categories.map((category) => (
-            <CategorySingleTab tempCategory={category} />
+            <CategorySingleTab tempCategory={category} canEdit={canEdit} />
           ))}
-          {createMode ? (
-            <CreateCategorySection />
-          ) : (
-            <PlusButton />
-          )}
+          {canEdit? (createMode ? (  <CreateCategorySection />  ) : (<PlusButton /> ) ) :  <></>}
+          
         </div>
       </div>
     </>

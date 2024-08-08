@@ -55,6 +55,9 @@ const AddBookmarkModal: FC<move> = ({
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        params:{
+          userId:userId,
+        },
         data: {
           url: tempUrl,
           title: tempTitle,
@@ -74,6 +77,9 @@ const AddBookmarkModal: FC<move> = ({
         url: `${API_BASE_URL}/api/bookmark/add/${listId}`,
         headers: {
           Authorization: `Bearer ${token}`,
+        },
+        params:{
+          userId:userId,
         },
         data: {
           url: tempUrl,

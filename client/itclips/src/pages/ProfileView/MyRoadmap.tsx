@@ -20,6 +20,7 @@ const MyRoadmap = () => {
   const {isRoadmapChange, setIsRoadmapChange} = mainStore()
   const [filterdRoadmaps, setFilterdRoadmaps] = useState<RoadmapSumType[]>([])
   const [filterText, changeFilterText] = useState("");
+  const [canEdit, setCanEdit] = useState(false)
 
   // 변경사항 있을때마다 로드맵 요약 불러오기
   useEffect(() => {
@@ -39,6 +40,8 @@ const MyRoadmap = () => {
         setFilterdRoadmaps(res.data.filter((roadmap:any) =>roadmap.title.includes(filterText)))
         setIsRoadmapChange(false)
         console.log('로드맵 변화 감지')
+        if(String(userId)===params.userId){
+          setCanEdit(true)}
       })
       .catch((err) => {
         console.error(err);
@@ -67,16 +70,17 @@ const MyRoadmap = () => {
       <div className="absolute top-32  w-7/12 ">
       {filterdRoadmaps.length === 0 ? <NoContent content={"로드맵"}/> : <>
         {filterdRoadmaps.map((roadmap) => (
-          <Roadmap roadmap={roadmap} />
+          <Roadmap roadmap={roadmap} canEdit={canEdit}/>
         ))}</>}
       </div>
       
       {/* 로드맵 추가 버튼 */}
-      <button className="fixed z-0 bottom-10 right-10"
+      {canEdit? <button className="fixed z-0 bottom-10 right-10"
       onClick={() => navigate('/roadmap/create')}>
         
         <FaPlus color="skyblue" size={56}/>
-      </button>
+      </button>: <></> }
+      
     </>
   );
 };

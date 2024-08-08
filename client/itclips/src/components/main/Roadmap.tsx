@@ -14,9 +14,10 @@ import noImg from "../../assets/images/noImg.gif"
 
 interface Props {
   roadmap: RoadmapSumType;
+  canEdit:boolean
 }
 
-const RoadMap: FC<Props> = ({ roadmap }) => {
+const RoadMap: FC<Props> = ({ roadmap,canEdit }) => {
 
   const { userId, token } = authStore();
   const [isLike, setIsLike] = useState(roadmap.isLiked);
@@ -58,18 +59,18 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
             <img
               src={roadmap.image === "default" ? noImg : roadmap.image}
               alt="Movie"
-              className="h-full w-full hidden lg:inline  rounded-s-2xl"
+              className="h-full w-full hidden lg:inline  rounded-s-2xl "
             />
           </div>
 
           <div className="card-body flex flex-row justify-between h-full relative">
             <div
-              className={
+              className={(canEdit? "" : "hidden ") +
                 (!isDark
                   ? percentage == "100.0"
                     ? "bg-green-100"
                     : "bg-sky-100"
-                  : percentage == "100.0"
+                  : percentage == "100.0" 
                   ? "bg-green-900"
                   : "bg-sky-900") +
                 " h-full absolute z-0 top-0 left-0 rounded-e-2xl lg:rounded-s-none rounded-s-2xl"
@@ -92,14 +93,14 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
 
             <div className=" items-center text-blue-400 font-bold text-xl z-0 hidden lg:inline-flex">
               <p
-                className={
-                  !isDark
+                className={(canEdit? "" : "hidden ") +
+                  (!isDark
                     ? percentage == "100.0"
                       ? "text-green-400"
                       : "text-blue-400"
                     : percentage == "100.0"
                     ? "text-green-200"
-                    : "text-blue-200"
+                    : "text-blue-200")
                 }
               >
                 {percentage}

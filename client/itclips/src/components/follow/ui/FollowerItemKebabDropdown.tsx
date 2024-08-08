@@ -6,6 +6,8 @@ import { VscKebabVertical } from "react-icons/vsc";
 // stores
 import { asideStore } from "../../../stores/asideStore";
 
+import { useParams } from "react-router-dom";
+import { authStore } from "../../../stores/authStore";
 interface Props {
   onDeleteFollower: () => void;
 }
@@ -17,7 +19,9 @@ const FollowerItemKebabDropdown: React.FC<Props> = ({ onDeleteFollower }) => {
   const toggleDropdown = (): void => setIsDropdownOpen(!isDropdownOpen);
   const toggleMessage = asideStore(state => state.toggleMessage);
 
-  const categories: string[] = ["메세지 보내기", "삭제", "삭제 후 차단"];
+  const params = useParams()
+  const {userId} = authStore()
+  const categories: string[] =  params.userId === String(userId) ? ["메세지 보내기", "삭제", "삭제 후 차단"] :["메세지 보내기"]
 
   // 채팅 시작하는 함수
   const startSendMessage = () => {

@@ -12,6 +12,7 @@ import axios from "axios";
 import { authStore } from "../../stores/authStore";
 import { useNavigate } from "react-router-dom";
 import mainStore from "../../stores/mainStore";
+import { useParams } from "react-router-dom";
 // 무슨 탭에서 눌렀는지 받는 인자
 // 리스트, 즐겨찾기, 로드맵  3가지로 받을예정. 그룹 리스트랑 그냥 리스트는 차이 없음
 interface Props {
@@ -31,8 +32,9 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
     useState<boolean>(false);
   const [isScrapModalOpen, setIsScrapModalOpen] = useState<boolean>(false);
 
+  const params = useParams();
+  const nowUserId = params.userId;
   const navigate = useNavigate();
-
   const { setIsRoadmapChange } = mainStore();
   // 유저 아이디 임시값. 나중엔 스토리지서 받아오면됨
   const { userId, token } = authStore();
@@ -87,19 +89,25 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
           className="dropdown-content menu bg-base-100 rounded-box w-52 p-2 shadow z-30"
         >
           {/* 수정 삭제는 남꺼일때 안 보이게 */}
-          <li
-            className={whatMenu === "즐겨찾기" ? "hidden" : ""}
-            onClick={() => {
-              whatMenu === "로드맵"
-                ? navigate(`/roadmap/${id}/edit`)
-                : setIsEditModalOpen(true);
-            }}
-          >
-            <a>수정하기</a>
-          </li>
-          <li onClick={() => setIsDeleteModalOpen(true)}>
-            <a>삭제하기</a>
-          </li>
+          {String(userId) !== nowUserId ? (
+            <></>
+          ) : (
+            <>
+              <li
+                className={whatMenu === "즐겨찾기" ? "hidden" : ""}
+                onClick={() => {
+                  whatMenu === "로드맵"
+                    ? navigate(`/roadmap/${id}/edit`)
+                    : setIsEditModalOpen(true);
+                }}
+              >
+                <a>수정하기</a>
+              </li>
+              <li onClick={() => setIsDeleteModalOpen(true)}>
+                <a>삭제하기</a>
+              </li>
+            </>
+          )}
           {/*  */}
 
           <li

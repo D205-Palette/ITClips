@@ -91,14 +91,7 @@ const {isBookmarkListChange, setIsBookmarkListChange} = mainStore()
     <>
       <div id="Body" className="grid grid-cols-12 gap-5">
         {/* aside 자리 */}
-        <div
-          id="aside"
-          className="xl:col-start-2 xl:col-span-3 hidden xl:block "
-        >
-          {/* 메세지 뜨는 위치 */}
-          <div id="aside" className="absolute col-start-2 col-span-3 z-40">
-            <div className="fixed">{isMessageOpen && <MessageLayout />}</div>
-          </div>
+        <div id="aside" className="xl:col-start-2 xl:col-span-3 hidden xl:block">
           <div className="static">
             {bookmarkList ? (
               <AsideBookmarkList bookmarkList={bookmarkList} />
@@ -133,7 +126,7 @@ const {isBookmarkListChange, setIsBookmarkListChange} = mainStore()
               </div>
             ) : bookmarkList ? (
               <div className="static z-50">
-                <CategoryTab categories={bookmarkList.categories} listId={bookmarkList.id}/>
+                <CategoryTab categories={bookmarkList.categories} listId={bookmarkList.id} canEdit={canEdit}/>
               </div>
             ) : (
               <></>

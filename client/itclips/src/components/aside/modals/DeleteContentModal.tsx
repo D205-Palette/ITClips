@@ -47,6 +47,9 @@ const DeleteContentModal: React.FC<DeleteConfirmModalProps> = ({
           headers: {
             Authorization: `Bearer ${token}`,
           },
+          params:{
+            userId:userId,
+          },
         })
         .then(() => {
           setIsBookmarkListChange(true);

@@ -17,7 +17,7 @@ import type { RoadmapDetailType } from "../types/RoadmapType";
 import axios from "axios";
 import { API_BASE_URL } from "../config";
 import { authStore } from "../stores/authStore";
-
+import FileResizer from "react-image-file-resizer";
 type StepTListType = {
     id: number;
     roadmapId: number;
@@ -41,6 +41,7 @@ const RoadmapView = () => {
   const {userId, token} = authStore()
   const [roadmap, setRoadmap] = useState<RoadmapDetailType>()
 
+  const [canEdit, setCanEdit] = useState(false)
   useEffect(() => {
     async function fetchData() {
       axios({
@@ -58,6 +59,9 @@ const RoadmapView = () => {
           setRoadmap(res.data);
           setCheckCount(res.data.stepList.filter((list:any) => list.check===true).length)
           setTotalCount(res.data.stepList.length)  
+          if(res.data.userId === userId){
+            setCanEdit(true)
+          }
         })
         .catch((err) => {
           console.error(err);
@@ -126,7 +130,7 @@ const RoadmapView = () => {
             <BackButton />
           </div>
           <div
-            className={
+            className={(canEdit? "":"hidden ") + 
               (!isDark
                 ? percentage === "100.0"
                   ? "text-green-300"
@@ -142,7 +146,7 @@ const RoadmapView = () => {
         </div>
        
         {roadmap?.stepList.map((list:any) => (
-          <ListItem list={list} count={checkCount} changeCount={setCheckCount} />
+          <ListItem list={list} count={checkCount} changeCount={setCheckCount} canEdit={canEdit}/>
         ))}
     
       </div>

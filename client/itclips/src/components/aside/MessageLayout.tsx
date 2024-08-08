@@ -1,9 +1,4 @@
-import { useState, useRef, useEffect } from "react";
-import { Client } from '@stomp/stompjs';
-import { API_BASE_URL } from "../../config";
-
-// socket
-import SockJS from 'sockjs-client';
+import { useState, useEffect } from "react";
 
 // components
 import AsideMessage from "./AsideMessage";
@@ -24,7 +19,6 @@ const MessageLayout = () => {
   const setSelectedChat = asideStore(state => state.setSelectedChat);
   const { connect, disconnect } = useWebSocketStore();
 
-  // 소켓 연결
   // 소켓 연결
   useEffect(() => {
     connect();
@@ -60,7 +54,7 @@ const MessageLayout = () => {
   }
 
   return (
-    <div className={`${ isDark ? "bg-base-300" : "bg-sky-100" } rounded-3xl w-80 h-[35rem]`}>
+    <div className={`${isDark ? "bg-base-300" : "bg-sky-100"} rounded-3xl w-80 h-[37rem]`}>
       {selectedChat === null && showInvite === null && (
         <AsideMessage
           onSelectChat={handleSelectChat}

@@ -21,9 +21,10 @@ import Tab from "../../stores/mainTabStore";
 import mainStore from "../../stores/mainStore";
 interface Props {
   tempCategory:CategoryType;
+  canEdit:boolean
 }
 
-const CategorySingleTab: FC<Props> = ({ tempCategory }) => {
+const CategorySingleTab: FC<Props> = ({ tempCategory,canEdit }) => {
 
   const params = useParams()
   const {tempCategories, setTempCategories,addTempCategories, deleteTempCategories} = Tab()
@@ -64,6 +65,9 @@ const {setIsBookmarkListChange} = mainStore()
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        params:{
+          userId:userId,
+        },
       })
         .then((res) => {
           deleteTempCategories(tempCategory.categoryName)
@@ -101,7 +105,8 @@ const {setIsBookmarkListChange} = mainStore()
             className="me-2">
             {tempCategory.categoryName}
           </div>{" "}
-          <DeleteButton />
+          {canEdit? <DeleteButton />: <></>}
+          
         </div>
       </button>
     </>

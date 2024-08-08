@@ -16,11 +16,12 @@ interface Props {
   list:StepListType
   count:number;
   changeCount: React.Dispatch<React.SetStateAction<number>>;
+  canEdit:boolean
 }
 
 
 
-const ListItem: FC<Props> = ({ list,changeCount,count }) => {
+const ListItem: FC<Props> = ({ list,changeCount,count,canEdit }) => {
 
   const navigate = useNavigate();
   const {userId, token} = authStore()
@@ -71,7 +72,7 @@ const ListItem: FC<Props> = ({ list,changeCount,count }) => {
                 </h4>
             </div>
             {/* 체크박스 */}
-            <div className="form-control flex flex-row items-center">
+            <div className={(canEdit?"":"hidden ") + "form-control flex flex-row items-center"}>
               <input
                 type="checkbox"
                 defaultChecked={list.check? true : false}

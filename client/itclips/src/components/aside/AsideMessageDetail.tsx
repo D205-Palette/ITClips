@@ -55,14 +55,23 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
   function formatDateToKST(date: string | Date): string {
     const parsedDate = typeof date === 'string' ? new Date(date) : date;
     const kstDate = toZonedTime(parsedDate, 'Asia/Seoul');
-    return format(kstDate, 'yyyy-MM-dd HH:mm');
+    return format(kstDate, 'yyyy-MM-dd HH:mm:ss');
   }
 
   // 서버 시간에서 9시간을 추가하는 함수
-  function addNineHours(dateString: string): string {
-    const date = parseISO(dateString);
-    const sixHoursLater = addHours(date, 9);
-    return format(sixHoursLater, 'yyyy-MM-dd HH:mm');
+  function addNineHours(dateString: string | null): string {
+    if (!dateString) {
+      console.warn("Invalid date string received:", dateString);
+      return new Date().toISOString(); // 현재 시간을 반환하거나 다른 기본값 설정
+    }
+    try {
+      const date = parseISO(dateString);
+      const nineHoursLater = addHours(date, 9);
+      return format(nineHoursLater, 'yyyy-MM-dd HH:mm:ss');
+    } catch (error) {
+      console.error("Error parsing date:", error);
+      return new Date().toISOString(); // 오류 발생 시 현재 시간을 반환하거나 다른 기본값 설정
+    }
   }
 
   // 메시지 컨테이너에 대한 ref 생성
@@ -83,10 +92,18 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
   // 컴포넌트 마운트 시 메시지 읽음 처리
   useEffect(() => {
     markMessagesAsRead();
-
-    // 컴포넌트 언마운트 시 메시지 읽음 처리
+  
     return () => {
-      markMessagesAsRead();
+      // 컴포넌트 언마운트 시 동기적으로 실행되는 함수
+      const markMessagesAsReadOnUnmount = () => {
+        if (userInfo.id) {
+          updateMessageStatusToRead(roomId, userInfo.id)
+            .then(() => console.log("Messages marked as read on unmount"))
+            .catch((error) => console.error("Failed to mark messages as read on unmount:", error));
+        }
+      };
+  
+      markMessagesAsReadOnUnmount();
     };
   }, [roomId, userInfo.id]);
 
@@ -143,16 +160,11 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
     const fetchMessages = async () => {
       try {
         const response = await getChatRoomMessages(roomId);
-        // 받아온 메시지를 날짜 기준으로 오름차순 정렬 (오래된 메시지가 위로)
-        const sortedMessages = response.data
-          .map((message: Message) => ({
-            ...message,
-            createdAt: addNineHours(message.createdAt)
-          }))
-          .sort((a: Message, b: Message) => 
-            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-          );
-        setMessages(sortedMessages);
+        const updatedMessages = response.data.map((message: Message) => ({
+          ...message,
+          createdAt: addNineHours(message.createdAt)
+        })).filter((message: Message) => message.createdAt !== null);
+        setMessages(updatedMessages.reverse());
         setTimeout(scrollToBottom, 0);
       } catch (error) {
         console.error("메세지 불러오기 실패:", error);

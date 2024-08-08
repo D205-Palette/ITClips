@@ -20,7 +20,7 @@ const MessageContainer: React.FC<ChildComponentProps> = ({ rooms, onClickMessage
   return (
     <div>
       <ul
-        className="space-y-4 h-[26rem] overflow-y-auto"
+        className="space-y-4 h-[28rem] overflow-y-auto"
         style={{
           scrollbarWidth: "thin",
           scrollbarColor: "#CBD5E0 #EDF2F7"

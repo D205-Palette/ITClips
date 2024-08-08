@@ -192,6 +192,7 @@ public class RoadmapController {
     }
 
     @GetMapping("/recommend/step/{keyWord}")
+    @Operation(summary = "로드맵 gpt 추천 ", description = "로드맵 제작 추천")
     public ResponseEntity<?> recommendRoadmapSteps(@PathVariable String keyWord,
                                                    @RequestParam(required = false) Long userId
                                                    ) {

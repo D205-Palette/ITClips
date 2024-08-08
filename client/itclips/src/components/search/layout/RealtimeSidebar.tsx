@@ -57,7 +57,7 @@ const RealtimeSidebar = () => {
   };
 
   return (
-    <div className="bg-base-100 text-base-content rounded shadow-md p-2 mx-auto w-[300px] ml-0">
+    <div className="bg-base-100 text-base-content p-2 mx-auto w-[300px] ml-0">
       <div className="overflow-hidden h-8">
         {rankItems.map((item, index) => (
           <div 

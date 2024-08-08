@@ -55,7 +55,6 @@ const RoadmapCreateView: React.FC = () => {
         `${API_BASE_URL}/api/list/group/${userId}?viewerId=${userId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-<<<<<<< HEAD
       // 즐겨찾기 조회
       const scrapResponse = await axios
         .get(`${API_BASE_URL}/api/list/scrap/${userId}?viewerId=${userId}`, {
@@ -65,8 +64,6 @@ const RoadmapCreateView: React.FC = () => {
           // 즐겨찾기 한 글 없으면 404 에러뜸
           console.log(err);
         });
-=======
->>>>>>> Frontend
 
       // 데이터 가공하여 설정
       const processItems = (data: any[]): Item[] =>
@@ -91,10 +88,7 @@ const RoadmapCreateView: React.FC = () => {
 
       initialItems.bookmarks = processItems(personalResponse.data);
       initialItems.groupBookmarks = processItems(groupResponse.data);
-<<<<<<< HEAD
       initialItems.favorites = processItems(scrapResponse?.data);
-=======
->>>>>>> Frontend
 
       try {
         // 즐겨찾기 조회

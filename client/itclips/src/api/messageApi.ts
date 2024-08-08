@@ -39,3 +39,8 @@ export const createGroupChatRoom = (roomInfo: RoomInfo) => {
 export const getChatRoomInfo = (roomId: number) => {
   return authenticatedRequest("get", `/chat/room/info/${roomId}`, undefined, { roomId });
 };
+
+// 안읽은 메세지 읽음처리
+export const updateMessageStatusToRead = (roomId: number, userId: number) => {
+  return authenticatedRequest("get", `/chat/messages/readAll/${roomId}/${userId}`, undefined, { roomId, userId });
+};

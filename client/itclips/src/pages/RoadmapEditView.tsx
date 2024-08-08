@@ -64,15 +64,6 @@ const RoadmapEditView: React.FC = () => {
       );
 
       // 즐겨찾기 조회
-<<<<<<< HEAD
-      const scrapResponse = await axios.get(
-        `${API_BASE_URL}/api/list/scrap/${userId}?viewerId=${userId}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      ).catch((err)=>{
-        console.log(err)
-        // 즐겿자기 없으면 404 에러뜸. 그거 방지용
-      })
-=======
       let scrapResponse;
       try {
         scrapResponse = await axios.get(
@@ -87,7 +78,6 @@ const RoadmapEditView: React.FC = () => {
         }
       }
 
->>>>>>> Frontend
       // 기존 로드맵 정보 조회
       const roadmapResponse = await axios.get(
         `${API_BASE_URL}/api/roadmap/${roadmapId}?viewId=${userId}`

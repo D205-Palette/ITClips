@@ -8,17 +8,10 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { authStore } from "../../stores/authStore";
 import { API_BASE_URL } from "../../config";
-<<<<<<< HEAD
 import type { StepListType } from "../../types/RoadmapType";
 import noImg from "../../assets/images/noImg.gif"
 
 
-=======
-import noImg from "../../assets/images/noImg.gif"
-
-
-import type { StepListType } from "../../types/RoadmapType";
->>>>>>> Frontend
 interface Props {
   list:StepListType
   changeCount: React.Dispatch<React.SetStateAction<number>>;

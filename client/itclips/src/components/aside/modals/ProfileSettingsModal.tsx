@@ -572,11 +572,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
 
         {/* 변경완료 버튼 */}
         <div className="flex justify-end items-center mt-6">
-<<<<<<< HEAD
           <button className="btn bg-sky-500 text-slate-100 hover:bg-sky-700" onClick={handleUpdateProfile}>변경 완료</button>
-=======
-          <button className="btn btn-primary" onClick={handleUpdateProfile}>변경 완료</button>
->>>>>>> Frontend
         </div>
 
         {/* 비밀번호 변경 모달 */}

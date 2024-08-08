@@ -8,17 +8,10 @@ import { useEffect } from "react";
 // icons
 import { IoCloseOutline } from "react-icons/io5";
 
-<<<<<<< HEAD
 import darkModeStore from "../../../stores/darkModeStore";
 // 기본 이미지
 import noImg from "../../../assets/images/noImg.gif";
 
-=======
-// 기본 이미지
-import noImg from "../../../assets/images/noImg.gif";
-
-import darkModeStore from "../../../stores/darkModeStore";
->>>>>>> Frontend
 import type { CategoryType } from "../../../types/BookmarkListType";
 interface EditModalProps {
   isOpen: boolean;
@@ -33,18 +26,11 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
 }) => {
   const { userId, token } = authStore();
   const [tempCategories, setTempCategories] = useState<string[]>([]);
-<<<<<<< HEAD
   const {isDark}= darkModeStore()
-=======
->>>>>>> Frontend
   // 이미지 업로드 상태 관리
   const [bookmarklistImage, setBookmarklistImage] = useState<File | null>(null);
   const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
 
-<<<<<<< HEAD
-=======
-  const {isDark}= darkModeStore()
->>>>>>> Frontend
   useEffect(() => {
     async function fetchData() {
       axios({
@@ -223,7 +209,6 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
         </div>
 
         <div className="mb-4">
-<<<<<<< HEAD
           <label className="block text-sm font-medium  mb-2">
             유저
           </label>
@@ -237,8 +222,6 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
 
         <div className="mb-4">
           {/* <label className="block text-sm font-medium  mb-2"> */}
-=======
->>>>>>> Frontend
           <label className="block text-sm font-medium text-gray-700 mb-2">
             리스트명
           </label>

@@ -22,7 +22,7 @@ const MessageLayout = () => {
   const selectedChat = asideStore(state => state.selectedChat);
   const isMessageOpen = asideStore(state => state.isMessageOpen);
   const setSelectedChat = asideStore(state => state.setSelectedChat);
-  const { stompClient, isConnected, connect, disconnect } = useWebSocketStore();
+  const { connect, disconnect } = useWebSocketStore();
 
   // 소켓 연결
   // 소켓 연결

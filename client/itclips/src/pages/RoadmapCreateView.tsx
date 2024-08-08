@@ -16,6 +16,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import noImg from "../assets/images/noImg.gif";
+import { IoIosWarning } from "react-icons/io";
 
 // 타입 정의
 interface Item extends BookmarkListSumType {
@@ -54,6 +55,7 @@ const RoadmapCreateView: React.FC = () => {
         `${API_BASE_URL}/api/list/group/${userId}?viewerId=${userId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
+<<<<<<< HEAD
       // 즐겨찾기 조회
       const scrapResponse = await axios
         .get(`${API_BASE_URL}/api/list/scrap/${userId}?viewerId=${userId}`, {
@@ -63,6 +65,8 @@ const RoadmapCreateView: React.FC = () => {
           // 즐겨찾기 한 글 없으면 404 에러뜸
           console.log(err);
         });
+=======
+>>>>>>> Frontend
 
       // 데이터 가공하여 설정
       const processItems = (data: any[]): Item[] =>
@@ -87,9 +91,27 @@ const RoadmapCreateView: React.FC = () => {
 
       initialItems.bookmarks = processItems(personalResponse.data);
       initialItems.groupBookmarks = processItems(groupResponse.data);
+<<<<<<< HEAD
       initialItems.favorites = processItems(scrapResponse?.data);
+=======
+>>>>>>> Frontend
 
-      console.log(initialItems);
+      try {
+        // 즐겨찾기 조회
+        const scrapResponse = await axios.get(
+          `${API_BASE_URL}/api/list/scrap/${userId}?viewerId=${userId}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        initialItems.favorites = processItems(scrapResponse.data);
+      } catch (error: any) {
+        if (error.response && error.response.status === 404) {
+          // 404 에러가 발생했을 때 favorites를 빈 배열로 설정
+          initialItems.favorites = [];
+        } else {
+          throw error; // 다른 에러는 다시 던짐
+        }
+      }
+
       // 활성화된 탭에 따라 items 설정
       setItems(initialItems[activeTab]);
 
@@ -281,60 +303,57 @@ const RoadmapCreateView: React.FC = () => {
                   scrollbarWidth: "thin",
                 }}
               >
-                {items.map((item, index) => (
-                  <Draggable
-                    key={item.id}
-                    draggableId={item.id.toString()}
-                    index={index}
-                  >
-                    {(provided, snapshot) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        className="mx-1 mb-2 p-2 bg-base-100 border border-gray-300 rounded-lg shadow-sm"
-                        style={{
-                          ...provided.draggableProps.style,
-                          ...(snapshot.isDragging
-                            ? { backgroundColor: "#e2e8f0" }
-                            : {}),
-                        }}
-                      >
-                        <div className="flex items-center">
-                          {item.image?.trim() !== "" ? (
-                            <img
-                              src={item.image}
-                              alt="img"
-                              className="w-16 h-16 border object-cover mr-4"
-                            />
-                          ) : (
-                            <div className="w-16 h-16 border bg-base-100 mr-4"></div>
-                          )}
-                          <div className="flex w-full items-center justify-between me-3">
-                            <div>
-                              <h4 className="text-lg font-bold">
-                                {item.title}
-                              </h4>
-                              <p className="line-clamp-1">{item.description}</p>
-                            </div>
-                            <div className="flex w-40 gap-1 overflow-hidden whitespace-nowrap">
-                              {/* <div className="flex-grow overflow-hidden text-ellipsis">
-                                {item.tags.map((tag) => (
-                                  <span
-                                    key={tag.id}
-                                    className="text-sm text-gray-500"
-                                  >
-                                    #{tag.title}
-                                  </span>
-                                ))}
-                              </div> */}
+                {items.length === 0 ? (
+                  <div className="flex justify-center items-center h-full">
+                    <IoIosWarning color="skyblue" size={20} />
+                    <p className="ms-3 text-sm font-bold">컨텐츠가 없습니다!</p>
+                  </div>
+                ) : (
+                  items.map((item, index) => (
+                    <Draggable
+                      key={item.id}
+                      draggableId={item.id.toString()}
+                      index={index}
+                    >
+                      {(provided, snapshot) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          className="mx-1 mb-2 p-2 bg-base-100 border border-gray-300 rounded-lg shadow-sm"
+                          style={{
+                            ...provided.draggableProps.style,
+                            ...(snapshot.isDragging
+                              ? { backgroundColor: "#e2e8f0" }
+                              : {}),
+                          }}
+                        >
+                          <div className="flex items-center">
+                            {item.image?.trim() !== "" ? (
+                              <img
+                                src={item.image}
+                                alt="img"
+                                className="w-16 h-16 border object-cover mr-4"
+                              />
+                            ) : (
+                              <div className="w-16 h-16 border bg-base-100 mr-4"></div>
+                            )}
+                            <div className="flex w-full items-center justify-between me-3">
+                              <div>
+                                <h4 className="text-lg font-bold">
+                                  {item.title}
+                                </h4>
+                                <p className="line-clamp-1">
+                                  {item.description}
+                                </p>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
+                      )}
+                    </Draggable>
+                  ))
+                )}
                 {provided.placeholder}
               </div>
             )}

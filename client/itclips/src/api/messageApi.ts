@@ -1,7 +1,6 @@
 import { authenticatedRequest } from "./apiUtils";
 
 interface RoomInfo {
-  id: number;
   name: string;
   userIds: number[];
 }
@@ -22,7 +21,7 @@ export const createPrivateChatRoom = (user1Id: number, user2Id: number) => {
 };
 
 // 채팅방 나가기
-export const deleteChatRoom = (roomId: number, userId: number) => {
+export const leaveChatRoom = (roomId: number, userId: number) => {
   return authenticatedRequest("delete", `/chat/room/${roomId}/${userId}`, undefined, { roomId, userId });
 };
 
@@ -33,5 +32,10 @@ export const inviteToChatRoom = (roomId: number, userId: number) => {
 
 // 그룹 채팅방 만들기
 export const createGroupChatRoom = (roomInfo: RoomInfo) => {
-  return authenticatedRequest("post", `/chat/room`, { roomInfo }, undefined);
+  return authenticatedRequest("post", `/chat/room`, roomInfo, undefined);
+};
+
+// 채팅방 정보 조회
+export const getChatRoomInfo = (roomId: number) => {
+  return authenticatedRequest("get", `/chat/room/info/${roomId}`, undefined, { roomId });
 };

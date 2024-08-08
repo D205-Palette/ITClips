@@ -14,8 +14,8 @@ const ImageContainer : React.FC<ImageSrc> = ({src, whatContent}) => {
   const containerClass = whatContent === '프로필' ? 'w-32 h-32 rounded-full' : 'w-48 h-48 rounded-xl';
 
   return (
-    <div className={`${containerClass} overflow-hidden bg-gray-200 mb-4`}>
-      <img src={imageSrc} className="border w-full h-full object-cover"></img>
+    <div className={`${containerClass} border overflow-hidden bg-gray-200 mb-4`}>
+      <img src={imageSrc} className="w-full h-full object-cover"></img>
     </div>
   );
 };

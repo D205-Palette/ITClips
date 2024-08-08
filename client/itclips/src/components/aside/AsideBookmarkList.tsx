@@ -15,9 +15,6 @@ import { asideStore } from "../../stores/asideStore";
 
 import type { BookmarkListDetailType } from "../../types/BookmarkListType";
 
-// apis
-import { getBookmarkListComments } from "../../api/bookmarkListApi";
-
 interface ItemProps {
   bookmarkList:BookmarkListDetailType;
 }

@@ -10,6 +10,10 @@ import type { BookmarkListSumType } from "../../types/BookmarkListType";
 import { API_BASE_URL } from "../../config";
 import { authStore } from "../../stores/authStore";
 import noImg from "../../assets/images/noImg.gif"
+<<<<<<< HEAD
+=======
+import BookmarkListEditModal from "../aside/modals/BookmarkListEditModal";
+>>>>>>> Frontend
 
 interface Props {
   list: BookmarkListSumType;
@@ -56,8 +60,13 @@ const ListItem: FC<Props> = ({ list }) => {
             onClick={() => navigate(`/bookmarklist/${list.id}`)}
             className="hover:cursor-pointer w-1/6"
           >
+<<<<<<< HEAD
             <img
               src={list.image==="default"?  noImg : list.image }
+=======
+            <img              
+              src={list.image === "default" ? noImg : list.image}
+>>>>>>> Frontend
               alt="Movie"
               className="size-28 object-cover"
             />

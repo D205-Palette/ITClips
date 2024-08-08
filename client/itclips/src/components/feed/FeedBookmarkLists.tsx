@@ -4,6 +4,7 @@ import { authStore } from "../../stores/authStore";
 import ListsItem from "./ListsItem(Feed)";
 import { API_BASE_URL } from "../../config";
 import axios from "axios";
+import { IoIosWarning } from "react-icons/io";
 
 const FeedBookmarkLists = () => {
   const [dataLoaded, setDataLoaded] = useState<boolean>(false);
@@ -36,19 +37,23 @@ const FeedBookmarkLists = () => {
       {/* 피드 북마크리스트 목록 */}
       <div id="feedBookMarkList">
         <div className="flex flex-col gap-3">
+          <div className="flex justify-center items-center h-full">
+
           {!dataLoaded ? (
             <p>로딩 중 입니다.</p>
+          ) : feedList.length !== 0 ? (
+            feedList?.map((list) => (
+              <div>
+                <ListsItem list={list} />
+              </div>
+            ))
           ) : (
-            feedList.length !== 0 ? (
-              feedList?.map((list) => (
-                <div>
-                  <ListsItem list={list} />
-                </div>
-              ))
-            ) : (
-              <p>컨텐츠가 없습니다.</p>
-            )
-            )}          
+              <div className="flex">
+                <IoIosWarning color="skyblue" size={20} />
+                <p className="ms-3 text-sm font-bold">컨텐츠가 없습니다!</p>
+              </div>
+            )}
+            </div>
         </div>
       </div>
     </>

@@ -38,7 +38,9 @@ const FeedRoadmaps = () => {
       <div id="feedRoadmaps">
         <div className="flex flex-col gap-3">
           {!dataLoaded ? (
-            <p>로딩 중 입니다.</p>
+            <div className="mt-10 flex justify-center">
+              <p className="ms-3 text-xl font-bold">로딩 중 입니다...</p>
+            </div>
           ) : feedRoadmap.length !== 0 ? (
             feedRoadmap?.map((roadmap) => (
               <div>
@@ -46,9 +48,9 @@ const FeedRoadmaps = () => {
               </div>
             ))
           ) : (
-            <div className="flex">
+            <div className="mt-10 flex justify-center items-center">
               <IoIosWarning color="skyblue" size={20} />
-              <p className="ms-3 text-sm font-bold">컨텐츠가 없습니다!</p>
+              <p className="ms-3 text-xl font-bold">컨텐츠가 없습니다!</p>
             </div>
           )}
         </div>

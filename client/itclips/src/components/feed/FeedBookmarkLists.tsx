@@ -36,24 +36,20 @@ const FeedBookmarkLists = () => {
     <>
       {/* 피드 북마크리스트 목록 */}
       <div id="feedBookMarkList">
-        <div className="flex flex-col gap-3">
-          
-
+        <div className="flex justify-center flex-col gap-3">
           {!dataLoaded ? (
-            <p>로딩 중 입니다.</p>
+            <div className="mt-10 flex justify-center">
+              <p className="ms-3 text-xl font-bold">로딩 중 입니다...</p>
+            </div>
+
           ) : feedList.length !== 0 ? (
-            feedList?.map((list) => (
-              
-                <ListsItem list={list} />
-              
-            ))
+            feedList?.map((list) => <ListsItem list={list} />)
           ) : (
-              <div className="flex">
-                <IoIosWarning color="skyblue" size={20} />
-                <p className="ms-3 text-sm font-bold">컨텐츠가 없습니다!</p>
-              </div>
-            )}
-          
+            <div className="mt-10 flex justify-center items-center">
+              <IoIosWarning color="skyblue" size={20} />
+              <p className="ms-3 text-xl font-bold">컨텐츠가 없습니다!</p>
+            </div>
+          )}
         </div>
       </div>
     </>

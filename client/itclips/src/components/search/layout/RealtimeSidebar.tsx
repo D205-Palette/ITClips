@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { NavLink } from "react-router-dom";
 
 // styles
 import styles from "../styles/RealtimeSidebar.module.css";
@@ -56,14 +57,21 @@ const RealtimeSidebar = () => {
   };
 
   return (
-    <div className={`bg-base-100 text-base-content ${styles.container}`}>
-      <div className={styles.searchTerms}>
+    <div className="bg-base-100 text-base-content rounded shadow-md p-2 mx-auto w-[300px] ml-0">
+      <div className="overflow-hidden h-8">
         {rankItems.map((item, index) => (
-          <div
+          <div 
             key={`${item.type}-${item.id}`}
-            className={`${styles.term} ${index === currentIndex ? styles.active : ''}`}
+            className={`transition-all duration-300 ${index === currentIndex ? 'opacity-100' : 'opacity-0 hidden'}`}
           >
-            {index + 1}. {item.title}
+            <NavLink
+              to={item.type === 'bookmark' ? `/bookmarklist/${item.id}` : `/roadmap/${item.id}`}
+              className="flex items-center justify-between px-4"
+            >
+              <span className="font-semibold mr-2 w-6 text-center">{index + 1}.</span>
+              <span className="truncate flex-grow max-w-[350px]">{item.title}</span>
+              <span className="text-sm text-gray-500 ml-2 w-20 text-right">{item.count} hits</span>
+            </NavLink>
           </div>
         ))}
       </div>

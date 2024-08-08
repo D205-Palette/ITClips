@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { NavLink } from "react-router-dom";
 
 // apis
 import { getBookmarkListScrapRank, getBookmarkListHitRank, getBookmarkListLikeRank, getRoadmapHitRank, getRoadmapLikeRank, getRoadmapScrapRank } from '../../api/rankApi';
@@ -11,7 +12,7 @@ interface Item {
 
 // map 돌릴때 유일한 key 필요해서 어쩔수 없이 이렇게 만듦;;
 interface RankItem extends Item {
-  type: 'bookmark' | 'roadmap';
+  type: 'bookmarkList' | 'roadmap';
 }
 
 const RealtimeList = () => {
@@ -46,7 +47,7 @@ const RealtimeList = () => {
           roadmapRank = [];
       }
 
-      const bookmarkData: RankItem[] = bookmarkRank.map(item => ({ ...item, type: 'bookmark' as const }));
+      const bookmarkData: RankItem[] = bookmarkRank.map(item => ({ ...item, type: 'bookmarkList' as const }));
       const roadmapData: RankItem[] = roadmapRank.map(item => ({ ...item, type: 'roadmap' as const }));
 
       const combinedRank = [...bookmarkData, ...roadmapData]
@@ -102,9 +103,10 @@ const RealtimeList = () => {
       </div>
       <ul className="space-y-2">
         {rankItems.map((item, index) => (
-          <li 
-            key={`${item.type}-${item.id}`}
+          <NavLink 
+            to={item.type === "bookmarkList" ? `/bookmarkList/${item.id}` : item.type === "roadmap" ? `/roadmap/${item.id}` : ''}
             className="flex items-center py-2"
+            key={`${item.type}-${item.id}`}
           >
             <span className="w-6 mr-3 text-sm">
               {index + 1}
@@ -112,7 +114,7 @@ const RealtimeList = () => {
             <div className="hover:text-blue-500 text-sm">
               {item.title}
             </div>
-          </li>
+          </NavLink>
         ))}
       </ul>
     </div>

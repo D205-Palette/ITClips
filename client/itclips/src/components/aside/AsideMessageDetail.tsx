@@ -1,5 +1,6 @@
 // AsideMessageDetail.tsx 는 메세지창의 메세지 목록 중 하나를 클릭했을 때 그 메세지의 상세창 컴포넌트
 import React, { useState, useEffect, useRef } from "react";
+import { format, toZonedTime } from 'date-fns-tz';
 
 // components
 import MessageBackButton from "./ui/MessageBackButton";
@@ -16,7 +17,7 @@ import { useWebSocketStore } from "../../stores/webSocketStore";
 
 interface Message {
   roomId: number;
-  senderId: string;
+  senderId: number;
   senderName: string;
   message: string;
   createdAt: string;
@@ -39,7 +40,7 @@ interface AsideMessageDetailProps {
 // AsideMessage에서 id값을가지고 데이터를 꺼내서 라우터로 AsideMessageDetail 컴포넌트로 넘겨줌
 
 const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack }) => {
-
+  
   const userInfo = authStore(state => state.userInfo)
   
   const [ roomInfo, setRoomInfo ] = useState<ChatRoomInfo | null>(null);
@@ -48,6 +49,13 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
   const { isConnected, subscribe, stompClient } = useWebSocketStore();
   const [ notification, setNotification ] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
   const [ isInviteModalOpen, setIsInviteModalOpen ] = useState(false);
+  
+  // 시간 형식 변경
+  function formatDateToKST(date: string | Date): string {
+    const parsedDate = typeof date === 'string' ? new Date(date) : date;
+    const kstDate = toZonedTime(parsedDate, 'Asia/Seoul');
+    return format(kstDate, 'yyyy-MM-dd HH:mm:ss', { timeZone: 'Asia/Seoul' });
+  }
 
   // 메시지 컨테이너에 대한 ref 생성
   const messageContainerRef = useRef<HTMLDivElement>(null);
@@ -99,16 +107,21 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
     setIsInviteModalOpen(false);
   };
 
-  // 메세지 내용 조회
+  // 메시지 내용 조회
   useEffect(() => {
     console.log(`채팅방 번호 : ${roomId}`);
     const fetchMessages = async () => {
       try {
         const response = await getChatRoomMessages(roomId);
         // 받아온 메시지를 날짜 기준으로 오름차순 정렬 (오래된 메시지가 위로)
-        const sortedMessages = response.data.sort((a: Message, b: Message) => 
-          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-        );
+        const sortedMessages = response.data
+          .map((message: Message) => ({
+            ...message,
+            createdAt: formatDateToKST(message.createdAt)
+          }))
+          .sort((a: Message, b: Message) => 
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+          );
         setMessages(sortedMessages);
         setTimeout(scrollToBottom, 0);
       } catch (error) {
@@ -117,7 +130,10 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
     };
 
     fetchMessages();
+  }, [roomId]); // roomId가 변경될 때만 실행
 
+  // 웹소켓 구독 관리
+  useEffect(() => {
     let unsubscribe: () => void = () => {};
 
     if (isConnected) {
@@ -136,14 +152,18 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
 
   // 메세지 전송 버튼을 눌렀을 때 동작
   const handleSendMessage = () => {
-    if (isConnected && stompClient && roomId && userInfo.id && inputMessage.trim()) {
+    if (isConnected && stompClient && roomId && userInfo.id && userInfo.nickname && inputMessage.trim()) {
+
+      const now = new Date();
+
       stompClient.publish({
         destination: `/api/pub/chat/message`,
         body: JSON.stringify({
           roomId: roomId,
           senderId: userInfo.id,
           senderName: userInfo.nickname,
-          message: inputMessage.trim()
+          message: inputMessage.trim(),
+          createdAt: formatDateToKST(now)
         })
       });
       setInputMessage('');

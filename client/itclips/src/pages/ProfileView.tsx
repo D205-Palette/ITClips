@@ -1,7 +1,7 @@
 import MyBookmarkList from "./ProfileView/MyBookmarkList";
 import React from "react";
 
-import { Route, Routes, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import MyGroupBookmarkList from './ProfileView/MyGroupBookmarkList';
 import MyFavorites from './ProfileView/MyFavorites';
 import MyRoadmap from './ProfileView/MyRoadmap';

@@ -9,8 +9,12 @@ import AsideStartNewMessage from "./AsideStartNewMessage";
 import darkModeStore from "../../stores/darkModeStore";
 import { asideStore } from "../../stores/asideStore";
 import { useWebSocketStore } from "../../stores/webSocketStore";
+import { authStore } from "../../stores/authStore";
+import { chatStore } from "../../stores/chatStore";
 
 const MessageLayout = () => {
+
+  const userInfo = authStore(state => state.userInfo);
 
   const [showInvite, setShowInvite] = useState(null);
   const isDark = darkModeStore(state => state.isDark);
@@ -18,6 +22,7 @@ const MessageLayout = () => {
   const isMessageOpen = asideStore(state => state.isMessageOpen);
   const setSelectedChat = asideStore(state => state.setSelectedChat);
   const { connect, disconnect } = useWebSocketStore();
+  const { updateMessageStatus, resetMessageCount } = chatStore();
 
   // 소켓 연결
   useEffect(() => {
@@ -36,6 +41,15 @@ const MessageLayout = () => {
     setSelectedChat(null);
     setShowInvite(null);
   };
+
+  // AsideMessageDetail에서 뒤로가기 했을 때
+  const handleBackToListFromAsideMessageDetail = (roomId: number) => {
+    if (userInfo.id) {
+      setSelectedChat(null);
+      updateMessageStatus(roomId, userInfo.id);
+      resetMessageCount(roomId);
+    }
+  }
   
   // 새 채팅 초대 함수
   const handleNewChat = (state: any) => {
@@ -65,6 +79,7 @@ const MessageLayout = () => {
         <AsideMessageDetail
           roomId={selectedChat}
           onBack={handleBackToList}
+          onBackWithRead={handleBackToListFromAsideMessageDetail}
         />
       )}
       {selectedChat === null && showInvite !== null && (

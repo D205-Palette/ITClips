@@ -29,6 +29,7 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
   // 이미지 업로드 상태 관리
   const [bookmarklistImage, setBookmarklistImage] = useState<File | null>(null);
   const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
+  const [imageState, setImageState] = useState<string>("edit"); // 이미지 변경 상태 체크
 
   const {isDark}= darkModeStore()
   useEffect(() => {
@@ -93,7 +94,12 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
     const formData = {
       title: tempTitle,
       description: tempDescription,
-      image: bookmarklistImage ? `${tempTitle}-${userId}` : "default",
+      image:
+        imageState === "edit" // 이미지가 변경되지 않았다면 백서버에 edit 메세지 전송 (DB 이미지 변경사항 없음)
+          ? "edit"
+          : bookmarklistImage 
+          ? `${tempTitle}-${userId}` // 변경할 로드맵 이미지가 등록 되어있다면 '제목-유저아이디'로 이미지 생성 URL 요청
+          : "default", // 없다면 DB에서 이미지 삭제 요청
       isPublic: isPublic,
       categories: tempCategories,
       users: tempUser,
@@ -108,7 +114,7 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
       })
       .then((res) => {
         if (bookmarklistImage) {
-          axios.put(`${res.data.url}`, bookmarklistImage, {
+          axios.put(`${res.data.url}`, bookmarklistImage, { // 리스폰스 받은 S3 URL로 이미지 등록 요청
             headers: {
               "Content-Type": bookmarklistImage.type,
             }, // 파일의 MIME 타입 설정
@@ -126,6 +132,7 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
     const file = event.target.files?.[0]; // 파일이 선택되지 않았을 때 null 처리
     if (file) {
       setBookmarklistImage(file); // 파일 자체를 상태에 저장
+      setImageState("new"); // 새로운 이미지로 변경하려고 할 때 상태 변경
 
       // 미리보기 URL 생성
       const reader = new FileReader();
@@ -143,6 +150,7 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
   const handleImageRemove = () => {
     setBookmarklistImage(null);
     setPreviewImageUrl(null);
+    setImageState("delete"); // 등록할 이미지 상태 변경
   };
 
   if (!isOpen) return null;

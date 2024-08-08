@@ -11,7 +11,6 @@ import CommentsContainer from "./layout/CommentsContainer";
 
 // stores
 import darkModeStore from "../../stores/darkModeStore";
-import { asideStore } from "../../stores/asideStore";
 
 import type { BookmarkListDetailType } from "../../types/BookmarkListType";
 
@@ -22,12 +21,11 @@ interface ItemProps {
 const AsideBookmarkList : React.FC<ItemProps> = ({bookmarkList}) => {
 
   const isDark = darkModeStore(state => state.isDark);
-  const isMessageOpen = asideStore(state => state.isMessageOpen);
 
   return (
     <div className={`${ isDark ? "bg-base-300" : "bg-sky-100" } rounded-3xl w-80 p-8 flex flex-col items-center ` }>
       {/* 더보기 버튼 */}
-      { !isMessageOpen && <AsideBookmarkListKebabDropdown isRoadmap={false} id={bookmarkList.id}/> }
+      {<AsideBookmarkListKebabDropdown isRoadmap={false} id={bookmarkList.id}/> }
       {/* 북마크리스트 썸네일 */}
       <ImageContainer src={bookmarkList.image} whatContent="북마크리스트"/>
       {/* 북마크리스트 정보 */}

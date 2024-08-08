@@ -18,8 +18,7 @@ interface DeleteConfirmModalProps {
 
 const DeleteContentModal: React.FC<DeleteConfirmModalProps> = ({ isOpen, onClose,whatContent,id }) => {
   const navigate = useNavigate()
-  if (!isOpen) return null;
-
+  
   const {setDeletedBookmarkList, setDeletedBookmark, setDeletedRoadmap} = deleteStore()
   // 임시이긴한데 스토리지에 박아둔 값 가져와서 할 예정
   // 아니면 필요한 곳에서먄 ?치고 prop때려도 ㄱㅊ
@@ -62,6 +61,7 @@ const DeleteContentModal: React.FC<DeleteConfirmModalProps> = ({ isOpen, onClose
     setDeletedBookmarkList(id)
   }
 
+  if (!isOpen) return null;
 
   return (
     <div className="modal modal-open">

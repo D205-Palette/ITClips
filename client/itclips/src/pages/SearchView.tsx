@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 
 // components
-import MessageLayout from "../components/aside/MessageLayout";
 import SearchBar from "../components/search/ui/SearchBar";
 import RealtimeList from "../components/search/RealtimeList";
 import SearchMain from "../components/search/SearchMain";
@@ -16,7 +15,6 @@ import { asideStore } from "../stores/asideStore";
 
 const SearchView = () => {
 
-  const isMessageOpen = asideStore(state => state.isMessageOpen);
   const [ whatCategory, setWhatCategory ] = useState("카테고리");
   const [ keyword, setKeyword ] = useState("");
 

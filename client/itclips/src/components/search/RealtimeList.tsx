@@ -1,34 +1,70 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
+import { NavLink } from "react-router-dom";
 
 // apis
-import { getBookmarkListScrapRank, getBookmarkListHitRank, getBookmarkListLinkRank, getRoadmapHitRank, getRoadmapLikeRank, getRoadmapScrapRank } from '../../api/rankApi';
+import { getBookmarkListScrapRank, getBookmarkListHitRank, getBookmarkListLikeRank, getRoadmapHitRank, getRoadmapLikeRank, getRoadmapScrapRank } from '../../api/rankApi';
 
-interface RealtimeItem {
+interface Item {
   id: number;
   title: string;
-  views: number;
-  scraps: number;
-  likes: number;
+  count: number;
+}
+
+// map 돌릴때 유일한 key 필요해서 어쩔수 없이 이렇게 만듦;;
+interface RankItem extends Item {
+  type: 'bookmarkList' | 'roadmap';
 }
 
 const RealtimeList = () => {
   
   const [sortBy, setSortBy] = useState<'views' | 'scraps' | 'likes'>('views');
-  const trendingItems: RealtimeItem[] = [
-    // 더미 데이터
-    { id: 1, title: "리눅스 초급자를 위한", views: 5, scraps: 10, likes: 20 },
-    { id: 2, title: "리눅스 중급자를 위한", views: 10, scraps: 5, likes: 20 },
-    { id: 3, title: "리눅스 고급자를 위한", views: 20, scraps: 10, likes: 5 },
-    { id: 4, title: "리눅스 고급자를 위한", views: 20, scraps: 10, likes: 5 },
-    { id: 5, title: "리눅스 고급자를 위한", views: 20, scraps: 10, likes: 5 },
-    { id: 6, title: "리눅스 고급자를 위한", views: 20, scraps: 10, likes: 5 },
-    { id: 7, title: "리눅스 고급자를 위한", views: 20, scraps: 10, likes: 5 },
-    { id: 8, title: "리눅스 고급자를 위한", views: 20, scraps: 10, likes: 5 },
-    { id: 9, title: "리눅스 고급자를 위한", views: 20, scraps: 10, likes: 5 },
-    { id: 10, title: "리눅스 고급자를 위한", views: 20, scraps: 10, likes: 5 },
-  ];
+  const [ rankItems, setRankItems ] = useState<RankItem[]>([]);
 
-  const sortedItems = trendingItems.sort((a, b) => b[sortBy] - a[sortBy]);
+  // 선택된 카테고리에 맞게 랭크 리스트(북마크리스트 + 로드맵) 조회
+  useEffect(() => {
+    fetchRankData(sortBy);
+  }, [sortBy]);
+
+  const fetchRankData = async (criteria: 'views' | 'scraps' | 'likes') => {
+    try {
+      let bookmarkRank: Item[], roadmapRank: Item[];
+
+      switch (criteria) {
+        case 'views':
+          bookmarkRank = (await getBookmarkListHitRank()).data;
+          roadmapRank = (await getRoadmapHitRank()).data;
+          break;
+        case 'scraps':
+          bookmarkRank = (await getBookmarkListScrapRank()).data;
+          roadmapRank = (await getRoadmapScrapRank()).data;
+          break;
+        case 'likes':
+          bookmarkRank = (await getBookmarkListLikeRank()).data;
+          roadmapRank = (await getRoadmapLikeRank()).data;
+          break;
+        default:
+          bookmarkRank = [];
+          roadmapRank = [];
+      }
+
+      const bookmarkData: RankItem[] = bookmarkRank.map(item => ({ ...item, type: 'bookmarkList' as const }));
+      const roadmapData: RankItem[] = roadmapRank.map(item => ({ ...item, type: 'roadmap' as const }));
+
+      const combinedRank = [...bookmarkData, ...roadmapData]
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 10);
+
+      setRankItems(combinedRank);
+    } catch (error) {
+      console.error(`Error fetching ${criteria} rank data:`, error);
+      setRankItems([]); // 에러 발생 시 빈 배열로 설정
+    }
+  };
+
+  const handleSortChange = (newSortBy: 'views' | 'scraps' | 'likes') => {
+    setRankItems([]); // 데이터 초기화
+    setSortBy(newSortBy);
+  };
 
   return (
     <div className="bg-base-100 p-4 max-w-md mx-auto">
@@ -40,7 +76,7 @@ const RealtimeList = () => {
               ? 'text-blue-500 border-b-2 border-blue-500' 
               : 'text-gray-500 hover:text-gray-700'
           }`} 
-          onClick={() => setSortBy('views')}
+          onClick={() => handleSortChange('views')}
         >
           조회수
         </button>
@@ -50,7 +86,7 @@ const RealtimeList = () => {
               ? 'text-blue-500 border-b-2 border-blue-500' 
               : 'text-gray-500 hover:text-gray-700'
           }`} 
-          onClick={() => setSortBy('scraps')}
+          onClick={() => handleSortChange('scraps')}
         >
           스크랩수
         </button>
@@ -60,16 +96,17 @@ const RealtimeList = () => {
               ? 'text-blue-500 border-b-2 border-blue-500' 
               : 'text-gray-500 hover:text-gray-700'
           }`} 
-          onClick={() => setSortBy('likes')}
+          onClick={() => handleSortChange('likes')}
         >
           좋아요수
         </button>
       </div>
       <ul className="space-y-2">
-        {sortedItems.map((item, index) => (
-          <li 
-            key={item.id} 
+        {rankItems.map((item, index) => (
+          <NavLink 
+            to={item.type === "bookmarkList" ? `/bookmarkList/${item.id}` : item.type === "roadmap" ? `/roadmap/${item.id}` : ''}
             className="flex items-center py-2"
+            key={`${item.type}-${item.id}`}
           >
             <span className="w-6 mr-3 text-sm">
               {index + 1}
@@ -77,7 +114,7 @@ const RealtimeList = () => {
             <div className="hover:text-blue-500 text-sm">
               {item.title}
             </div>
-          </li>
+          </NavLink>
         ))}
       </ul>
     </div>

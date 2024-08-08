@@ -4,14 +4,11 @@ import { Outlet } from "react-router-dom";
 import axios from "axios";
 import { API_BASE_URL } from "../config";
 
-import { asideStore } from "../stores/asideStore";
-import MessageLayout from "../components/aside/MessageLayout";
 import AsideProfile from "../components/aside/AsideProfile";
 
 import FeedTab from "../components/feed/FeedTab";
 
 export default function FeedView() {
-  const isMessageOpen = asideStore((state) => state.isMessageOpen);
 
   const fetchFeedPosts = (userId: string) => {
     return axios
@@ -241,15 +238,7 @@ export default function FeedView() {
           className="xl:col-start-2 xl:col-span-3 hidden xl:block"
         >
           {/* aside 자리 */}
-
-          <div className="sticky z-30">
-            <AsideProfile />
-          </div>
-
-          {/* 여기에 프로필이나 메세지일때 넣기 */}
-          <div id="aside" className="absolute col-start-2 col-span-2">
-            {isMessageOpen && <MessageLayout />}
-          </div>
+          <AsideProfile />
         </div>
 
         {/* main자리 */}

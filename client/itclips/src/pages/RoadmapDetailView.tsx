@@ -92,11 +92,7 @@ const RoadmapView = () => {
 
 {/* aside 자리 */}
 <div id="aside" className="xl:col-start-2 xl:col-span-3 hidden xl:block ">
-  {/* 메세지 뜨는 위치 */}
-  <div id="aside" className="absolute col-start-2 col-span-2 z-50 ">
-  { isMessageOpen && <MessageLayout /> }
-  </div>
-  <div className="sticky top-16">
+  <div className="fixed z-20">
     {roadmap?<AsideRoadmap roadmap={roadmap} />:<></>}
   </div>
 </div>                                        

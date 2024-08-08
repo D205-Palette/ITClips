@@ -6,7 +6,7 @@ export const getBookmarkListScrapRank = () => {
 };
 
 // 북마크리스트 좋아요 순 랭킹 조회
-export const getBookmarkListLinkRank = () => {
+export const getBookmarkListLikeRank = () => {
   return authenticatedRequest("get", "/list/rank/like", undefined, undefined);
 };
 

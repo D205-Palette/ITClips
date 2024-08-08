@@ -161,10 +161,13 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
     const fetchMessages = async () => {
       try {
         const response = await getChatRoomMessages(roomId);
-        const updatedMessages = response.data.map((message: Message) => ({
+        const updatedMessages = response.data
+        .map((message: Message) => ({
           ...message,
           createdAt: addNineHours(message.createdAt)
-        })).filter((message: Message) => message.createdAt !== null);
+        }))
+        .filter((message: Message) => message.createdAt !== null)
+        .sort((a: Message, b: Message) => b.id - a.id); // id 기준 내림차순 정렬
         setMessages(updatedMessages.reverse());
         setTimeout(scrollToBottom, 0);
       } catch (error) {
@@ -199,16 +202,24 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack 
 
       const now = new Date();
 
+      // 현재 메시지 목록에서 가장 큰 id 값 찾기
+      const maxId = messages.reduce((max, message) => Math.max(max, message.id), 0);
+      const newMessageId = maxId + 1;
+
+      const newMessage = {
+        id: newMessageId,
+        roomId: roomId,
+        senderId: userInfo.id,
+        senderName: userInfo.nickname,
+        message: inputMessage.trim(),
+        createdAt: formatDateToKST(now)
+      };
+
       stompClient.publish({
         destination: `/api/pub/chat/message`,
-        body: JSON.stringify({
-          roomId: roomId,
-          senderId: userInfo.id,
-          senderName: userInfo.nickname,
-          message: inputMessage.trim(),
-          createdAt: formatDateToKST(now)
-        })
+        body: JSON.stringify(newMessage)
       });
+      
       setInputMessage('');
     } else {
       alert('메시지를 전송할 수 없습니다. 연결 상태를 확인해주세요.');

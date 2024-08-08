@@ -384,7 +384,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         Integer scrapCount = bookmarkList.getBookmarkListScraps().size();
         Boolean isScraped = bookmarkListScrapRepository.existsByUserIdAndBookmarkListId(userId, bookmarkList.getId());
 
-        String imageUrl = getImageUrl(bookmarkList);
+        String imageUrl = getImageUrl(bookmarkList.getImage());
         // bookmark 정보
         List<BookmarkDetailDTO> bookmarkDetails = bookmarkListRepository.findDetailedByListId(bookmarkList.getId());
         bookmarkDetails.forEach(bookmarkDetailDTO -> addAdditionalInfoForBookmarkDetailDTO(bookmarkDetailDTO, userId));
@@ -392,10 +392,9 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         return bookmarkList.makeBookmarkListDetailDTO(likeCount, scrapCount, isLiked, isScraped, imageUrl, categories, tags, users, bookmarkDetails);
     }
 
-    private String getImageUrl(BookmarkList bookmarkList) {
-        String imageUrl = bookmarkList.getImage();
+    private String getImageUrl(String imageUrl) {
         if(!"default".equals(imageUrl)) {
-            imageUrl = fileService.getPresignedUrl("images", bookmarkList.getImage(), false).get("url");
+            imageUrl = fileService.getPresignedUrl("images", imageUrl, false).get("url");
         }
         return imageUrl;
     }
@@ -432,7 +431,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
 
         Integer likeCount = bookmarkList.getBookmarkListLikes().size();
         Boolean isLiked = (bookmarkListLikeRepository.findByBookmarkListIdAndUserId(bookmarkList.getId(), viewerId) != null);
-        String imageUrl = getImageUrl(bookmarkList);
+        String imageUrl = getImageUrl(bookmarkList.getImage());
 
         return bookmarkList.makeBookmarkListResponseDTO(bookmarkList.getBookmarks().size(), likeCount, isLiked, imageUrl, tags, users);
     }
@@ -456,10 +455,12 @@ public class BookmarkListServiceImpl implements BookmarkListService {
 
     private UserTitleDTO convertToUserTitleDTO(UserGroup userGroup) {
         User user = userGroup.getUser();
-        return UserTitleDTO.builder()
+        UserTitleDTO userTitleDTO = UserTitleDTO.builder()
                 .id(user.getId())
                 .nickName(user.getNickname())
                 .build();
+        userTitleDTO.addUserImage(getImageUrl(user.getProfileImage()));
+        return userTitleDTO;
     }
 
     private TagDTO convertToTagDTO(BookmarkListTag bookmarkListTag) {
@@ -521,7 +522,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
                         (existing, replacement) -> existing // Handle duplicates by keeping the existing tagDTO
                 ))
                 .values());
-        String imageUrl = getImageUrl(bookmarkList);
+        String imageUrl = getImageUrl(bookmarkList.getImage());
         return BookmarkListRoadmapDTO.builder()
                 .id(bookmarkList.getId())
                 .title(bookmarkList.getTitle())

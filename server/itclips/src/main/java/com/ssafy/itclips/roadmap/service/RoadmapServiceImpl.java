@@ -106,21 +106,21 @@ public class RoadmapServiceImpl implements RoadmapService {
             Long checkCnt = roadmapStepRepository.countByRoadmapIdAndCheck(roadmap.getId(), true);
 
             //이미지 url 생성
-            String imageUrl = getImageURL(roadmap);
-
+            String imageUrl = getImageURL(roadmap.getImage());
+            //유저 이미지 생성
+            String userImage = getImageURL(roadmap.getUser().getProfileImage());
             // 좋아요 했는지 안했는지
             Boolean isLiked = roadmapLikeRepository.existsByRoadmapIdAndUserId(roadmap.getId(), viewId);
 
-            RoadmapInfoDTO roadmapInfoDTO = RoadmapInfoDTO.toDto(roadmap,steps.size(),checkCnt,likeCnt,steps,isLiked,imageUrl);
+            RoadmapInfoDTO roadmapInfoDTO = RoadmapInfoDTO.toDto(roadmap,steps.size(),checkCnt,likeCnt,steps,isLiked,imageUrl,userImage);
             roadmapInfoDTOList.add(roadmapInfoDTO);
         }
         return roadmapInfoDTOList;
     }
 
-    private String getImageURL(Roadmap roadmap) {
-        String imageUrl = roadmap.getImage();
+    private String getImageURL(String imageUrl) {
         if(imageUrl != null && !"default".equals(imageUrl)) {
-            imageUrl = fileService.getPresignedUrl("images", roadmap.getImage(), false).get("url");
+            imageUrl = fileService.getPresignedUrl("images", imageUrl, false).get("url");
         }
         return imageUrl;
     }
@@ -346,7 +346,7 @@ public class RoadmapServiceImpl implements RoadmapService {
         Long scrapCnt = roadmapRepository.countByOrigin(roadmapId);
 
         //이미지 url 생성
-        String imageUrl = getImageURL(roadmap);
+        String imageUrl = getImageURL(roadmap.getImage());
 
         // 좋아요 했는지 안했는지
         Boolean isLiked = roadmapLikeRepository.existsByRoadmapIdAndUserId(roadmap.getId(),viewId);

@@ -66,12 +66,13 @@ public class FeedServiceImpl implements FeedService{
                 // 좋아요 수
                 Long likeCnt = roadmapLikeRepository.countByRoadmapId(roadmap.get().getId());
                 //이미지 url 생성
-                String imageUrl = getImageUrl(roadmap);
+                String imageUrl = getImageURL(roadmap.get().getImage());
+                //유저 이미지 생성
+                String userImage = getImageURL(roadmap.get().getUser().getProfileImage());
                 // 좋아요 했는지 안했는지
                 Boolean isLiked = roadmapLikeRepository.existsByRoadmapIdAndUserId(roadmap.get().getId(),userId);
 
-
-                RoadmapInfoDTO roadmapInfoDTO = RoadmapInfoDTO.toDto(roadmap.get(),steps.size(),checkCnt,likeCnt,steps,isLiked,imageUrl);
+                RoadmapInfoDTO roadmapInfoDTO = RoadmapInfoDTO.toDto(roadmap.get(),steps.size(),checkCnt,likeCnt,steps,isLiked,imageUrl,userImage);
                 roadmapInfoDTOList.add(roadmapInfoDTO);
             }
 
@@ -79,11 +80,11 @@ public class FeedServiceImpl implements FeedService{
         return roadmapInfoDTOList;
     }
 
-    private String getImageUrl(Optional<Roadmap> roadmap) {
-        return roadmap
-                .map(r -> fileService.getPresignedUrl("images", r.getImage(), false).get("url"))
-                .orElse(null);
-
+    private String getImageURL(String imageUrl) {
+        if(imageUrl != null && !"default".equals(imageUrl)) {
+            imageUrl = fileService.getPresignedUrl("images", imageUrl, false).get("url");
+        }
+        return imageUrl;
     }
 
     // 로드맵 피드 저장

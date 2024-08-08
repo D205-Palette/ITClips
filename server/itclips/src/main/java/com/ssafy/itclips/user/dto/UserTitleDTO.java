@@ -10,6 +10,7 @@ import lombok.*;
 public class UserTitleDTO {
     private Long id;
     private String nickName;
+    private String userImage;
 
     @Builder
     public UserTitleDTO(Long id, String nickName) {
@@ -17,10 +18,21 @@ public class UserTitleDTO {
         this.nickName = nickName;
     }
 
+    @Builder
+    public UserTitleDTO(Long id, String nickName, String userImage) {
+        this.id = id;
+        this.nickName = nickName;
+        this.userImage = userImage;
+    }
+
     public static UserTitleDTO toDTO(User user) {
         return UserTitleDTO.builder()
                 .id(user.getId())
                 .nickName(user.getNickname())
                 .build();
+    }
+
+    public void addUserImage(String userImage) {
+        this.userImage = userImage;
     }
 }

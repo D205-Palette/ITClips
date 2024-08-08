@@ -245,11 +245,8 @@ public class ChatRoomService {
             ChatRoom room = chatRoomJPARepository.findById(roomId)
                     .orElseThrow(()->new CustomException(ErrorCode.CHAT_ROOM_NOT_FOUND));
 
-            Chat chat = Chat.builder()
-                    .user(user)
-                    .room(room)
-                    .build();
-            chatJPARepository.save(chat);
+            //chat저장
+            saveChat(room, user);
         }
     }
 

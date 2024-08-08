@@ -19,13 +19,11 @@ import { useParams } from "react-router-dom";
 import { API_BASE_URL } from "../config";
 import { authStore } from "../stores/authStore";
 import darkModeStore from "../stores/darkModeStore";
-import { deleteStore } from "../stores/deleteStore";
 import mainStore from "../stores/mainStore";
 
 const MyBookmark = () => {
   const params = useParams();
   const { isDark } = darkModeStore();
-  const { deletedBookmark } = deleteStore();
   const tempListId = params.bookmarklistId;
 const {isBookmarkListChange, setIsBookmarkListChange} = mainStore()
 
@@ -33,6 +31,7 @@ const {isBookmarkListChange, setIsBookmarkListChange} = mainStore()
   if (tempListId) {
     listId = parseInt(tempListId);
   }
+
   const { userId, token } = authStore();
   const isMessageOpen = asideStore((state) => state.isMessageOpen);
 
@@ -41,10 +40,11 @@ const {isBookmarkListChange, setIsBookmarkListChange} = mainStore()
   const tempCategories = mainTabStore((state) => state.tempCategories);
   const setTempCategories = mainTabStore((state) => state.setTempCategories);
 
-  // 수정용 북마크들
+  // 수정&이동용 북마크 정보들
   const [editBookmarks, changeEditBookmarks] = useState<BookmarkType[]>([]);
   const [editBookmarksIndex, changeEditBookmarksIndex] = useState<number[]>([]);
 
+  // 에디트 모드 전환용 
   const [editMode, setEditMode] = useState(false);
   const [isEditModal, tabEditModal] = useState(false);
   const [isAddModal, tabAddModal] = useState(false);
@@ -55,36 +55,6 @@ const {isBookmarkListChange, setIsBookmarkListChange} = mainStore()
   // 메인으로 쓸것들
   const [bookmarkList, setBookmarkList] = useState<BookmarkListDetailType>();
   const [filterdBookmarks, setFilterdBookmarks] = useState<BookmarkType[]>([]);
-
-  // 북마크 추가 버튼 누를 시, 임시로 잡아줬던 whatCategory의 id값을 갱신해줘야됨
-  const addBookmark = () => {
-    // 임시의 카테고리면 id가 필요하니까 받아오는 거
-    if (whatCategory.categoryId === 0) {
-      axios({
-        method: "get",
-        url: `${API_BASE_URL}/api/list/${listId}`,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        params: {
-          userId: userId,
-        },
-      })
-        .then((res) => {
-          const newCatId = res.data.categories.filter(
-            (cat: CategoryType) =>
-              cat.categoryName === whatCategory.categoryName
-          )[0].categoryId;
-          changeCategory({
-            categoryId: newCatId,
-            categoryName: whatCategory.categoryName,
-          });
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    }
-  };
 
   // 북마크 리스트 변경될때마다 리스트 불러오기
   useEffect(() => {
@@ -163,7 +133,7 @@ const {isBookmarkListChange, setIsBookmarkListChange} = mainStore()
               </div>
             ) : bookmarkList ? (
               <div className="static z-50">
-                <CategoryTab listId={bookmarkList.id} />
+                <CategoryTab categories={bookmarkList.categories} listId={bookmarkList.id}/>
               </div>
             ) : (
               <></>
@@ -201,7 +171,6 @@ const {isBookmarkListChange, setIsBookmarkListChange} = mainStore()
                   size={50}
                   onClick={() => {
                     tabAddModal(true);
-                    addBookmark();
                   }}
                   className="hover:cursor-pointer hover:text-sky-600 text-sky-400"
                 />{" "}

@@ -10,14 +10,18 @@ import { API_BASE_URL } from "../../config";
 import { authStore } from "../../stores/authStore";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom"; 
+import mainStore from "../../stores/mainStore";
 
-const MyRoadmap: FC = () => {
+const MyRoadmap = () => {
   const navigate = useNavigate()
   const {userId, token} = authStore()
   const [roadmaps, setRoadmaps] = useState<RoadmapSumType[]>([])
   const params = useParams()
-  const [deletedIndex, setDeletedIndex] = useState<number[]>([])
-  // 로드맵 요약 불러오기
+  const {isRoadmapChange, setIsRoadmapChange} = mainStore()
+  const [filterdRoadmaps, setFilterdRoadmaps] = useState<RoadmapSumType[]>([])
+  const [filterText, changeFilterText] = useState("");
+
+  // 변경사항 있을때마다 로드맵 요약 불러오기
   useEffect(() => {
 		async function fetchData() {
       axios({
@@ -32,19 +36,21 @@ const MyRoadmap: FC = () => {
       })
       .then((res) => {
         setRoadmaps(res.data)
+        setFilterdRoadmaps(res.data.filter((roadmap:any) =>roadmap.title.includes(filterText)))
+        setIsRoadmapChange(false)
+        console.log('로드맵 변화 감지')
       })
       .catch((err) => {
         console.error(err);
       });
 		}
     fetchData();
-	}, []);
+	}, [isRoadmapChange]);
 
+  useEffect(() => {
+    setFilterdRoadmaps(roadmaps.filter((roadmap) =>roadmap.title.includes(filterText)))
+  }, [filterText]);
 
-  const [filterText, changeFilterText] = useState("");
-  const filterdRoadmaps = roadmaps.filter(
-    (roadmap) => roadmap.title.includes(filterText)
-  );
 
   return (
     <>
@@ -60,7 +66,7 @@ const MyRoadmap: FC = () => {
       {/* 로드맵들 */}
       <div className="absolute top-32  w-7/12 ">
       {filterdRoadmaps.length === 0 ? <NoContent content={"로드맵"}/> : <>
-        {filterdRoadmaps.map((roadmap,index) => (
+        {filterdRoadmaps.map((roadmap) => (
           <Roadmap roadmap={roadmap} />
         ))}</>}
       </div>

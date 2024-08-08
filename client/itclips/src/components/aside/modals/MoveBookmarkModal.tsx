@@ -33,7 +33,7 @@ const MoveBookmarkModal: FC<Move> = ({
   const { userId, token } = authStore();
 
   const [clickedIndex, changeClickedIndex] = useState<number>(0);
-
+  const {setIsBookmarkListChange} = mainStore()
   /// 최종적으로 북마크들 이동시킬 카테고리
   const [selectCategory, setSelectCategory] = useState<number>(0);
   const [selectListId, setSelectListId] = useState<number>();
@@ -49,11 +49,15 @@ const MoveBookmarkModal: FC<Move> = ({
         axios.post(
           `${API_BASE_URL}/api/bookmark/add/${selectListId}`,
           editBookmark
-        )
+        ).then(()=>{
+          setIsBookmarkListChange(true)
+        })
       );
       if (whatMenu === "이동") {
         editBookmarks.map((editBookmark) =>
-          axios.delete(`${API_BASE_URL}/api/bookmark/delete/${editBookmark.id}`)
+          axios.delete(`${API_BASE_URL}/api/bookmark/delete/${editBookmark.id}`).then(()=>{
+            setIsBookmarkListChange(true)
+          })
         );
         changeEditBookmarksIndex([]);
       }
@@ -63,12 +67,16 @@ const MoveBookmarkModal: FC<Move> = ({
         axios.post(
           `${API_BASE_URL}/api/bookmark/add/${selectListId}/${selectCategory}`,
           editBookmark
-        )
+        ).then(()=>{
+          setIsBookmarkListChange(true)
+        })
       );
 
       if (whatMenu === "이동") {
         editBookmarks.map((editBookmark) =>
-          axios.delete(`${API_BASE_URL}/api/bookmark/delete/${editBookmark.id}`)
+          axios.delete(`${API_BASE_URL}/api/bookmark/delete/${editBookmark.id}`).then(()=>{
+            setIsBookmarkListChange(true)
+          })
         );
         changeEditBookmarksIndex([]);
       }

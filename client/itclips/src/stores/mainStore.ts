@@ -5,16 +5,16 @@ interface Article {
   isBookmarkListChange : boolean
   setIsBookmarkListChange : (bool:boolean) => void
 
-  isBookmarkChange : boolean
-  setIsBookmarkChange : (bool:boolean) => void
+  isRoadmapChange : boolean
+  setIsRoadmapChange : (bool:boolean) => void
   }
 
 const mainStore = create<Article>((set) => ({
   isBookmarkListChange:false,
   setIsBookmarkListChange: (bool) => set(() => ({isBookmarkListChange : bool})),
 
-  isBookmarkChange:false,
-  setIsBookmarkChange: (bool) => set(() => ({isBookmarkChange : bool})),
+  isRoadmapChange:false,
+  setIsRoadmapChange: (bool) => set(() => ({isRoadmapChange : bool})),
   
 }
 ));

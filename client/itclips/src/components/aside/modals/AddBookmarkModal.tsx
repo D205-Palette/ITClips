@@ -44,6 +44,7 @@ const AddBookmarkModal: FC<move> = ({
 
   const [createMode, changeCreateMode] = useState(false);
 
+  const {isBookmarkListChange,setIsBookmarkListChange} = mainStore()
   const handleSubmit = () => {
     console.log(whatCategory);
     // 카테고리가 있냐 없냐에 따라 분기
@@ -61,7 +62,9 @@ const AddBookmarkModal: FC<move> = ({
           content: tempContent,
         },
       })
-        .then((res) => {})
+        .then((res) => {
+          setIsBookmarkListChange(true)
+        })
         .catch((err) => {
           console.error(err);
         });
@@ -82,6 +85,7 @@ const AddBookmarkModal: FC<move> = ({
         .then((res) => {
               // 카테고리 초기화
     changeCategory({ categoryId: 0, categoryName: "" });
+    setIsBookmarkListChange(true)
         })
         .catch((err) => {
           console.error(err);

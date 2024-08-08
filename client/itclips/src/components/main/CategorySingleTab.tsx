@@ -18,7 +18,7 @@ import { useEffect } from "react";
 import type { CategoryType } from "../../types/BookmarkListType";
 import { useParams } from "react-router-dom";
 import Tab from "../../stores/mainTabStore";
-
+import mainStore from "../../stores/mainStore";
 interface Props {
   tempCategory:CategoryType;
 }
@@ -27,32 +27,7 @@ const CategorySingleTab: FC<Props> = ({ tempCategory }) => {
 
   const params = useParams()
   const {tempCategories, setTempCategories,addTempCategories, deleteTempCategories} = Tab()
-
-  // 새로 생성 했을떄, id가0이라 그거 맞는 id 받아오기 위한 용도
-  // useEffect(()=>{
-  //   async function fetchData() {
-  //     axios({
-  //       method: "get",
-  //       url: `${API_BASE_URL}/api/list/${params.bookmarklistId}`,
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //       params:{
-  //         userId:userId, 
-  //       },
-  //       })
-  //         .then((res) => {
-  //           // 이게 고민이다... zustand 쓸라니까 자꾸 랜더 번쩍거리는디
-  //           addTempCategories(res.data.categories);
-  //       })
-  //       .catch((err) => {
-  //         console.error(err);
-  //       });
-  //   }
-  //   fetchData();
-  // }, [])
-
-
+const {setIsBookmarkListChange} = mainStore()
   const { userId, token } = authStore();
   const isDark = darkModeStore((state) => state.isDark);
   const color = isDark
@@ -92,6 +67,7 @@ const CategorySingleTab: FC<Props> = ({ tempCategory }) => {
       })
         .then((res) => {
           deleteTempCategories(tempCategory.categoryName)
+          setIsBookmarkListChange(true)
         })
         .catch((err) => {
           console.error(err);
@@ -115,7 +91,6 @@ const CategorySingleTab: FC<Props> = ({ tempCategory }) => {
     <>
       <button
         className={
-          ( isDelete? "hidden ": " ") +
           (tempCategory.categoryName === whatCategory.categoryName
             ? "bg-sky-500 text-slate-100 border-solid border-sky-500 border-2 p-1"
             : color) + " rounded-2xl mx-2 ps-3"

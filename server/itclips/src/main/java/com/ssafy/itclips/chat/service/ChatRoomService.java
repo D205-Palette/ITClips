@@ -44,7 +44,7 @@ public class ChatRoomService {
 
     //방 생성
     @Transactional
-    public Map<String, Long> createChatRoom(Long user1Id, Long user2Id) {
+    public Map<String, Long> createChatRoom(Long user1Id, Long user2Id) throws RuntimeException{
         User user1 = userRepository.findById(user1Id).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
         User user2 = userRepository.findById(user2Id).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
 
@@ -70,7 +70,7 @@ public class ChatRoomService {
 
     //그룹 채팅방 생성
     @Transactional
-    public Map<String,Long> chatGroupRoom(GroupRoomDTO groupRoomDTO){
+    public Map<String,Long> chatGroupRoom(GroupRoomDTO groupRoomDTO)throws RuntimeException{
         //채팅방 생성
         ChatRoom chatRoom = ChatRoom.builder()
                 .name(groupRoomDTO.getName())
@@ -93,11 +93,16 @@ public class ChatRoomService {
     }
 
     //채팅방 정보
-    public ChatRoomInfoDTO getRoomInfo(Long roomId){
+    public ChatRoomInfoDTO getRoomInfo(Long roomId) throws RuntimeException{
         List<Chat> chats = chatJPARepository.findByRoomId(roomId)
                 .orElseThrow(()-> new CustomException(ErrorCode.CHAT_NOT_FOUND));
+        if(chats.isEmpty()){
+            throw new CustomException(ErrorCode.CHAT_NOT_FOUND);
+        }
+
         List<UserTitleDTO> userTitleDTOS = new ArrayList<>();
         for(Chat chat : chats){
+            log.info(chat.getUser().getId().toString());
             UserTitleDTO userInfoDTO = UserTitleDTO.toDTO(chat.getUser());
             userTitleDTOS.add(userInfoDTO);
         }
@@ -107,7 +112,7 @@ public class ChatRoomService {
 
     // 채팅방 레디스 생성
     @Transactional
-    public void saveChatRoomInRedis(ChatRoom savedChatRoom) {
+    public void saveChatRoomInRedis(ChatRoom savedChatRoom) throws RuntimeException{
         ChatRoomDTO chatRoomDTO = ChatRoomDTO.builder()
                 .name(savedChatRoom.getName())
                 .roomId(savedChatRoom.getId())
@@ -117,7 +122,7 @@ public class ChatRoomService {
     }
 
     @Transactional
-    public void saveChat(ChatRoom savedChatRoom, User user1) {
+    public void saveChat(ChatRoom savedChatRoom, User user1) throws RuntimeException{
         Chat chat1 = Chat.builder()
                 .room(savedChatRoom)
                 .user(user1)
@@ -128,7 +133,7 @@ public class ChatRoomService {
 
     //메세지 전송
     @Transactional
-    public void publish(MessageDTO message) {
+    public void publish(MessageDTO message) throws RuntimeException{
         //topic생성
         chatRoomRepository.enterChatRoom(message.getRoomId());
         log.info(message.getSenderId()+" "+message.getRoomId());
@@ -162,7 +167,7 @@ public class ChatRoomService {
 
     //유저가 속한 채팅방 리스트
     @Transactional
-    public List<ChatRoomDTO> getChatRooms(Long userId) {
+    public List<ChatRoomDTO> getChatRooms(Long userId) throws RuntimeException{
 
         // 특정 유저가 속한 채팅 가져오기
         List<Chat> chatRoomList = chatJPARepository.findByUserId(userId)
@@ -201,7 +206,7 @@ public class ChatRoomService {
 
     @Transactional
     //채팅방 메세지 찾기
-    public List<MessageDTO> getMessages(Long roomId){
+    public List<MessageDTO> getMessages(Long roomId)throws RuntimeException{
 
         List<MessageDTO> messageList = new ArrayList<>();
 
@@ -228,12 +233,12 @@ public class ChatRoomService {
     }
 
     @Transactional
-    public void deleteRoom(Long roomId, Long userId){
+    public void deleteRoom(Long roomId, Long userId)throws RuntimeException{
         chatJPARepository.deleteByRoomIdAndUserId(roomId,userId);
     }
 
     @Transactional
-    public void inviteUser(Long roomId, Long userId){
+    public void inviteUser(Long roomId, Long userId)throws RuntimeException{
         if(!chatJPARepository.existsByUserIdAndRoomId(userId, roomId)){
             User user = userRepository.findById(userId)
                     .orElseThrow(()->new CustomException(ErrorCode.USER_NOT_FOUND));
@@ -250,7 +255,7 @@ public class ChatRoomService {
 
     //안읽은 메세지 0으로 세팅
     @Transactional
-    public void setZero(Long roomId, Long userId){
+    public void setZero(Long roomId, Long userId)throws RuntimeException{
         Chat chat = chatJPARepository.findByUserIdAndRoomId(userId,roomId)
                 .orElseThrow(()->new CustomException(ErrorCode.CHAT_NOT_FOUND));
 

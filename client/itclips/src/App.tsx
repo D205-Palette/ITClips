@@ -7,7 +7,7 @@ import NavBar from "./components/nav/NavBar";
 import Footer from "./components/footer/Footer";
 
 // stores
-import { useWebSocketStore } from "./stores/webSocketStore";
+import { webSocketStore } from "./stores/webSocketStore";
 import notificationStore from "./stores/notificationStore";
 import { authStore } from "./stores/authStore";
 import { chatStore } from "./stores/chatStore";
@@ -16,8 +16,8 @@ import { chatStore } from "./stores/chatStore";
 import { connectNotificationStream } from "./api/notificationApi";
 
 const App = () => {
-  const connect = useWebSocketStore(state => state.connect);
-  const disconnect = useWebSocketStore(state => state.disconnect);
+  const connect = webSocketStore(state => state.connect);
+  const disconnect = webSocketStore(state => state.disconnect);
   const { addNotification } = notificationStore();
   const fetchRooms = chatStore(state => state.fetchRooms);
   const userId = authStore(state => state.userId);

@@ -29,10 +29,10 @@ const MessageContainer: React.FC<MessageContainerProps> = ({ messages }) => {
     const nineHoursAgo = subHours(now, 9);
     
     if (isAfter(date, nineHoursAgo)) {
-      return format(date, 'yyyy-MM-dd HH:mm:ss');
+      return format(date, 'yyyy-MM-dd HH:mm');
     } else {
       const kstDate = addHours(date, 9);
-      return format(kstDate, 'yyyy-MM-dd HH:mm:ss');
+      return format(kstDate, 'yyyy-MM-dd HH:mm');
     }
   };
 

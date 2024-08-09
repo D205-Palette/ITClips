@@ -160,6 +160,7 @@ public class BookmarkList {
                 .users(users)
                 .bookmarks(bookmarks)
                 .hit(this.hit)
+                .isPublic(this.isPublic)
                 .build();
     }
 

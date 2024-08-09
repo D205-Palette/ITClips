@@ -7,6 +7,7 @@ import com.ssafy.itclips.error.ErrorCode;
 import com.ssafy.itclips.follow.dto.FollowDetailDTO;
 import com.ssafy.itclips.follow.entity.Follow;
 import com.ssafy.itclips.follow.repository.FollowRepository;
+import com.ssafy.itclips.global.file.FileService;
 import com.ssafy.itclips.user.entity.User;
 import com.ssafy.itclips.user.repository.UserRepository;
 import com.ssafy.itclips.user.service.UserService;
@@ -28,6 +29,7 @@ public class FollowServiceImpl implements FollowService {
     private final FollowRepository followRepository;
     private final UserRepository userRepository;
     private final NotificationService notificationService;
+    private final FileService fileService;
 
     @Transactional
     @Override
@@ -69,7 +71,7 @@ public class FollowServiceImpl implements FollowService {
                     follow.getFrom().getId(),
                     follow.getTo().getId(),
                     followedUser != null ? followedUser.getNickname() : null,
-                    followedUser != null ? followedUser.getProfileImage() : null,
+                    followedUser != null ? getImageUrl(followedUser.getProfileImage()) : null,
                     followedUser != null ? followedUser.getEmail() : null
             );
         }).collect(Collectors.toList());
@@ -101,7 +103,7 @@ public class FollowServiceImpl implements FollowService {
                     follow.getFrom().getId(),
                     follow.getTo().getId(),
                     followerUser != null ? followerUser.getNickname() : null,
-                    followerUser != null ? followerUser.getProfileImage() : null,
+                    followerUser != null ? getImageUrl(followerUser.getProfileImage()) : null,
                     followerUser != null ? followerUser.getEmail() : null
             );
         }).collect(Collectors.toList());
@@ -144,5 +146,12 @@ public class FollowServiceImpl implements FollowService {
     @Override
     public boolean isFollowedBy(User targetUser, User currentUser) {
         return followRepository.existsByFromUserAndToUser(targetUser, currentUser);
+    }
+
+    private String getImageUrl(String imageUrl) {
+        if(!"default".equals(imageUrl)) {
+            imageUrl = fileService.getPresignedUrl("images", imageUrl, false).get("url");
+        }
+        return imageUrl;
     }
 }

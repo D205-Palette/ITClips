@@ -87,8 +87,12 @@ const RoadmapView = () => {
 
   // 체크된 개수 바뀔때마다 갱신
   useEffect(()=>{
+    if(totalCount===0){
+      setPercentage("No List")
+    } else{
+    setPercentage(`${(checkCount * 100 /totalCount).toFixed(1)}%`)
+  }
 
-    setPercentage((checkCount * 100 /totalCount).toFixed(1))
   
   }, [checkCount])
   
@@ -122,7 +126,7 @@ const RoadmapView = () => {
           <MainTab userId={roadmap?.userId!}/>
         </div>
         </div>
-        <div className="col-span-7 flex flex-row justify-between my-9">
+        <div className="col-span-7 flex flex-row justify-between my-12">
           <div>
             <BackButton />
           </div>
@@ -137,7 +141,7 @@ const RoadmapView = () => {
                 : "text-sky-400") + " flex items-center text-3xl font-bold"
             }
           >
-            {`${percentage}` + "%"}
+            {percentage}
           </div>
           {/* 퍼센트 계산 방법이.... 전체 필터걸어서 isCompleted된거 구하는거긴한데... */}
         </div>

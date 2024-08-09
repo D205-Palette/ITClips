@@ -66,7 +66,7 @@ const RoadMap: FC<Props> = ({ roadmap, canEdit }) => {
             />
           </div>
 
-          <div className={(isDark ? "hover:bg-slate-700" : "hover:bg-slate-100") +"  card-body flex flex-row justify-between h-full relative"}>
+          <div className={(isDark ? "hover:bg-slate-700" : "hover:bg-slate-100") +"  card-body flex flex-row justify-between h-full relative w-5/6"}>
             <div
               className={
                 (canEdit ? "" : "hidden ") +

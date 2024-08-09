@@ -57,12 +57,12 @@ const ListItem: FC<Props> = ({ list,whatMenu }) => {
         <>
           <figure
             onClick={() => navigate(`/bookmarklist/${list.id}`)}
-            className="hover:cursor-pointer w-1/6"
+            className="hover:cursor-pointer w-1/6 overflow-hidden"
           >
             <img
               src={list.image==="default"?  noImg : list.image }
               alt="Movie"
-              className="size-28 object-cover"
+              className=" object-fill"
             />
           </figure>
 

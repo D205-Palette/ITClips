@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
+
+// icons
 import { FaBell, FaTimes, FaCheck } from "react-icons/fa";
 
 // stores
@@ -10,7 +12,7 @@ const NotificationDropdown: React.FC = () => {
   const userId = authStore(state => state.userId);
 
   const { notifications, fetchNotifications, markAllAsRead, deleteNotification } = notificationStore();
-  const [isOpen, setIsOpen] = useState(false);
+  const [ isOpen, setIsOpen ] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleToggle = () => {
@@ -55,6 +57,11 @@ const NotificationDropdown: React.FC = () => {
     return notifications.filter(notification => !notification.read).length;
   }, [notifications]);
 
+  // 알림을 ID 기준으로 내림차순 정렬
+  const sortedNotifications = useMemo(() => {
+    return [...notifications].sort((a, b) => b.id - a.id);
+  }, [notifications]);
+
   return (
     <div ref={dropdownRef} className={`dropdown dropdown-end ${isOpen ? 'dropdown-open' : ''} relative`}>
       <label tabIndex={0} onClick={handleToggle}>
@@ -77,11 +84,11 @@ const NotificationDropdown: React.FC = () => {
               )}
             </div>
             <div className="max-h-96 overflow-y-auto">
-              {notifications.length === 0 ? (
+              {sortedNotifications.length === 0 ? (
                 <p className="text-center py-2">알림이 없습니다.</p>
               ) : (
                 <ul>
-                  {notifications.map((notification) => (
+                  {sortedNotifications.map((notification) => (
                     <li key={notification.id} className={`flex justify-between items-center py-2 border-b ${notification.read ? 'text-gray-400' : ''}`}>
                       <span className="text-sm">{notification.contents}</span>
                       <button 

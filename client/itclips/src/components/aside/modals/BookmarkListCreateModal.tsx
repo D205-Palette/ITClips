@@ -27,8 +27,9 @@ const BookmarkListCreateModal: React.FC<EditModalProps> = ({
   const [tempTag, setTempTag] = useState("");
   const [tempTags, setTempTags] = useState<{ title: string }[]>([]);
   const [tempCategories, setTempCategories] = useState<string[]>([]);
+
   // user 설정이랑 isPublic 해ㅇ줘야하나?
-  const [isPublic, setIsPublic] = useState(false);
+  const [isPublic, setIsPublic] = useState<any>(false);
   const [imageToS3FileName, setImageToS3FileName] = useState("");
   const { userId, token } = authStore();
   // 이미지 업로드 상태 관리
@@ -54,6 +55,11 @@ const BookmarkListCreateModal: React.FC<EditModalProps> = ({
   };
 
   const endCreate = () => {
+    if(isPublic){
+      setIsPublic(1)
+    } else{
+      setIsPublic(0)
+    }
     axios({
       method: "post",
       url: `${API_BASE_URL}/api/list/add/${userId}`,
@@ -65,9 +71,9 @@ const BookmarkListCreateModal: React.FC<EditModalProps> = ({
         description: tempDescription,
         image: bookmarklistImage ? `${tempTitle}-${userId}` : "default",
         isPublic: isPublic,
-        categories: tempCategories,
+        categories: ["새 카테고리"],
         users: [],
-        tags: tempTags,        
+        tags: tempTags,
       },
     })
       .then((res) => {
@@ -78,8 +84,15 @@ const BookmarkListCreateModal: React.FC<EditModalProps> = ({
             }, // 파일의 MIME 타입 설정
           });
         }
-        console.log(res.data.url)
         setIsBookmarkListChange(true)
+          // 입력값들 초기화
+          setTempTitle("")
+          setTempTags([])
+          setTempTag("")
+          setTempDescription("")
+          // setTemp
+
+
         window.alert("북마크리스트를 생성하였습니다.");
         onClose();
       })
@@ -246,7 +259,7 @@ const BookmarkListCreateModal: React.FC<EditModalProps> = ({
               type="text"
               value={tempTag}
               onChange={(e) => setTempTag(e.target.value)}
-              className="flex-grow px-3 py-2 border rounded-l-md"
+              className="flex-grow px-3 py-2 border rounded-l-md  "
               placeholder="새 태그 입력"
             />
             <button
@@ -255,7 +268,16 @@ const BookmarkListCreateModal: React.FC<EditModalProps> = ({
             >
               +
             </button>
+
           </div>
+          <div className="form-control flex flex-row items-center justify-end my-3">
+              <label htmlFor="">공개 여부</label>
+              <input
+                type="checkbox"
+                onClick={() => setIsPublic(!isPublic)}
+                className="checkbox checkbox-info  [--chkfg:white] mx-2 "
+              />
+            </div>
         </div>
 
         <button className="btn bg-sky-500 hover:bg-sky-700 text-slate-100 w-full" onClick={() => endCreate()}>

@@ -25,7 +25,7 @@ const NotificationDropdown: React.FC = () => {
 
   return (
     <div className="dropdown dropdown-hover">
-      <div tabIndex={0} role="button" className="hover:bg-sky-700 m-1">
+      <div tabIndex={0} role="button" className="hover:text-sky-700 m-1">
         <FaBell/>
       </div>
       <ul

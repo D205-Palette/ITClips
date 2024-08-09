@@ -318,7 +318,14 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
             </button>
           </div>
         </div>
-
+        <div className="form-control flex flex-row items-center justify-end my-3">
+              <label htmlFor="">공개 여부</label>
+              <input
+                type="checkbox"
+                onClick={() => setIsPublic(!isPublic)}
+                className="checkbox checkbox-info  [--chkfg:white] mx-2 "
+              />
+            </div>
         <button className="btn text-slate-100 bg-sky-500 hover:bg-sky-700 w-full" onClick={() => endEdit()}>
           수정
         </button>

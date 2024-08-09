@@ -54,7 +54,7 @@ const RoadMap: FC<Props> = ({ roadmap, canEdit }) => {
       <div
         className={
           (isDark ? "hover:bg-slate-700" : "hover:bg-slate-100") +
-          " card card-side bg-base-100 hover:cursor-pointer h-32 my-1 static z-0"
+          " card card-side bg-base-100 hover:cursor-pointer h-32 my-1 static"
         }
       >
         <>
@@ -77,10 +77,10 @@ const RoadMap: FC<Props> = ({ roadmap, canEdit }) => {
                   : percentage == "100.0"
                   ? "bg-green-900"
                   : "bg-sky-900") +
-                " h-full absolute z-0 top-0 left-0 rounded-e-2xl lg:rounded-s-none rounded-s-2xl"
+                " h-full absolute z-30 top-0 left-0 rounded-e-2xl lg:rounded-s-none rounded-s-2xl"
               }
               style={{ width: `${percentage}%` }}
-              onClick={() => navigate(`/roadmap/${roadmap.id}`)}
+              // onClick={() => navigate(`/roadmap/${roadmap.id}`)}
             ></div>
 
             <div

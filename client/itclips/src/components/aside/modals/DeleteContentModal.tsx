@@ -6,6 +6,7 @@ import { API_BASE_URL } from "../../../config";
 import { authStore } from "../../../stores/authStore";
 import { useNavigate } from "react-router-dom";
 import mainStore from "../../../stores/mainStore";
+import { useEffect } from "react";
 interface DeleteConfirmModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -21,12 +22,21 @@ const DeleteContentModal: React.FC<DeleteConfirmModalProps> = ({
   whatContent,
   id,
 }) => {
+  
+  // 엔터쳤을떄도 삭제되게
+  useEffect(() => {
+    const handleKeyDown =  async (e:KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        await deleteApi();
+        await onClose();
+      } 
+    };
+    window.addEventListener('keydown', handleKeyDown);
+  }, []);
+
   const navigate = useNavigate();
-  // if (!isOpen) return null;
   const { setIsBookmarkListChange } = mainStore();
   const{setIsRoadmapChange} = mainStore()
-  // 임시이긴한데 스토리지에 박아둔 값 가져와서 할 예정
-  // 아니면 필요한 곳에서먄 ?치고 prop때려도 ㄱㅊ
   const { userId, token } = authStore();
 
   function deleteApi(): void {
@@ -81,7 +91,7 @@ const DeleteContentModal: React.FC<DeleteConfirmModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="modal modal-open">
+    <div className="modal modal-open ">
       <div className="modal-box">
         <h3 className="font-bold text-lg">삭제하시겠습니까?</h3>
         <div className="modal-action">

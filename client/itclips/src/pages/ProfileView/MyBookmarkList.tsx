@@ -62,7 +62,7 @@ export default function MyView() {
         });
     }
     fetchData();
-  }, [isBookmarkListChange]);
+  }, [isBookmarkListChange,params.userId]);
 
 
   // 검색어 변경시 리스트 변경

@@ -50,6 +50,7 @@ type BookmarkListSumType = {
     {
       id: number;
       nickName: string;
+      userImage: string;
     }[]
 };
 

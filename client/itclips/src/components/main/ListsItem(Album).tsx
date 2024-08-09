@@ -53,8 +53,8 @@ const ListItem: FC<Props> = ({ list,whatMenu,canEdit }) => {
   return (
     <>
       <div
-        className={(list.isPublic || canEdit? "" : "hidden ") + 
-          "card w-64 bg-base-100 border border-slate-200 " +
+        className={
+          "card border bg-base-100 " +
           (isDark ? "hover:bg-slate-700" : "hover:bg-slate-100")
         }
         onMouseOver={() => setIsHovering(true)}
@@ -62,7 +62,7 @@ const ListItem: FC<Props> = ({ list,whatMenu,canEdit }) => {
       >
         <figure
           className={
-            "w-56 h-56 " +
+            "h-56 " +
             (isDark ? "hover:brightness-150" : "hover:brightness-95")
           }
         >

@@ -20,13 +20,15 @@ const LogoutButton = () => {
   };
 
   return (
-    <button
-      onClick={logoutButton}
-      className="transition-colors duration-300"
-      aria-label="Logout"
-    >
-      <FaSignOutAlt />
-    </button>
+    <div>
+      <button
+        onClick={logoutButton}
+        className="transition-colors duration-300"
+        aria-label="Logout"
+      >
+        <FaSignOutAlt />
+      </button>
+    </div>
   );
 };
 

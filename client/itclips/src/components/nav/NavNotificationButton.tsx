@@ -56,12 +56,12 @@ const NotificationDropdown: React.FC = () => {
   }, [notifications]);
 
   return (
-    <div ref={dropdownRef} className={`dropdown dropdown-end ${isOpen ? 'dropdown-open' : ''}`}>
-      <label tabIndex={0} className="flex items-center justify-center w-10 h-10 cursor-pointer hover:text-gray-400 transition-colors duration-300" onClick={handleToggle}>
+    <div ref={dropdownRef} className={`dropdown dropdown-end ${isOpen ? 'dropdown-open' : ''} relative`}>
+      <label tabIndex={0} onClick={handleToggle}>
         <div className="indicator">
-          <FaBell className="h-5 w-5" />
+          <FaBell className="transition-colors duration-300 hover:text-gray-400" />
           {unreadCount > 0 && (
-            <span className="badge badge-sm badge-error indicator-item">{unreadCount}</span>
+            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-3 w-3 flex items-center justify-center"></span>
           )}
         </div>
       </label>

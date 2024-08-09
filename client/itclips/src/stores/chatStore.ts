@@ -4,7 +4,7 @@ import { create } from 'zustand';
 import { getChatRooms, getChatRoomMessages, getChatRoomInfo, leaveChatRoom, updateMessageStatusToRead } from "../api/messageApi";
 
 // stores
-import { useWebSocketStore } from './webSocketStore';
+import { webSocketStore } from './webSocketStore';
 
 // 채팅방 목록을 호출했을 때 들어오는 정보(getChatRooms)
 interface ChatRoom {
@@ -70,9 +70,8 @@ export const chatStore = create<ChatStore>((set, get) => ({
       const totalUnread = response.data.reduce((sum: number, room: ChatRoom) => sum + room.messageCnt, 0);
       set({ rooms: response.data, totalUnreadCount: totalUnread, isLoading: false });
       
-      // WebSocket 구독 설정
-      const { subscribeToAllRooms } = useWebSocketStore.getState();
-      subscribeToAllRooms(response.data);
+      // WebSocket 구독 설정은 webSocketStore에서 처리하도록 변경
+      webSocketStore.getState().subscribeToAllRooms();
     } catch (error) {
       set({ error: "Failed to fetch chat rooms", isLoading: false });
     }
@@ -160,10 +159,11 @@ export const chatStore = create<ChatStore>((set, get) => ({
     }),
 
   // 안읽은 채팅방 수 계산
-  updateTotalUnreadCount: () =>
-    set(state => ({
-      totalUnreadCount: state.rooms.reduce((sum, room) => sum + room.messageCnt, 0)
-    })),
+  updateTotalUnreadCount: () => {
+    const rooms = get().rooms;
+    const totalUnread = rooms.reduce((sum, room) => sum + room.messageCnt, 0);
+    set({ totalUnreadCount: totalUnread });
+  },
 
   // 새 메세지 프론트 단 추가
   addMessage: (message: Message) =>

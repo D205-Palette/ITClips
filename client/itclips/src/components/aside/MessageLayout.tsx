@@ -8,7 +8,7 @@ import AsideStartNewMessage from "./AsideStartNewMessage";
 // stores
 import darkModeStore from "../../stores/darkModeStore";
 import { asideStore } from "../../stores/asideStore";
-import { useWebSocketStore } from "../../stores/webSocketStore";
+import { webSocketStore } from "../../stores/webSocketStore";
 import { authStore } from "../../stores/authStore";
 import { chatStore } from "../../stores/chatStore";
 
@@ -21,7 +21,7 @@ const MessageLayout = () => {
   const selectedChat = asideStore(state => state.selectedChat);
   const isMessageOpen = asideStore(state => state.isMessageOpen);
   const setSelectedChat = asideStore(state => state.setSelectedChat);
-  const { connect, disconnect } = useWebSocketStore();
+  const { connect, disconnect } = webSocketStore();
   const { updateMessageStatus, resetMessageCount } = chatStore();
 
   // 소켓 연결

@@ -8,30 +8,23 @@ import SockJS from "sockjs-client";
 // stores
 import { chatStore } from "./chatStore";
 
-interface ChatRoom {
-  id: number;
-  name: string;
-  lastMessage: string | null;
-  lastModified: string | null;
-  messageCnt: number;
-}
-
 interface WebSocketStore {
   stompClient: Client | null;
   isConnected: boolean;
   connect: () => void;
   disconnect: () => void;
   subscribe: (destination: string, callback: (message: any) => void) => () => void;
-  subscribeToAllRooms: (rooms: ChatRoom[]) => void;
+  subscribeToAllRooms: () => void;
 }
 
-export const useWebSocketStore = create<WebSocketStore>((set, get) => ({
+export const webSocketStore = create<WebSocketStore>((set, get) => ({
 
   stompClient: null,
   isConnected: false,
-  subscribeToAllRooms: (rooms: ChatRoom[]) => {
+
+  subscribeToAllRooms: () => {
     const { stompClient } = get();
-    const addMessage = chatStore.getState().addMessage;
+    const { rooms, addMessage } = chatStore.getState();
 
     if (stompClient && stompClient.connected) {
       rooms.forEach(room => {
@@ -57,21 +50,13 @@ export const useWebSocketStore = create<WebSocketStore>((set, get) => ({
         onConnect: () => {
           console.log('WebSocket Connected');
           set({ isConnected: true });
+          get().subscribeToAllRooms();
         },
         onDisconnect: () => {
           console.log('WebSocket Disconnected');
           set({ isConnected: false });
         },
       });
-
-      client.onConnect = () => {
-        console.log('WebSocket Connected');
-        set({ isConnected: true });
-        
-        // 연결 후 모든 채팅방 구독
-        const rooms = chatStore.getState().rooms;
-        get().subscribeToAllRooms(rooms);
-      };
 
       client.activate();
       set({ stompClient: client });

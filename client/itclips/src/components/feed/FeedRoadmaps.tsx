@@ -38,8 +38,8 @@ const FeedRoadmaps = () => {
       <div id="feedRoadmaps">
         <div className="flex flex-col gap-3">
           {!dataLoaded ? (
-            <div className="mt-10 flex justify-center">
-              <p className="ms-3 text-xl font-bold">로딩 중 입니다...</p>
+            <div className="mt-10 flex justify-center">              
+              <span className="loading loading-spinner loading-lg"></span>
             </div>
           ) : feedRoadmap.length !== 0 ? (
             feedRoadmap?.map((roadmap) => (

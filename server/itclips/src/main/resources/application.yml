@@ -25,6 +25,7 @@ spring:
     redis:
       host: ${DB_HOST}
       port: 6379
+      password: ${DB_PASSWORD}
 
   cache:
     type: redis

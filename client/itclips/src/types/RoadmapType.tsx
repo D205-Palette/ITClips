@@ -46,6 +46,7 @@ type RoadmapSumType = {
   id: number;
   userId: number;
   userName: string;
+  userImage: string;
   title: string;
   description: string;
   image: string;

@@ -37,22 +37,22 @@ const FeedRoadmaps = () => {
       {/* 피드 로드맵 목록 */}
       <div id="feedRoadmaps">
         <div className="flex flex-col gap-3">
-          <div className="flex justify-center items-center h-full">
-            {!dataLoaded ? (
-              <p>로딩 중 입니다.</p>
-            ) : feedRoadmap.length !== 0 ? (
-              feedRoadmap?.map((roadmap) => (
-                <div>
-                  <Roadmap roadmap={roadmap} />
-                </div>
-              ))
-            ) : (
-              <div className="flex">
-                <IoIosWarning color="skyblue" size={20} />
-                <p className="ms-3 text-sm font-bold">컨텐츠가 없습니다!</p>
+          {!dataLoaded ? (
+            <div className="mt-10 flex justify-center">              
+              <span className="loading loading-spinner loading-lg"></span>
+            </div>
+          ) : feedRoadmap.length !== 0 ? (
+            feedRoadmap?.map((roadmap) => (
+              <div>
+                <Roadmap roadmap={roadmap} />
               </div>
-            )}
-          </div>
+            ))
+          ) : (
+            <div className="mt-10 flex justify-center items-center">
+              <IoIosWarning color="skyblue" size={20} />
+              <p className="ms-3 text-xl font-bold">컨텐츠가 없습니다!</p>
+            </div>
+          )}
         </div>
       </div>
     </>

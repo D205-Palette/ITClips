@@ -1,5 +1,5 @@
 import SearchBar from "../../components/main/MainSearchBar";
-import { FC, useState,useEffect } from "react";
+import { FC, useState, useEffect } from "react";
 import Roadmap from "../../components/main/Roadmap";
 import MainTab from "../../components/main/MainTab";
 import type { RoadmapSumType } from "../../types/RoadmapType";
@@ -24,15 +24,15 @@ const MyRoadmap = () => {
 
   // 변경사항 있을때마다 로드맵 요약 불러오기
   useEffect(() => {
-		async function fetchData() {
+    async function fetchData() {
       axios({
-        method: 'get',
+        method: "get",
         url: `${API_BASE_URL}/api/roadmap/list/${params.userId}`,
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
-        params:{
-          viewId:userId, 
+        params: {
+          viewId: userId,
         },
       })
       .then((res) => {
@@ -57,7 +57,7 @@ const MyRoadmap = () => {
 
   return (
     <>
-      <div className="fixed z-20 w-7/12 bg-base-100">
+      <div className="sticky top-16 z-20 w-full bg-base-100">
         <MainTab />
         <SearchBar
           whatSearch={"로드맵"}
@@ -65,22 +65,23 @@ const MyRoadmap = () => {
           changeFilterText={changeFilterText}
         />
       </div>
-      
+
       {/* 로드맵들 */}
-      <div className="absolute top-32  w-7/12 ">
+      <div className="">
       {filterdRoadmaps.length === 0 ? <NoContent content={"로드맵"}/> : <>
         {filterdRoadmaps.map((roadmap) => (
           <Roadmap roadmap={roadmap} canEdit={canEdit}/>
         ))}</>}
       </div>
-      
+
       {/* 로드맵 추가 버튼 */}
-      {canEdit? <button className="fixed z-0 bottom-10 right-10"
+      {canEdit? <button className="sticky z-20 bottom-10 flex justify-end w-full"
       onClick={() => navigate('/roadmap/create')}>
         
         <FaPlus color="skyblue" size={56}/>
       </button>: <></> }
       
+
     </>
   );
 };

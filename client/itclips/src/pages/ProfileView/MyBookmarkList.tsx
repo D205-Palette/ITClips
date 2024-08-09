@@ -47,11 +47,11 @@ export default function MyView() {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        params:{
-          viewerId:userId, 
+        params: {
+          viewerId: userId,
         },
-        })
-          .then((res) => {
+      })
+        .then((res) => {
           setLists(res.data);
           setFilterdLists(res.data.filter((list:any) =>list.title.includes(filterText)))
           setIsBookmarkListChange(false)
@@ -73,7 +73,7 @@ export default function MyView() {
   return (
     <>
       {/* 화면에 고정시킬 우측 상단들 */}
-      <div className="fixed z-10 w-7/12">
+      <div className="sticky top-16 z-20 w-full">
         <div className="bg-base-100">
           <MainTab />
           {/* 상단 검색바 */}
@@ -118,7 +118,7 @@ export default function MyView() {
       </div>
 
       {/* 북마크 리스트들*/}
-      <div className="absolute top-36 w-7/12">
+      <div className="">
         {filterdLists.length === 0 ? (
           <NoContent content={"리스트"} />
         ) : (
@@ -143,15 +143,18 @@ export default function MyView() {
           </>
         )}
       </div>
-  
+
       {/* 리스트 생성 버튼 */}
-      <button
-        className={(nowUserId!==userId? "hidden": "" ) + " fixed z-20 bottom-10 right-10"}
-        onClick={() => setIsCreateModalOpen(true)}
-      >
-        <FaPlus color="skyblue" size={56} />
-      </button>
-     
+
+      <div className="sticky z-20 bottom-10 flex justify-end w-full">
+        <button
+          className={(nowUserId !== userId ? "hidden" : "") + " "}
+          onClick={() => setIsCreateModalOpen(true)}
+        >
+          <FaPlus color="skyblue" size={56} />
+        </button>
+      </div>
+
       {/* 북마크리스트 생성 모달 */}
       <BookmarkListCreateModal
         isOpen={isCreateModalOpen}

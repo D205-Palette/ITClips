@@ -106,7 +106,7 @@ const {isBookmarkListChange, setIsBookmarkListChange} = mainStore()
           id="Main"
           className="xl:col-start-5 xl:col-span-7 col-start-3 col-span-8 gap-4"
         >
-          <div className=" bg-base-100 fixed z-10 w-7/12">
+          <div className="sticky top-16 bg-base-100 z-10">
             {/* 상단바 */}
             {editMode ? (
               <div className="flex flex-row justify-end pe-5 my-5  ">
@@ -134,7 +134,7 @@ const {isBookmarkListChange, setIsBookmarkListChange} = mainStore()
           </div>
           {/* 북마크들 */}
 
-          <div className="absolute top-24 w-7/12">
+          <div className="">
             {filterdBookmarks.map((bookmark) =>
               editMode ? (
                 <BookmarkEdit
@@ -157,7 +157,7 @@ const {isBookmarkListChange, setIsBookmarkListChange} = mainStore()
           </div>
 
           {/* 에디터 모드 전환 버튼 */}
-          <div className="fixed bottom-10 right-10">
+          <div className="flex justify-end sticky bottom-10">
             {editMode ? (
               <div className="flex flex-col ">
                 <FaPlus

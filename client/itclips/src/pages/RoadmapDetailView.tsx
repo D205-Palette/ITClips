@@ -106,7 +106,7 @@ const RoadmapView = () => {
 
 {/* aside 자리 */}
 <div id="aside" className="xl:col-start-2 xl:col-span-3 hidden xl:block ">
-  <div className="fixed z-20">
+  <div className="sticky top-16 z-20">
     {roadmap?<AsideRoadmap roadmap={roadmap} />:<></>}
   </div>
 </div>                                        

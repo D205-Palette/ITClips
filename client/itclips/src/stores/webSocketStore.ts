@@ -25,7 +25,7 @@ interface WebSocketStore {
   subscribeToAllRooms: (rooms: ChatRoom[]) => void;
 }
 
-export const useWebSocketStore = create<WebSocketStore>((set, get) => ({
+export const webSocketStore = create<WebSocketStore>((set, get) => ({
 
   stompClient: null,
   isConnected: false,

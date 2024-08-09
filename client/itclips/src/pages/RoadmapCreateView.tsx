@@ -19,6 +19,8 @@ import noImg from "../assets/images/noImg.gif";
 import { IoIosWarning } from "react-icons/io";
 import FileResizer from "react-image-file-resizer";
 import RoadMap from "../components/main/Roadmap";
+import RecommendModal from "../components/common/RecommendModal";
+
 // 타입 정의
 interface Item extends BookmarkListSumType {
   originalId?: string; // 원본 아이디를 저장할 수 있는 필드
@@ -41,7 +43,10 @@ const RoadmapCreateView: React.FC = () => {
   const [isPublic, setIsPublic] = useState<boolean>(true);
   const [roadmapImage, setRoadmapImage] = useState<File | null>(null);
   const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
-  const activeButton = "text-sky-500";
+  const activeButton = "text-sky-500";  
+  const [recommendMessage, setRecommendMessage] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   // API로부터 데이터 불러오기
   const fetchData = async () => {
@@ -182,30 +187,32 @@ const RoadmapCreateView: React.FC = () => {
         file,
         200, // 이미지 너비
         200, // 이미지 높이
-        'SVG', // 파일 형식 - SVG 대신 JPEG로 변경
+        "SVG", // 파일 형식 - SVG 대신 JPEG로 변경
         100, // 이미지 퀄리티
         0,
         (uri) => {
           if (uri) {
             resolve(uri as File); // Promise를 사용하여 비동기 처리
           } else {
-            reject(new Error('Resizing failed'));
+            reject(new Error("Resizing failed"));
           }
         },
-        'file' // 출력 타입
+        "file" // 출력 타입
       );
     });
-  
-  const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+
+  const handleImageChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0]; // 파일이 선택되지 않았을 때 null 처리
-  
+
     if (file) {
       try {
         const compressedFile = await resizeFile(file); // "resizeFile" 함수를 통해서 업로드한 이미지 리사이징 및 인코딩
         console.log(compressedFile); // 리사이징된 파일을 콘솔에 출력하여 확인
-  
+
         await setRoadmapImage(compressedFile); // 리사이징된 파일을 상태에 저장
-  
+
         // 미리보기 URL 생성
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -214,13 +221,13 @@ const RoadmapCreateView: React.FC = () => {
         reader.readAsDataURL(compressedFile); // compressedFile을 사용하여 미리보기 URL 생성
       } catch (error) {
         // 리사이징에 실패했을 시 console에 출력하게 한다.
-        console.log('file resizing failed', error);
+        console.log("file resizing failed", error);
       }
     } else {
       setRoadmapImage(null); // 파일이 없을 경우 상태를 null로 설정
       setPreviewImageUrl(null); // 미리보기 URL을 null로 설정
     }
-  }
+  };
 
   // 아이템 삭제 핸들러
   const handleDeleteItem = (id: string) => {
@@ -272,10 +279,29 @@ const RoadmapCreateView: React.FC = () => {
     description: Yup.string().optional(),
   });
 
+  const openModal = () => setIsModalOpen(!isModalOpen);
+  
+
   return (
     <div className="grid grid-cols-12 flex-col justify-center gap-x-6 gap-y-5">
-      <h1 className="col-start-3 col-span-3 text-3xl font-bold">로드맵 생성</h1>
+      <div className="col-start-2 col-span-1 w-full h-full">
+      <button onClick={openModal} className="btn bg-sky-500 hover:bg-sky-700 text-slate-100">
+        추천 받기 
+      </button>
+        
+        {isModalOpen && (
+        <RecommendModal
+          recommendMessage={recommendMessage}
+          setRecommendMessage={setRecommendMessage}
+          loading={loading}
+          setLoading={setLoading}          
+        />
+      )}
+      </div>
 
+      <h1 className="col-start-3 col-span-3 text-3xl font-bold">
+        로드맵 생성
+      </h1>
       <DragDropContext onDragEnd={onDragEnd}>
         {/* 좌측 */}
         <div className="aside col-start-3 col-span-3 flex flex-col w-full">
@@ -387,7 +413,7 @@ const RoadmapCreateView: React.FC = () => {
 
         {/* 우측 */}
         {/* 로드맵 생성 */}
-        <div className="main flex flex-col gap-5 col-start-6 col-span-5 w-full">
+        <div className="main flex flex-col gap-5 col-start-6 col-span-5 w-full">         
           <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
@@ -428,7 +454,7 @@ const RoadmapCreateView: React.FC = () => {
                           </button>
                         )}
 
-                        <label className="btn btn-primary btn-outline btn-xs">
+                        <label className="btn bg-sky-500 hover:bg-sky-700 text-slate-100 btn-xs">
                           이미지 업로드
                           <input
                             type="file"
@@ -558,7 +584,7 @@ const RoadmapCreateView: React.FC = () => {
 
                   <button
                     type="submit"
-                    className="btn btn-primary btn-outline ms-auto"
+                    className="btn bg-sky-500 hover:bg-sky-700 text-slate-100 ms-auto"
                     disabled={!isValid || !values.title || roadmap.length === 0} // 필수 요소가 없을 때 비활성화
                   >
                     로드맵 생성하기
@@ -572,7 +598,7 @@ const RoadmapCreateView: React.FC = () => {
 
       {/* 뒤로가기 버튼 */}
       <button
-        className="fixed bottom-10 right-10"
+        className="fixed top-16 right-32"
         onClick={() => {
           navigate(-1);
         }}

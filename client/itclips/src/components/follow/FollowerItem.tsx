@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-
-// images (임시)
-import image from "../../assets/images/profile_image.png";
+import noImg from "../../assets/images/noImg.gif"
 
 // apis
 import { removeFollower } from "../../api/followApi";
@@ -27,9 +25,11 @@ interface Props {
 }
 
 const FollowerItem: React.FC<Props> = ({ items }) => {
-
-  const [ followers, setFollowers ] = useState<Follower[]>(items);
-  const [ notification, setNotification ] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
+  const [followers, setFollowers] = useState<Follower[]>(items);
+  const [notification, setNotification] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
   const { decrementFollowerCount } = useFollowStore();
 
   useEffect(() => {
@@ -46,14 +46,17 @@ const FollowerItem: React.FC<Props> = ({ items }) => {
   const rmFollower = async (fromUserId: number, toUserId: number) => {
     try {
       await removeFollower(fromUserId, toUserId);
-      setFollowers(prevFollowers => 
-        prevFollowers.filter(follower => follower.fromUserId !== fromUserId)
+      setFollowers((prevFollowers) =>
+        prevFollowers.filter((follower) => follower.fromUserId !== fromUserId)
       );
       decrementFollowerCount();
-      setNotification({ message: "팔로워가 삭제되었습니다.", type: 'success' });
+      setNotification({ message: "팔로워가 삭제되었습니다.", type: "success" });
     } catch (error) {
       console.error("팔로워 삭제 실패:", error);
-      setNotification({ message: "팔로워 삭제에 실패했습니다.", type: 'error' });
+      setNotification({
+        message: "팔로워 삭제에 실패했습니다.",
+        type: "error",
+      });
     }
   };
 
@@ -75,7 +78,11 @@ const FollowerItem: React.FC<Props> = ({ items }) => {
             to={`/user/${item.fromUserId}`}
             className="flex items-center space-x-4 p-4 rounded-lg shadow"
           >
-            <img src={image} alt={item.nickname} className="w-20 h-20 object-cover rounded" />
+            <img
+              src={item.profileImage === "default" ? noImg : item.profileImage}
+              alt={item.nickname}
+              className="w-20 h-20 object-cover rounded"
+            />
             <div className="flex-grow">
               <h3 className="text-lg font-semibold">{item.nickname}</h3>
               <div className="flex space-x-4 mt-2">
@@ -87,7 +94,9 @@ const FollowerItem: React.FC<Props> = ({ items }) => {
 
             <div onClick={handleNavLink}>
               <FollowerItemKebabDropdown
-                onDeleteFollower={() => rmFollower(item.fromUserId, item.toUserId)}  
+                onDeleteFollower={() =>
+                  rmFollower(item.fromUserId, item.toUserId)
+                }
               />
             </div>
           </NavLink>
@@ -95,19 +104,18 @@ const FollowerItem: React.FC<Props> = ({ items }) => {
       ))}
 
       {notification && (
-        <div 
+        <div
           className={`fixed bottom-4 left-1/2 transform -translate-x-1/2 p-4 rounded-md ${
-            notification.type === 'success' ? 'bg-green-500' : 'bg-red-500'
+            notification.type === "success" ? "bg-green-500" : "bg-red-500"
           } text-white shadow-lg z-50 transition-opacity duration-300`}
           style={{
             opacity: notification ? 1 : 0,
-            visibility: notification ? 'visible' : 'hidden',
+            visibility: notification ? "visible" : "hidden",
           }}
         >
           {notification.message}
         </div>
       )}
-
     </div>
   );
 };

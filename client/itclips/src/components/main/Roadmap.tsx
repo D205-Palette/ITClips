@@ -58,7 +58,7 @@ const RoadMap: FC<Props> = ({ roadmap, canEdit }) => {
         }
       >
         <>
-          <div className="w-28  hidden lg:inline rounded-s-2xl">
+          <div className="w-1/6 z-10 hidden lg:inline rounded-s-2xl">
             <img
               src={roadmap.image === "default" ? noImg : roadmap.image}
               alt="Movie"

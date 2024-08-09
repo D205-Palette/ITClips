@@ -84,9 +84,7 @@ const ListItem: FC<Props> = ({ list }) => {
         >
           <div className="w-10 h-10 border rounded-full overflow-hidden">
             <img
-              src={""
-                // list.userImage
-              }
+              src={list.users[0].userImage === "default" ? noImg : list.users[0].userImage}
               className="w-full h-full object-cover"
               alt="리스트유저이미지"
             />

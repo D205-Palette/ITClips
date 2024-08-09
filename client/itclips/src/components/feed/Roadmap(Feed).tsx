@@ -80,7 +80,7 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
         >
           <div className="w-10 h-10 border rounded-full overflow-hidden">
             <img
-              src={roadmap.userImage}
+              src={roadmap.userImage === "default" ? noImg : roadmap.userImage}
               className="w-full h-full object-cover"
               alt="로드맵유저이미지"
             />

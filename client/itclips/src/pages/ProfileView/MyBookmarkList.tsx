@@ -125,7 +125,7 @@ export default function MyView() {
           <>
             {!isList ? (
               <div className="flex justify-around ">
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 w-full gap-10">
                   {filterdLists.map((list) => (
                     <MyBookmarkListAlbum whatMenu="리스트" list={list} canEdit={params.userId===String(userId)} />
                   ))}
@@ -146,7 +146,7 @@ export default function MyView() {
 
       {/* 리스트 생성 버튼 */}
 
-      <div className="sticky z-20 bottom-24 flex justify-end w-full">
+      <div className="fixed bottom-24 right-16 z-20 flex justify-end w-full">
         <button
           className={(nowUserId !== userId ? "hidden" : "") + " "}
           onClick={() => setIsCreateModalOpen(true)}

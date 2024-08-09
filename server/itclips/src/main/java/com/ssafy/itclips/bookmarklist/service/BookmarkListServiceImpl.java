@@ -217,6 +217,13 @@ public class BookmarkListServiceImpl implements BookmarkListService {
 
         return bookmarkLists.stream()
                 .map(bookmarkList -> convertToBookmarkListResponseDTO(bookmarkList,viewerId)) // userId를 추가로 전달
+                .filter(dto -> {
+                    // 사용자 리스트에서 viewerId와 동일한 ID를 가진 User가 있는지 확인
+                    boolean hasViewer = dto.getUsers().stream()
+                            .anyMatch(user -> user.getId().equals(viewerId));
+                    // isPublic이 true이거나, viewerId가 포함된 경우에는 필터링 제외
+                    return !dto.getIsPublic() && hasViewer;
+                })
                 .filter(dto -> (target ? dto.getUsers().size() > USER_NUM : dto.getUsers().size() == USER_NUM))
                 .collect(Collectors.toList());
     }

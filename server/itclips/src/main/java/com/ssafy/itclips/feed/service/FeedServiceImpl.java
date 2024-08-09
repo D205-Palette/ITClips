@@ -49,7 +49,7 @@ public class FeedServiceImpl implements FeedService{
             for (Long roadmapId : roadmapIds) {
                 Optional<Roadmap> roadmap = roadmapRepository.findById(roadmapId);
 
-                if(!roadmap.isPresent()) {
+                if(!roadmap.isPresent() || roadmap.get().getIsPublic()==0) {
                     continue;
                 }
 
@@ -110,7 +110,7 @@ public class FeedServiceImpl implements FeedService{
                 Optional<BookmarkList> bookmarkList = bookmarkListRepository.findById(listId);
                 //TODO: 삭제됐을 때 처리
 
-                if(!bookmarkList.isPresent()) {
+                if(!bookmarkList.isPresent()|| !bookmarkList.get().getIsPublic()) {
                     continue;
                 }
 

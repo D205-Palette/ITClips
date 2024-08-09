@@ -70,7 +70,7 @@ const App = () => {
         <Outlet />
       </main>
       
-      <footer className={isIntroPage ? "" : "mt-16"}>
+      <footer className={isIntroPage ? "" : "mt-20"}>
         <Footer />
       </footer>
 

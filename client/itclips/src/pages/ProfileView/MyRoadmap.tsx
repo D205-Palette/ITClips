@@ -58,7 +58,7 @@ const MyRoadmap = () => {
   return (
     <>
       <div className="sticky top-16 z-20 w-full bg-base-100">
-        <MainTab />
+        <MainTab userId={Number(params.userId)}/>
         <SearchBar
           whatSearch={"로드맵"}
           filterText={filterText}
@@ -75,7 +75,7 @@ const MyRoadmap = () => {
       </div>
 
       {/* 로드맵 추가 버튼 */}
-      {canEdit? <button className="sticky z-20 bottom-10 flex justify-end w-full"
+      {canEdit? <button className="fixed bottom-24 right-16 z-20 flex justify-end w-full"
       onClick={() => navigate('/roadmap/create')}>
         
         <FaPlus color="skyblue" size={56}/>

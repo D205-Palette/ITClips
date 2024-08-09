@@ -14,14 +14,16 @@ import BookmarkListEditModal from "../aside/modals/BookmarkListEditModal";
 
 interface Props {
   list: BookmarkListSumType;
+  whatMenu:string;
+
 }
 
-const ListItem: FC<Props> = ({ list }) => {
+const ListItem: FC<Props> = ({ list,whatMenu }) => {
   const { token, userId } = authStore();
   const navigate = useNavigate();
   const [isLike, setIsLike] = useState(list.isLiked);
   const [likeCount, changeLikeCount] = useState(list.likeCount);
-  const [isEditModalOpen,setIsEditModalOpen] = useState(false)
+
   // 좋아요
   const clickHeart = (): void => {
     if (isLike) {
@@ -55,12 +57,12 @@ const ListItem: FC<Props> = ({ list }) => {
         <>
           <figure
             onClick={() => navigate(`/bookmarklist/${list.id}`)}
-            className="hover:cursor-pointer w-1/6"
+            className="hover:cursor-pointer w-1/6 overflow-hidden"
           >
             <img
               src={list.image==="default"?  noImg : list.image }
               alt="Movie"
-              className="size-28 object-cover"
+              className=" object-fill"
             />
           </figure>
 
@@ -95,7 +97,7 @@ const ListItem: FC<Props> = ({ list }) => {
                 {likeCount}
               </button>
               <div className="md:block hidden">
-                <KebabDropdown whatMenu="리스트" id={list.id} />
+                <KebabDropdown whatMenu={whatMenu} id={list.id} />
               </div>
             </div>
           </div>

@@ -53,8 +53,8 @@ const RoadMap: FC<Props> = ({ roadmap, canEdit }) => {
     <>
       <div
         className={
-          (isDark ? "hover:bg-slate-700" : "hover:bg-slate-100") +
-          " card card-side bg-base-100 hover:cursor-pointer h-32 my-1 static z-0"
+          
+          " card card-side bg-base-100 hover:cursor-pointer h-32 my-1 static "
         }
       >
         <>
@@ -66,20 +66,20 @@ const RoadMap: FC<Props> = ({ roadmap, canEdit }) => {
             />
           </div>
 
-          <div className="w-5/6 card-body flex flex-row justify-between h-full relative">
+          <div className={(isDark ? "hover:bg-slate-700" : "hover:bg-slate-100") +"  card-body flex flex-row justify-between h-full relative w-5/6"}>
             <div
               className={
                 (canEdit ? "" : "hidden ") +
                 (!isDark
-                  ? percentage == "100.0"
+                  ? percentage == "100.0%"
                     ? "bg-green-100"
                     : "bg-sky-100"
-                  : percentage == "100.0"
+                  : percentage == "100.0%" 
                   ? "bg-green-900"
                   : "bg-sky-900") +
-                " h-full absolute z-0 top-0 left-0 rounded-e-2xl lg:rounded-s-none rounded-s-2xl"
+                " h-full absolute top-0 left-0 rounded-e-2xl lg:rounded-s-none rounded-s-2xl"
               }
-              style={{ width: `${percentage}%` }}
+              style={{ width: `${percentage}` }}
               onClick={() => navigate(`/roadmap/${roadmap.id}`)}
             ></div>
 
@@ -99,29 +99,45 @@ const RoadMap: FC<Props> = ({ roadmap, canEdit }) => {
 
             <div className="w-1/3 flex gap-x-2">
               <div className=" items-center text-blue-400 font-bold text-xl z-0 hidden lg:inline-flex">
-                <p
-                  className={
-                    (canEdit ? "" : "hidden ") +
-                    (!isDark
-                      ? percentage == "100.0"
-                        ? "text-green-400"
-                        : "text-blue-400"
-                      : percentage == "100.0"
-                      ? "text-green-200"
-                      : "text-blue-200")
-                  }
-                >
-                  {percentage}
-                </p>
+              <p
+                className={(canEdit? "" : "hidden ") +
+                  (!isDark
+                    ? percentage == "100.0%"
+                      ? "text-green-400"
+                      : "text-blue-400"
+                    : percentage == "100.0%"
+                    ? "text-green-200"
+                    : "text-blue-200")
+                }
+              >
+                {percentage}
+              </p>
               </div>
-              <div className="justify-end flex items-center">
-                <button onClick={clickHeart} className="btn btn-ghost z-0 ">
-                  {isLike ? <FaHeart color="red" /> : <FaRegHeart />}
-                  {likeCount}{" "}
-                </button>
-                <div className="hidden md:inline">
-                  <KebabDropdown whatMenu="로드맵" id={roadmap.id} />
-                </div>
+            </div>
+
+            {/* <div className=" items-center text-blue-400 font-bold text-xl z-0 hidden lg:inline-flex">
+              <p
+                className={(canEdit? "" : "hidden ") +
+                  (!isDark
+                    ? percentage == "100.0%"
+                      ? "text-green-400"
+                      : "text-blue-400"
+                    : percentage == "100.0%"
+                    ? "text-green-200"
+                    : "text-blue-200")
+                }
+              >
+                {percentage}
+              </p>
+            </div> */}
+
+            <div className="card-actions justify-end flex items-center">
+              <button onClick={clickHeart} className="btn btn-ghost z-0 ">
+                {isLike ? <FaHeart color="red"/> : <FaRegHeart />}
+                {likeCount}{" "}
+              </button>
+              <div className="hidden md:inline">
+                <KebabDropdown whatMenu="로드맵" id={roadmap.id} />
               </div>
             </div>
           </div>

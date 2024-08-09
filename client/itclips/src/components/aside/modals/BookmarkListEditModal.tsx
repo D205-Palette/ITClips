@@ -8,7 +8,6 @@ import { useEffect } from "react";
 // icons
 import { IoCloseOutline } from "react-icons/io5";
 
-
 // 기본 이미지
 import noImg from "../../../assets/images/noImg.gif";
 
@@ -37,6 +36,15 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
   const {setIsBookmarkListChange} = mainStore()
   const [imageState, setImageState] = useState<string>("edit"); // 이미지 변경 상태 체크
   
+
+  const [tempTitle, setTempTitle] = useState<string>("");
+  const [tempDescription, setTempDescription] = useState<string>("");
+  const [tempTag, setTempTag] = useState("");
+  const [tempTags, setTempTags] = useState<{ title: string }[]>([]);
+   
+  const [isPublic, setIsPublic] = useState(true);
+  const [tagsLengthWarning, setTagsLengthWarning] = useState(false)
+
   useEffect(() => {
     async function fetchData() {
       axios({
@@ -54,6 +62,7 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
           setTempDescription(res.data.description);
           setTempTags(res.data.tags);
           setPreviewImageUrl(res.data.image);
+          setIsPublic(res.data.isPublic)
           // 이미지 없다
           const catArr = [];
           for (var ele of res.data.categories) {
@@ -71,15 +80,18 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
           console.error(err);
         });
     }
-    fetchData();
+  fetchData();
   }, []);
+// 태그 3개 이상되면 경고
+useEffect(()=>{
+  if(tempTags.length >= 3){
+    setTagsLengthWarning(true)
+  } else{
+    setTagsLengthWarning(false)
+  }
+},[tempTags.length] )
 
-  const [tempTitle, setTempTitle] = useState<string>("");
-  const [tempDescription, setTempDescription] = useState<string>("");
-  const [tempTag, setTempTag] = useState("");
-  const [tempTags, setTempTags] = useState<{ title: string }[]>([]);
-   
-  const [isPublic, setIsPublic] = useState(false);
+
   const [tempUser, setTempUser] = useState<string[]>([]);
 
   const handleAddTag = () => {
@@ -94,8 +106,7 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
   };
 
   const endEdit = () => {
-    console.log("api때");
-    console.log(tempCategories);
+
     const formData = {
       title: tempTitle,
       description: tempDescription,
@@ -308,17 +319,28 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
               value={tempTag}
               onChange={(e) => setTempTag(e.target.value)}
               className="flex-grow px-3 py-2 border rounded-l-md"
-              placeholder="새 태그 입력"
+              placeholder={tagsLengthWarning? "태그는 3개까지 가능합니다" :"새 태그 입력"}
+              disabled={tagsLengthWarning}
             />
             <button
               onClick={handleAddTag}
               className="btn bg-sky-500 hover:bg-sky-700 text-slate-100 rounded-l-none"
+              disabled={tagsLengthWarning}
             >
               +
             </button>
           </div>
         </div>
 
+        <div className="form-control flex flex-row items-center justify-end my-3">
+              <label>공개 여부</label>
+              <input
+                type="checkbox"
+                checked={isPublic? true: false}
+                onClick={() => setIsPublic(!isPublic)}
+                className="checkbox checkbox-info  [--chkfg:white] mx-2 "
+              />
+            </div>
         <button className="btn text-slate-100 bg-sky-500 hover:bg-sky-700 w-full" onClick={() => endEdit()}>
           수정
         </button>

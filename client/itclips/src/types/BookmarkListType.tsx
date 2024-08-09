@@ -38,6 +38,7 @@ type BookmarkListSumType = {
   description: string;
   bookmarkCount: number;
   likeCount: number;
+  isPublic:boolean;
   image: string;
   isLiked: boolean;
   tags: 
@@ -49,6 +50,7 @@ type BookmarkListSumType = {
     {
       id: number;
       nickName: string;
+      userImage: string;
     }[]
 };
 

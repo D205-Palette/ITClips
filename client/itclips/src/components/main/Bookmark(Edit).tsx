@@ -59,7 +59,7 @@ const Bookmark: FC<Props> = ({
       <div
         className={(whatCategory.categoryName===bookmark.category || whatCategory.categoryName===""? "":"hidden ") +
           (isDark ? "hover:bg-slate-700" : "hover:bg-slate-100") +
-          " card card-side bg-base-100 shadow-xl hover:cursor-pointer h-28 my-1"
+          " card card-side bg-base-100 hover:cursor-pointer h-28 my-1 shadow-sm"
         }
       >
         <>

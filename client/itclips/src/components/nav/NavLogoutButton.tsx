@@ -23,7 +23,7 @@ const LogoutButton = () => {
     <div>
       <button
         onClick={logoutButton}
-        className="transition-colors duration-300"
+        className="hover:text-sky-700 transition-colors duration-300"
         aria-label="Logout"
       >
         <FaSignOutAlt />

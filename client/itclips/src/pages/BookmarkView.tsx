@@ -109,13 +109,14 @@ const {isBookmarkListChange, setIsBookmarkListChange} = mainStore()
           <div className="sticky top-16 bg-base-100 z-10">
             {/* 상단바 */}
             {editMode ? (
-              <div className="flex flex-row justify-end pe-5 my-5  ">
+              <div className="flex flex-row justify-between pe-5 items-center ">
+                <CategoryTab categories={bookmarkList?.categories!} listId={bookmarkList?.id!} canEdit={canEdit} editMode={editMode}/>
                 <button
                   className={
                     (editBookmarks.length === 0
                       ? "bg-white border text-sky-500"
                       : "bg-sky-500  text-slate-100 border") +
-                    "  border-sky-500 rounded-2xl py-2 px-4 font-bold hover:bg-sky-600 hover:text-white"
+                    "  border-sky-500 rounded-2xl  px-4 font-bold hover:bg-sky-600 hover:text-white h-9 "
                   }
                   onClick={() =>
                     editBookmarks.length !== 0 ? tabEditModal(true) : ""
@@ -126,7 +127,7 @@ const {isBookmarkListChange, setIsBookmarkListChange} = mainStore()
               </div>
             ) : bookmarkList ? (
               <div className="static z-50">
-                <CategoryTab categories={bookmarkList.categories} listId={bookmarkList.id} canEdit={canEdit}/>
+                <CategoryTab categories={bookmarkList.categories} listId={bookmarkList.id} canEdit={canEdit} editMode={editMode}/>
               </div>
             ) : (
               <></>
@@ -157,7 +158,7 @@ const {isBookmarkListChange, setIsBookmarkListChange} = mainStore()
           </div>
 
           {/* 에디터 모드 전환 버튼 */}
-          <div className="flex justify-end sticky bottom-10">
+          <div className="flex justify-end sticky ">
             {editMode ? (
               <div className="flex flex-col ">
                 <FaPlus

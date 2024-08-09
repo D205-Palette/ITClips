@@ -97,15 +97,20 @@ const {setIsBookmarkListChange} = mainStore()
         className={
           (tempCategory.categoryName === whatCategory.categoryName
             ? "bg-sky-500 text-slate-100 border-solid border-sky-500 border-2 p-1"
-            : color) + " rounded-2xl mx-2 ps-3 h-9"
+            : color) + " rounded-2xl mx-2 ps-3 w-36"
         }
       >
-        <div className="flex flex-row items-center h-2">
-          <div onClick={() => changeCategory(tempCategory)}
+        <div className="flex flex-row items-center w-24">
+          <div 
             className="me-2">
-            {tempCategory.categoryName}
+            
+            <input type="text"
+            value={tempCategory.categoryName}
+            className="w-24"
+            />
           </div>{" "}
-
+          {canEdit? <DeleteButton />: <></>}
+          
         </div>
       </button>
     </>

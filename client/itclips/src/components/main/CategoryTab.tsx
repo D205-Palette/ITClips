@@ -8,7 +8,8 @@ import { MdOutlineBookmarks } from "react-icons/md";
 // import mainTabStore from "../../stores/mainTabStore";
 import darkModeStore from "../../stores/darkModeStore";
 import CategorySingleTab from "./CategorySingleTab";
-import { useState, useRef, FC,useEffect } from "react";
+import CategorySingleEditTab from "./CategorySingleTab(Edit)";
+import { useState, useRef, FC, useEffect } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import { FaPlus } from "react-icons/fa6";
 // import categoriesStore from "../../stores/categoriesStore";
@@ -22,30 +23,42 @@ import Tab from "../../stores/mainTabStore";
 import mainStore from "../../stores/mainStore";
 interface Props {
   // categories: CategoryType[];
-  listId : number
-  categories:CategoryType[]
-  canEdit:boolean
+  listId: number;
+  categories: CategoryType[];
+  canEdit: boolean; // 본인 여부
+  editMode: boolean; // 에딧 모드 여부
 }
 
-const CategoryTab: FC<Props> = ({ listId,categories,canEdit }) => {
-  const {userId, token} = authStore()
+const CategoryTab: FC<Props> = ({ listId, categories, canEdit, editMode }) => {
+  const { userId, token } = authStore();
   const isDark = darkModeStore((state) => state.isDark);
 
   const [createMode, modeChange] = useState(false);
   const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement>(null);
-  const {setIsBookmarkListChange} = mainStore()
+  const { setIsBookmarkListChange } = mainStore();
+
+  const [categoryLengthWarning, setCategoryLengthWarning] = useState(categories.length>=3);
+
   useEffect(() => {
     if (createMode && inputRef.current) {
       inputRef.current.focus();
     }
   }, [createMode]);
-  
+
+  useEffect(() => {
+    if (categories.length >= 3) {
+      setCategoryLengthWarning(true);
+    } else{
+      setCategoryLengthWarning(false);
+    }
+  }, [categories.length]);
+
   // 뒤로가기 버튼
   const BackButton = (): any => {
     return (
       <button className="me-5  " onClick={() => navigate(-1)}>
-        <IoIosArrowBack size="40px" />{" "}
+        <IoIosArrowBack size="36px" />{" "}
       </button>
     );
   };
@@ -56,7 +69,9 @@ const CategoryTab: FC<Props> = ({ listId,categories,canEdit }) => {
       <button
         onClick={() => {
           modeChange(true);
-        }}>
+        }}
+        className={categoryLengthWarning? "hidden" : ""}
+      >
         <FaPlus className="ms-2 " />
       </button>
     );
@@ -67,7 +82,6 @@ const CategoryTab: FC<Props> = ({ listId,categories,canEdit }) => {
     const [inputValue, changeInputValue] = useState<string>("");
 
     const createCategory = (): void => {
-
       // 카테고리 추가 api
       axios({
         method: "post",
@@ -75,15 +89,15 @@ const CategoryTab: FC<Props> = ({ listId,categories,canEdit }) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        params:{
-          userId:userId,
+        params: {
+          userId: userId,
         },
-        data:{
-          categoryName:inputValue,
-        }
+        data: {
+          categoryName: inputValue,
+        },
       })
         .then((res) => {
-          setIsBookmarkListChange(true)
+          setIsBookmarkListChange(true);
         })
         .catch((err) => {
           console.error(err);
@@ -93,7 +107,7 @@ const CategoryTab: FC<Props> = ({ listId,categories,canEdit }) => {
     };
 
     return (
-      <form onSubmit={()=>createCategory()}>
+      <form onSubmit={() => createCategory()}>
         <input
           ref={inputRef}
           type="text"
@@ -123,17 +137,33 @@ const CategoryTab: FC<Props> = ({ listId,categories,canEdit }) => {
 
   return (
     <>
-      <div className="flex flex-row m-3 items-centerpy-5 static z-20">
-        <BackButton />
+      <div className="flex flex-row m-3 items-center py-5 static z-20 w-10/12">
+        <div className={editMode ? "hidden" : "h-9"}>
+          <BackButton />
+        </div>
         <div
-          className=" flex flex-row  whitespace-nowrap  container overflow-x-scroll "
+          className=" flex flex-row  whitespace-nowrap  container "
           onWheel={handleScroll}
         >
-          {categories.map((category) => (
-            <CategorySingleTab tempCategory={category} canEdit={canEdit} />
-          ))}
-          {canEdit? (createMode ? (  <CreateCategorySection />  ) : (<PlusButton /> ) ) :  <></>}
-          
+          {categories.map((category) =>
+            editMode ? (
+              <CategorySingleEditTab
+                tempCategory={category}
+                canEdit={canEdit}
+              />
+            ) : (
+              <CategorySingleTab tempCategory={category} canEdit={canEdit} />
+            )
+          )}
+          {canEdit && editMode ? (
+            createMode ? (
+              <CreateCategorySection />
+            ) : (
+              <PlusButton />
+            )
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </>

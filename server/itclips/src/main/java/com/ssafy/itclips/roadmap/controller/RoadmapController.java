@@ -191,6 +191,17 @@ public class RoadmapController {
         return new ResponseEntity<>(lists, HttpStatus.OK);
     }
 
+    @GetMapping("/search/{page}/{searchType}/{title}")
+    public ResponseEntity<?> searchRoadMap(@PathVariable Integer page,
+                                           @PathVariable String searchType,
+                                           @PathVariable String title,
+                                           @RequestParam Long userId) {
+        List<RoadmapInfoDTO> lists = roadmapService.searchRoadMaps(page,searchType,userId,title);
+
+        return new ResponseEntity<>(lists,HttpStatus.OK);
+    }
+
+
     @GetMapping("/recommend/step/{keyWord}")
     @Operation(summary = "로드맵 gpt 추천 ", description = "로드맵 제작 추천")
     public ResponseEntity<?> recommendRoadmapSteps(@PathVariable String keyWord,

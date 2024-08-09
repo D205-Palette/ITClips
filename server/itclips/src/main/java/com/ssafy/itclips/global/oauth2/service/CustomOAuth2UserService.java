@@ -57,7 +57,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
             Optional<User> userOptional = userRepository.findByEmail(oAuth2UserInfo.getEmail());
             User user = userOptional
 //                    .map(entity -> entity.update(oAuth2UserInfo.getNickname(), oAuth2UserInfo.getImageUrl()))
-                    .map(entity -> entity.update(oAuth2UserInfo.getImageUrl()))
+//                    .map(entity -> entity.update(oAuth2UserInfo.getImageUrl()))
                     .orElseGet(() -> createUser(oAuth2UserInfo, provider));
 
             return userRepository.save(user);

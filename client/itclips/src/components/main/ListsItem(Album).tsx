@@ -52,7 +52,7 @@ const ListItem: FC<Props> = ({ list }) => {
     <>
       <div
         className={
-          "card w-56 bg-base-100 shadow-xl " +
+          "card border bg-base-100 " +
           (isDark ? "hover:bg-slate-700" : "hover:bg-slate-100")
         }
         onMouseOver={() => setIsHovering(true)}
@@ -60,7 +60,7 @@ const ListItem: FC<Props> = ({ list }) => {
       >
         <figure
           className={
-            "w-56 h-56 " +
+            "h-56 " +
             (isDark ? "hover:brightness-150" : "hover:brightness-95")
           }
         >

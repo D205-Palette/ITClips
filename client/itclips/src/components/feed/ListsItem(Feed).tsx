@@ -7,6 +7,9 @@ import darkModeStore from "../../stores/darkModeStore";
 import profile_img from "../../assets/images/profile_image.png";
 import type { BookmarkListSumType } from "../../types/BookmarkListType";
 import noImg from "../../assets/images/noImg.gif"
+import axios from "axios";
+import { API_BASE_URL } from "../../config";
+import { authStore } from "../../stores/authStore";
 
 interface BookmarkListSumFeedType extends BookmarkListSumType {
   createdAt: string;  
@@ -17,12 +20,45 @@ interface Props {
   }
 
 const ListItem: FC<Props> = ({ list }) => {
-  const [isLike, setIsLike] = useState(false);
-  const clickHeart = (event: React.MouseEvent<HTMLButtonElement>): void => {
+  const { token, userId } = authStore();
+  const [isLike, setIsLike] = useState(list.isLiked);
+  const [likeCount, changeLikeCount] = useState(list.likeCount);
+
+  // 좋아요
+  const clickHeart = (event: React.MouseEvent<HTMLButtonElement | HTMLDivElement>): void => {
     event.stopPropagation();
+  
+    if (isLike) {
+      axios
+        .delete(`${API_BASE_URL}/api/list/like/${userId}/${list.id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(() => {
+          changeLikeCount(likeCount - 1);
+        })
+        .catch((error) => {
+          console.error("Error unliking the list:", error);
+        });
+    } else {
+      axios
+        .post(`${API_BASE_URL}/api/list/like/${userId}/${list.id}`, null, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(() => {
+          changeLikeCount(likeCount + 1);
+        })
+        .catch((error) => {
+          console.error("Error liking the list:", error);
+        });
+    }
+  
     setIsLike(!isLike);
-    // 여기에 좋아요 api 호출
   };
+  
 
   const isDark = darkModeStore((state) => state.isDark);
   const navigate = useNavigate();
@@ -90,7 +126,7 @@ const ListItem: FC<Props> = ({ list }) => {
             />
           </div>
           <h2>{list.users[0].nickName}</h2>
-          <div className="badge badge-secondary">
+          <div className="badge badge-info text-slate-100">
             {getRelativeTime(list.createdAt)}
           </div>
         </div>
@@ -113,10 +149,13 @@ const ListItem: FC<Props> = ({ list }) => {
         <p className="text-sm md:text-base line-clamp-3">{list.description}</p>
 
         <div className="card-actions justify-end flex items-center relative mt-2">
-          <button onClick={clickHeart} className="btn btn-ghost z-0">
-            {isLike ? <FaHeart /> : <FaRegHeart />}
-            {list.likeCount}
-          </button>
+          <button
+                onClick={clickHeart}
+                className="btn btn-ghost hidden sm:inline-flex"
+              >
+                {isLike ? <FaHeart color="red" /> : <FaRegHeart />}
+                {likeCount}
+              </button>
         </div>
       </div>
     </div>

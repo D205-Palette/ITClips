@@ -5,18 +5,44 @@ import { useNavigate } from "react-router-dom";
 import KebabDropdown from "./KebabDropdown(Feed)";
 import darkModeStore from "../../stores/darkModeStore";
 import type { RoadmapSumType } from "../../types/RoadmapType";
-import noImg from "../../assets/images/noImg.gif"
+import noImg from "../../assets/images/noImg.gif";
+import axios from "axios";
+import { API_BASE_URL } from "../../config";
+import { authStore } from "../../stores/authStore";
 
 interface Props {
   roadmap: RoadmapSumType;
 }
 
 const RoadMap: FC<Props> = ({ roadmap }) => {
-  const [isLike, setIsLike] = useState(false);
-  const clickHeart = (event: React.MouseEvent<HTMLButtonElement>): void => {
+  const { token, userId } = authStore();
+  const [isLike, setIsLike] = useState(roadmap.isLiked);
+  const [likeCount, changeLikeCount] = useState(roadmap.likeCnt);
+
+  // 좋아요
+  const clickHeart = (
+    event: React.MouseEvent<HTMLButtonElement | HTMLDivElement>
+  ): void => {
     event.stopPropagation();
+
+    if (isLike) {
+      axios.delete(`${API_BASE_URL}/api/roadmap/like/${roadmap.id}/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      changeLikeCount(likeCount - 1);
+    } else {
+      {
+        axios.post(`${API_BASE_URL}/api/roadmap/like/${roadmap.id}/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      }
+      changeLikeCount(likeCount + 1);
+    }
     setIsLike(!isLike);
-    // 여기에 좋아요 api 호출
   };
 
   const isDark = darkModeStore((state) => state.isDark);
@@ -43,7 +69,7 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
   const getRelativeTime = (createdAt: string) => {
     const now = new Date();
     const createdDate = new Date(createdAt);
-    createdDate.setHours(createdDate.getHours()+9);
+    createdDate.setHours(createdDate.getHours() + 9);
     const diffInMs = now.getTime() - createdDate.getTime();
     const diffInMinutes = diffInMs / (1000 * 60);
     const diffInHours = diffInMs / (1000 * 60 * 60);
@@ -86,7 +112,7 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
             />
           </div>
           <h2>{roadmap.userName}</h2>
-          <div className="badge badge-secondary">
+          <div className="badge badge-error text-slate-100">
             {getRelativeTime(roadmap.createdAt)}
           </div>
         </div>
@@ -99,7 +125,7 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
       <figure className="border rounded-xl mx-5 overflow-hidden h-64">
         <img
           className="w-full h-full object-contain"
-          src={roadmap.image === "default" ? noImg : roadmap.image}          
+          src={roadmap.image === "default" ? noImg : roadmap.image}
           alt="RoadmapImg"
         />
       </figure>
@@ -112,9 +138,9 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
         </p>
 
         <div className="card-actions justify-end flex items-center relative mt-2">
-          <button onClick={clickHeart} className="btn btn-ghost z-0">
-            {isLike ? <FaHeart /> : <FaRegHeart />}
-            {roadmap.likeCnt}
+          <button onClick={clickHeart} className="btn btn-ghost z-0 ">
+            {isLike ? <FaHeart color="red" /> : <FaRegHeart />}
+            {likeCount}{" "}
           </button>
         </div>
       </div>

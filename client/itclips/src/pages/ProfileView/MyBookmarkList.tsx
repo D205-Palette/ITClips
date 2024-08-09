@@ -35,7 +35,7 @@ export default function MyView() {
   // const filterdLists = lists.filter((list) => list.title.includes(filterText));
   const [filterdLists, setFilterdLists] = useState<BookmarkListSumType[]>([])
   const params = useParams()
-  const nowUserId = parseInt(params.userId!)
+  const nowUserId = Number(params.userId)
 
   
   // 북마크 리스트 변화할때 유저의 북마크 리스트들 요약
@@ -62,7 +62,7 @@ export default function MyView() {
         });
     }
     fetchData();
-  }, [isBookmarkListChange]);
+  }, [isBookmarkListChange,params.userId]);
 
 
   // 검색어 변경시 리스트 변경
@@ -75,7 +75,7 @@ export default function MyView() {
       {/* 화면에 고정시킬 우측 상단들 */}
       <div className="sticky top-16 z-20 w-full">
         <div className="bg-base-100">
-          <MainTab />
+          <MainTab userId={Number(params.userId)} />
           {/* 상단 검색바 */}
           <SearchBar
             whatSearch={"북마크 리스트"}
@@ -127,15 +127,15 @@ export default function MyView() {
               <div className="flex justify-around ">
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2">
                   {filterdLists.map((list) => (
-                    <MyBookmarkListAlbum list={list} />
+                    <MyBookmarkListAlbum whatMenu="리스트" list={list} canEdit={params.userId===String(userId)} />
                   ))}
                 </div>
               </div>
             ) : (
               <>
                 {filterdLists.map((list) => (
-                  <div className="my-1">
-                    <MyBookmarkList list={list} />
+                  <div className={(params.userId===String(userId) || list.isPublic? "" : "hidden ") + " my-1"}>
+                    <MyBookmarkList whatMenu="리스트" list={list} />
                   </div>
                 ))}
               </>
@@ -146,7 +146,7 @@ export default function MyView() {
 
       {/* 리스트 생성 버튼 */}
 
-      <div className="sticky z-20 bottom-10 flex justify-end w-full">
+      <div className="sticky z-20 bottom-24 flex justify-end w-full">
         <button
           className={(nowUserId !== userId ? "hidden" : "") + " "}
           onClick={() => setIsCreateModalOpen(true)}

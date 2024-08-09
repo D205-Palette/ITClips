@@ -75,6 +75,7 @@ const RoadmapCreateView: React.FC = () => {
           description: item.description,
           bookmarkCount: item.bookmarkCount,
           likeCount: item.likeCount,
+          isPublic: item.isPublic,
           image: item.image,
           isLiked: item.isLiked,
           tags: item.tags.map((tag: any) => ({

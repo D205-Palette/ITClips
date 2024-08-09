@@ -1,15 +1,16 @@
 // ReportComfirmModal.tsx 는 ReportModal.tsx(북마크리스트 신고하기 모달) 에서 신고하기 버튼을 누른 후 출력되는 컴포넌트
 
 import React from 'react';
-
+import { useEffect } from 'react';
 interface ScrapConfirmationModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
 const ScrapConfirmationModal: React.FC<ScrapConfirmationModalProps> = ({ isOpen, onClose }) => {
-  if (!isOpen) return null;
 
+ 
+  if (!isOpen) return null;
   return (
     <div className="modal modal-open">
       <div className="modal-box">

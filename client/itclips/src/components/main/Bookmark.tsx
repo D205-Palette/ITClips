@@ -9,9 +9,9 @@ import axios from "axios";
 import { authStore } from "../../stores/authStore";
 import { API_BASE_URL } from "../../config";
 import EditTag from "./Bookmark(Tag)";
-import { LINKPREVIEW_API_KEY } from "../../config"; 
+import { LINKPREVIEW_API_KEY } from "../../config";
 import AIContent from "./Bookmark(AI)";
-import mainTabStore from '../../stores/mainTabStore'
+import mainTabStore from "../../stores/mainTabStore";
 
 interface Props {
   bookmark: BookmarkType;
@@ -28,7 +28,6 @@ const Bookmark: FC<Props> = ({
   editBookmarksIndex,
   changeEditBookmarksIndex,
 }) => {
-  
   const [tempBookmark, editTempBookmark] = useState<BookmarkType>(bookmark);
   const [tempTitle, editTempTitle] = useState<string>(bookmark.title);
   const [tempTags, editTempTags] = useState(bookmark.tags);
@@ -36,10 +35,15 @@ const Bookmark: FC<Props> = ({
 
   // 북마크 썸네일 불러오기
   const [ogImage, setOgImage] = useState("");
-  
-  useEffect(()=>{
-    setOgImage(`https://www.google.com/s2/favicons?sz=64&domain_url=${bookmark.url}`)
-  })
+
+
+
+  useEffect(() => {
+    setOgImage(
+      `https://www.google.com/s2/favicons?sz=64&domain_url=${bookmark.url}`
+    );
+  });
+
 
   const [isLike, toggleLike] = useState(bookmark.isLiked);
   const [likeCount, setLikeCount] = useState(bookmark.likeCount);
@@ -50,10 +54,13 @@ const Bookmark: FC<Props> = ({
   // 그냥 더미. 있어야됨. 삭제 ㄴㄴ
   const [nothingMode, tabNothing] = useState(false);
 
-
-  const {whatCategory} = mainTabStore()
+  const { whatCategory } = mainTabStore();
   const { userId, token } = authStore();
 
+  useEffect(() => {
+    setIsAIOpen(false);
+  }, [whatCategory.categoryName]);
+  
   //좋아요
   const clickHeart = (): void => {
     if (isLike) {
@@ -90,24 +97,27 @@ const Bookmark: FC<Props> = ({
 
   // 최종 수정
   function completeEdit(): void {
-  
     toggleEdit(false);
     // editTempBookmark({ ...tempBookmark, title: tempTitle, tags: tempTags });
     editTempBookmark({ ...tempBookmark, title: tempTitle });
     //  /bookmark /update/{bookmarkId} 로 put요청
-    axios.put(`${API_BASE_URL}/api/bookmark/update/${bookmark.id}`,{url: bookmark.url,
-      title: tempTitle,
-      tags: tempTags,
-      content: bookmark.content,},
-       {
-      headers: {
-        Authorization: `Bearer ${token}`,
+    axios.put(
+      `${API_BASE_URL}/api/bookmark/update/${bookmark.id}`,
+      {
+        url: bookmark.url,
+        title: tempTitle,
+        tags: tempTags,
+        content: bookmark.content,
       },
-      params:{
-        userId:userId,
-      },
-    
-    });
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          userId: userId,
+        },
+      }
+    );
   }
 
   return (
@@ -115,7 +125,10 @@ const Bookmark: FC<Props> = ({
       <div
         className={
           (isDark ? "hover:bg-slate-700" : "hover:bg-slate-100") +
-          (whatCategory.categoryName===bookmark.category || whatCategory.categoryName==="" ? " " : " hidden")+
+          (whatCategory.categoryName === bookmark.category ||
+          whatCategory.categoryName === ""
+            ? " "
+            : " hidden") +
           " card card-side bg-base-100 shadow-sm hover:cursor-pointer h-28 my-1"
         }
       >
@@ -123,12 +136,21 @@ const Bookmark: FC<Props> = ({
           <div className="card-body flex flex-row items-center">
             {/* 주소에 https 포함 여부 확인해야할듯 */}
 
-            <img src={ogImage || 'default-image.jpg'} alt={bookmark.url} className="h-full" />
+            <img
+              src={ogImage || "default-image.jpg"}
+              alt={bookmark.url}
+              className="h-full"
+            />
 
             <div
               className="flex flex-col flex-auto justify-around"
               onClick={() => {
-                !isEdit && window.open( (bookmark.url.includes('https') ? `${bookmark.url}` : `https://${bookmark.url}`));
+                !isEdit &&
+                  window.open(
+                    bookmark.url.includes("https")
+                      ? `${bookmark.url}`
+                      : `https://${bookmark.url}`
+                  );
               }}
             >
               <div>
@@ -143,9 +165,7 @@ const Bookmark: FC<Props> = ({
                   <h2 className="flex-auto card-title">{tempBookmark.title}</h2>
                 )}
               </div>
-              <div className="underline underline-offset-1">
-                {bookmark.url}
-              </div>
+              <div className="underline underline-offset-1">{bookmark.url}</div>
             </div>
 
             {/* 태그들 */}
@@ -211,10 +231,16 @@ const Bookmark: FC<Props> = ({
       </div>
 
       {/* AI요약 탭 열리는 위치 */}
-      <div className={(isDark?"bg-sky-950 text-slate-300" :"bg-sky-100" ) + (isAiOpen&&" py-5") + " ps-9 pe-12 mt-3 "}>
+      <div
+        className={
+          (isDark ? "bg-sky-950 text-slate-300" : "bg-sky-100") +
+          (isAiOpen && " py-5") +
+          " ps-9 pe-12 mt-3 "
+        }
+      >
         {isAiOpen ? (
           <>
-            <AIContent bookmarkId={bookmark.id} setIsAIOpen={setIsAIOpen}/>
+            <AIContent bookmarkId={bookmark.id} setIsAIOpen={setIsAIOpen} />
           </>
         ) : (
           <></>

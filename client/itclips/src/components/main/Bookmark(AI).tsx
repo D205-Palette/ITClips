@@ -11,6 +11,7 @@ import axios from "axios";
 import { RiRobot3Line } from "react-icons/ri";
 import { IoIosArrowUp } from "react-icons/io";
 import { authStore } from "../../stores/authStore";
+
 interface Props {
   bookmarkId: number;
   setIsAIOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -38,6 +39,7 @@ const AIContent: React.FC<Props> = ({ bookmarkId, setIsAIOpen }) => {
         }
         fetchData();
       }, []);
+
 
   const [AIAnswer, setAIAnswer] = useState<string[]>(["Loading..."]);
 

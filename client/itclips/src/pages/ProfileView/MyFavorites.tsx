@@ -52,7 +52,7 @@ const MyGroupBookmarkList = () => {
     <>
       <div className="sticky top-16 z-20 w-full">
         <div className="bg-base-100">
-          <MainTab />
+          <MainTab userId={Number(params.userId)} />
           <SearchBar
             whatSearch={"즐겨찾기"}
             filterText={filterText}
@@ -103,15 +103,25 @@ const MyGroupBookmarkList = () => {
               <div className="flex justify-around ">
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2">
                   {filterdLists.map((list) => (
-                    <MyBookmarkListAlbum list={list} />
+                    <MyBookmarkListAlbum
+                      list={list}
+                      whatMenu="즐겨찾기"
+                      canEdit={params.userId === String(userId)}
+                    />
                   ))}
                 </div>
               </div>
             ) : (
               <>
                 {filterdLists.map((list) => (
-                  <div className="my-1">
-                    <MyBookmarkList list={list} />
+                  <div
+                    className={
+                      (params.userId === String(userId) || list.isPublic
+                        ? ""
+                        : "hidden ") + " my-1"
+                    }
+                  >
+                    <MyBookmarkList list={list} whatMenu="즐겨찾기" />
                   </div>
                 ))}
               </>

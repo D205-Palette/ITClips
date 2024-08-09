@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import mainStore from "../../stores/mainStore";
 import { useParams } from "react-router-dom";
 // 무슨 탭에서 눌렀는지 받는 인자
+
 // 리스트, 즐겨찾기, 로드맵  3가지로 받을예정. 그룹 리스트랑 그냥 리스트는 차이 없음
 interface Props {
   whatMenu: string;
@@ -94,7 +95,7 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
           ) : (
             <>
               <li
-                className={whatMenu === "즐겨찾기" ? "hidden" : ""}
+                className={whatMenu === "즐겨찾기" ? "hidden " : ""}
                 onClick={() => {
                   whatMenu === "로드맵"
                     ? navigate(`/roadmap/${id}/edit`)
@@ -119,7 +120,7 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
           </li>
           <li
             className={
-              whatMenu === "로드맵" || whatMenu === "북마크" ? "hidden" : ""
+              whatMenu === "로드맵" || whatMenu === "북마크" || whatMenu==="즐겨찾기" ? "hidden " : ""
             }
             onClick={() => {
               addFavorite();
@@ -129,7 +130,7 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
             <a>즐겨찾기</a>
           </li>
           <li
-            className={whatMenu === "로드맵" ? "" : "hidden"}
+            className={whatMenu === "로드맵" ? "" : "hidden "}
             onClick={() => {
               setIsScrapModalOpen(true);
               addScrap();
@@ -138,7 +139,7 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
             <a>스크랩</a>
           </li>
           <li
-            className={whatMenu === "로드맵" ? "hidden" : ""}
+            className={whatMenu === "로드맵" ? "hidden " : ""}
             onClick={() => setIsReportModalOpen(true)}
           >
             <a>신고하기</a>

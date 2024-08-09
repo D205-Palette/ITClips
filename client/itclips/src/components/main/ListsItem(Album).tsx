@@ -18,9 +18,11 @@ import axios from "axios";
 
 interface Props {
   list: BookmarkListSumType;
+  whatMenu:string;
+  canEdit:boolean
 }
 
-const ListItem: FC<Props> = ({ list }) => {
+const ListItem: FC<Props> = ({ list,whatMenu,canEdit }) => {
   const { token, userId } = authStore();
   const navigate = useNavigate();
 
@@ -51,7 +53,7 @@ const ListItem: FC<Props> = ({ list }) => {
   return (
     <>
       <div
-        className={
+        className={(list.isPublic || canEdit? "" : "hidden ") + 
           "card w-56 bg-base-100 shadow-xl " +
           (isDark ? "hover:bg-slate-700" : "hover:bg-slate-100")
         }
@@ -68,19 +70,19 @@ const ListItem: FC<Props> = ({ list }) => {
             <ListItemHover list={list}/>
           ) : (
             <>
-              <img src={`${list.image}`} alt="Movie" className=" w-56" />
+              <img src={`${list.image}`} alt="Movie" className=" w-56 " />
             </>
           )}
         </figure>
 
         <div className="card-body flex flex-col p-6 relative ">
           <div className="absolute top-0 right-0 z-50">
-            <KebabDropdown whatMenu="리스트" id={list.id} />
+            <KebabDropdown whatMenu={whatMenu} id={list.id} />
           </div>
           <div className="flex flex-col flex-auto justify-around hover:cursor-pointer ">
             <div>
               <h5
-                onClick={() => navigate("/bookmarklist/:bookmarklist_id")}
+                onClick={() => navigate(`/bookmarklist/${list.id}`)}
                 className="flex-auto card-title my-1 "
               >
                 {list.title}
@@ -103,18 +105,9 @@ const ListItem: FC<Props> = ({ list }) => {
             </div>
           </div>
 
-          {/* <div className="flex items-center">
-                <p>{list.description}</p>
-              </div> */}
 
           <div className="card-actions justify-end flex items-center">
-            {/* <button className="btn btn-primary">
-                  <HeartButton />
-                  {list.bookmark_list_like} 
-                </button> */}
-            {/* <button>
-                  <KebabDropdown />
-                </button> */}
+
           </div>
         </div>
       </div>

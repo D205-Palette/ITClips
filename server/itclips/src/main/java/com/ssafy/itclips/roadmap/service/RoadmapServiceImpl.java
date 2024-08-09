@@ -91,6 +91,9 @@ public class RoadmapServiceImpl implements RoadmapService {
 
         for (Roadmap roadmap : roadmapList) {
 
+            if(roadmap.getIsPublic()==0&& viewId!= roadmap.getUser().getId()){
+                continue;
+            }
             // 로드맵 단계
             List<RoadmapStep> roadmapStepList = roadmapStepRepository.findByRoadmapId(roadmap.getId());
             List<StepInfoDTO> steps = new ArrayList<>();

@@ -1,5 +1,10 @@
 import { create } from 'zustand';
+
+//apis
 import { getChatRooms, getChatRoomMessages, getChatRoomInfo, leaveChatRoom, updateMessageStatusToRead } from "../api/messageApi";
+
+// stores
+import { useWebSocketStore } from './webSocketStore';
 
 // 채팅방 목록을 호출했을 때 들어오는 정보(getChatRooms)
 interface ChatRoom {
@@ -64,6 +69,10 @@ export const chatStore = create<ChatStore>((set, get) => ({
       const response = await getChatRooms(userId);
       const totalUnread = response.data.reduce((sum: number, room: ChatRoom) => sum + room.messageCnt, 0);
       set({ rooms: response.data, totalUnreadCount: totalUnread, isLoading: false });
+      
+      // WebSocket 구독 설정
+      const { subscribeToAllRooms } = useWebSocketStore.getState();
+      subscribeToAllRooms(response.data);
     } catch (error) {
       set({ error: "Failed to fetch chat rooms", isLoading: false });
     }

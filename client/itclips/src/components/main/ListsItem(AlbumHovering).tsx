@@ -8,31 +8,30 @@ import type { BookmarkListSumType } from "../../types/BookmarkListType";
 // 아님 호버링 기능을 여기에다 포함이 나을듯?
 
 interface Props {
-  list:BookmarkListSumType
+  list: BookmarkListSumType;
 }
 
-const ListItem : FC<Props> = ({list}) => {
-
+const ListItem: FC<Props> = ({ list }) => {
   const navigate = useNavigate();
   // const list = useStore((state) => state);
   const [isHover, setIsHovering] = useState(false);
 
   return (
     <>
-      <div className="card bg-base-100 image-full size-64 shadow-xl">
-        <figure >
-          <img
-            src={list.image}
-            alt="Shoes" 
-            className="w-56"/>
+      <div
+        className="card bg-base-100 image-full size-64 shadow-xl hover:cursor-pointer"
+        onClick={() => navigate(`/bookmarklist/${list.id}`)}
+      >
+        <figure>
+          <img src={list.image} alt="Shoes" className="w-56" />
         </figure>
-        
-        <div  className="card-body flex flex-row justify-center items-center">
+
+        <div className="card-body flex flex-row justify-center items-center">
           <p>{list.description}</p>
         </div>
       </div>
     </>
   );
-}
+};
 
-export default ListItem
+export default ListItem;

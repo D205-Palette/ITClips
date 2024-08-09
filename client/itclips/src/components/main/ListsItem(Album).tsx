@@ -54,7 +54,7 @@ const ListItem: FC<Props> = ({ list,whatMenu,canEdit }) => {
     <>
       <div
         className={(list.isPublic || canEdit? "" : "hidden ") + 
-          "card w-56 bg-base-100 shadow-xl " +
+          "card w-64 bg-base-100 border border-slate-200 " +
           (isDark ? "hover:bg-slate-700" : "hover:bg-slate-100")
         }
         onMouseOver={() => setIsHovering(true)}
@@ -76,7 +76,7 @@ const ListItem: FC<Props> = ({ list,whatMenu,canEdit }) => {
         </figure>
 
         <div className="card-body flex flex-col p-6 relative ">
-          <div className="absolute top-0 right-0 z-50">
+          <div className="absolute top-0 right-0 z-40">
             <KebabDropdown whatMenu={whatMenu} id={list.id} />
           </div>
           <div className="flex flex-col flex-auto justify-around hover:cursor-pointer ">

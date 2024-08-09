@@ -50,12 +50,12 @@ const RoadMap: FC<Props> = ({ roadmap,canEdit }) => {
     <>
       <div
         className={
-          (isDark ? "hover:bg-slate-700" : "hover:bg-slate-100") +
-          " card card-side bg-base-100 hover:cursor-pointer h-32 my-1 static"
+          
+          " card card-side bg-base-100 hover:cursor-pointer h-32 my-1 static "
         }
       >
         <>
-          <div className="w-28 hidden lg:inline rounded-s-2xl">
+          <div className="w-28  hidden lg:inline rounded-s-2xl">
             <img
               src={roadmap.image === "default" ? noImg : roadmap.image}
               alt="Movie"
@@ -63,20 +63,20 @@ const RoadMap: FC<Props> = ({ roadmap,canEdit }) => {
             />
           </div>
 
-          <div className="card-body flex flex-row justify-between h-full relative">
+          <div className={(isDark ? "hover:bg-slate-700" : "hover:bg-slate-100") +"  card-body flex flex-row justify-between h-full relative"}>
             <div
               className={(canEdit? "" : "hidden ") +
                 (!isDark
-                  ? percentage == "100.0"
+                  ? percentage == "100.0%"
                     ? "bg-green-100"
                     : "bg-sky-100"
-                  : percentage == "100.0" 
+                  : percentage == "100.0%" 
                   ? "bg-green-900"
                   : "bg-sky-900") +
-                " h-full absolute z-30 top-0 left-0 rounded-e-2xl lg:rounded-s-none rounded-s-2xl"
+                " h-full absolute top-0 left-0 rounded-e-2xl lg:rounded-s-none rounded-s-2xl"
               }
-              style={{ width: `${percentage}%` }}
-              // onClick={() => navigate(`/roadmap/${roadmap.id}`)}
+              style={{ width: `${percentage}` }}
+              onClick={() => navigate(`/roadmap/${roadmap.id}`)}
             ></div>
             <div
               className="flex flex-col justify-around z-10 "
@@ -95,10 +95,10 @@ const RoadMap: FC<Props> = ({ roadmap,canEdit }) => {
               <p
                 className={(canEdit? "" : "hidden ") +
                   (!isDark
-                    ? percentage == "100.0"
+                    ? percentage == "100.0%"
                       ? "text-green-400"
                       : "text-blue-400"
-                    : percentage == "100.0"
+                    : percentage == "100.0%"
                     ? "text-green-200"
                     : "text-blue-200")
                 }

@@ -29,7 +29,7 @@ const BookmarkListCreateModal: React.FC<EditModalProps> = ({
   const [tempCategories, setTempCategories] = useState<string[]>([]);
 
   // user 설정이랑 isPublic 해ㅇ줘야하나?
-  const [isPublic, setIsPublic] = useState<any>(false);
+  const [isPublic, setIsPublic] = useState<any>(true);
   const [imageToS3FileName, setImageToS3FileName] = useState("");
   const { userId, token } = authStore();
   // 이미지 업로드 상태 관리
@@ -37,11 +37,15 @@ const BookmarkListCreateModal: React.FC<EditModalProps> = ({
   const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
 
   const {isBookmarkListChange, setIsBookmarkListChange} = mainStore()
+  const [tagsLengthWarning, setTagsLengthWarning] = useState(false)
+
   const handleAddTag = () => {
+ 
     if (tempTag.trim() !== "") {
       setTempTags([...tempTags, { title: tempTag.trim() }]);
       setTempTag("");
     }
+  
   };
 
   const handleRemoveTag = (inputText: string) => {
@@ -54,12 +58,21 @@ const BookmarkListCreateModal: React.FC<EditModalProps> = ({
     setPreviewImageUrl(null);
   };
 
+// 태그 3개 이상되면 경고
+useEffect(()=>{
+  if(tempTags.length >= 3){
+    setTagsLengthWarning(true)
+  } else{
+    setTagsLengthWarning(false)
+  }
+},[tempTags.length] )
+
   const endCreate = () => {
-    if(isPublic){
-      setIsPublic(1)
-    } else{
-      setIsPublic(0)
-    }
+    // if(isPublic){
+    //   setIsPublic(1)
+    // } else{
+    //   setIsPublic(0)
+    // }
     axios({
       method: "post",
       url: `${API_BASE_URL}/api/list/add/${userId}`,
@@ -259,12 +272,14 @@ const BookmarkListCreateModal: React.FC<EditModalProps> = ({
               type="text"
               value={tempTag}
               onChange={(e) => setTempTag(e.target.value)}
-              className="flex-grow px-3 py-2 border rounded-l-md  "
-              placeholder="새 태그 입력"
+              className={" flex-grow px-3 py-2 border-2 rounded-l-md  "}
+              placeholder={tagsLengthWarning? "태그는 3개까지 가능합니다" :"새 태그 입력"}
+              disabled={tagsLengthWarning}
             />
             <button
               onClick={handleAddTag}
               className="btn bg-sky-500 hover:bg-sky-700 text-slate-100 rounded-l-none"
+              disabled={tagsLengthWarning}
             >
               +
             </button>
@@ -274,6 +289,7 @@ const BookmarkListCreateModal: React.FC<EditModalProps> = ({
               <label htmlFor="">공개 여부</label>
               <input
                 type="checkbox"
+                checked={isPublic}
                 onClick={() => setIsPublic(!isPublic)}
                 className="checkbox checkbox-info  [--chkfg:white] mx-2 "
               />

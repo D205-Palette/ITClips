@@ -11,15 +11,7 @@ interface ReportConfirmationModalProps {
 
 const ReportConfirmModal: React.FC<ReportConfirmationModalProps> = ({ isOpen, onClose }) => {
 
-  // 엔터쳤을떄도 닫게
-  useEffect(() => {
-    const handleKeyDown = (e:KeyboardEvent) => {
-      if (e.key === 'Enter') {
-        onClose();
-      } 
-    };
-    window.addEventListener('keydown', handleKeyDown);
-  }, []);
+  
   if (!isOpen) return null;
   return (
     <div className="modal modal-open">

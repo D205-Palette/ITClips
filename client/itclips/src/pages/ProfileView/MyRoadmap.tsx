@@ -58,7 +58,7 @@ const MyRoadmap = () => {
   return (
     <>
       <div className="fixed z-20 w-7/12 bg-base-100">
-        <MainTab />
+        <MainTab userId={Number(params.userId)}/>
         <SearchBar
           whatSearch={"로드맵"}
           filterText={filterText}

@@ -14,11 +14,16 @@ import { BsFillPeopleFill } from "react-icons/bs";
 import { authStore } from "../../stores/authStore";
 import { useParams } from "react-router-dom";
 
-export default function MainTab() {
+interface Props {
+  userId : number
+}
+
+
+const MainTab : React.FC<Props> =  ({userId})  => {
   const isDark = darkModeStore((state) => state.isDark);
   const textColor = isDark ? "text-slate-300" : "text-slate-900";
   const params = useParams()
-  const nowUserId = params.userId
+
 
   // const {userId} = authStore()
 
@@ -26,7 +31,7 @@ export default function MainTab() {
     <>
       <div className="flex justify-around">
         <NavLink
-          to={`/user/${nowUserId}`}
+          to={`/user/${userId}`}
           end
           className={({ isActive }) =>
             isActive
@@ -42,7 +47,7 @@ export default function MainTab() {
         </NavLink>
 
         <NavLink
-          to={`/user/${nowUserId}/groupbookmarklist`}
+          to={`/user/${userId}/groupbookmarklist`}
           className={({ isActive }) =>
             isActive
               ? "text-sky-500 font-bold flex flex-row items-center"
@@ -56,7 +61,7 @@ export default function MainTab() {
       
         </NavLink>
         <NavLink
-          to={`/user/${nowUserId}/favorites`}
+          to={`/user/${userId}/favorites`}
           className={({ isActive }) =>
             isActive
               ? "text-sky-500 font-bold flex flex-row items-center"
@@ -70,7 +75,7 @@ export default function MainTab() {
        
         </NavLink>
         <NavLink
-          to={`/user/${nowUserId}/roadmap`}
+          to={`/user/${userId}/roadmap`}
           className={({ isActive }) =>
             isActive
               ? "text-sky-500 font-bold flex flex-row items-center"
@@ -87,3 +92,4 @@ export default function MainTab() {
     </>
   );
 }
+export default MainTab

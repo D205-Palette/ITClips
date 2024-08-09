@@ -15,15 +15,7 @@ const DeletedAccountModal: React.FC<AccountDeletedModalProps> = ({ isOpen, onDel
       // 직접 리다이렉트를 수행합니다.
       window.location.href = "/intro";
     };
-// 엔터쳤을떄도 닫게
-useEffect(() => {
-  const handleKeyDown = (e:KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleConfirm()
-    } 
-  };
-  window.addEventListener('keydown', handleKeyDown);
-}, []);
+    
     if (!isOpen) return null;
   
   return (

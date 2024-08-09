@@ -98,6 +98,7 @@ const RoadmapEditView: React.FC = () => {
           bookmarkCount: item.bookmarkCount,
           likeCount: item.likeCount,
           image: item.image,
+          isPublic:item.isPublic,
           isLiked: item.isLiked,
           tags: item.tags.map((tag: any) => ({
             id: tag.id,
@@ -306,6 +307,7 @@ const RoadmapEditView: React.FC = () => {
         description: item.bookmarkListRoadmapDTO.description,
         bookmarkCount: item.bookmarkListRoadmapDTO.bookmarkCount,
         likeCount: item.bookmarkListRoadmapDTO.likeCount,
+        isPublic:item.bookmarkListRoadmapDTO.isPublic,
         image: item.bookmarkListRoadmapDTO.image,
         isLiked: item.bookmarkListRoadmapDTO.isLiked,
         tags: item.bookmarkListRoadmapDTO.tags,

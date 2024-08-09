@@ -38,6 +38,7 @@ type BookmarkListSumType = {
   description: string;
   bookmarkCount: number;
   likeCount: number;
+  isPublic:boolean;
   image: string;
   isLiked: boolean;
   tags: 

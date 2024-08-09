@@ -18,6 +18,7 @@ import axios from "axios";
 import { API_BASE_URL } from "../config";
 import { authStore } from "../stores/authStore";
 import FileResizer from "react-image-file-resizer";
+
 type StepTListType = {
     id: number;
     roadmapId: number;
@@ -118,7 +119,7 @@ const RoadmapView = () => {
   <div className="grid  grid-cols-7 ">
     <div className="fixed z-10 w-7/12">
         <div className="col-span-7">
-          <MainTab />
+          <MainTab userId={roadmap?.userId!}/>
         </div>
         </div>
         <div className="col-span-7 flex flex-row justify-between my-9">

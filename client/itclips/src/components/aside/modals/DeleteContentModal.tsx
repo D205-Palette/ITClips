@@ -1,6 +1,6 @@
 // DeleteBookmarkListModal.tsx 는 AsideBookmarkList.tsx 에서 더보기 메뉴의 '삭제하기' 버튼을 눌렀을 때 출력되는 컴포넌트
 
-import React from "react";
+import React, { useRef } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../../../config";
 import { authStore } from "../../../stores/authStore";
@@ -22,21 +22,11 @@ const DeleteContentModal: React.FC<DeleteConfirmModalProps> = ({
   whatContent,
   id,
 }) => {
-  
-  // 엔터쳤을떄도 삭제되게
-  useEffect(() => {
-    const handleKeyDown =  async (e:KeyboardEvent) => {
-      if (e.key === 'Enter') {
-        await deleteApi();
-        await onClose();
-      } 
-    };
-    window.addEventListener('keydown', handleKeyDown);
-  }, []);
+
 
   const navigate = useNavigate();
   const { setIsBookmarkListChange } = mainStore();
-  const{setIsRoadmapChange} = mainStore()
+  const { setIsRoadmapChange } = mainStore();
   const { userId, token } = authStore();
 
   function deleteApi(): void {
@@ -57,8 +47,8 @@ const DeleteContentModal: React.FC<DeleteConfirmModalProps> = ({
           headers: {
             Authorization: `Bearer ${token}`,
           },
-          params:{
-            userId:userId,
+          params: {
+            userId: userId,
           },
         })
         .then(() => {
@@ -98,6 +88,7 @@ const DeleteContentModal: React.FC<DeleteConfirmModalProps> = ({
           <button className="btn" onClick={onClose}>
             아니오
           </button>
+
           <button
             className="btn bg-sky-500 hover:bg-sky-700 text-slate-100"
             onClick={() => {

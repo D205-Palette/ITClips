@@ -9,15 +9,7 @@ interface ScrapConfirmationModalProps {
 
 const ScrapConfirmationModal: React.FC<ScrapConfirmationModalProps> = ({ isOpen, onClose }) => {
 
-  // 엔터쳤을떄도 닫게
-  useEffect(() => {
-    const handleKeyDown = (e:KeyboardEvent) => {
-      if (e.key === 'Enter') {
-        onClose();
-      } 
-    };
-    window.addEventListener('keydown', handleKeyDown);
-  }, []);
+ 
   if (!isOpen) return null;
   return (
     <div className="modal modal-open">

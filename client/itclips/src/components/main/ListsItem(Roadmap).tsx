@@ -75,7 +75,7 @@ const ListItem: FC<Props> = ({ list,changeCount,count,canEdit }) => {
             <div className={(canEdit?"":"hidden ") + "form-control flex flex-row items-center"}>
               <input
                 type="checkbox"
-                defaultChecked={list.check? true : false}
+                checked={list.check? true : false}
                 onClick={() => toggleCheck(list.check)}
                 className="checkbox checkbox-info  [--chkfg:white]"
               />

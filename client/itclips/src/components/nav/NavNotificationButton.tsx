@@ -1,47 +1,80 @@
-import React, { useState, useRef, useEffect } from "react";
-import { FaBell } from "react-icons/fa";
+import React, { useEffect, useMemo } from "react";
+import { FaBell, FaTimes, FaCheck } from "react-icons/fa";
 
-interface Notification {
-  id: number;
-  text: string;
-}
+// stores
+import notificationStore from "../../stores/notificationStore";
+import { authStore } from "../../stores/authStore";
 
 const NotificationDropdown: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLUListElement>(null);
 
-  const notifications: Notification[] = [
-    { id: 1, text: "알림 1" },
-    { id: 2, text: "알림 2" },
-    { id: 3, text: "알림 3" },
-    { id: 4, text: "알림 4" },
-    { id: 5, text: "알림 5" },
-    { id: 6, text: "알림 6" },
-    { id: 7, text: "알림 7" },
-    { id: 8, text: "알림 8" },
-    { id: 9, text: "알림 9" },
-    { id: 10, text: "알림 10" },
-  ];
+  const { notifications, fetchNotifications, markAllAsRead, deleteNotification } = notificationStore();
+  const userId = authStore(state => state.userId);
+
+  useEffect(() => {
+    if (userId) {
+      fetchNotifications(userId);
+    }
+  }, [userId, fetchNotifications]);
+
+  const handleMarkAllAsRead = () => {
+    if (userId) {
+      markAllAsRead(userId);
+    }
+  };
+
+  const handleDelete = (event: React.MouseEvent, notificationId: number) => {
+    event.stopPropagation();
+    event.preventDefault();   // 삭제버튼 누른후 알림창 닫히지 않도록
+    deleteNotification(notificationId);
+  };
+
+  const unreadCount = useMemo(() => {
+    return notifications.filter(notification => !notification.read).length;
+  }, [notifications]);
 
   return (
-    <div className="dropdown dropdown-hover">
-      <div tabIndex={0} role="button" className="hover:bg-sky-700 m-1">
-        <FaBell/>
+    <div className="dropdown dropdown-end">
+      <label tabIndex={0} className="btn btn-ghost btn-circle">
+        <div className="indicator">
+          <FaBell className="h-5 w-5" />
+          {unreadCount > 0 && (
+            <span className="badge badge-sm badge-error indicator-item rounded-full w-2 h-2 p-0">{unreadCount}</span>
+          )}
+        </div>
+      </label>
+      <div tabIndex={0} className="mt-3 z-[1] card card-compact dropdown-content w-80 bg-base-100 shadow">
+        <div className="card-body">
+          <div className="flex justify-between items-center">
+            <h3 className="font-bold text-lg">알림</h3>
+            {unreadCount > 0 && (
+              <button onClick={handleMarkAllAsRead} className="btn btn-xs btn-ghost">
+                <FaCheck className="mr-1" /> 모두 읽음
+              </button>
+            )}
+          </div>
+          <div className="max-h-96 overflow-y-auto">
+            {notifications.length === 0 ? (
+              <p className="text-center py-2">알림이 없습니다.</p>
+            ) : (
+              <ul>
+                {notifications.map((notification) => (
+                  <li key={notification.id} className={`flex justify-between items-center py-2 border-b ${notification.read ? 'text-gray-400' : ''}`}>
+                    <span className="text-sm">{notification.contents}</span>
+                    <button
+                      onClick={(event) => handleDelete(event, notification.id)}
+                      className="btn btn-ghost btn-xs"
+                    >
+                      <FaTimes />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
       </div>
-      <ul
-        tabIndex={0}
-        className="flex flex-col dropdown-content menu bg-base-100 rounded-box z-[1] right-0 w-52 p-2 shadow overflow-scroll"
-      >
-        {notifications.map((notification) => (
-        <li key={notification.id}>
-          <a>{notification.text}</a>
-        </li>
-      ))}
-      </ul>
     </div>
   );
 };
 
 export default NotificationDropdown;
-
-

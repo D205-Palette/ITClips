@@ -48,6 +48,7 @@ const RoadmapEditView: React.FC = () => {
   const activeButton = "text-sky-500";
   const [roadmapItem, setRoadmapItem] = useState<RoadmapItem | null>(null);
   const { roadmapId } = useParams<{ roadmapId: string }>();
+  const [imageState, setImageState] = useState<string>("edit"); // 이미지 변경 상태 체크
 
   // API로부터 데이터 불러오기
   const fetchData = async () => {
@@ -81,12 +82,9 @@ const RoadmapEditView: React.FC = () => {
       // 기존 로드맵 정보 조회
       const roadmapResponse = await axios.get(
         `${API_BASE_URL}/api/roadmap/${roadmapId}?viewId=${userId}`
-      ).then((res)=>{
-        console.log(res)
-        setRoadmapItem(res.data)
-        setRoadmapImage(res.data.image)
-      });
-    
+      );
+
+      setRoadmapItem(roadmapResponse.data);
 
       // 데이터 가공하여 설정
       const processItems = (data: any[]): Item[] =>
@@ -122,12 +120,35 @@ const RoadmapEditView: React.FC = () => {
     }
   };
 
+  // 로드 시 북마크리스트 목록 조회와 수정할 로드맵 정보 조회
   useEffect(() => {
     if (!dataLoaded) {
       fetchData();
     }
   }, [dataLoaded]);
 
+  // 로드 시기존 등록된 로드맵에 포함된 북마크리스트 목록 렌더링
+  useEffect(() => {
+    if (roadmapItem) {
+      setIsPublic(roadmapItem.isPublic === 1);
+      setPreviewImageUrl(roadmapItem.image);
+      const processedRoadmap = roadmapItem.stepList.map((item: any, index) => ({
+        id: index,
+        originalId: item.bookmarkListRoadmapDTO.id,
+        title: item.bookmarkListRoadmapDTO.title,
+        description: item.bookmarkListRoadmapDTO.description,
+        bookmarkCount: item.bookmarkListRoadmapDTO.bookmarkCount,
+        likeCount: item.bookmarkListRoadmapDTO.likeCount,
+        image: item.bookmarkListRoadmapDTO.image,
+        isLiked: item.bookmarkListRoadmapDTO.isLiked,
+        tags: item.bookmarkListRoadmapDTO.tags,
+        users: item.bookmarkListRoadmapDTO.users,
+      }));
+      setRoadmap(processedRoadmap);
+    }
+  }, [roadmapItem]);
+
+  // 드래그 앤 드랍 로직
   const onDragEnd = async (result: DropResult) => {
     const { source, destination, draggableId } = result;
 
@@ -169,56 +190,24 @@ const RoadmapEditView: React.FC = () => {
     }
   };
 
+  // 왼쪽 리스트 표시할 탭 변경 로직
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
     setItems(initialItems[tab]);
   };
 
-  const resizeFile = (file: File): Promise<File> =>
-    new Promise((resolve, reject) => {
-      FileResizer.imageFileResizer(
-        file,
-        200, // 이미지 너비
-        200, // 이미지 높이
-        "SVG", // 파일 형식 - SVG 대신 JPEG로 변경
-        100, // 이미지 퀄리티
-        0,
-        (uri) => {
-          if (uri) {
-            resolve(uri as File); // Promise를 사용하여 비동기 처리
-          } else {
-            reject(new Error("Resizing failed"));
-          }
-        },
-        "file" // 출력 타입
-      );
-    });
-
   // 로드맵 이미지 변경 핸들러
-  const handleImageChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]; // 파일이 선택되지 않았을 때 null 처리
-    console.log(roadmapItem);
-    // console.log(roadmapItem?.image);
-    // 이미 이미지가 있고, 새로 바꾼 이미지가 없으면 변경 X
     if (file) {
-      try {
-        const compressedFile = await resizeFile(file); // "resizeFile" 함수를 통해서 업로드한 이미지 리사이징 및 인코딩
-        console.log(compressedFile); // 리사이징된 파일을 콘솔에 출력하여 확인
-
-        await setRoadmapImage(compressedFile); // 리사이징된 파일을 상태에 저장
-
-        // 미리보기 URL 생성
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setPreviewImageUrl(reader.result as string); // 미리보기 URL을 상태에 저장
-        };
-        reader.readAsDataURL(compressedFile); // compressedFile을 사용하여 미리보기 URL 생성
-      } catch (error) {
-        // 리사이징에 실패했을 시 console에 출력하게 한다.
-        console.log("file resizing failed", error);
-      }
+      setRoadmapImage(file); // 파일 자체를 상태에 저장
+      setImageState("new"); // 새로운 이미지로 변경하려고 할 때 상태 변경
+      // 미리보기 URL 생성
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImageUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
     } else {
       if (roadmapItem?.image === "default") {
     
@@ -232,10 +221,28 @@ const RoadmapEditView: React.FC = () => {
     }
   };
 
-  // 아이템 삭제 핸들러
+  // 로드맵 스탭 리스트에 등록된 북마크리스트 삭제 핸들
   const handleDeleteItem = (id: string) => {
     const updatedRoadmap = roadmap.filter((item) => item.id.toString() !== id);
     setRoadmap(updatedRoadmap);
+  };
+
+  // Formik의 초기 값 설정
+  const initialValues = {
+    title: roadmapItem?.title || "",
+    description: roadmapItem?.description || "",
+  };
+
+  // 폼 유효성 검사
+  const validationSchema = Yup.object({
+    title: Yup.string().required("로드맵 제목을 입력해주세요."),
+  });
+
+  // 선택된 이미지 내리기
+  const handleImageRemove = () => {
+    setRoadmapImage(null); // 등록할 파일 비우기
+    setPreviewImageUrl(null); // 미리보기 이미지 비우기
+    setImageState("delete"); // 등록할 이미지 상태 변경
   };
 
   // 로드맵 수정 버튼 클릭
@@ -246,11 +253,15 @@ const RoadmapEditView: React.FC = () => {
     const roadmapData = {
       title: values.title,
       description: values.description,
-      image: roadmapImage ? `${values.title}-${userId}` : "default",
+      image:
+        imageState === "edit" // 이미지가 변경되지 않았다면 백서버에 edit 메세지 전송 (DB 이미지 변경사항 없음)
+          ? "edit"
+          : roadmapImage 
+          ? `${values.title}-${userId}` // 변경할 로드맵 이미지가 등록 되어있다면 '제목-유저아이디'로 이미지 생성 URL 요청
+          : "default", // 없다면 DB에서 이미지 삭제 요청
       isPublic: isPublic ? 1 : 0,
       stepList: roadmap.map((item) => Number(item.originalId)),
     };
-    console.log(roadmapData.image);
 
     try {
       const roadmapCreateResponse = await axios.put(
@@ -262,11 +273,11 @@ const RoadmapEditView: React.FC = () => {
       );
 
       if (roadmapImage) {
-        console.log(roadmapImage)
-        await axios.put(`${roadmapCreateResponse.data.url}`, roadmapImage, {
-          // headers: {
-          //   "Content-Type": roadmapImage.type,
-          // }, // 파일의 MIME 타입 설정
+        console.log("이미지 S3 등록");
+        await axios.put(`${roadmapCreateResponse.data.url}`, roadmapImage, { // 리스폰스 받은 URL로 이미지 등록
+          headers: {
+            "Content-Type": roadmapImage.type,
+          }, // 파일의 MIME 타입 설정
         });
       }
 
@@ -276,44 +287,6 @@ const RoadmapEditView: React.FC = () => {
       console.error(error);
     }
   };
-
-  // Formik의 초기 값 설정
-  const initialValues = {
-    title: roadmapItem?.title || "",
-    description: roadmapItem?.description || "",
-  };
-
-  const validationSchema = Yup.object({
-    title: Yup.string().required("로드맵 제목을 입력해주세요."),
-  });
-
-  // 선택된 이미지 내리기
-  const handleImageRemove = () => {
-    setRoadmapImage(null);
-    setPreviewImageUrl(null);
-  };
-
-  // useEffect를 사용해 불러온 데이터를 상태에 설정
-  useEffect(() => {
-    if (roadmapItem) {
-      setIsPublic(roadmapItem.isPublic === 1);
-      setPreviewImageUrl(roadmapItem.image);
-
-      const processedRoadmap = roadmapItem.stepList.map((item: any, index) => ({
-        id: index,
-        originalId: item.bookmarkListRoadmapDTO.id,
-        title: item.bookmarkListRoadmapDTO.title,
-        description: item.bookmarkListRoadmapDTO.description,
-        bookmarkCount: item.bookmarkListRoadmapDTO.bookmarkCount,
-        likeCount: item.bookmarkListRoadmapDTO.likeCount,
-        image: item.bookmarkListRoadmapDTO.image,
-        isLiked: item.bookmarkListRoadmapDTO.isLiked,
-        tags: item.bookmarkListRoadmapDTO.tags,
-        users: item.bookmarkListRoadmapDTO.users,
-      }));
-      setRoadmap(processedRoadmap);
-    }
-  }, [roadmapItem]);
 
   return (
     <div className="grid grid-cols-12 flex-col justify-center gap-x-6 gap-y-5">

@@ -20,9 +20,9 @@ export default function MyView() {
       <div id='Body' className="grid grid-cols-12 gap-4">
 
         {/* aside 자리 */}
-        <div id="aside" className="xl:col-start-2 xl:col-span-3 hidden xl:block ">
+        <div id="aside" className="xl:col-start-2 xl:col-span-3 hidden xl:block  ">
           {/* 메세지 뜨는 위치 */}
-          <div className="fixed z-30">
+          <div className="sticky top-16 z-30">
             <AsideProfile />
           </div>
         </div>

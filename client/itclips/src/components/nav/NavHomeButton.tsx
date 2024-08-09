@@ -6,8 +6,12 @@ export default function HomeButton() {
   const { isLoggedIn, userInfo, userId } = authStore();
 
   return (
-    <div className="font-bold text-xl">
-      <Link to={isLoggedIn ? `user/${userId}` : "intro"}>IT Clips</Link>
-    </div>
+    <>
+      <Link to={isLoggedIn ? `user/${userId}` : "intro"}>
+        <h1 className="font-extrabold text-2xl">
+          <span className="text-sky-500">IT</span> Clips
+        </h1>
+      </Link>
+    </>
   );
 }

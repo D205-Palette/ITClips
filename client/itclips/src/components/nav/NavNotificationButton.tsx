@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { FaBell, FaTimes, FaCheck } from "react-icons/fa";
 
 // stores
@@ -7,8 +7,31 @@ import { authStore } from "../../stores/authStore";
 
 const NotificationDropdown: React.FC = () => {
 
-  const { notifications, fetchNotifications, markAllAsRead, deleteNotification } = notificationStore();
   const userId = authStore(state => state.userId);
+
+  const { notifications, fetchNotifications, markAllAsRead, deleteNotification } = notificationStore();
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const handleToggle = () => {
+    setIsOpen(!isOpen);
+    if (!isOpen && unreadCount > 0) {
+      handleMarkAllAsRead();
+    }
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     if (userId) {
@@ -33,46 +56,48 @@ const NotificationDropdown: React.FC = () => {
   }, [notifications]);
 
   return (
-    <div className="dropdown dropdown-end">
-      <label tabIndex={0} className="btn btn-ghost btn-circle">
+    <div ref={dropdownRef} className={`dropdown dropdown-end ${isOpen ? 'dropdown-open' : ''}`}>
+      <label tabIndex={0} className="flex items-center justify-center w-10 h-10 cursor-pointer hover:text-gray-400 transition-colors duration-300" onClick={handleToggle}>
         <div className="indicator">
           <FaBell className="h-5 w-5" />
           {unreadCount > 0 && (
-            <span className="badge badge-sm badge-error indicator-item rounded-full w-2 h-2 p-0">{unreadCount}</span>
+            <span className="badge badge-sm badge-error indicator-item">{unreadCount}</span>
           )}
         </div>
       </label>
-      <div tabIndex={0} className="mt-3 z-[1] card card-compact dropdown-content w-80 bg-base-100 shadow">
-        <div className="card-body">
-          <div className="flex justify-between items-center">
-            <h3 className="font-bold text-lg">알림</h3>
-            {unreadCount > 0 && (
-              <button onClick={handleMarkAllAsRead} className="btn btn-xs btn-ghost">
-                <FaCheck className="mr-1" /> 모두 읽음
-              </button>
-            )}
-          </div>
-          <div className="max-h-96 overflow-y-auto">
-            {notifications.length === 0 ? (
-              <p className="text-center py-2">알림이 없습니다.</p>
-            ) : (
-              <ul>
-                {notifications.map((notification) => (
-                  <li key={notification.id} className={`flex justify-between items-center py-2 border-b ${notification.read ? 'text-gray-400' : ''}`}>
-                    <span className="text-sm">{notification.contents}</span>
-                    <button
-                      onClick={(event) => handleDelete(event, notification.id)}
-                      className="btn btn-ghost btn-xs"
-                    >
-                      <FaTimes />
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
+      {isOpen && (
+        <div tabIndex={0} className="mt-3 z-[1] card card-compact dropdown-content w-80 bg-base-100 shadow">
+          <div className="card-body">
+            <div className="flex justify-between items-center">
+              <h3 className="font-bold text-lg">알림</h3>
+              {unreadCount > 0 && (
+                <button onClick={handleMarkAllAsRead} className="btn btn-xs btn-ghost">
+                  <FaCheck className="mr-1" /> 모두 읽음
+                </button>
+              )}
+            </div>
+            <div className="max-h-96 overflow-y-auto">
+              {notifications.length === 0 ? (
+                <p className="text-center py-2">알림이 없습니다.</p>
+              ) : (
+                <ul>
+                  {notifications.map((notification) => (
+                    <li key={notification.id} className={`flex justify-between items-center py-2 border-b ${notification.read ? 'text-gray-400' : ''}`}>
+                      <span className="text-sm">{notification.contents}</span>
+                      <button 
+                        onClick={(event) => handleDelete(event, notification.id)} 
+                        className="btn btn-ghost btn-xs"
+                      >
+                        <FaTimes />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

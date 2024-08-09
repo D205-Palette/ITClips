@@ -10,6 +10,7 @@ import Footer from "./components/footer/Footer";
 import { useWebSocketStore } from "./stores/webSocketStore";
 import notificationStore from "./stores/notificationStore";
 import { authStore } from "./stores/authStore";
+import { chatStore } from "./stores/chatStore";
 
 // apis
 import { connectNotificationStream } from "./api/notificationApi";
@@ -18,14 +19,18 @@ const App = () => {
   const connect = useWebSocketStore(state => state.connect);
   const disconnect = useWebSocketStore(state => state.disconnect);
   const { addNotification } = notificationStore();
+  const fetchRooms = chatStore(state => state.fetchRooms);
   const userId = authStore(state => state.userId);
   const location = useLocation();
 
   // webSocket 연결
   useEffect(() => {
-    connect();
+    if (userId) {
+      connect();
+      fetchRooms(userId);
+    }
     return () => disconnect();
-  }, [connect, disconnect]);
+  }, [connect, disconnect, fetchRooms, userId]);
 
   // sse 연결
   useEffect(() => {

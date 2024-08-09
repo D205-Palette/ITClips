@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import KebabDropdown from "./KebabDropdown(Feed)";
 import darkModeStore from "../../stores/darkModeStore";
 import type { RoadmapSumType } from "../../types/RoadmapType";
+import noImg from "../../assets/images/noImg.gif"
 
 interface Props {
   roadmap: RoadmapSumType;
@@ -79,7 +80,7 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
         >
           <div className="w-10 h-10 border rounded-full overflow-hidden">
             <img
-              // src={roadmap.image} 유저의 이미지 추가해야함
+              src={roadmap.userImage}
               className="w-full h-full object-cover"
               alt="로드맵유저이미지"
             />
@@ -98,7 +99,7 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
       <figure className="border rounded-xl mx-5 overflow-hidden h-64">
         <img
           className="w-full h-full object-contain"
-          src={roadmap.image}
+          src={roadmap.image === "default" ? noImg : roadmap.image}          
           alt="RoadmapImg"
         />
       </figure>

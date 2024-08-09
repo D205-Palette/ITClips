@@ -6,6 +6,7 @@ import KebabDropdown from "./KebabDropdown(Feed)";
 import darkModeStore from "../../stores/darkModeStore";
 import profile_img from "../../assets/images/profile_image.png";
 import type { BookmarkListSumType } from "../../types/BookmarkListType";
+import noImg from "../../assets/images/noImg.gif"
 
 interface BookmarkListSumFeedType extends BookmarkListSumType {
   createdAt: string;  
@@ -83,8 +84,8 @@ const ListItem: FC<Props> = ({ list }) => {
         >
           <div className="w-10 h-10 border rounded-full overflow-hidden">
             <img
-              src={''
-                // list.users[0].image 유저이미지 오면 받아서 넣어야함.
+              src={""
+                // list.userImage
               }
               className="w-full h-full object-cover"
               alt="리스트유저이미지"
@@ -104,7 +105,7 @@ const ListItem: FC<Props> = ({ list }) => {
       <figure className="border rounded-xl mx-5 overflow-hidden h-64">
         <img
           className="w-full h-full object-contain"
-          src={list.image}
+          src={list.image === "default" ? noImg : list.image}          
           alt="listImg"
         />
       </figure>

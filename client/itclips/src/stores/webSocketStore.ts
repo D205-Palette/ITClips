@@ -7,6 +7,7 @@ import SockJS from "sockjs-client";
 
 // stores
 import { chatStore } from "./chatStore";
+import { authStore } from "./authStore";
 
 interface ChatRoom {
   id: number;
@@ -57,21 +58,19 @@ export const webSocketStore = create<WebSocketStore>((set, get) => ({
         onConnect: () => {
           console.log('WebSocket Connected');
           set({ isConnected: true });
+          const userId = authStore.getState().userId;
+          if (userId) {
+            chatStore.getState().fetchRooms(userId).then(() => {
+              const rooms = chatStore.getState().rooms;
+              get().subscribeToAllRooms(rooms);
+            });
+          }
         },
         onDisconnect: () => {
           console.log('WebSocket Disconnected');
           set({ isConnected: false });
         },
       });
-
-      client.onConnect = () => {
-        console.log('WebSocket Connected');
-        set({ isConnected: true });
-        
-        // 연결 후 모든 채팅방 구독
-        const rooms = chatStore.getState().rooms;
-        get().subscribeToAllRooms(rooms);
-      };
 
       client.activate();
       set({ stompClient: client });

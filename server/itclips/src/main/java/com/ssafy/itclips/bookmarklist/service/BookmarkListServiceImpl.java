@@ -192,6 +192,9 @@ public class BookmarkListServiceImpl implements BookmarkListService {
     public BookmarkListDetailDTO getListDetail(Long userId, Long listId) throws RuntimeException {
         BookmarkList bookmarkList = bookmarkListRepository.findById(listId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND));
+        if(!bookmarkList.getIsPublic() && bookmarkList.getUser().getId() != userId) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+        }
         bookmarkList.upHit();
         return convertToBookmarkListDetailDTO(bookmarkList, userId);
     }

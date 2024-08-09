@@ -41,17 +41,13 @@ public class BookmarkListRepositoryImpl implements BookmarkListRepositoryCustom 
     private static final Integer PAGE_SIZE = 8;
 
     @Override
-    public List<BookmarkList> findDetailedByUserId(Long userId) {
-        QBookmarkList bookmarkList = QBookmarkList.bookmarkList;
-        QUserGroup userGroup = QUserGroup.userGroup;
-        QTag tag = QTag.tag;
-        QBookmarkListTag bookmarkListTag = QBookmarkListTag.bookmarkListTag;
+    public List<BookmarkList> findBookmarkListByUserId(Long userId) {
+        QBookmarkList qBookmarkList = QBookmarkList.bookmarkList;
+        QUserGroup qUserGroup = QUserGroup.userGroup;
 
-        return queryFactory.selectFrom(bookmarkList)
-                .leftJoin(bookmarkList.groups, userGroup).fetchJoin()
-                .leftJoin(bookmarkList.tags, bookmarkListTag).fetchJoin()
-                .leftJoin(bookmarkListTag.tag, tag).fetchJoin()
-                .where(bookmarkList.user.id.eq(userId))
+        return queryFactory.selectFrom(qBookmarkList)
+                .join(qUserGroup).on(qUserGroup.bookmarkList.id.eq(qBookmarkList.id))
+                .where(qUserGroup.user.id.eq(userId))
                 .fetch();
     }
 

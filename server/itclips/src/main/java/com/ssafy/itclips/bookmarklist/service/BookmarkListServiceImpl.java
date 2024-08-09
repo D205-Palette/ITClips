@@ -209,7 +209,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
     @Override
     @Transactional
     public List<BookmarkListResponseDTO> getLists(Long userId, Long viewerId, Boolean target) throws RuntimeException {
-        List<BookmarkList> bookmarkLists = bookmarkListRepository.findDetailedByUserId(userId);
+        List<BookmarkList> bookmarkLists = bookmarkListRepository.findBookmarkListByUserId(userId);
 
         if (bookmarkLists.isEmpty()) {
             throw new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND);

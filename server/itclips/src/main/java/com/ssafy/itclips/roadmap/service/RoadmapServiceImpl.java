@@ -563,23 +563,29 @@ public class RoadmapServiceImpl implements RoadmapService {
     private static void makePrompt(String keyWord, List<BookmarkListAndTagsDTO> scrapedList, StringBuilder prompt, List<BookmarkListAndTagsDTO> ownList) {
         for (BookmarkListAndTagsDTO list : scrapedList) {
             prompt.append(list.getTitle()).append("[tag : ");
+            log.info(list.getTitle());
             for(TagDTO tag : list.getTags()){
                 prompt.append(tag.getTitle()).append(", ");
+                log.info(tag.getTitle());
+
             }
             prompt.append("], ");
         }
 
         for(BookmarkListAndTagsDTO list : ownList){
             prompt.append("title : ").append(list.getTitle()).append("[tag : ");
+            log.info(list.getTitle());
             for(TagDTO tag : list.getTags()){
                 prompt.append(tag.getTitle()).append(", ");
+                log.info(tag.getTitle());
             }
             prompt.append("], ");
         }
 
         prompt.append("와 같은 북마크리스트들을 보유중이야.");
         prompt.append(keyWord).append("에 관해서 공부하고 싶은데, 해당 북마크리스트의 제목과 태그들을 기반으로 북마크리스트를 조합해 로드맵을 만들어 줘.");
-        prompt.append("관련이 없다면 빼도 괜찮아. 다른 말은 빼고 title 정보만으로 {title1}-{title2} 와 같은 형식으로만 출력해줘. tag정보는 표시하지마");
+        prompt.append("관련이 없다면 빼도 괜찮아. 다른 말은 빼고 title 정보만으로 {title1}-> 와 같은 형식으로만 출력해줘. 마지막 단어라면 화살표는 빼주고 tag 정보는 표시하지마.");
+        prompt.append("해당 사항이 하나라도 없다면 '관련 북마크리스트가 없습니다.'만 출력해줘");
     }
 
 

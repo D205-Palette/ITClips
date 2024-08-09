@@ -10,7 +10,7 @@ import com.ssafy.itclips.tag.dto.TagSearchDTO;
 import java.util.List;
 
 public interface BookmarkListRepositoryCustom {
-    List<BookmarkList> findDetailedByUserId(Long userId);
+    List<BookmarkList> findBookmarkListByUserId(Long userId);
     List<BookmarkDetailDTO> findDetailedByListId(Long listId);
     List<RankDTO> findListRankingByLike();
     List<RankDTO> findListRankingByScrap();

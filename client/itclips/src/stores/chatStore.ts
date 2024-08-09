@@ -36,6 +36,8 @@ interface ChatStore {
   currentRoomInfo: ChatRoomInfo | null;
   isLoading: boolean;
   error: string | null;
+  totalUnreadCount: number;
+  updateTotalUnreadCount: () => void;
   fetchRooms: (userId: number) => Promise<void>;
   fetchMessages: (roomId: number) => Promise<void>;
   fetchRoomInfo: (roomId: number) => Promise<void>;
@@ -47,18 +49,21 @@ interface ChatStore {
 }
 
 export const chatStore = create<ChatStore>((set, get) => ({
+
   rooms: [],
   currentRoomMessages: [],
   currentRoomInfo: null,
   isLoading: false,
   error: null,
+  totalUnreadCount: 0,
 
   // 채팅방 조회
   fetchRooms: async (userId: number) => {
     set({ isLoading: true, error: null });
     try {
       const response = await getChatRooms(userId);
-      set({ rooms: response.data, isLoading: false });
+      const totalUnread = response.data.reduce((sum: number, room: ChatRoom) => sum + room.messageCnt, 0);
+      set({ rooms: response.data, totalUnreadCount: totalUnread, isLoading: false });
     } catch (error) {
       set({ error: "Failed to fetch chat rooms", isLoading: false });
     }
@@ -107,11 +112,15 @@ export const chatStore = create<ChatStore>((set, get) => ({
   updateMessageStatus: async (roomId: number, userId: number) => {
     try {
       await updateMessageStatusToRead(roomId, userId);
-      set(state => ({
-        rooms: state.rooms.map(room =>
+      set(state => {
+        const updatedRooms = state.rooms.map(room =>
           room.id === roomId ? { ...room, messageCnt: 0 } : room
-        )
-      }));
+        );
+        return {
+          rooms: updatedRooms,
+          totalUnreadCount: updatedRooms.reduce((sum, room) => sum + room.messageCnt, 0)
+        };
+      });
     } catch (error) {
       set({ error: "Failed to update message status" });
     }
@@ -119,18 +128,32 @@ export const chatStore = create<ChatStore>((set, get) => ({
 
   // 채팅방 목록 실시간 업데이트를 위한 메서드
   updateRoom: (roomId, updates) =>
-    set(state => ({
-      rooms: state.rooms.map(room =>
+    set(state => {
+      const updatedRooms = state.rooms.map(room =>
         room.id === roomId ? { ...room, ...updates } : room
-      )
-    })),
+      );
+      return {
+        rooms: updatedRooms,
+        totalUnreadCount: updatedRooms.reduce((sum, room) => sum + room.messageCnt, 0)
+      };
+    }),
 
   // 메세지 읽음 처리후 프론트 단 초기화
   resetMessageCount: (roomId) =>
-    set(state => ({
-      rooms: state.rooms.map(room =>
+    set(state => {
+      const updatedRooms = state.rooms.map(room =>
         room.id === roomId ? { ...room, messageCnt: 0 } : room
-      )
+      );
+      return {
+        rooms: updatedRooms,
+        totalUnreadCount: updatedRooms.reduce((sum, room) => sum + room.messageCnt, 0)
+      };
+    }),
+
+  // 안읽은 채팅방 수 계산
+  updateTotalUnreadCount: () =>
+    set(state => ({
+      totalUnreadCount: state.rooms.reduce((sum, room) => sum + room.messageCnt, 0)
     })),
 
   // 새 메세지 프론트 단 추가
@@ -138,7 +161,7 @@ export const chatStore = create<ChatStore>((set, get) => ({
     set(state => {
       const existingMessage = state.currentRoomMessages.find(m => m.id === message.id);
       if (existingMessage) {
-        return state; // 이미 존재하는 메시지라면 상태를 변경하지 않음
+        return state;
       }
 
       const updatedMessages = [...state.currentRoomMessages, message].sort((a, b) => 
@@ -156,9 +179,12 @@ export const chatStore = create<ChatStore>((set, get) => ({
           : room
       );
 
+      const newTotalUnreadCount = updatedRooms.reduce((sum, room) => sum + room.messageCnt, 0);
+
       return {
         currentRoomMessages: updatedMessages,
-        rooms: updatedRooms
+        rooms: updatedRooms,
+        totalUnreadCount: newTotalUnreadCount
       };
     }),
 

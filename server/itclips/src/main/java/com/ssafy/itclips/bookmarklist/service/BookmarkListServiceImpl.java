@@ -222,7 +222,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
                     boolean hasViewer = dto.getUsers().stream()
                             .anyMatch(user -> user.getId().equals(viewerId));
                     // isPublic이 true이거나, viewerId가 포함된 경우에는 필터링 제외
-                    return !dto.getIsPublic() && hasViewer;
+                    return dto.getIsPublic() || hasViewer;
                 })
                 .filter(dto -> (target ? dto.getUsers().size() > USER_NUM : dto.getUsers().size() == USER_NUM))
                 .collect(Collectors.toList());

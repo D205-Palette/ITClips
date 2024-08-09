@@ -118,6 +118,7 @@ public class BookmarkListRepositoryImpl implements BookmarkListRepositoryCustom 
                         qBookmarkList.title,
                         qBookmarkListLike.count().as("count")))
                 .from(qBookmarkList)
+                .where(qBookmarkList.isPublic.isTrue())
                 .innerJoin(qBookmarkListLike)
                 .on(qBookmarkList.id.eq(qBookmarkListLike.bookmarkList.id))
                 .groupBy(qBookmarkList.id)
@@ -137,6 +138,7 @@ public class BookmarkListRepositoryImpl implements BookmarkListRepositoryCustom 
                         qBookmarkList.title,
                         qBookmarkListScrap.count().as("count")))
                 .from(qBookmarkList)
+                .where(qBookmarkList.isPublic.isTrue())
                 .innerJoin(qBookmarkListScrap)
                 .on(qBookmarkList.id.eq(qBookmarkListScrap.bookmarkList.id))
                 .groupBy(qBookmarkList.id)

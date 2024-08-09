@@ -334,6 +334,9 @@ public class RoadmapServiceImpl implements RoadmapService {
         roadmap.setHit(roadmap.getHit() + 1);
         roadmapRepository.save(roadmap);
 
+        if(roadmap.getIsPublic() == 0) {
+            checkUser(roadmap,viewId);
+        }
         // 로드맵 댓글 가져오기
         List<RoadmapCommentDTO> roadmapCommentDTOList = getRoadmapCommentDTOList(roadmapId);
 

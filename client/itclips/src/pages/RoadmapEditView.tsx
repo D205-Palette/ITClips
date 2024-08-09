@@ -210,8 +210,7 @@ const RoadmapEditView: React.FC = () => {
       reader.readAsDataURL(file);
     } else {
       if (roadmapItem?.image === "default") {
-    
-        setRoadmapImage(roadmapItem.image)
+        setRoadmapImage(roadmapItem.image);
       } else {
         setRoadmapImage(null); // 파일이 없을 경우 상태를 null로 설정
         setPreviewImageUrl(null); // 미리보기 URL을 null로 설정
@@ -256,7 +255,7 @@ const RoadmapEditView: React.FC = () => {
       image:
         imageState === "edit" // 이미지가 변경되지 않았다면 백서버에 edit 메세지 전송 (DB 이미지 변경사항 없음)
           ? "edit"
-          : roadmapImage 
+          : roadmapImage
           ? `${values.title}-${userId}` // 변경할 로드맵 이미지가 등록 되어있다면 '제목-유저아이디'로 이미지 생성 URL 요청
           : "default", // 없다면 DB에서 이미지 삭제 요청
       isPublic: isPublic ? 1 : 0,
@@ -274,7 +273,8 @@ const RoadmapEditView: React.FC = () => {
 
       if (roadmapImage) {
         console.log("이미지 S3 등록");
-        await axios.put(`${roadmapCreateResponse.data.url}`, roadmapImage, { // 리스폰스 받은 URL로 이미지 등록
+        await axios.put(`${roadmapCreateResponse.data.url}`, roadmapImage, {
+          // 리스폰스 받은 URL로 이미지 등록
           // headers: {
           //   "Content-Type": roadmapImage.type,
           // }, // 파일의 MIME 타입 설정
@@ -411,168 +411,170 @@ const RoadmapEditView: React.FC = () => {
           >
             {({ handleSubmit, setFieldValue, values, errors, isValid }) => (
               <Form onSubmit={handleSubmit}>
-                {/* 로드맵 Info 입력 */}
-                <div className="flex justify-center items-center gap-x-6 w-full">
-                  {/* 로드맵 이미지 설정 */}
-                  <div className="flex flex-col gap-x justify-center">
-                    <div className="flex flex-col gap-y-2">
-                      <div className="border w-32 h-32 bg-gray-200 rounded-lg overflow-hidden">
-                        {previewImageUrl === "default" ||
-                        previewImageUrl === null ? (
-                          <img
-                            src={noImg}
-                            alt="noImg"
-                            className=" w-full h-full object-cover"
-                          />
-                        ) : (
-                          <img
-                            src={previewImageUrl || ""}
-                            alt="roadmapImg"
-                            className="border w-full h-full object-cover"
-                          />
-                        )}
-                      </div>
-
-                      {previewImageUrl && previewImageUrl !== "default" && (
-                        <button
-                          type="button"
-                          onClick={handleImageRemove}
-                          className="btn btn-outline btn-xs mt-2"
-                        >
-                          이미지 삭제
-                        </button>
-                      )}
-
-                      <label className="btn btn-primary btn-outline btn-xs">
-                        이미지 업로드
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleImageChange}
-                          className="hidden"
-                        />
-                      </label>
-                    </div>
-                  </div>
-
-                  {/* 로드맵 타이틀 & 내용 입력 */}
-                  <div className="flex flex-col gap-2 w-full">
-                    <div className="flex justify-between">
-                      <h2 className="font-bold">로드맵 제목</h2>
-                      <div className="flex items-center mt-2">
-                        <input
-                          type="checkbox"
-                          checked={isPublic}
-                          onChange={() => setIsPublic(!isPublic)}
-                          className="checkbox"
-                        />
-                        <span className="ml-2">공개 여부</span>
-                      </div>
-                    </div>
-                    <Field
-                      name="title"
-                      type="text"
-                      placeholder="로드맵 제목을 입력해주세요."
-                      className="input input-bordered w-full"
-                    />
-                    <ErrorMessage
-                      name="title"
-                      component="div"
-                      className="text-red-500"
-                    />
-                    <h2 className="font-bold">로드맵 설명</h2>
-                    <Field
-                      name="description"
-                      as="textarea"
-                      placeholder="로드맵 내용을 입력해주세요."
-                      className="textarea textarea-bordered w-full h-24"
-                    />
-                    <ErrorMessage
-                      name="description"
-                      component="div"
-                      className="text-red-500"
-                    />
-                  </div>
-                </div>
-
-                {/* 오른쪽 드롭 리스트 */}
-                <Droppable droppableId="roadmapList">
-                  {(provided) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.droppableProps}
-                      className="flex-grow p-4 bg-base-100 border border-gray-300 rounded-lg overflow-y-auto"
-                      style={{
-                        maxHeight: "450px",
-                        scrollbarWidth: "thin",
-                      }}
-                    >
-                      {roadmap.map((item, index) => (
-                        <Draggable
-                          key={item.id}
-                          draggableId={item.id.toString()}
-                          index={index}
-                        >
-                          {(provided, snapshot) => (
-                            <div
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                              className="mx-1 mb-2 p-2 bg-base-100 border border-gray-300 rounded-lg shadow-sm"
-                              style={{
-                                ...provided.draggableProps.style,
-                                ...(snapshot.isDragging
-                                  ? { backgroundColor: "#e2e8f0" }
-                                  : {}),
-                              }}
-                            >
-                              <div className="flex items-center">
-                                <div className="me-3 font-bold">
-                                  {index + 1}
-                                </div>
-                                {item.image ? (
-                                  <img
-                                    src={item.image}
-                                    alt="img"
-                                    className="w-16 h-16 border object-cover mr-4"
-                                  />
-                                ) : (
-                                  <div className="w-16 h-16 border bg-base-100 mr-4"></div>
-                                )}
-                                <div className="flex w-full items-center justify-between me-3">
-                                  <div>
-                                    <h4 className="text-lg font-bold">
-                                      {item.title}
-                                    </h4>
-                                    <p className="line-clamp-1">
-                                      {item.description}
-                                    </p>
-                                  </div>
-                                </div>
-                                <button
-                                  onClick={() =>
-                                    handleDeleteItem(item.id.toString())
-                                  }
-                                  className="ml-2 text-red-500 hover:text-red-700"
-                                >
-                                  <FaTrashAlt />
-                                </button>
-                              </div>
-                            </div>
+                <div className="flex flex-col gap-y-2">
+                  {/* 로드맵 Info 입력 */}
+                  <div className="flex justify-center items-center gap-x-6 w-full">
+                    {/* 로드맵 이미지 설정 */}
+                    <div className="flex flex-col gap-x justify-center">
+                      <div className="flex flex-col gap-y-2">
+                        <div className="border w-32 h-32 bg-gray-200 rounded-lg overflow-hidden">
+                          {previewImageUrl === "default" ||
+                          previewImageUrl === null ? (
+                            <img
+                              src={noImg}
+                              alt="noImg"
+                              className=" w-full h-full object-cover"
+                            />
+                          ) : (
+                            <img
+                              src={previewImageUrl || ""}
+                              alt="roadmapImg"
+                              className="border w-full h-full object-cover"
+                            />
                           )}
-                        </Draggable>
-                      ))}
-                      {provided.placeholder}
+                        </div>
+
+                        {previewImageUrl && previewImageUrl !== "default" && (
+                          <button
+                            type="button"
+                            onClick={handleImageRemove}
+                            className="btn btn-outline btn-xs mt-2"
+                          >
+                            이미지 삭제
+                          </button>
+                        )}
+
+                        <label className="btn bg-sky-500 hover:bg-sky-700 text-slate-100 btn-xs">
+                          이미지 업로드
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageChange}
+                            className="hidden"
+                          />
+                        </label>
+                      </div>
                     </div>
-                  )}
-                </Droppable>
-                <button
-                  type="submit"
-                  className="btn btn-primary btn-outline"
-                  disabled={!isValid || !values.title || roadmap.length === 0} // 필수 조건 체크
-                >
-                  로드맵 수정하기
-                </button>
+
+                    {/* 로드맵 타이틀 & 내용 입력 */}
+                    <div className="flex flex-col gap-2 w-full">
+                      <div className="flex justify-between">
+                        <h2 className="font-bold">로드맵 제목</h2>
+                        <div className="flex items-center mt-2">
+                          <input
+                            type="checkbox"
+                            checked={isPublic}
+                            onChange={() => setIsPublic(!isPublic)}
+                            className="checkbox"
+                          />
+                          <span className="ml-2">공개 여부</span>
+                        </div>
+                      </div>
+                      <Field
+                        name="title"
+                        type="text"
+                        placeholder="로드맵 제목을 입력해주세요."
+                        className="input input-bordered w-full"
+                      />
+                      <ErrorMessage
+                        name="title"
+                        component="div"
+                        className="text-red-500"
+                      />
+                      <h2 className="font-bold">로드맵 설명</h2>
+                      <Field
+                        name="description"
+                        as="textarea"
+                        placeholder="로드맵 내용을 입력해주세요."
+                        className="textarea textarea-bordered w-full h-24"
+                      />
+                      <ErrorMessage
+                        name="description"
+                        component="div"
+                        className="text-red-500"
+                      />
+                    </div>
+                  </div>
+
+                  {/* 오른쪽 드롭 리스트 */}
+                  <Droppable droppableId="roadmapList">
+                    {(provided) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.droppableProps}
+                        className="flex-grow p-4 bg-base-100 border border-gray-300 rounded-lg overflow-y-auto"
+                        style={{
+                          maxHeight: "450px",
+                          scrollbarWidth: "thin",
+                        }}
+                      >
+                        {roadmap.map((item, index) => (
+                          <Draggable
+                            key={item.id}
+                            draggableId={item.id.toString()}
+                            index={index}
+                          >
+                            {(provided, snapshot) => (
+                              <div
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                className="mx-1 mb-2 p-2 bg-base-100 border border-gray-300 rounded-lg shadow-sm"
+                                style={{
+                                  ...provided.draggableProps.style,
+                                  ...(snapshot.isDragging
+                                    ? { backgroundColor: "#e2e8f0" }
+                                    : {}),
+                                }}
+                              >
+                                <div className="flex items-center">
+                                  <div className="me-3 font-bold">
+                                    {index + 1}
+                                  </div>
+                                  {item.image ? (
+                                    <img
+                                      src={item.image}
+                                      alt="img"
+                                      className="w-16 h-16 border object-cover mr-4"
+                                    />
+                                  ) : (
+                                    <div className="w-16 h-16 border bg-base-100 mr-4"></div>
+                                  )}
+                                  <div className="flex w-full items-center justify-between me-3">
+                                    <div>
+                                      <h4 className="text-lg font-bold">
+                                        {item.title}
+                                      </h4>
+                                      <p className="line-clamp-1">
+                                        {item.description}
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <button
+                                    onClick={() =>
+                                      handleDeleteItem(item.id.toString())
+                                    }
+                                    className="ml-2 text-red-500 hover:text-red-700"
+                                  >
+                                    <FaTrashAlt />
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                          </Draggable>
+                        ))}
+                        {provided.placeholder}
+                      </div>
+                    )}
+                  </Droppable>
+                  <button
+                    type="submit"
+                    className="btn bg-sky-500 hover:bg-sky-700 text-slate-100 ms-auto"
+                    disabled={!isValid || !values.title || roadmap.length === 0} // 필수 조건 체크
+                  >
+                    로드맵 수정하기
+                  </button>
+                </div>
               </Form>
             )}
           </Formik>
@@ -581,7 +583,7 @@ const RoadmapEditView: React.FC = () => {
 
       {/* 뒤로가기 버튼 */}
       <button
-        className="fixed bottom-10 right-10"
+        className="fixed top-16 right-32"
         onClick={() => {
           navigate(-1);
         }}

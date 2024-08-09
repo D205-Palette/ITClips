@@ -327,7 +327,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
 
     @Override
     public List<RankDTO> getListsRankingByHit() throws RuntimeException {
-        List<BookmarkList> listsRankingByHit = bookmarkListRepository.findTop10ByOrderByHitDesc();
+        List<BookmarkList> listsRankingByHit = bookmarkListRepository.findTop10ByIsPublicTrueOrderByHitDesc();
         List<RankDTO> rankDTOs = new ArrayList<>();
         for (BookmarkList bookmarkList : listsRankingByHit) {
             rankDTOs.add(bookmarkList.toRankDTO());

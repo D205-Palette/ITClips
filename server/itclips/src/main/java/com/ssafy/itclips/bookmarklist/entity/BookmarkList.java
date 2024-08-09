@@ -50,7 +50,7 @@ public class BookmarkList {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Lob
+    @Size(max = 511)
     @Column(name = "description")
     private String description;
 

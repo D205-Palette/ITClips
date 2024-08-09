@@ -9,7 +9,7 @@ import MessageInviteModal from "./modals/MessageInviteModal";
 
 // stores
 import { authStore } from "../../stores/authStore";
-import { useWebSocketStore } from "../../stores/webSocketStore";
+import { webSocketStore } from "../../stores/webSocketStore";
 import { chatStore } from "../../stores/chatStore";
 
 interface AsideMessageDetailProps {
@@ -33,7 +33,7 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack,
   
   const userInfo = authStore(state => state.userInfo);
 
-  const { isConnected, stompClient } = useWebSocketStore();
+  const { isConnected, stompClient } = webSocketStore();
   const { 
     currentRoomMessages, 
     currentRoomInfo, 

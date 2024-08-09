@@ -7,7 +7,7 @@ import ChatRoomListContainer from "./layout/ChatRoomListContainer";
 
 // stores
 import { authStore } from "../../stores/authStore";
-import { useWebSocketStore } from "../../stores/webSocketStore";
+import { webSocketStore } from "../../stores/webSocketStore";
 import { chatStore } from "../../stores/chatStore";
 
 // 채팅방 인터페이스
@@ -36,7 +36,7 @@ interface MessageListProps {
 const AsideMessage: React.FC<MessageListProps> = ({ onSelectChat, onShowInvite }) => {
 
   const userId = authStore(state => state.userId);
-  const { stompClient, isConnected } = useWebSocketStore();
+  const { stompClient, isConnected } = webSocketStore();
   const { rooms, fetchRooms, updateRoom } = chatStore();
 
   // 구독 정보를 저장할 ref

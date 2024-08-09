@@ -275,9 +275,9 @@ const RoadmapEditView: React.FC = () => {
       if (roadmapImage) {
         console.log("이미지 S3 등록");
         await axios.put(`${roadmapCreateResponse.data.url}`, roadmapImage, { // 리스폰스 받은 URL로 이미지 등록
-          headers: {
-            "Content-Type": roadmapImage.type,
-          }, // 파일의 MIME 타입 설정
+          // headers: {
+          //   "Content-Type": roadmapImage.type,
+          // }, // 파일의 MIME 타입 설정
         });
       }
 

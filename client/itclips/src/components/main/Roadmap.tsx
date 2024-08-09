@@ -14,11 +14,10 @@ import noImg from "../../assets/images/noImg.gif";
 
 interface Props {
   roadmap: RoadmapSumType;
-  canEdit:boolean
+  canEdit: boolean;
 }
 
-const RoadMap: FC<Props> = ({ roadmap,canEdit }) => {
-
+const RoadMap: FC<Props> = ({ roadmap, canEdit }) => {
   const { userId, token } = authStore();
   const [isLike, setIsLike] = useState(roadmap.isLiked);
   const [likeCount, changeLikeCount] = useState(roadmap.likeCnt);
@@ -44,8 +43,10 @@ const RoadMap: FC<Props> = ({ roadmap,canEdit }) => {
     setIsLike(!isLike);
   };
   const isDark = darkModeStore((state) => state.isDark);
-  const percentage =(roadmap.stepCnt===0?  "No List" : 
-    ((roadmap.checkCnt * 100) / roadmap.stepCnt).toFixed(1)+'%')
+  const percentage =
+    roadmap.stepCnt === 0
+      ? "No List"
+      : ((roadmap.checkCnt * 100) / roadmap.stepCnt).toFixed(1) + "%";
   const navigate = useNavigate();
 
   return (
@@ -65,14 +66,15 @@ const RoadMap: FC<Props> = ({ roadmap,canEdit }) => {
             />
           </div>
 
-          <div className="card-body flex flex-row justify-between h-full relative">
+          <div className="w-5/6 card-body flex flex-row justify-between h-full relative">
             <div
-              className={(canEdit? "" : "hidden ") +
+              className={
+                (canEdit ? "" : "hidden ") +
                 (!isDark
                   ? percentage == "100.0"
                     ? "bg-green-100"
                     : "bg-sky-100"
-                  : percentage == "100.0" 
+                  : percentage == "100.0"
                   ? "bg-green-900"
                   : "bg-sky-900") +
                 " h-full absolute z-0 top-0 left-0 rounded-e-2xl lg:rounded-s-none rounded-s-2xl"
@@ -82,22 +84,24 @@ const RoadMap: FC<Props> = ({ roadmap,canEdit }) => {
             ></div>
 
             <div
-              className="flex flex-col justify-around z-10"
+              className="w-2/3 flex flex-col justify-around z-10"
               onClick={() => navigate(`/roadmap/${roadmap.id}`)}
             >
               <div>
-                <h2 className=" card-title">{roadmap.title}</h2>
+                <h2 className="card-title">{roadmap.title}</h2>
+                <p className="text-sm md:text-base line-clamp-2">
+                  {roadmap.description}
+                </p>
               </div>
 
-              <div>
-                <p>{roadmap.description}</p>
-              </div>
+              <div></div>
             </div>
 
-            <div className="flex gap-x-2">
+            <div className="w-1/3 flex gap-x-2">
               <div className=" items-center text-blue-400 font-bold text-xl z-0 hidden lg:inline-flex">
                 <p
-                  className={(canEdit? "" : "hidden ") +
+                  className={
+                    (canEdit ? "" : "hidden ") +
                     (!isDark
                       ? percentage == "100.0"
                         ? "text-green-400"
@@ -117,10 +121,9 @@ const RoadMap: FC<Props> = ({ roadmap,canEdit }) => {
                 </button>
                 <div className="hidden md:inline">
                   <KebabDropdown whatMenu="로드맵" id={roadmap.id} />
-                </div>                
-              </div>              
+                </div>
+              </div>
             </div>
-            
           </div>
         </>
       </div>

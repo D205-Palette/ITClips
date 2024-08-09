@@ -36,12 +36,20 @@ const Footer = () => {
           </div>
           <div className="flex flex-col ">
             <h3 className="font-bold mb-3">팀 팔레트</h3>
-            <p>정진규 팀장</p>
-            <p>김동준 팀원</p>
-            <p>김민솔 팀원</p>
-            <p>김세진 팀원</p>
-            <p>김수정 팀원</p>
-            <p>최형우 팀원</p>
+            <div className="flex gap-x-4">
+              <div className="flex flex-col">
+                <p className="font-bold">Backend</p>
+                <p>정진규 팀장</p>
+                <p>김민솔 팀원</p>
+                <p>김수정 팀원</p>
+              </div>
+              <div className="flex flex-col">
+                <p className="font-bold">Frontend</p>
+                <p>김동준 팀원</p>
+                <p>김세진 팀원</p>
+                <p>최형우 팀원</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

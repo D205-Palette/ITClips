@@ -22,6 +22,8 @@ const App = () => {
   const fetchRooms = chatStore(state => state.fetchRooms);
   const userId = authStore(state => state.userId);
   const location = useLocation();
+  // 특정 경로에 따라 클래스 적용
+  const isIntroPage = location.pathname === '/intro'; // '/intro'를 인트로 페이지 경로로 변경
 
   // webSocket 연결
   useEffect(() => {
@@ -47,9 +49,6 @@ const App = () => {
       };
     }
   }, [userId]);
-  
-  // 특정 경로에 따라 클래스 적용
-  const isIntroPage = location.pathname === '/intro'; // '/intro'를 인트로 페이지 경로로 변경
 
   return (
     <div className="App flex flex-col justify-between min-h-screen">

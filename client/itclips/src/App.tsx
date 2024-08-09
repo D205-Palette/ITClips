@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
-import "./index.css";
 import { Outlet, useLocation } from "react-router-dom";
+
+// styles
+import "./index.css";
 
 // components
 import NavBar from "./components/nav/NavBar";
@@ -20,19 +22,26 @@ const App = () => {
   const disconnect = webSocketStore(state => state.disconnect);
   const { addNotification } = notificationStore();
   const fetchRooms = chatStore(state => state.fetchRooms);
+  const updateTotalUnreadCount = chatStore(state => state.updateTotalUnreadCount);
   const userId = authStore(state => state.userId);
   const location = useLocation();
   // 특정 경로에 따라 클래스 적용
   const isIntroPage = location.pathname === '/intro'; // '/intro'를 인트로 페이지 경로로 변경
 
-  // webSocket 연결
+  // webSocket 연결하면서 채팅방 목록 조회
   useEffect(() => {
-    if (userId) {
-      connect();
-      fetchRooms(userId);
-    }
+    const initializeChat = async () => {
+      if (userId) {
+        await fetchRooms(userId);
+        updateTotalUnreadCount();
+        connect();
+      }
+    };
+
+    initializeChat();
+
     return () => disconnect();
-  }, [connect, disconnect, fetchRooms, userId]);
+  }, [connect, disconnect, fetchRooms, updateTotalUnreadCount, userId]);
 
   // sse 연결
   useEffect(() => {

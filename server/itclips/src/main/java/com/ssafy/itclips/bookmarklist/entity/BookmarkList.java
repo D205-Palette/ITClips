@@ -140,6 +140,7 @@ public class BookmarkList {
                 .isLiked(isLiked)
                 .likeCount(likeCount)
                 .createdAt(this.createdAt)
+                .isPublic(this.isPublic)
                 .build();
     }
 

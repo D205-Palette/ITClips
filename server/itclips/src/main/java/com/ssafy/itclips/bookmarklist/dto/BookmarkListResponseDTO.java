@@ -21,12 +21,13 @@ public class BookmarkListResponseDTO {
     private Integer likeCount;
     private String image;
     private Boolean isLiked;
+    private Boolean isPublic;
     Set<TagDTO> tags;
     List<UserTitleDTO> users;
 
     @Builder
     public BookmarkListResponseDTO(Long id, String title, String description, Integer bookmarkCount,
-                                   Integer likeCount, String image, Boolean isLiked, Set<TagDTO> tags, List<UserTitleDTO> users, LocalDateTime createdAt) {
+                                   Integer likeCount, String image, Boolean isLiked, Boolean isPublic, Set<TagDTO> tags, List<UserTitleDTO> users, LocalDateTime createdAt) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -37,6 +38,7 @@ public class BookmarkListResponseDTO {
         this.tags = tags;
         this.users = users;
         this.createdAt = createdAt;
+        this.isPublic = isPublic;
     }
 
 

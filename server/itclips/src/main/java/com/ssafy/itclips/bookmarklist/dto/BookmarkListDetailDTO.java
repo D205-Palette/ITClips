@@ -29,11 +29,12 @@ public class BookmarkListDetailDTO {
     private List<UserTitleDTO> users;
     private List<BookmarkDetailDTO> bookmarks;
     private Long hit;
+    private Boolean isPublic;
 
     @Builder
     public BookmarkListDetailDTO(Long id, String title, String description, Integer likeCount, Integer scrapCount,
                                  String image, Boolean isLiked, Boolean isScraped, List<CategoryParamDTO> categories,
-                                 Set<TagDTO> tags, List<UserTitleDTO> users,List<BookmarkDetailDTO> bookmarks,Long hit) {
+                                 Set<TagDTO> tags, List<UserTitleDTO> users,List<BookmarkDetailDTO> bookmarks,Long hit,Boolean isPublic) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -47,6 +48,7 @@ public class BookmarkListDetailDTO {
         this.users = users;
         this.bookmarks = bookmarks;
         this.hit = hit;
+        this.isPublic = isPublic;
     }
 
 

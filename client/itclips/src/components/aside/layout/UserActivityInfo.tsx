@@ -4,37 +4,72 @@ import { useParams } from "react-router-dom";
 
 import { NavLink } from "react-router-dom";
 import { profileStore } from "../../../stores/profileStore";
+import { authStore } from "../../../stores/authStore";
 
 const UserActivityInfo = () => {
-  
   const params = useParams();
   const { urlUserInfo } = profileStore();
+  const { userId } = authStore();
 
   return (
     <div className="w-full grid grid-cols-1 gap-y-4 mt-6">
       <div className="grid grid-cols-12">
-        <div className="col-start-3 col-span-5 text-start text-gray-500">팔로워</div>
+        <div className="col-start-3 col-span-5 text-start text-gray-500">
+          팔로워
+        </div>
         <div className="col-start-9">
-          <NavLink to={`/user/${params.userId}/follow/follower`}>
-            <button id="followers" className="text-start font-bold hover:bg-sky-200 hover:rounded">{urlUserInfo?.followerCount}</button>
+          <NavLink
+            to={
+              params.userId === undefined
+                ? `/user/${userId}/follow/follower`
+                : `/user/${params.userId}/follow/follower`
+            }
+          >
+            <button
+              id="followers"
+              className="text-start font-bold hover:bg-sky-200 hover:rounded"
+            >
+              {urlUserInfo?.followerCount}
+            </button>
           </NavLink>
         </div>
       </div>
       <div className="grid grid-cols-12">
-        <div className="col-start-3 col-span-5 text-start text-gray-500">팔로잉</div>
+        <div className="col-start-3 col-span-5 text-start text-gray-500">
+          팔로잉
+        </div>
         <div className="col-start-9">
-          <NavLink to={`/user/${params.userId}/follow/following`}>
-            <button id="following" className="text-start font-bold hover:bg-sky-200 hover:rounded">{urlUserInfo?.followingCount}</button>
+          <NavLink
+            to={
+              params.userId === undefined
+                ? `/user/${userId}/follow/following`
+                : `/user/${params.userId}/follow/following`
+            }
+          >
+            <button
+              id="following"
+              className="text-start font-bold hover:bg-sky-200 hover:rounded"
+            >
+              {urlUserInfo?.followingCount}
+            </button>
           </NavLink>
         </div>
       </div>
       <div className="grid grid-cols-12">
-        <div className="col-start-3 col-span-5 text-start text-gray-500">리스트 개수</div>
-        <div className="col-start-9 text-start font-bold">{urlUserInfo?.bookmarkListCount ?? 0}</div>
+        <div className="col-start-3 col-span-5 text-start text-gray-500">
+          리스트 개수
+        </div>
+        <div className="col-start-9 text-start font-bold">
+          {urlUserInfo?.bookmarkListCount ?? 0}
+        </div>
       </div>
       <div className="grid grid-cols-12">
-        <div className="col-start-3 col-span-5 text-start text-gray-500">로드맵 개수</div>
-        <div className="col-start-9 text-start font-bold">{urlUserInfo?.roadmapCount ?? 0}</div>
+        <div className="col-start-3 col-span-5 text-start text-gray-500">
+          로드맵 개수
+        </div>
+        <div className="col-start-9 text-start font-bold">
+          {urlUserInfo?.roadmapCount ?? 0}
+        </div>
       </div>
     </div>
   );

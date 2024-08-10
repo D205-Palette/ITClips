@@ -17,9 +17,6 @@ const NotificationDropdown: React.FC = () => {
 
   const handleToggle = () => {
     setIsOpen(!isOpen);
-    if (!isOpen && unreadCount > 0) {
-      handleMarkAllAsRead();
-    }
   };
 
   useEffect(() => {

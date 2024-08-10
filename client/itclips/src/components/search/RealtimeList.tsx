@@ -62,61 +62,47 @@ const RealtimeList = () => {
   };
 
   const handleSortChange = (newSortBy: 'views' | 'scraps' | 'likes') => {
-    setRankItems([]); // 데이터 초기화
-    setSortBy(newSortBy);
+    if (newSortBy !== sortBy) {
+      setSortBy(newSortBy);
+    } else {
+      fetchRankData(newSortBy);
+    }
   };
 
   return (
     <div className="bg-base-100 p-4 max-w-md mx-auto">
       <h2 className="text-lg font-semibold mb-3">실시간 인기순위</h2>
       <div className="flex mb-3 border-b">
-        <button 
-          className={`mr-4 pb-2 text-sm ${
-            sortBy === 'views' 
-              ? 'text-blue-500 border-b-2 border-blue-500' 
-              : 'text-gray-500 hover:text-gray-700'
-          }`} 
-          onClick={() => handleSortChange('views')}
-        >
-          조회수
-        </button>
-        <button 
-          className={`mr-4 pb-2 text-sm ${
-            sortBy === 'scraps' 
-              ? 'text-blue-500 border-b-2 border-blue-500' 
-              : 'text-gray-500 hover:text-gray-700'
-          }`} 
-          onClick={() => handleSortChange('scraps')}
-        >
-          스크랩수
-        </button>
-        <button 
-          className={`mr-4 pb-2 text-sm ${
-            sortBy === 'likes' 
-              ? 'text-blue-500 border-b-2 border-blue-500' 
-              : 'text-gray-500 hover:text-gray-700'
-          }`} 
-          onClick={() => handleSortChange('likes')}
-        >
-          좋아요수
-        </button>
+        {['views', 'scraps', 'likes'].map((sort) => (
+          <button 
+            key={sort}
+            className={`mr-4 pb-2 text-sm ${
+              sortBy === sort 
+                ? 'text-blue-500 border-b-2 border-blue-500' 
+                : 'text-gray-500 hover:text-gray-700'
+            }`} 
+            onClick={() => handleSortChange(sort as 'views' | 'scraps' | 'likes')}
+          >
+            {sort === 'views' ? '조회수' : sort === 'scraps' ? '스크랩수' : '좋아요수'}
+          </button>
+        ))}
       </div>
       <ul className="space-y-2">
-        {rankItems.map((item, index) => (
-          <NavLink 
-            to={item.type === "bookmarkList" ? `/bookmarkList/${item.id}` : item.type === "roadmap" ? `/roadmap/${item.id}` : ''}
-            className="flex items-center py-2"
-            key={`${item.type}-${item.id}`}
-          >
-            <span className="w-6 mr-3 text-sm">
-              {index + 1}
-            </span>
-            <div className="hover:text-blue-500 text-sm">
-              {item.title}
-            </div>
-          </NavLink>
-        ))}
-      </ul>
+          {rankItems.map((item, index) => (
+            <NavLink 
+              to={item.type === "bookmarkList" ? `/bookmarkList/${item.id}` : item.type === "roadmap" ? `/roadmap/${item.id}` : ''}
+              className="flex items-center py-2"
+              key={`${item.type}-${item.id}`}
+            >
+              <span className="w-6 mr-3 text-sm">
+                {index + 1}
+              </span>
+              <div className="hover:text-blue-500 text-sm">
+                {item.title}
+              </div>
+            </NavLink>
+          ))}
+        </ul>
     </div>
   );
 };

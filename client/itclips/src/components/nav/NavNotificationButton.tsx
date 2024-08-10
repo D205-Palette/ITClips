@@ -15,10 +15,12 @@ const NotificationDropdown: React.FC = () => {
   const [ isOpen, setIsOpen ] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  // 알림 버튼 눌러서 드롭다운 펼쳤다가 닫혔다가
   const handleToggle = () => {
     setIsOpen(!isOpen);
   };
 
+  // 다른 곳 클릭하면 알림창 닫히도록
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -32,6 +34,7 @@ const NotificationDropdown: React.FC = () => {
     };
   }, []);
 
+  // 알림 목록 가져오기
   useEffect(() => {
     if (userId) {
       fetchNotifications(userId);
@@ -44,12 +47,14 @@ const NotificationDropdown: React.FC = () => {
     }
   };
 
+  // 알림 삭제
   const handleDelete = (event: React.MouseEvent, notificationId: number) => {
     event.stopPropagation();
     event.preventDefault();   // 삭제버튼 누른후 알림창 닫히지 않도록
     deleteNotification(notificationId);
   };
 
+  // 읽지않은 알림 갯수 세서 뱃지 출력하기
   const unreadCount = useMemo(() => {
     return notifications.filter(notification => !notification.read).length;
   }, [notifications]);

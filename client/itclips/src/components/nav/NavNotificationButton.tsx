@@ -67,7 +67,7 @@ const NotificationDropdown: React.FC = () => {
   return (
     <div ref={dropdownRef} className={`dropdown dropdown-end ${isOpen ? 'dropdown-open' : ''} relative`}>
       <label tabIndex={0} onClick={handleToggle}>
-        <div className="indicator">
+        <div className="indicator cursor-pointer">
           <FaBell className="transition-colors duration-300 hover:text-gray-400" />
           {unreadCount > 0 && (
             <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-3 w-3 flex items-center justify-center"></span>

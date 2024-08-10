@@ -1,6 +1,26 @@
 import { authenticatedRequest } from "./apiUtils";
 
-// 로드맵 댓글 조회
-export const getRoadmapComments = (roadmapId: number) => {
-  
+// 로드맵 댓글 갯수 조회
+export const getRoadmapCommentsCount = (roadmapId: number) => {
+  return authenticatedRequest("get", `/roadmap/comment/count/${roadmapId}`, undefined, { roadmapId });
 };
+
+// 로드맵 정보 조회
+export const getRoadmapInfo = (roadmapId: number, viewId: number) => {
+  return authenticatedRequest("get", `/roadmap/${roadmapId}`, undefined, { roadmapId, viewId });
+};
+
+// 로드맵 댓글 작성
+export const writeRoadmapComment = (roadmapId: number, userId: number, comment: string) => {
+  return authenticatedRequest("post", `/roadmap/comment/${roadmapId}/${userId}`, { comment }, { roadmapId, userId });
+};
+
+// 로드맵 댓글 삭제
+export const deleteRoadmapComment = (commentId: number, userId: number) => {
+  return authenticatedRequest("delete", `/roadmap/comment/${commentId}/${userId}`, undefined, { commentId, userId });
+};
+
+// 로드맵 댓글 수정
+// export const editRoadmapComment = (userId: number, commentId: number, contents: string) => {
+//   return authenticatedRequest("put", `/comment/update/${userId}/${commentId}`, { contents }, { userId, commentId });
+// };

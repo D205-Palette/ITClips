@@ -229,7 +229,7 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack,
       >
         <MessageContainer messages={currentRoomMessages} />
       </div>
-      <div className="flex items-center">
+      <div className="flex items-center w-full">
         <input
           ref={inputRef}
           type="text"
@@ -239,9 +239,9 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack,
           onFocus={handleInputFocus}
           onBlur={handleInputBlur}
           placeholder="메세지를 입력해주세요"
-          className="input input-bordered flex-1 mr-2"
+          className="input input-bordered flex-grow mr-2 min-w-0"
         />
-        <button onClick={handleSendMessage} className="btn bg-sky-500 text-slate-100 hover:bg-sky-700">전송</button>
+        <button onClick={handleSendMessage} className="btn bg-sky-500 text-slate-100 hover:bg-sky-700 whitespace-nowrap">전송</button>
       </div>
       {isInviteModalOpen && (
         <MessageInviteModal

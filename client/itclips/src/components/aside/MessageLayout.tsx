@@ -57,24 +57,26 @@ const MessageLayout = () => {
   }
 
   return (
-    <div className={`${isDark ? "bg-base-300" : "bg-sky-100"} rounded-3xl w-80 h-[37rem]`}>
-      {selectedChat === null && showInvite === null && (
-        <AsideMessage
-          onSelectChat={handleSelectChat}
-          onShowInvite={handleNewChat}
-        />
-      )}
-      {selectedChat !== null && showInvite === null && (
-        <AsideMessageDetail
-          roomId={selectedChat}
-          onBack={handleBackToList}
-          onBackWithRead={handleBackToListFromAsideMessageDetail}
-        />
-      )}
-      {selectedChat === null && showInvite !== null && (
-        <AsideStartNewMessage onStartChat={handleChatStart} onBack={handleBackToList} />
-      )}
-      {/* 둘다 값이 들어오는 경우는 없기 때문에 무시 (예외 처리) */}
+    <div className={`${isDark ? "bg-base-300" : "bg-sky-100"} rounded-3xl w-80 h-[37rem] overflow-hidden`}>
+      <div className="w-full h-full overflow-hidden">
+        {selectedChat === null && showInvite === null && (
+          <AsideMessage
+            onSelectChat={handleSelectChat}
+            onShowInvite={handleNewChat}
+          />
+        )}
+        {selectedChat !== null && showInvite === null && (
+          <AsideMessageDetail
+            roomId={selectedChat}
+            onBack={handleBackToList}
+            onBackWithRead={handleBackToListFromAsideMessageDetail}
+          />
+        )}
+        {selectedChat === null && showInvite !== null && (
+          <AsideStartNewMessage onStartChat={handleChatStart} onBack={handleBackToList} />
+        )}
+        {/* 둘다 값이 들어오는 경우는 없기 때문에 무시 (예외 처리) */}
+      </div>
     </div>
   );
 };

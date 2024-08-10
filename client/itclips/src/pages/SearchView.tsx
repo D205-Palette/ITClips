@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect  } from "react";
 
 // components
 import SearchBar from "../components/search/ui/SearchBar";
@@ -17,11 +17,27 @@ const SearchView = () => {
 
   const [ whatCategory, setWhatCategory ] = useState("카테고리");
   const [ keyword, setKeyword ] = useState("");
+  const [ notification, setNotification ] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
   const selectCategory = (category: string, keyword: string) => {
+    if (category === "카테고리") {
+      setNotification({ message: "검색할 항목을 선택해주세요.", type: "error" });
+      return;
+    }
     setWhatCategory(category);
     setKeyword(keyword);
   }
+
+  // 3초간 토스트알림 띄우기
+  useEffect(() => {
+    if (notification) {
+      const timer = setTimeout(() => {
+        setNotification(null);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [notification]);
 
   // 검색바에서 어떤 카테고리 골랐는지에 따라 검색 메인에 출력되는 컴포넌트 다르게
 
@@ -60,6 +76,21 @@ const SearchView = () => {
           )}
         </div>
       </div>
+
+      {/* 토스트 알림 */}
+      {notification && (
+        <div
+          className={`fixed bottom-4 left-1/2 transform -translate-x-1/2 p-4 rounded-md ${
+            notification.type === "success" ? "bg-green-500" : "bg-red-500"
+          } text-white shadow-lg z-50 transition-opacity duration-300`}
+          style={{
+            opacity: notification ? 1 : 0,
+            visibility: notification ? "visible" : "hidden",
+          }}
+        >
+          {notification.message}
+        </div>
+      )}
     </>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import noImg from "../../assets/images/noImg.gif"
 
 // apis
@@ -10,6 +10,7 @@ import FollowerItemKebabDropdown from "./ui/FollowerItemKebabDropdown";
 
 // stores
 import { useFollowStore } from "../../stores/followStore";
+import { authStore } from "../../stores/authStore";
 
 interface Follower {
   id: number;
@@ -25,6 +26,10 @@ interface Props {
 }
 
 const FollowerItem: React.FC<Props> = ({ items }) => {
+
+  const userId = authStore(state => state.userId);
+  const params = useParams<{ userId?: string }>();
+  const urlUserId = params.userId ? parseInt(params.userId, 10) : undefined;
   const [followers, setFollowers] = useState<Follower[]>(items);
   const [notification, setNotification] = useState<{
     message: string;
@@ -92,13 +97,17 @@ const FollowerItem: React.FC<Props> = ({ items }) => {
 
             <p className="text-gray-500">#관심사1 #관심사2 #관심사3</p>
 
-            <div onClick={handleNavLink}>
-              <FollowerItemKebabDropdown
-                onDeleteFollower={() =>
-                  rmFollower(item.fromUserId, item.toUserId)
-                }
-              />
-            </div>
+            {userId === urlUserId ? (
+              <div onClick={handleNavLink}>
+                <FollowerItemKebabDropdown
+                  onDeleteFollower={() =>
+                    rmFollower(item.fromUserId, item.toUserId)
+                  }
+                />
+              </div>
+            ) : (
+              <div className="w-8" />
+            )}
           </NavLink>
         </div>
       ))}

@@ -1,7 +1,10 @@
 // ChatRoomListContainer.tsx 는 AsideMessage.tsx 에서 채팅방들을 리스트로 보여주는 컴포넌트
 
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
+
+// icons
+import { FaChevronUp, FaChevronDown  } from "react-icons/fa6";
 
 // stores
 import { chatStore } from "../../../stores/chatStore";
@@ -21,15 +24,36 @@ interface ChildComponentProps {
 const ChatRoomListContainer: React.FC<ChildComponentProps> = ({ onClickMessage }) => {
 
   const rooms = chatStore(useShallow(state => state.rooms));
+
+  const listRef = useRef<HTMLUListElement>(null);
+  const [showTopArrow, setShowTopArrow] = useState(false);
+  const [showBottomArrow, setShowBottomArrow] = useState(false);
+
+  const handleScroll = () => {
+    if (listRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = listRef.current;
+      setShowTopArrow(scrollTop > 0);
+      setShowBottomArrow(scrollTop + clientHeight < scrollHeight);
+    }
+  };
+
+  useEffect(() => {
+    handleScroll();
+    window.addEventListener('resize', handleScroll);
+    return () => window.removeEventListener('resize', handleScroll);
+  }, [rooms]);
   
   return (
-    <div className="h-full overflow-hidden">
+    <div className="h-full overflow-hidden relative">
+      {showTopArrow && (
+        <div className="absolute top-0 left-0 right-0 flex justify-center bg-gradient-to-b from-base-100 to-transparent py-2">
+          <FaChevronUp className="text-gray-400" size={20} />
+        </div>
+      )}
       <ul
-        className="space-y-2 h-full overflow-y-auto"
-        style={{
-          scrollbarWidth: "thin",
-          scrollbarColor: "#CBD5E0 #EDF2F7"
-        }}  
+        ref={listRef}
+        className="space-y-2 h-full overflow-y-auto scrollbar-hide"
+        onScroll={handleScroll}
       >
         {rooms.map((room: ChatRoom) => (
           <li 
@@ -51,6 +75,11 @@ const ChatRoomListContainer: React.FC<ChildComponentProps> = ({ onClickMessage }
           </li>
         ))}
       </ul>
+      {showBottomArrow && (
+        <div className="absolute bottom-0 left-0 right-0 flex justify-center bg-gradient-to-t from-base-100 to-transparent py-2">
+          <FaChevronDown className="text-gray-400" size={20} />
+        </div>
+      )}
     </div>
   );
 };

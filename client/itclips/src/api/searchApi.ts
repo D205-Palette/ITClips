@@ -23,3 +23,8 @@ export const roadmapSearch = (userId: number, page: number, searchType: string, 
 export const tagSearch = (userId: number, page: number, tags: Tag[]) => {
   return authenticatedRequest("post", `/list/search/tag/${page}`, { tags }, { page, userId });
 };
+
+// 북마크 리스트 추천 목록
+export const getRecommendedBookmarks = (userId: number) => {
+  return authenticatedRequest("post", `/recommendations/user/${userId}`, undefined, { userId });
+};

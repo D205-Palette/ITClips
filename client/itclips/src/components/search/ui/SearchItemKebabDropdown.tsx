@@ -65,11 +65,11 @@ const SearchItemKebabDropdown: FC<Props> = ({id, whatContent}) => {
       </button>
 
       {isDropdownOpen && (
-        <div className="absolute right-0 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 z-50">
-          <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
+        <div className="absolute right-0 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 z-50">
+          <ul className="py-2 text-sm text-gray-700">
             {categories.map((category) => (
               <li key={category} onClick={() => handleMenu(category)}>
-                <div className="text-center block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                <div className="text-center block px-4 py-2 hover:bg-gray-100">
                   {category}
                 </div>
               </li>

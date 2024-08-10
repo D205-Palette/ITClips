@@ -72,7 +72,7 @@ const JobCategoryDropdown: React.FC<JobProps> = ({ selectCategory, initialValue 
       <button
         id="dropdownDefaultButton"
         onClick={toggleDropdown}
-        className="w-full bg-base-100 border hover:bg-black-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2 text-left inline-flex items-center justify-between dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        className="w-full bg-base-100 border hover:bg-black-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2 text-left inline-flex items-center justify-between"
         type="button"
       >
         <span className="truncate">{searchCategory}</span>
@@ -82,8 +82,8 @@ const JobCategoryDropdown: React.FC<JobProps> = ({ selectCategory, initialValue 
       </button>
 
       {isOpen && (
-        <div className="absolute z-10 w-full bottom-full mb-1 bg-base-100 divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 max-h-60 overflow-y-auto">
-          <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
+        <div className="absolute z-10 w-full bottom-full mb-1 bg-base-100 divide-y divide-gray-100 rounded-lg shadow max-h-60 overflow-y-auto">
+          <ul className="py-2 text-sm text-gray-700">
             {categories.map((category) => (
               <li key={category} onClick={() => handleCategory(category)}>
                 <div className={`${isDark && "text-gray-200"} block px-4 py-2 hover:bg-gray-100 cursor-pointer`}>

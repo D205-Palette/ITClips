@@ -25,7 +25,7 @@ const ChatRoomListContainer: React.FC<ChildComponentProps> = ({ onClickMessage }
   return (
     <div className="h-full overflow-hidden">
       <ul
-        className="space-y-4 h-full overflow-y-auto"
+        className="space-y-2 h-full overflow-y-auto"
         style={{
           scrollbarWidth: "thin",
           scrollbarColor: "#CBD5E0 #EDF2F7"
@@ -34,7 +34,7 @@ const ChatRoomListContainer: React.FC<ChildComponentProps> = ({ onClickMessage }
         {rooms.map((room: ChatRoom) => (
           <li 
             key={room.id} 
-            className="flex justify-between items-center bg-base-100 hover:bg-sky-100 transition-colors duration-200 rounded-lg shadow-sm w-full px-3 py-2 cursor-pointer" 
+            className="flex justify-between items-center bg-base-100 hover:bg-sky-50 transition-colors duration-200 rounded-lg shadow-xl w-full px-3 py-2 cursor-pointer"
             onClick={() => onClickMessage(room.id)}
           >
             <div className="p-3 flex-1 min-w-0">

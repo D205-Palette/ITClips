@@ -12,6 +12,7 @@ import { createPrivateChatRoom, createGroupChatRoom } from "../../api/messageApi
 
 // stores
 import { authStore } from "../../stores/authStore";
+import darkModeStore from "../../stores/darkModeStore";
 
 interface Notification {
   message: string;
@@ -53,6 +54,7 @@ const AsideStartNewMessage: React.FC<InviteProps> = ({ onStartChat, onBack }) =>
   const [ inputName, setInputName ] = useState("");
   const [ searchResults, setSearchResults ] = useState<SearchUser[]>([]);
   const [ notification, setNotification ] = useState<Notification | null>(null);
+  const isDark = darkModeStore(state => state.isDark);
 
   // 토스트 메세지 3초뒤 종료
   useEffect(() => {
@@ -145,7 +147,7 @@ const AsideStartNewMessage: React.FC<InviteProps> = ({ onStartChat, onBack }) =>
 
   return (
     <div className="w-full h-full flex flex-col overflow-hidden">
-      <div className="p-4">
+      <div className={`${ isDark ? "bg-base-200" : "bg-sky-200" } p-4 border-b border-gray-200`}>
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center">
             <MessageBackButton onBack={onBack} />
@@ -158,11 +160,11 @@ const AsideStartNewMessage: React.FC<InviteProps> = ({ onStartChat, onBack }) =>
             value={inputName}
             onChange={(e) => setInputName(e.target.value)}
             placeholder="메세지 보낼 상대 이름"
-            className="input input-bordered w-full bg-white border-sky-200 focus:border-sky-400 focus:ring-2 focus:ring-sky-200"
+            className="input input-bordered w-full border-sky-200 focus:border-sky-400 focus:ring-2 focus:ring-sky-200"
           />
         </div>
       </div>
-      <div className="flex-1 overflow-y-auto px-4">
+      <div className="flex-1 overflow-y-auto px-4 py-2">
         <div className="space-y-2 mb-4">
           {searchResults.length > 0 ? (
             searchResults.map((user) => (
@@ -202,7 +204,7 @@ const AsideStartNewMessage: React.FC<InviteProps> = ({ onStartChat, onBack }) =>
           ))}
         </div>
       </div>
-      <div className="p-4 mt-auto">
+      <div className="p-4 mt-auto border-t border-gray-200">
         <button 
           onClick={handleStartChat} 
           className="btn w-full bg-sky-500 hover:bg-sky-600 text-white border-none"

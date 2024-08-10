@@ -37,18 +37,18 @@ const SearchCategoryDropdown: React.FC<CategoryProps> = ({ selectCategory }) => 
       <button
         id="dropdownDefaultButton"
         onClick={toggleDropdown}
-        className="btn w-32 text-white bg-slate-400 hover:bg-black-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        className="btn w-32 text-white bg-slate-400 hover:bg-black-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center"
         type="button"
       >
         {searchCategory}
       </button>
 
       {isOpen && (
-        <div className="absolute mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 h-40 z-50">  {/* z-50 클래스 추가 */}
-          <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
+        <div className="absolute mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 h-40 z-50">  {/* z-50 클래스 추가 */}
+          <ul className="py-2 text-sm text-gray-700">
             {categories.map((category) => (
               <li key={category} onClick={() => handleCategory(category)}>
-                <div className="text-center block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                <div className="text-center block px-4 py-2 hover:bg-gray-100">
                   {category}
                 </div>
               </li>

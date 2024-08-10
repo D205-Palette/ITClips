@@ -11,6 +11,7 @@ import MessageInviteModal from "./modals/MessageInviteModal";
 import { authStore } from "../../stores/authStore";
 import { webSocketStore } from "../../stores/webSocketStore";
 import { chatStore } from "../../stores/chatStore";
+import darkModeStore from "../../stores/darkModeStore";
 
 interface AsideMessageDetailProps {
   roomId: number;
@@ -32,6 +33,7 @@ interface Message {
 const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack, onBackWithRead }) => {
   
   const userInfo = authStore(state => state.userInfo);
+  const isDark = darkModeStore(state => state.isDark);
 
   const { isConnected, stompClient } = webSocketStore();
   const { 
@@ -209,7 +211,7 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack,
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex justify-between items-center p-4">
+      <div className={`${ isDark ? "bg-base-200" : "bg-sky-200" } flex justify-between items-center p-4 border-b`}>
         <div className="flex items-center">
           <MessageBackButton onBack={handleBackClick} />
           <h2 className="text-xl font-bold ml-2 truncate flex-shrink min-w-0 max-w-[180px]">{currentRoomInfo?.roomName}</h2>
@@ -221,7 +223,7 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack,
       </div>
       <div
         ref={messageContainerRef}
-        className="flex-1 overflow-y-auto px-4"
+        className="flex-1 overflow-y-auto px-4 py-2"
         style={{
           scrollbarWidth: "thin",
           scrollbarColor: "#CBD5E0 #EDF2F7"
@@ -229,7 +231,7 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack,
       >
         <MessageContainer messages={currentRoomMessages} />
       </div>
-      <div className="p-4">
+      <div className="p-4 bg-base-100 border-t border-gray-200">
         <div className="flex items-center w-full">
           <input
             ref={inputRef}

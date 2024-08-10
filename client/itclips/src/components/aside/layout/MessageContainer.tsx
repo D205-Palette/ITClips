@@ -42,13 +42,13 @@ const MessageContainer: React.FC<MessageContainerProps> = ({ messages }) => {
         const isMyMessage = message.senderName === userInfo.nickname;
         return (
           <div key={`${message.id}-${message.createdAt}`} className={`chat ${isMyMessage ? 'chat-end' : 'chat-start'} w-full`}>
-            <div className="chat-header">
+            <div className="chat-header mb-2">
               {message.senderName}
               <time className="text-xs opacity-50 ml-1">
                 {formatMessageTime(message.createdAt)}
               </time>
             </div>
-            <div className={`chat-bubble ${isMyMessage ? 'bg-sky-500 text-white' : 'bg-gray-300 text-gray-800'} break-words max-w-[90%] whitespace-pre-wrap overflow-hidden`}>
+            <div className={`chat-bubble ${isMyMessage ? 'bg-sky-500 text-white' : 'bg-gray-200 text-gray-800'} break-words max-w-[90%] whitespace-pre-wrap overflow-hidden`}>
               {message.message}
             </div>
           </div>

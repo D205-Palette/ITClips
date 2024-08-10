@@ -15,7 +15,7 @@ const AsideMessage: React.FC<MessageListProps> = ({ onSelectChat, onShowInvite }
   return (
     <div className="flex flex-col h-full">
       <MessageHeader onClickInvite={onShowInvite} />
-      <div className="flex-1 overflow-y-auto px-4">
+      <div className="flex-1 overflow-y-auto px-4 py-2">
         <ChatRoomListContainer onClickMessage={onSelectChat} />
       </div>
     </div>

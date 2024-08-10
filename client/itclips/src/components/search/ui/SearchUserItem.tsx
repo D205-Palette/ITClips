@@ -1,8 +1,8 @@
 import { NavLink } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-// images (임시)
-import image from "../../../assets/images/profile_image.png";
+// images
+import noImage from "../../../assets/images/noImg.gif";
 
 // apis
 import { follow, unfollow } from "../../../api/followApi";
@@ -36,6 +36,8 @@ const SearchUserItem: React.FC<SearchUserItemProps> = ({ item: initialItem }) =>
   const myUserId = authStore(state => state.userId);
   const [item, setItem] = useState(initialItem);
   const [toast, setToast] = useState<{ message: string; type: 'error' | 'success' } | null>(null);
+
+  console.log(item);
 
   // 버튼 기능이 NavLink와 안겹치게 설정
   const handleNavLink = (e: React.MouseEvent) => {
@@ -91,7 +93,7 @@ const SearchUserItem: React.FC<SearchUserItemProps> = ({ item: initialItem }) =>
             <div className="flex items-center space-x-3">
               <div className="placeholder">
                 <div className="bg-neutral-focus text-neutral-content rounded-full w-10">
-                  <img src={image} alt={item.nickname} className="w-full object-cover" />
+                  <img src={item.image === "default" ? noImage : item.image} alt={item.nickname} className="w-full object-cover" />
                 </div>
               </div>
               <div>
@@ -100,7 +102,7 @@ const SearchUserItem: React.FC<SearchUserItemProps> = ({ item: initialItem }) =>
               </div>
             </div>
             {/* 팔로우 버튼 */}
-            <button 
+            <button
               className={`btn btn-sm ${item.following ? 'text-base-100 btn-error' : 'btn-primary'}`} 
               onClick={toggleFollow}
             >

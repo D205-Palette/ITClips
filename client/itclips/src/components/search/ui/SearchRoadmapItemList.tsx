@@ -4,8 +4,8 @@ import React from "react";
 // components
 import SearchItemKebabDropdown from "./SearchItemKebabDropdown";
 
-// images (임시)
-import image from "../../../assets/images/profile_image.png";
+// images
+import noImage from "../../../assets/images/noImg.gif"
 
 interface Step {
   id: number;
@@ -49,7 +49,7 @@ const SearchRoadmapItemList: React.FC<RoadmapProps> = ({ item }) => {
         to={`/roadmap/${item.id}`}
         className="flex items-center space-x-4 flex-grow"
       >
-        <img src={image} alt={item.title} className="w-20 h-20 object-cover rounded" />
+        <img src={item.image === "default" ? noImage : item.image} alt={item.title} className="w-20 h-20 object-cover rounded" />
         <div className="flex-grow">
           <h3 className="text-lg font-semibold">{item.title}</h3>
           <div className="flex space-x-4 mt-2">

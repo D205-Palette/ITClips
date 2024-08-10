@@ -4,8 +4,8 @@ import React from "react";
 // components
 import SearchItemKebabDropdown from "./SearchItemKebabDropdown";
 
-// images (임시)
-import image from "../../../assets/images/profile_image.png";
+// images
+import noImage from "../../../assets/images/noImg.gif"
 
 interface Step {
   id: number;
@@ -50,7 +50,7 @@ const SearchRoadmapItemGrid: React.FC<RoadmapProps> = ({ item }) => {
         className="block h-full"
       >
         <div className="relative">
-          <img src={image} alt={item.title} className="w-full h-40 object-cover" />
+          <img src={item.image === "default" ? noImage : item.image} alt={item.title} className="w-full h-40 object-cover" />
           <div className="absolute top-2 right-2 z-10" onClick={handleNavLink}>
             <SearchItemKebabDropdown id={item.id} whatContent="로드맵"/>
           </div>

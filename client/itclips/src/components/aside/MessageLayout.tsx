@@ -57,8 +57,8 @@ const MessageLayout = () => {
   }
 
   return (
-    <div className={`${isDark ? "bg-base-300" : "bg-sky-100"} rounded-3xl w-80 h-[37rem] overflow-hidden`}>
-      <div className="w-full h-full overflow-hidden">
+    <div className={`${isDark ? "bg-gray-800" : "bg-white"} rounded-lg w-96 h-[42rem] overflow-hidden shadow-xl transition-all duration-300`}>
+      <div className="w-full h-full overflow-hidden flex flex-col">
         {selectedChat === null && showInvite === null && (
           <AsideMessage
             onSelectChat={handleSelectChat}
@@ -75,7 +75,6 @@ const MessageLayout = () => {
         {selectedChat === null && showInvite !== null && (
           <AsideStartNewMessage onStartChat={handleChatStart} onBack={handleBackToList} />
         )}
-        {/* 둘다 값이 들어오는 경우는 없기 때문에 무시 (예외 처리) */}
       </div>
     </div>
   );

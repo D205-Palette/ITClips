@@ -24,11 +24,14 @@ const MessageHeader: React.FC<MessageHeaderProps> = ({ onClickInvite }) => {
   };
 
   return (
-    <div className="flex justify-between items-center mb-4">
-      <MessageCloseButton onBack={ handleBackToList }/>
-      <h2 className="text-xl font-bold">메세지</h2>
-      <button className="self-end btn btn-ghost btn-circle" onClick={ () => onClickInvite(1) }>
-        <GoPlus className="h-6 w-6" />
+    <div className="flex justify-between items-center p-4 border-b dark:border-gray-700">
+      <MessageCloseButton onBack={toggleMessage} />
+      <h2 className="text-xl font-bold dark:text-white">메세지</h2>
+      <button 
+        className="btn btn-ghost btn-circle hover:bg-sky-100 dark:hover:bg-gray-700 transition-colors duration-200" 
+        onClick={() => onClickInvite(1)}
+      >
+        <GoPlus className="h-6 w-6 text-sky-500 dark:text-sky-400" />
       </button>
     </div>
   );

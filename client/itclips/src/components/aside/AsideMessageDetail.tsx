@@ -208,8 +208,8 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack,
   };
 
   return (
-    <div className="p-4 max-w-sm mx-auto h-[35rem] flex flex-col">
-      <div className="flex justify-between items-center mb-4">
+    <div className="flex flex-col h-full">
+      <div className="flex justify-between items-center p-4">
         <div className="flex items-center">
           <MessageBackButton onBack={handleBackClick} />
           <h2 className="text-xl font-bold ml-2 truncate flex-shrink min-w-0 max-w-[180px]">{currentRoomInfo?.roomName}</h2>
@@ -221,7 +221,7 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack,
       </div>
       <div
         ref={messageContainerRef}
-        className="flex-1 overflow-y-auto"
+        className="flex-1 overflow-y-auto px-4"
         style={{
           scrollbarWidth: "thin",
           scrollbarColor: "#CBD5E0 #EDF2F7"
@@ -229,19 +229,21 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack,
       >
         <MessageContainer messages={currentRoomMessages} />
       </div>
-      <div className="flex items-center w-full">
-        <input
-          ref={inputRef}
-          type="text"
-          value={inputMessage}
-          onChange={(e) => setInputMessage(e.target.value)}
-          onKeyDown={handleKeyDown}
-          onFocus={handleInputFocus}
-          onBlur={handleInputBlur}
-          placeholder="메세지를 입력해주세요"
-          className="input input-bordered flex-grow mr-2 min-w-0"
-        />
-        <button onClick={handleSendMessage} className="btn bg-sky-500 text-slate-100 hover:bg-sky-700 whitespace-nowrap">전송</button>
+      <div className="p-4">
+        <div className="flex items-center w-full">
+          <input
+            ref={inputRef}
+            type="text"
+            value={inputMessage}
+            onChange={(e) => setInputMessage(e.target.value)}
+            onKeyDown={handleKeyDown}
+            onFocus={handleInputFocus}
+            onBlur={handleInputBlur}
+            placeholder="메세지를 입력해주세요"
+            className="input input-bordered flex-grow mr-2 min-w-0"
+          />
+          <button onClick={handleSendMessage} className="btn bg-sky-500 text-slate-100 hover:bg-sky-700 whitespace-nowrap">전송</button>
+        </div>
       </div>
       {isInviteModalOpen && (
         <MessageInviteModal

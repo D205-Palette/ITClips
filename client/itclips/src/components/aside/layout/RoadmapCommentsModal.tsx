@@ -60,8 +60,9 @@ const RoadmapCommentsModal: FC<Props> = ({ id, isOpen, onClose, onCommentCountCh
     if (!userInfo?.id) return;
     try {
       const response = await getRoadmapInfo(id, userInfo.id);
-      setComments(response.data.commentList);
-      onCommentCountChange(response.data.commentList.length);
+      const sortedComments = response.data.commentList.sort((a: Comment, b: Comment) => b.id - a.id);
+      setComments(sortedComments);
+      onCommentCountChange(sortedComments.length);
     } catch (error) {
       console.error("댓글을 불러오는 중 오류가 발생했습니다:", error);
     }

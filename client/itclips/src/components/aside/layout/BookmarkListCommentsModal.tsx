@@ -59,7 +59,8 @@ const BookmarkListCommentsModal: FC<Props> = ({ id, isOpen, onClose }) => {
   const fetchComments = async () => {
     try {
       const response = await getBookmarkListComments(id);
-      setComments(response.data);
+      const sortedComments = response.data.sort((a: Comment, b: Comment) => b.commentId - a.commentId);
+      setComments(sortedComments);
     } catch (error) {
       console.error("댓글을 불러오는 중 오류가 발생했습니다:", error);
     }
@@ -107,7 +108,7 @@ const BookmarkListCommentsModal: FC<Props> = ({ id, isOpen, onClose }) => {
           comment.commentId === commentId 
             ? { ...comment, comment: editContent }
             : comment
-        )
+        ).sort((a, b) => b.commentId - a.commentId)
       );
       setEditingId(null);
       setEditContent("");

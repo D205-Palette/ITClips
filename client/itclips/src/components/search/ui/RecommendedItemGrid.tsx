@@ -21,7 +21,7 @@ interface RecommandedItemProps {
   item: RecommandedItem;
 }
 
-const RecommandedItemGrid: React.FC<RecommandedItemProps> = ({ item }) => {
+const RecommendedItemGrid: React.FC<RecommandedItemProps> = ({ item }) => {
 
   // 더보기 버튼 기능이 NavLink와 안겹치게 설정
   const handleNavLink = (e: React.MouseEvent) => {
@@ -58,4 +58,4 @@ const RecommandedItemGrid: React.FC<RecommandedItemProps> = ({ item }) => {
   );
 };
 
-export default RecommandedItemGrid;
+export default RecommendedItemGrid;

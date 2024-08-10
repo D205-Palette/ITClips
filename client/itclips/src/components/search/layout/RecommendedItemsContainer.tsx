@@ -1,8 +1,8 @@
 import React from "react";
 
 // components
-import RecommandedItemList from "../ui/RecommandedItemList";
-import RecommandedItemGrid from "../ui/RecommandedItemGrid";
+import RecommandedItemList from "../ui/RecommendedItemList";
+import RecommandedItemGrid from "../ui/RecommendedItemGrid";
 
 interface RecommandedItem {
   id: number;

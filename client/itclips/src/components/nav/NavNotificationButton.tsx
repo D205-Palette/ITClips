@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
+import { NavLink } from "react-router-dom";
+import { format } from "date-fns";
 
 // icons
 import { FaBell, FaTimes, FaCheck } from "react-icons/fa";
@@ -6,6 +8,17 @@ import { FaBell, FaTimes, FaCheck } from "react-icons/fa";
 // stores
 import notificationStore from "../../stores/notificationStore";
 import { authStore } from "../../stores/authStore";
+
+interface Notification {
+  id: number;
+  userId: number;
+  senderId: number;
+  type: string;
+  typeId: number;
+  contents: string;
+  read: boolean;
+  createdAt: string;
+}
 
 const NotificationDropdown: React.FC = () => {
 
@@ -41,6 +54,7 @@ const NotificationDropdown: React.FC = () => {
     }
   }, [userId, fetchNotifications]);
 
+  // 모든 알림 읽음 처리
   const handleMarkAllAsRead = () => {
     if (userId) {
       markAllAsRead(userId);
@@ -64,18 +78,42 @@ const NotificationDropdown: React.FC = () => {
     return [...notifications].sort((a, b) => b.id - a.id);
   }, [notifications]);
 
+  // 알림타입에 따른 주소
+  const getNotificationLink = (notification: Notification) => {
+    switch (notification.type) {
+      case "FOLLOW":
+        return `/user/${notification.typeId}`;
+      case "LIST_LIKE":
+      case "LIST_SCRAP":
+      case "LIST_COMMENT":
+        return `/bookmarklist/${notification.typeId}`;
+      case "ROADMAP_LIKE":
+      case "ROADMAP_SCRAP":
+      case "ROADMAP_COMMENT":
+        return `/roadmap/${notification.typeId}`;
+      default:
+        return "#";
+    }
+  };
+
+  // 알림 시간 변환
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return format(date, "yyyy-MM-dd HH:mm");
+  };
+
   return (
     <div ref={dropdownRef} className={`dropdown dropdown-end ${isOpen ? 'dropdown-open' : ''} relative`}>
       <label tabIndex={0} onClick={handleToggle}>
         <div className="indicator cursor-pointer">
           <FaBell className="transition-colors duration-300 hover:text-gray-400" />
           {unreadCount > 0 && (
-            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-3 w-3 flex items-center justify-center"></span>
+            <span className="absolute -top-2 -right-2 bg-red-500 rounded-full h-3 w-3 flex items-center justify-center"></span>
           )}
         </div>
       </label>
       {isOpen && (
-        <div tabIndex={0} className="mt-3 z-[1] card card-compact dropdown-content w-80 bg-base-100 shadow">
+        <div tabIndex={0} className="mt-3 z-[1] card card-compact dropdown-content w-96 bg-base-100 shadow">
           <div className="card-body">
             <div className="flex justify-between items-center">
               <h3 className="font-bold text-lg">알림</h3>
@@ -91,11 +129,21 @@ const NotificationDropdown: React.FC = () => {
               ) : (
                 <ul>
                   {sortedNotifications.map((notification) => (
-                    <li key={notification.id} className={`flex justify-between items-center py-2 border-b ${notification.read ? 'text-gray-400' : ''}`}>
-                      <span className="text-sm">{notification.contents}</span>
+                    <li key={notification.id} className={`py-2 border-b ${notification.read ? 'bg-gray-100' : 'bg-white'}`}>
+                      <NavLink 
+                        to={getNotificationLink(notification)}
+                        className="flex flex-col hover:bg-gray-50 p-2 rounded transition-colors duration-200"
+                      >
+                        <span className={`text-sm ${notification.read ? 'text-gray-600' : 'text-black font-semibold'}`}>
+                          {notification.contents}
+                        </span>
+                        <span className="text-xs text-gray-400 mt-1">
+                          {formatDate(notification.createdAt)}
+                        </span>
+                      </NavLink>
                       <button 
                         onClick={(event) => handleDelete(event, notification.id)} 
-                        className="btn btn-ghost btn-xs"
+                        className="btn btn-ghost btn-xs float-right -mt-8 mr-2"
                       >
                         <FaTimes />
                       </button>

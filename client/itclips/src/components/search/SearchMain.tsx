@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // components
 import RecommendedItemsContainer from "./layout/RecommendedItemsContainer";
@@ -7,20 +7,49 @@ import RecommendedItemsContainer from "./layout/RecommendedItemsContainer";
 import { FaList } from "react-icons/fa";
 import { CiBoxList } from "react-icons/ci";
 import { HiOutlineSquares2X2, HiMiniSquares2X2 } from "react-icons/hi2";
+import { IoIosWarning } from "react-icons/io";
+
+// apis
+import { getRecommendedBookmarks } from "../../api/searchApi";
+
+// stores
+import { authStore } from "../../stores/authStore";
 
 interface RecommendedItem {
   id: number;
   title: string;
-  username: string;
-  imageUrl: string;
-  bookmarks: number;
-  likes: number;
+  description: string;
+  bookmarkCount: number;
   createdAt: string;
+  likeCount: number;
+  image: string;
+  isLiked: boolean;
+  tags: { title: string }[];
+  users: { id: number; nickName: string }[];
 }
 
 const SearchMain = () => {
 
+  const userId = authStore(state => state.userId);
   const [ viewMode, setViewMode ] = useState<'grid' | 'list'>('list');
+  const [ recommendedItems, setRecommendedItems ] = useState<RecommendedItem[]>([]);
+  const [ error, setError ] = useState<string | null>(null);
+  
+  // 추천 목록 조회
+  useEffect(() => {
+    const fetchRecommendedItems = async () => {
+      setError(null);
+      try {
+        const response = await getRecommendedBookmarks(userId);
+        setRecommendedItems(response.data);
+      } catch (err) {
+        setError("관심사 태그가 없거나 맞는 추천 아이템이 없습니다.");
+        console.error("Error fetching recommended items:", err);
+      }
+    };
+
+    fetchRecommendedItems();
+  }, [userId]);
 
   const tabList = () => {
     setViewMode("list");
@@ -29,14 +58,6 @@ const SearchMain = () => {
   const tabAlbum = () => {
     setViewMode("grid");
   };
-
-  // 더미 데이터
-  const data: RecommendedItem[] = [
-    { id: 1, title: "생성된 리스트_01", username: "고양양", imageUrl: "", bookmarks: 20, likes: 10, createdAt: "2020-01-01" },
-    { id: 2, title: "생성된 리스트_02", username: "고양양", imageUrl: "", bookmarks: 30, likes: 20, createdAt: "2020-01-01" },
-    { id: 3, title: "생성된 리스트_03", username: "고양양", imageUrl: "", bookmarks: 10, likes: 30, createdAt: "2020-01-01" },
-    { id: 4, title: "생성된 리스트_04", username: "고양양", imageUrl: "", bookmarks: 5, likes: 40, createdAt: "2020-01-01" },
-  ]
 
   return (
     <div className="mt-4">
@@ -61,7 +82,16 @@ const SearchMain = () => {
         </div>
       </div>
       {/* 추천 결과 */}
-      <RecommendedItemsContainer items={data} viewMode={viewMode} />
+      {error ? (
+        <div className="flex flex-row items-center justify-center mt-10">
+          <IoIosWarning color="skyblue" size={28} />
+          <div className="ms-3 text-sm lg:text-xl font-bold py-8 text-center">
+            관심사 태그가 없거나 맞는 추천 아이템이 없습니다.
+          </div>
+        </div>
+      ) : (
+        <RecommendedItemsContainer items={recommendedItems} viewMode={viewMode} />
+      )}
     </div>
   );
 };

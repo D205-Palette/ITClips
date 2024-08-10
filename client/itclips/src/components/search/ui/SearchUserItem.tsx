@@ -37,8 +37,6 @@ const SearchUserItem: React.FC<SearchUserItemProps> = ({ item: initialItem }) =>
   const [item, setItem] = useState(initialItem);
   const [toast, setToast] = useState<{ message: string; type: 'error' | 'success' } | null>(null);
 
-  console.log(item);
-
   // 버튼 기능이 NavLink와 안겹치게 설정
   const handleNavLink = (e: React.MouseEvent) => {
     e.preventDefault();

@@ -18,7 +18,7 @@ const CommentWrite: React.FC<CommentWriteProps> = ({ onCommentSubmit }) => {
 
   return (
     <div className="mt-3">
-      <form className="relative flex items-center" onSubmit={handleSubmit}>
+      <form className="relative flex items-center border rounded-lg" onSubmit={handleSubmit}>
         <input 
           type="text" 
           placeholder="댓글을 입력해주세요." 

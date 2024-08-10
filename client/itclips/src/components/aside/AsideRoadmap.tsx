@@ -63,7 +63,7 @@ const AsideRoadmap :  React.FC<Props> = ({ roadmap }) => {
       {/* 댓글 창 */}
       <button 
         onClick={() => setIsCommentsOpen(true)} 
-        className="btn btn-primary w-full mt-4"
+        className="btn btn-info w-full mt-4 text-base-100"
       >
         전체 댓글 보기 ({commentCount})
       </button>

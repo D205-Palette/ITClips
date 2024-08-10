@@ -137,7 +137,7 @@ const BookmarkListCommentsModal: FC<Props> = ({ id, isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white rounded-lg p-6 w-11/12 max-w-2xl h-[80vh] flex flex-col">
+      <div className="bg-base-100 border rounded-lg p-6 w-11/12 max-w-2xl h-[80vh] flex flex-col">
         <h2 className="text-2xl font-bold mb-4">댓글</h2>
         <CommentWrite onCommentSubmit={handleCommentSubmit} />
         <div className="flex-grow relative overflow-hidden mt-4">
@@ -146,7 +146,7 @@ const BookmarkListCommentsModal: FC<Props> = ({ id, isOpen, onClose }) => {
             className="h-full overflow-y-auto scrollbar-hide space-y-4 px-4"
           >
             {comments.map((comment) => (
-              <div key={comment.commentId} className="bg-gray-100 p-4 rounded-lg">
+              <div key={comment.commentId} className="bg-base-200 p-4 rounded-lg">
                 <div className="flex justify-between items-center mb-2">
                   <span className="font-semibold">{comment.commentUser.nickName}</span>
                   {userInfo && userInfo.id === comment.commentUser.id && (
@@ -190,7 +190,7 @@ const BookmarkListCommentsModal: FC<Props> = ({ id, isOpen, onClose }) => {
         </div>
         <button 
           onClick={onClose} 
-          className="btn btn-secondary mt-4 w-full"
+          className="btn btn-info text-base-100 mt-4 w-full"
         >
           닫기
         </button>

@@ -57,7 +57,7 @@ const AsideBookmarkList : React.FC<ItemProps> = ({ bookmarkList }) => {
       {/* 댓글 창 */}
       <button 
         onClick={() => setIsCommentsOpen(true)} 
-        className="btn btn-primary w-full mt-4"
+        className="btn btn-info text-base-100 w-full mt-4"
       >
         전체 댓글 보기 ({commentCount})
       </button>

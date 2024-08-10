@@ -1,10 +1,4 @@
-import AsideProfile from "../../components/aside/AsideProfile";
-import MessageLayout from "../../components/aside/MessageLayout";
-import { asideStore } from "../../stores/asideStore";
 import darkModeStore from "../../stores/darkModeStore";
-import { Outlet } from "react-router-dom";
-import MainTab from "../../components/main/MainTab";
-import { IoIosWarning } from "react-icons/io";
 import { useState,useEffect } from "react";
 import { API_BASE_URL } from "../../config";
 import axios from "axios";

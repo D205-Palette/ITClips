@@ -2,9 +2,10 @@
 
 import React from "react";
 import type { BookmarkListDetailType } from "../../../types/BookmarkListType";
+import { Link } from "react-router-dom";
 interface Comment {
   id: number;
-  username:string;
+  username: string;
   content: string;
 }
 
@@ -15,17 +16,20 @@ interface Tag {
 
 interface Item {
   title: string;
-  // email: string;
+  users?: {id:number, nickName:string}[];
   description: string;
-
+  userName?: string;
+  userId?:number;
 }
 
 const ItemDetailInfo = (data: Item) => {
-
   return (
     <div className="text-center">
       <h2 className="text-xl font-bold mb-1">{data.title}</h2>
-      {/* <p className="text-gray-500 mb-2">{data.email}</p> */}
+      {data.userName? <> <Link to={`/user/${data.userId}`} className="text-gray-500 mb-2">{data.userName}</Link></>: <></>}
+      {data.users?.map((user: any) => (
+        <Link to={`/user/${user.id}`} className="text-gray-500 mb-2">{user.nickName}</Link>
+      ))}
       <p className="text-center text-sm mb-6">{data.description}</p>
     </div>
   );

@@ -18,7 +18,7 @@ import axios from "axios";
 import { API_BASE_URL } from "../config";
 import { authStore } from "../stores/authStore";
 import FileResizer from "react-image-file-resizer";
-
+import NoContent from "./ProfileView/NoContent";
 type StepTListType = {
     id: number;
     roadmapId: number;
@@ -62,10 +62,15 @@ const RoadmapView = () => {
           setTotalCount(res.data.stepList.length)  
           if(res.data.userId === userId){
             setCanEdit(true)
+
+            
           }
         })
         .catch((err) => {
           console.error(err);
+          if (err.response.status === 401) {
+            setCanView(false);
+          }
         });
     }
     fetchData();
@@ -84,6 +89,8 @@ const RoadmapView = () => {
   const [totalCount, setTotalCount] = useState(0)
   const [percentage, setPercentage] = useState('0')
 
+  // 내꺼 남꺼 조회 여부
+  const [canView, setCanView] = useState(true);
 
   // 체크된 개수 바뀔때마다 갱신
   useEffect(()=>{
@@ -93,8 +100,7 @@ const RoadmapView = () => {
     setPercentage(`${(checkCount * 100 /totalCount).toFixed(1)}%`)
   }
 
-  
-  }, [checkCount])
+  }, [checkCount, totalCount])
   
 
   const BackButton = (): any => {
@@ -107,7 +113,7 @@ const RoadmapView = () => {
 
   return (
     <>
-<div id='Body' className="grid grid-cols-12 gap-4">
+    {canView? <><div id='Body' className="grid grid-cols-12 gap-4">
 
 {/* aside 자리 */}
 <div id="aside" className="xl:col-start-2 xl:col-span-3 hidden xl:block ">
@@ -133,10 +139,10 @@ const RoadmapView = () => {
           <div
             className={(canEdit? "":"hidden ") + 
               (!isDark
-                ? percentage === "100.0"
+                ? percentage === "100.0%"
                   ? "text-green-300"
                   : "text-sky-500"
-                : percentage === "100.0"
+                : percentage === "100.0%"
                 ? "text-green-700"
                 : "text-sky-400") + " flex items-center text-3xl font-bold"
             }
@@ -154,7 +160,8 @@ const RoadmapView = () => {
  
 
 </div>
-</div>
+</div></> : <> <NoContent content="비공개로드맵"/> </>}
+
 
 
 

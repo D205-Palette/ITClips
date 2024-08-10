@@ -19,44 +19,96 @@ import type { CategoryType } from "../../types/BookmarkListType";
 import { useParams } from "react-router-dom";
 import Tab from "../../stores/mainTabStore";
 import mainStore from "../../stores/mainStore";
+import { keyboardKey } from "@testing-library/user-event";
 interface Props {
-  tempCategory:CategoryType;
-  canEdit:boolean
+  tempCategory: CategoryType;
+  canEdit: boolean;
+  setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const CategorySingleTab: FC<Props> = ({ tempCategory,canEdit }) => {
+const CategorySingleTab: FC<Props> = ({
+  tempCategory,
+  canEdit,
+  setEditMode,
+}) => {
+  const params = useParams();
 
-  const params = useParams()
-  const {tempCategories, setTempCategories,addTempCategories, deleteTempCategories} = Tab()
-const {setIsBookmarkListChange} = mainStore()
+  const { setIsBookmarkListChange } = mainStore();
   const { userId, token } = authStore();
   const isDark = darkModeStore((state) => state.isDark);
   const color = isDark
     ? "bg-slate-900 text-slate-300 border-solid border-slate-100 border-2 p-1"
     : "bg-slate-0 text-slate-900 border-solid border-slate-900 border-2 p-1";
   const whatCategory = mainTabStore((state) => state.whatCategory);
-  const changeCategory = mainTabStore((state) => state.changeCategory);
 
-  const [isDelete, setIsDelete] = useState(false)
+  const [isDelete, setIsDelete] = useState(false);
+  const [tempTag, setTempTag] = useState(tempCategory.categoryName);
+  const [isMaxLength, setIsMaxLenth] = useState(false);
+  const editCategory = (event: any): void => {
+    if (event.key === "Enter") {
+      axios
+        .put(
+          `${API_BASE_URL}/api/category/update/${tempCategory.categoryId}`,
+          {
+            categoryName: tempTag,
+          },
+          {
+            params: {
+              userId: userId,
+            },
+          }
+        )
+        .then(() => {
+          console.log("ok");
+          setIsBookmarkListChange(true);
+          setEditMode(false);
+        });
+    }
+  };
+
+  useEffect(()=>{
+    if(tempTag.length===20){
+      setIsMaxLenth(true)
+    } else{
+      setIsMaxLenth(false)
+    }
+  },[tempTag.length])
+
   const DeleteButton = (): any => {
-    const [isOpen, setIsOpen] = useState(false)
+    const [isOpen, setIsOpen] = useState(false);
 
     interface Props {
-      setIsOpen:React.Dispatch<React.SetStateAction<boolean>>
+      setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
     }
-    const DeleteCheckModal:React.FC<Props> = ({setIsOpen}):any=>  {
+    const DeleteCheckModal: React.FC<Props> = ({ setIsOpen }): any => {
       return (
         <div className="modal modal-open fixed z-50">
-        <div className="modal-box pt-16 ">
-          <h3 className="font-bold text-lg">카테고리를 삭제하시겠습니까?</h3>
-          <div className="modal-action">
-            <button className="btn bg-sky-500 text-slate-100 hover:bg-sky-700" onClick={()=>{deleteCategory(); setIsOpen(false); setIsDelete(true)}}>확인</button>
-            <button className="btn" onClick={()=>{setIsOpen(false)}}>취소</button>
+          <div className="modal-box pt-16 ">
+            <h3 className="font-bold text-lg">카테고리를 삭제하시겠습니까?</h3>
+            <div className="modal-action">
+              <button
+                className="btn bg-sky-500 text-slate-100 hover:bg-sky-700"
+                onClick={() => {
+                  deleteCategory();
+                  setIsOpen(false);
+                  setIsDelete(true);
+                }}
+              >
+                확인
+              </button>
+              <button
+                className="btn"
+                onClick={() => {
+                  setIsOpen(false);
+                }}
+              >
+                취소
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-      )  
-    }
+      );
+    };
 
     function deleteCategory(): void {
       axios({
@@ -65,13 +117,12 @@ const {setIsBookmarkListChange} = mainStore()
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        params:{
-          userId:userId,
+        params: {
+          userId: userId,
         },
       })
         .then((res) => {
-          deleteTempCategories(tempCategory.categoryName)
-          setIsBookmarkListChange(true)
+          setIsBookmarkListChange(true);
         })
         .catch((err) => {
           console.error(err);
@@ -80,13 +131,13 @@ const {setIsBookmarkListChange} = mainStore()
 
     return (
       <>
-      <button
-        onClick={() => setIsOpen(true)}
-        className={isDark ? "text-slate-100" : "text-slate-900 "}
-      >
-        <IoIosClose size="24px" />
-      </button>
-      {isOpen&&  <DeleteCheckModal setIsOpen={setIsOpen}/>}
+        <button
+          onClick={() => setIsOpen(true)}
+          className={isDark ? "text-slate-100" : "text-slate-900 "}
+        >
+          <IoIosClose size="24px" />
+        </button>
+        {isOpen && <DeleteCheckModal setIsOpen={setIsOpen} />}
       </>
     );
   };
@@ -94,23 +145,24 @@ const {setIsBookmarkListChange} = mainStore()
   return (
     <>
       <button
-        className={
+        className={(isMaxLength? "border-red-500 ":" border-sky-500 " ) + 
           (tempCategory.categoryName === whatCategory.categoryName
-            ? "bg-sky-500 text-slate-100 border-solid border-sky-500 border-2 p-1"
+            ? "bg-sky-500 text-slate-100 border-solidborder-2 p-1"
             : color) + " rounded-2xl mx-2 ps-3 w-36"
         }
       >
         <div className="flex flex-row items-center w-24">
-          <div 
-            className="me-2">
-            
-            <input type="text"
-            value={tempCategory.categoryName}
-            className="w-24"
+          <div className="me-2 ">
+            <input
+              type="text"
+              value={tempTag}
+              className="w-24"
+              onChange={(e) => setTempTag(e.target.value)}
+              onKeyDown={(e) => editCategory(e)}
+              maxLength={20}
             />
           </div>{" "}
-          {canEdit? <DeleteButton />: <></>}
-          
+          {canEdit ? <DeleteButton /> : <></>}
         </div>
       </button>
     </>

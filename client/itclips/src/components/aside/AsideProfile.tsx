@@ -154,20 +154,20 @@ const AsideProfile = () => {
   return (
     <div
       className={`${
-        isDark ? "bg-base-300" : "bg-sky-100"
+        isDark ? "bg-base-300" : "bg-sky-50"
       } rounded-3xl w-80 p-8 flex flex-col items-center`}
     >
       {/* 피드 페이지에서 urlUserId가 undefined이므로 예외처리 */}
       {/* 다른 유저일때 채팅하기 버튼 또는 환경설정 활성화 */}
       {myInfo.id !== urlUserId && urlUserId !== undefined ? (
         <button
-          className="btn btn-ghost btn-circle ms-16"
+          className="btn btn-ghost btn-circle ms-44"
           onClick={onClickStartChat}
         >
           <IoChatboxEllipsesOutline className="h-8 w-8" />
         </button>
       ) : (
-        <button className="btn btn-ghost btn-circle ms-16" onClick={openModal}>
+        <button className="btn btn-ghost btn-circle ms-44" onClick={openModal}>
           <IoSettingsOutline className="h-6 w-6" />
         </button>
       )}

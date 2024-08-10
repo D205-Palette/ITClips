@@ -53,7 +53,6 @@ const RoadMap: FC<Props> = ({ roadmap, canEdit }) => {
     <>
       <div
         className={
-          
           " card card-side bg-base-100 hover:cursor-pointer h-32 my-1 static "
         }
       >
@@ -66,7 +65,12 @@ const RoadMap: FC<Props> = ({ roadmap, canEdit }) => {
             />
           </div>
 
-          <div className={(isDark ? "hover:bg-slate-700" : "hover:bg-slate-100") +"  card-body flex flex-row justify-between h-full relative w-5/6"}>
+          <div
+            className={
+              (isDark ? "hover:bg-slate-700" : "hover:bg-slate-100") +
+              "  card-body flex flex-row justify-between h-full relative w-5/6"
+            }
+          >
             <div
               className={
                 (canEdit ? "" : "hidden ") +
@@ -74,7 +78,7 @@ const RoadMap: FC<Props> = ({ roadmap, canEdit }) => {
                   ? percentage == "100.0%"
                     ? "bg-green-100"
                     : "bg-sky-100"
-                  : percentage == "100.0%" 
+                  : percentage == "100.0%"
                   ? "bg-green-900"
                   : "bg-sky-900") +
                 " h-full absolute top-0 left-0 rounded-e-2xl lg:rounded-s-none rounded-s-2xl"
@@ -84,12 +88,12 @@ const RoadMap: FC<Props> = ({ roadmap, canEdit }) => {
             ></div>
 
             <div
-              className="w-2/3 flex flex-col justify-around z-10"
+              className="w-7/12 flex flex-col justify-around z-10"
               onClick={() => navigate(`/roadmap/${roadmap.id}`)}
             >
               <div>
                 <h2 className="card-title">{roadmap.title}</h2>
-                <p className="text-sm md:text-base line-clamp-2">
+                <p className={(roadmap.description? "":"hidden " ) + "text-sm md:text-base line-clamp-2"}>
                   {roadmap.description}
                 </p>
               </div>
@@ -97,22 +101,34 @@ const RoadMap: FC<Props> = ({ roadmap, canEdit }) => {
               <div></div>
             </div>
 
-            <div className="w-1/3 flex gap-x-2">
+            <div className="w-5/12 flex gap-x-2 flex-row items-center justify-around">
+
               <div className=" items-center text-blue-400 font-bold text-xl z-0 hidden lg:inline-flex">
-              <p
-                className={(canEdit? "" : "hidden ") +
-                  (!isDark
-                    ? percentage == "100.0%"
-                      ? "text-green-400"
-                      : "text-blue-400"
-                    : percentage == "100.0%"
-                    ? "text-green-200"
-                    : "text-blue-200")
-                }
-              >
-                {percentage}
-              </p>
+                <p
+                  className={
+                    (canEdit ? "" : "hidden ") +
+                    (!isDark
+                      ? percentage == "100.0%"
+                        ? "text-green-400"
+                        : "text-blue-400"
+                      : percentage == "100.0%"
+                      ? "text-green-200"
+                      : "text-blue-200")
+                  }
+                >
+                  {percentage}
+                </p>
               </div>
+
+              <button onClick={clickHeart} className="btn btn-ghost z-0 ">
+                {isLike ? <FaHeart color="red" /> : <FaRegHeart />}
+                {likeCount}{" "}
+              </button>
+
+              <div className="hidden md:inline">
+                <KebabDropdown whatMenu="로드맵" id={roadmap.id} />
+              </div>
+
             </div>
 
             {/* <div className=" items-center text-blue-400 font-bold text-xl z-0 hidden lg:inline-flex">
@@ -130,16 +146,6 @@ const RoadMap: FC<Props> = ({ roadmap, canEdit }) => {
                 {percentage}
               </p>
             </div> */}
-
-            <div className="card-actions justify-end flex items-center">
-              <button onClick={clickHeart} className="btn btn-ghost z-0 ">
-                {isLike ? <FaHeart color="red"/> : <FaRegHeart />}
-                {likeCount}{" "}
-              </button>
-              <div className="hidden md:inline">
-                <KebabDropdown whatMenu="로드맵" id={roadmap.id} />
-              </div>
-            </div>
           </div>
         </>
       </div>

@@ -27,9 +27,10 @@ interface Props {
   categories: CategoryType[];
   canEdit: boolean; // 본인 여부
   editMode: boolean; // 에딧 모드 여부
+  setEditMode : React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const CategoryTab: FC<Props> = ({ listId, categories, canEdit, editMode }) => {
+const CategoryTab: FC<Props> = ({ listId, categories, canEdit, editMode,setEditMode }) => {
   const { userId, token } = authStore();
   const isDark = darkModeStore((state) => state.isDark);
 
@@ -150,6 +151,7 @@ const CategoryTab: FC<Props> = ({ listId, categories, canEdit, editMode }) => {
               <CategorySingleEditTab
                 tempCategory={category}
                 canEdit={canEdit}
+                setEditMode={setEditMode}
               />
             ) : (
               <CategorySingleTab tempCategory={category} canEdit={canEdit} />

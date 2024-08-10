@@ -31,7 +31,7 @@ const AsideRoadmap :  React.FC<Props> = ({roadmap}) => {
       {/* 북마크리스트 썸네일 */}
       <ImageContainer src={roadmap.image} whatContent="로드맵" />
       {/* 북마크리스트 정보 */}
-      <ItemDetailInfo title={roadmap.title} description={roadmap.description} />
+      <ItemDetailInfo title={roadmap.title} description={roadmap.description} userName={roadmap.userName} userId={roadmap.userId}/>
       {/* 좋아요, 즐겨찾기 칸 */}
       <LikesFavoritesCount {...roadmap} />
       {/* 태그 창 */}

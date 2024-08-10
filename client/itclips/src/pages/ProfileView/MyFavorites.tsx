@@ -19,6 +19,9 @@ const MyGroupBookmarkList = () => {
   const { token, userId } = authStore();
   const filterdLists = lists.filter((list) => list.title.includes(filterText)); // ||list.tags.includes({title: filterText}))
   const params = useParams();
+
+const [canView, setCanView] = useState(false)
+
   function tabList(): void {
     setTab(true);
   }
@@ -40,6 +43,8 @@ const MyGroupBookmarkList = () => {
       })
         .then((res) => {
           setLists(res.data);
+
+          res.data.users.map((user:any)=>user.Id===userId&&setCanView(true))
         })
         .catch((err) => {
           console.error(err);
@@ -106,7 +111,7 @@ const MyGroupBookmarkList = () => {
                     <MyBookmarkListAlbum
                       list={list}
                       whatMenu="즐겨찾기"
-                      canEdit={params.userId === String(userId)}
+                      canEdit={canView}
                     />
                   ))}
                 </div>
@@ -116,7 +121,7 @@ const MyGroupBookmarkList = () => {
                 {filterdLists.map((list) => (
                   <div
                     className={
-                      (params.userId === String(userId) || list.isPublic
+                      (canView|| list.isPublic
                         ? ""
                         : "hidden ") + " my-1"
                     }

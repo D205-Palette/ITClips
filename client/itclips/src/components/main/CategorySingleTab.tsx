@@ -27,7 +27,7 @@ interface Props {
 const CategorySingleTab: FC<Props> = ({ tempCategory,canEdit }) => {
 
   const params = useParams()
-  const {tempCategories, setTempCategories,addTempCategories, deleteTempCategories} = Tab()
+
 const {setIsBookmarkListChange} = mainStore()
   const { userId, token } = authStore();
   const isDark = darkModeStore((state) => state.isDark);
@@ -70,7 +70,7 @@ const {setIsBookmarkListChange} = mainStore()
         },
       })
         .then((res) => {
-          deleteTempCategories(tempCategory.categoryName)
+
           setIsBookmarkListChange(true)
         })
         .catch((err) => {

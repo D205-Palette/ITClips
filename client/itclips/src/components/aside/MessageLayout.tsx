@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 // components
 import AsideMessage from "./AsideMessage";
@@ -19,13 +19,32 @@ const MessageLayout = () => {
   const isDark = darkModeStore(state => state.isDark);
   const selectedChat = asideStore(state => state.selectedChat);
   const isMessageOpen = asideStore(state => state.isMessageOpen);
+  const toggleMessage = asideStore(state => state.toggleMessage);
   const setSelectedChat = asideStore(state => state.setSelectedChat);
   const { updateMessageStatus, resetMessageCount } = chatStore();
 
+  const messageLayoutRef = useRef<HTMLDivElement>(null);
+
+  // 바깥을 클릭했을 때 메세지창 닫기
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (messageLayoutRef.current && !messageLayoutRef.current.contains(event.target as Node)) {
+        toggleMessage();  // 메시지창을 닫습니다.
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [toggleMessage]);
+
+  // 채팅방을 고르는 함수
   const handleSelectChat = (roomId: any) => {
     setSelectedChat(roomId);
   };
 
+  // 그냥 뒤로가기
   const handleBackToList = () => {
     setSelectedChat(null);
     setShowInvite(null);
@@ -57,7 +76,10 @@ const MessageLayout = () => {
   }
 
   return (
-    <div className="bg-base-100 rounded-lg w-96 h-[42rem] overflow-hidden shadow-xl transition-all duration-300 border border-gray-200">
+    <div
+      ref={messageLayoutRef}
+      className="bg-base-100 rounded-lg w-96 h-[42rem] overflow-hidden shadow-xl transition-all duration-300 border border-gray-200"
+    >
       <div className="w-full h-full overflow-hidden flex flex-col">
         {selectedChat === null && showInvite === null && (
           <AsideMessage

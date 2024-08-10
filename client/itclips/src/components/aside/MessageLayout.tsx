@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 
 // components
 import AsideMessage from "./AsideMessage";
@@ -26,18 +26,32 @@ const MessageLayout = () => {
   const messageLayoutRef = useRef<HTMLDivElement>(null);
 
   // 바깥을 클릭했을 때 메세지창 닫기
+  const handleClickOutside = useCallback((event: MouseEvent) => {
+    if (messageLayoutRef.current && !messageLayoutRef.current.contains(event.target as Node)) {
+      const messageButton = document.querySelector('button[aria-label="Message"]');
+      if (messageButton && !messageButton.contains(event.target as Node)) {
+        // 의도적인 지연 추가
+        setTimeout(() => {
+          toggleMessage();
+        }, 0);
+      }
+    }
+  }, [toggleMessage]);
+
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (messageLayoutRef.current && !messageLayoutRef.current.contains(event.target as Node)) {
-        toggleMessage();  // 메시지창을 닫습니다.
+    const handleGlobalClick = (event: MouseEvent) => {
+      if (isMessageOpen) {
+        handleClickOutside(event);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    // 캡처 단계에서 이벤트 처리
+    document.addEventListener('mousedown', handleGlobalClick, true);
+
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('mousedown', handleGlobalClick, true);
     };
-  }, [toggleMessage]);
+  }, [isMessageOpen, handleClickOutside]);
 
   // 채팅방을 고르는 함수
   const handleSelectChat = (roomId: any) => {

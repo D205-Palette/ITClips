@@ -1,6 +1,10 @@
 // ChatRoomListContainer.tsx 는 AsideMessage.tsx 에서 채팅방들을 리스트로 보여주는 컴포넌트
 
 import React from "react";
+import { useShallow } from "zustand/react/shallow";
+
+// stores
+import { chatStore } from "../../../stores/chatStore";
 
 interface ChatRoom {
   id: number;
@@ -11,11 +15,12 @@ interface ChatRoom {
 }
 
 interface ChildComponentProps {
-  rooms: ChatRoom[];
   onClickMessage: (id: number) => any;
 }
 
-const ChatRoomListContainer: React.FC<ChildComponentProps> = ({ rooms, onClickMessage }) => {
+const ChatRoomListContainer: React.FC<ChildComponentProps> = ({ onClickMessage }) => {
+
+  const rooms = chatStore(useShallow(state => state.rooms));
   
   return (
     <div>

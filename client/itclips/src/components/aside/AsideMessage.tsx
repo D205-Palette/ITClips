@@ -16,15 +16,6 @@ interface MessageListProps {
 
 const AsideMessage: React.FC<MessageListProps> = ({ onSelectChat, onShowInvite }) => {
 
-  const userId = authStore(state => state.userId);
-  const { rooms, fetchRooms } = chatStore();
-
-  useEffect(() => {
-    if (userId) {
-      fetchRooms(userId);
-    }
-  }, [userId, fetchRooms]);
-
   const onClickMessage = (roomId: number) => {
     // 해당 메세지 대화창으로 이동하게 구현하기
     onSelectChat(roomId);
@@ -37,8 +28,7 @@ const AsideMessage: React.FC<MessageListProps> = ({ onSelectChat, onShowInvite }
   return (
     <div className="p-4 max-w-sm mx-auto h-[35rem] flex flex-col">
       <MessageHeader onClickInvite={onClickInvite} />
-      <ChatRoomListContainer 
-        rooms={rooms}
+      <ChatRoomListContainer
         onClickMessage={onClickMessage}
       />
     </div>

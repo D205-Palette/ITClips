@@ -140,8 +140,15 @@ export const chatStore = create<ChatStore>((set, get) => ({
       const updatedRooms = state.rooms.map(room =>
         room.id === roomId ? { ...room, ...updates } : room
       );
+
+      // 최신 메시지 순으로 정렬
+      const sortedRooms = updatedRooms.sort((a, b) => {
+        if (!a.lastModified || !b.lastModified) return 0;
+        return new Date(b.lastModified).getTime() - new Date(a.lastModified).getTime();
+      });
+
       return {
-        rooms: updatedRooms,
+        rooms: sortedRooms,
         totalUnreadCount: updatedRooms.reduce((sum, room) => sum + room.messageCnt, 0)
       };
     }),
@@ -188,11 +195,17 @@ export const chatStore = create<ChatStore>((set, get) => ({
           : room
       );
 
-      const newTotalUnreadCount = updatedRooms.reduce((sum, room) => sum + room.messageCnt, 0);
+      // 최신 메시지 순으로 정렬
+      const sortedRooms = updatedRooms.sort((a, b) => {
+        if (!a.lastModified || !b.lastModified) return 0;
+        return new Date(b.lastModified).getTime() - new Date(a.lastModified).getTime();
+      });
+
+      const newTotalUnreadCount = sortedRooms.reduce((sum, room) => sum + room.messageCnt, 0);
 
       return {
         currentRoomMessages: updatedMessages,
-        rooms: updatedRooms,
+        rooms: sortedRooms,
         totalUnreadCount: newTotalUnreadCount
       };
     }),

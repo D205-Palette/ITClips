@@ -199,27 +199,6 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack,
     }
   };
 
-  const handleNewMessage = useCallback((message: Message) => {
-    addMessage(message);
-  }, [addMessage]);
-
-  // chatStore에서 메세지와 방 정보 가져오기
-  useEffect(() => {
-    fetchMessages(roomId);
-    fetchRoomInfo(roomId);
-    
-    if (isConnected && stompClient) {
-      const subscription = stompClient.subscribe(`/api/sub/chat/room/${roomId}`, (message) => {
-        const newMessage = JSON.parse(message.body);
-        handleNewMessage(newMessage);
-      });
-
-      return () => {
-        subscription.unsubscribe();
-      };
-    }
-  }, [roomId, fetchMessages, fetchRoomInfo, isConnected, stompClient, handleNewMessage]);
-
   return (
     <div className="p-4 max-w-sm mx-auto h-[35rem] flex flex-col">
       <div className="flex justify-between items-center mb-4">

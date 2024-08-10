@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 // components
 import AsideMessage from "./AsideMessage";
@@ -8,7 +8,6 @@ import AsideStartNewMessage from "./AsideStartNewMessage";
 // stores
 import darkModeStore from "../../stores/darkModeStore";
 import { asideStore } from "../../stores/asideStore";
-import { webSocketStore } from "../../stores/webSocketStore";
 import { authStore } from "../../stores/authStore";
 import { chatStore } from "../../stores/chatStore";
 
@@ -21,17 +20,7 @@ const MessageLayout = () => {
   const selectedChat = asideStore(state => state.selectedChat);
   const isMessageOpen = asideStore(state => state.isMessageOpen);
   const setSelectedChat = asideStore(state => state.setSelectedChat);
-  const { connect, disconnect } = webSocketStore();
   const { updateMessageStatus, resetMessageCount } = chatStore();
-
-  // 소켓 연결
-  useEffect(() => {
-    connect();
-
-    return () => {
-      disconnect();
-    };
-  }, [connect, disconnect]);
 
   const handleSelectChat = (roomId: any) => {
     setSelectedChat(roomId);

@@ -37,18 +37,18 @@ const MessageContainer: React.FC<MessageContainerProps> = ({ messages }) => {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto mb-4 space-y-4 p-4 flex flex-col">
+    <div className="flex-1 overflow-y-auto mb-4 space-y-4 p-4 flex flex-col w-full max-w-full">
       {messages.map((message: Message) => {
         const isMyMessage = message.senderName === userInfo.nickname;
         return (
-          <div key={`${message.id}-${message.createdAt}`} className={`chat ${isMyMessage ? 'chat-end' : 'chat-start'}`}>
+          <div key={`${message.id}-${message.createdAt}`} className={`chat ${isMyMessage ? 'chat-end' : 'chat-start'} w-full`}>
             <div className="chat-header">
               {message.senderName}
               <time className="text-xs opacity-50 ml-1">
                 {formatMessageTime(message.createdAt)}
               </time>
             </div>
-            <div className={`chat-bubble ${isMyMessage ? 'bg-sky-500 text-white' : 'bg-gray-300 text-gray-800'}`}>
+            <div className={`chat-bubble ${isMyMessage ? 'bg-sky-500 text-white' : 'bg-gray-300 text-gray-800'} break-words max-w-[90%] whitespace-pre-wrap overflow-hidden`}>
               {message.message}
             </div>
           </div>

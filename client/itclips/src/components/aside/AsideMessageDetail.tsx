@@ -50,6 +50,14 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack,
   const [ isInviteModalOpen, setIsInviteModalOpen ] = useState(false);
   const [ isInputFocused, setIsInputFocused ] = useState(false);
   const updateStatusRef = useRef<(() => void) | null>(null); // 최신 updateReadStatus 함수를 참조하는 ref
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // 컴포넌트 마운트 시 입력 필드에 포커스
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
 
   // 메세지 읽음 상태를 업데이트
   const updateReadStatus = useCallback(async () => {
@@ -223,6 +231,7 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack,
       </div>
       <div className="flex items-center">
         <input
+          ref={inputRef}
           type="text"
           value={inputMessage}
           onChange={(e) => setInputMessage(e.target.value)}

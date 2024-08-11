@@ -55,4 +55,8 @@ public class RoadmapComment {
         this.contents = contents;
     }
 
+    public void updateComment(String contents) {
+        this.contents = contents;
+    }
+
 }

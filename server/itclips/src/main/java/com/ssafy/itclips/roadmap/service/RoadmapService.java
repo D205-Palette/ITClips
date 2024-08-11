@@ -53,6 +53,8 @@ public interface RoadmapService {
     // 로드맵 댓글 삭제
     void deleteComment(Long commentId, Long userId) throws RuntimeException;
 
+    void updateComment(Long commentId, Long userId, RoadmapCommentRequestDTO roadmapCommentRequestDTO) throws RuntimeException;
+
     //로드맵 좋아요 인기순위
     List<RankDTO> getListsRankingByLikes();
     //조회수 인기순위
@@ -65,4 +67,5 @@ public interface RoadmapService {
     Integer getCommentCount(Long roadmapId) throws RuntimeException;
 
     GPTResponseDTO getRecommendRoadmapSteps(Long userId, String keyWord) throws RuntimeException;
+
 }

@@ -482,7 +482,19 @@ public class RoadmapServiceImpl implements RoadmapService {
 
     }
 
+    @Override
+    @Transactional
+    public void updateComment(Long commentId, Long userId, RoadmapCommentRequestDTO roadmapCommentRequestDTO) throws RuntimeException {
+        RoadmapComment comment = roadmapCommentRepository.findById(commentId)
+                .orElseThrow(() -> new CustomException(ErrorCode.COMMENT_NOT_FOUND));
 
+        if(comment.getUser().getId() != userId){
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+        }
+
+        comment.updateComment(roadmapCommentRequestDTO.getComment());
+
+    }
 
     //댓글 삭제
     @Override

@@ -151,6 +151,16 @@ public class RoadmapController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    //로드맵 댓글달기
+    @PutMapping("/comment/{commentId}/{userId}")
+    @Operation(summary = "로드맵 댓글 수정", description = "로드맵에 댓글 수정")
+    public ResponseEntity<?> updateComment(@PathVariable("commentId") Long commentId,
+                                           @PathVariable("userId") Long userId,
+                                           @RequestBody RoadmapCommentRequestDTO roadmapCommentRequestDTO){
+        roadmapService.updateComment(commentId,userId, roadmapCommentRequestDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     //로드맵 댓글 삭제
     @DeleteMapping("/comment/{commentId}/{userId}")
     @Operation(summary = "로드맵 댓글 삭제", description = "로드맵 댓글 삭제")

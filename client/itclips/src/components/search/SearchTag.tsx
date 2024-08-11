@@ -15,6 +15,7 @@ import { tagSearch } from "../../api/searchApi";
 
 // stores
 import { authStore } from "../../stores/authStore";
+import { searchStore } from "../../stores/searchStore";
 
 interface Tag {
   title: string;
@@ -44,9 +45,9 @@ interface SearchBookmarkListProps {
 const SearchTag: React.FC<SearchBookmarkListProps> = ({ keyword }) => {
 
   const userId = authStore(state => state.userId);
+  const { bookmarkListItems, setBookmarkListItems } = searchStore();
 
   const [ viewMode, setViewMode ] = useState<'grid' | 'list'>('list');
-  const [ bookmarkListItems, setBookmarkListItems ] = useState<BookmarkListItem[]>([]);
   const [ hasResults, setHasResults ] = useState<boolean>(true);
 
   const tabList = () => {
@@ -79,7 +80,7 @@ const SearchTag: React.FC<SearchBookmarkListProps> = ({ keyword }) => {
     };
 
     fetchRoadmap();
-  }, [userId, keyword]);
+  }, [userId, keyword, setBookmarkListItems]);
 
   return (
     <div className="mt-4">

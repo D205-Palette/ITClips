@@ -7,6 +7,16 @@ import SearchItemKebabDropdown from "./SearchItemKebabDropdown";
 // images
 import noImage from "../../../assets/images/noImage.png"
 
+// icons
+import { FaHeart, FaRegHeart } from "react-icons/fa";
+
+// apis
+import { likeBookmarkList, unlikeBookmarkList } from "../../../api/bookmarkListApi";
+
+// stores
+import { authStore } from "../../../stores/authStore";
+import { searchStore } from "../../../stores/searchStore";
+
 interface Tag {
   title: string;
 }
@@ -34,6 +44,9 @@ interface TagProps {
 
 const SearchTagItemGrid: React.FC<TagProps> = ({ item }) => {
 
+  const userId = authStore(state => state.userId);
+  const { updateBookmarkItem } = searchStore();
+
   // 더보기 버튼 기능이 NavLink와 안겹치게 설정
   const handleNavLink = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -45,6 +58,24 @@ const SearchTagItemGrid: React.FC<TagProps> = ({ item }) => {
     if (users.length === 0) return "";
     if (users.length === 1) return users[0].nickName;
     return users.map(user => user.nickName).join(", ");
+  };
+
+  // 좋아요 기능
+  const handleLike = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    try {
+      if (item.isLiked) {
+        await unlikeBookmarkList(userId, item.id);
+        updateBookmarkItem(item.id, { isLiked: false, likeCount: item.likeCount - 1 });
+      } else {
+        await likeBookmarkList(userId, item.id);
+        updateBookmarkItem(item.id, { isLiked: true, likeCount: item.likeCount + 1 });
+      }
+    } catch (error) {
+      console.error("좋아요 처리 중 오류 발생:", error);
+    }
   };
 
   return (
@@ -67,7 +98,13 @@ const SearchTagItemGrid: React.FC<TagProps> = ({ item }) => {
               <p className="text-sm text-gray-400">{getUserNames(item.users)} 생성</p>
             </div>
             <div className="flex justify-end mt-2">
-              <button className="btn btn-ghost btn-xs" onClick={handleNavLink}>❤️ {item.likeCount}</button>
+              <button 
+                className="btn btn-ghost btn-xs text-sm flex items-center" 
+                onClick={handleLike}
+              >
+                {item.isLiked ? <FaHeart color="red" /> : <FaRegHeart />}
+                <span className="ml-1">{item.likeCount}</span>
+              </button>
             </div>
           </div>
         </div>

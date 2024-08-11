@@ -19,3 +19,13 @@ export const editBookmarkListComment = (userId: number, commentId: number, conte
 export const deleteBookmarkListComment = (userId: number, commentId: number) => {
   return authenticatedRequest("delete", `/comment/delete/${userId}/${commentId}`, undefined, { userId, commentId });
 };
+
+// 북마크리스트 좋아요
+export const likeBookmarkList = (userId: number, bookmarkId: number) => {
+  return authenticatedRequest("post", `/list/like/${userId}/${bookmarkId}`, undefined, { userId, bookmarkId });
+};
+
+// 북마크리스트 좋아요 취소
+export const unlikeBookmarkList = (userId: number, bookmarkId: number) => {
+  return authenticatedRequest("delete", `/list/like/${userId}/${bookmarkId}`, undefined, { userId, bookmarkId });
+};

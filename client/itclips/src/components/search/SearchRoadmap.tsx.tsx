@@ -15,6 +15,7 @@ import { roadmapSearch } from "../../api/searchApi";
 
 // stores
 import { authStore } from "../../stores/authStore";
+import { searchStore } from "../../stores/searchStore";
 
 interface Step {
   id: number;
@@ -47,10 +48,10 @@ interface SearchRoadmapProps {
 const SearchRoadmap: React.FC<SearchRoadmapProps> = ({ keyword }) => {
 
   const userId = authStore(state => state.userId);
+  const { roadmapItems, setRoadmapItems } = searchStore();
 
   const [ viewMode, setViewMode ] = useState<'grid' | 'list'>('list');
   const [ sortBy, setSortBy ] = useState<"hit" | "scrap" | "like">("hit");
-  const [ roadmapItems, setRoadmapItems ] = useState<RoadmapItem[]>([]);
   const [ hasResults, setHasResults ] = useState<boolean>(true);
 
   const tabList = () => {
@@ -62,13 +63,13 @@ const SearchRoadmap: React.FC<SearchRoadmapProps> = ({ keyword }) => {
   };
 
   useEffect(() => {
-    const fetchRoadmap = async () => {
+    const fetchRoadmapList = async () => {
       try {
         const response = await roadmapSearch(userId, 1, sortBy, keyword);
         setRoadmapItems(response.data);
         setHasResults(true);
       } catch (error) {
-        console.error("로드맵 검색 중 오류 발생 or 결과 없음:", error);
+        console.error("로드맵 리스트 검색 중 오류 발생 or 결과 없음:", error);
         if (axios.isAxiosError(error) && error.response?.status === 404) {
           setRoadmapItems([]);
           setHasResults(false);
@@ -76,8 +77,8 @@ const SearchRoadmap: React.FC<SearchRoadmapProps> = ({ keyword }) => {
       }
     };
 
-    fetchRoadmap();
-  }, [userId, sortBy, keyword]);
+    fetchRoadmapList();
+  }, [userId, sortBy, keyword, setRoadmapItems]);
 
   return (
     <div className="mt-4">

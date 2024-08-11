@@ -15,27 +15,7 @@ import { bookmarkSearch } from "../../api/searchApi";
 
 // stores
 import { authStore } from "../../stores/authStore";
-
-interface Tag {
-  title: string;
-}
-
-interface User {
-  id: number;
-  nickName: string;
-}
-
-interface BookmarkListItem {
-  id: number;
-  title: string;
-  description: string;
-  bookmarkCount: number;
-  likeCount: number;
-  image: string;
-  isLiked: boolean;
-  tags: Tag[];
-  users: User[];
-}
+import { searchStore } from "../../stores/searchStore";
 
 interface SearchBookmarkListProps {
   keyword: string;
@@ -44,10 +24,10 @@ interface SearchBookmarkListProps {
 const SearchBookmarkList: React.FC<SearchBookmarkListProps> = ({ keyword }) => {
 
   const userId = authStore(state => state.userId);
+  const { bookmarkListItems, setBookmarkListItems } = searchStore();
 
   const [ viewMode, setViewMode ] = useState<'grid' | 'list'>('list');
   const [ sortBy, setSortBy ] = useState<"hit" | "scrap" | "like">("hit");
-  const [ bookmarkListItems, setBookmarkListItems ] = useState<BookmarkListItem[]>([]);
   const [ hasResults, setHasResults ] = useState<boolean>(true);
 
   const tabList = () => {
@@ -74,7 +54,7 @@ const SearchBookmarkList: React.FC<SearchBookmarkListProps> = ({ keyword }) => {
     };
 
     fetchBookmarkList();
-  }, [userId, sortBy, keyword]);
+  }, [userId, sortBy, keyword, setBookmarkListItems]);
 
   return (
     <div className="mt-4">

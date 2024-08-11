@@ -46,7 +46,7 @@ const AsideMessageKebabDropdown: React.FC<Props> = ({ roomId, onMenuItemClick })
       </button>
 
       {isDropdownOpen && (
-        <div className="absolute right-0 top-full mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 z-10">
+        <div className="absolute right-0 top-full mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 z-20">
           <ul className="py-2 text-sm text-gray-700">
             {categories.map((category) => (
               <li key={category} onClick={() => handleMenu(category)}>

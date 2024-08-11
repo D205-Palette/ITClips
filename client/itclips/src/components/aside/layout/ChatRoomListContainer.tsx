@@ -33,7 +33,7 @@ const ChatRoomListContainer: React.FC<ChildComponentProps> = ({ onClickMessage }
     if (listRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = listRef.current;
       setShowTopArrow(scrollTop > 0);
-      setShowBottomArrow(scrollTop + clientHeight < scrollHeight);
+      setShowBottomArrow(scrollTop + clientHeight < scrollHeight - 1);
     }
   };
 

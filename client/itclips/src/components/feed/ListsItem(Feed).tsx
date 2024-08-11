@@ -136,7 +136,7 @@ const ListItem: FC<Props> = ({ list }) => {
         </button>
       </div>
 
-      <figure className="border rounded-xl mx-5 overflow-hidden h-64">
+      <figure className="border rounded-xl mx-5 overflow-hidden h-64 bg-sky-100">
         <img
           className="w-full h-full object-contain"
           src={list.image === "default" ? noImg : list.image}          

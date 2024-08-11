@@ -174,7 +174,7 @@ const SocialSignupView = () => {
               <input
                 name="nickname"
                 type="text"
-                className="input input-bordered w-full"
+                className="input input-bordered w-full text-xs md:text-sm"
                 placeholder="닉네임을 입력해주세요."
                 value={nickname}
                 onChange={handleInputChange}
@@ -191,7 +191,7 @@ const SocialSignupView = () => {
             {/* 닉네임 유효성 메시지 */}
             {isNicknameValid !== null && (
               <div
-                className={`ml-14 ${
+                className={`ml-14 text-xs md:text-sm ${
                   isNicknameValid ? "text-green-500" : "text-red-500"
                 }`}
               >
@@ -211,7 +211,7 @@ const SocialSignupView = () => {
                 name="birthday"
                 type="text"
                 value={birthday}
-                className="input input-bordered w-full"
+                className="input input-bordered w-full text-xs md:text-sm"
                 placeholder="생년월일을 입력해주세요. ex)YYYY-MM-DD"
                 onChange={handleInputChange}
               />
@@ -219,7 +219,7 @@ const SocialSignupView = () => {
             {/* 생년월일 유효성 메시지 */}
             {birthdayMessage && (
               <div
-                className={`ml-14 mt-2 ${
+                className={`ml-14 mt-2 text-xs md:text-sm ${
                   birthdayMessage.includes("입력 완료")
                     ? "text-green-500"
                     : "text-red-500"
@@ -239,7 +239,7 @@ const SocialSignupView = () => {
                 name="job"
                 value={job}
                 onChange={handleInputChange}
-                className="select input-bordered w-full max-w-xs"
+                className="select input-bordered w-full max-w-xs text-xs md:text-sm"
               >
                 <option value="" disabled>
                   직업을 선택해주세요.

@@ -297,7 +297,7 @@ const SignUpView = () => {
               <input
                 name="email"
                 type="email"
-                className={`input input-bordered w-full`}
+                className={`input input-bordered w-full text-xs md:text-sm`}
                 placeholder="아이디로 사용될 이메일을 입력해주세요."
                 value={email}
                 onChange={handleInputChange}
@@ -319,7 +319,7 @@ const SignUpView = () => {
               <div className="flex items-center ml-14 gap-3">
                 <input
                   type="text"
-                  className="input input-bordered w-full"
+                  className="input input-bordered w-full text-xs md:text-sm"
                   placeholder="인증번호를 입력해주세요."
                   value={verificationCode}
                   onChange={(e) => setVerificationCode(e.target.value)}
@@ -358,7 +358,7 @@ const SignUpView = () => {
               <input
                 name="password"
                 type="password"
-                className="input input-bordered w-full"
+                className="input input-bordered w-full text-xs md:text-sm"
                 placeholder="비밀번호를 입력해주세요. (최소 8자 이상)"
                 value={password}
                 onChange={handleInputChange}
@@ -368,7 +368,7 @@ const SignUpView = () => {
               <input
                 name="passwordCheck"
                 type="password"
-                className="input input-bordered w-full"
+                className="input input-bordered w-full text-xs md:text-sm"
                 placeholder="비밀번호를 한번 더 입력해주세요."
                 value={passwordCheck}
                 onChange={handleInputChange}
@@ -384,7 +384,7 @@ const SignUpView = () => {
             {/* 비밀번호 유효성 메시지 */}
             {isPasswordLengthValid !== null && (
               <div
-                className={`ml-14 mt-2 ${
+                className={`ml-14 mt-2 text-xs md:text-sm ${
                   isPasswordLengthValid ? "text-green-500" : "text-red-500"
                 }`}
               >
@@ -396,7 +396,7 @@ const SignUpView = () => {
             {/* 비밀번호 일치 여부 메시지 */}
             {isPasswordMatch !== null && (
               <div
-                className={`ml-14 mt-2 ${
+                className={`ml-14 mt-2 text-xs md:text-sm ${
                   isPasswordMatch ? "text-green-500" : "text-red-500"
                 }`}
               >
@@ -417,7 +417,7 @@ const SignUpView = () => {
               <input
                 name="nickname"
                 type="text"
-                className="input input-bordered w-full"
+                className="input input-bordered w-full text-xs md:text-sm"
                 placeholder="닉네임을 입력해주세요. (최대 10자 이내)"
                 value={nickname}
                 onChange={(e) => {
@@ -437,7 +437,7 @@ const SignUpView = () => {
             {/* 닉네임 길이 유효성 메시지 */}
             {isNicknameLengthValid !== null && (
               <div
-                className={`ml-14 mt-2 ${
+                className={`ml-14 mt-2 text-xs md:text-sm ${
                   isNicknameLengthValid ? "text-green-500" : "text-red-500"
                 }`}
               >
@@ -449,7 +449,7 @@ const SignUpView = () => {
             {/* 닉네임 유효성 메시지 */}
             {isNicknameValid !== null && (
               <div
-                className={`ml-14 ${
+                className={`ml-14 text-xs md:text-sm ${
                   isNicknameValid ? "text-green-500" : "text-red-500"
                 }`}
               >
@@ -462,14 +462,14 @@ const SignUpView = () => {
 
           {/* 생년월일 입력 */}
           <div className="space-y-4 mb-6">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 ">
               <FaRegCalendarAlt className="w-8 h-8" />
               <div className="pl-1"></div>
               <input
                 name="birthday"
                 type="text"
                 value={birthday}
-                className="input input-bordered w-full"
+                className="input input-bordered w-full text-xs md:text-sm"
                 placeholder="생년월일을 입력해주세요. ex)YYYY-MM-DD"
                 onChange={handleInputChange}
               />
@@ -477,7 +477,7 @@ const SignUpView = () => {
             {/* 생년월일 유효성 메시지 */}
             {birthdayMessage && (
               <div
-                className={`ml-14 mt-2 ${
+                className={`ml-14 mt-2 text-xs md:text-sm ${
                   birthdayMessage.includes("입력 완료")
                     ? "text-green-500"
                     : "text-red-500"
@@ -497,7 +497,7 @@ const SignUpView = () => {
                 name="job"
                 value={job}
                 onChange={handleInputChange}
-                className="select input-bordered w-full max-w-xs"
+                className="select input-bordered w-full max-w-xs text-xs md:text-sm"
               >
                 <option value="" disabled>
                   직업을 선택해주세요.

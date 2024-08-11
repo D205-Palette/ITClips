@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import React, { useState } from "react";
+import React from "react";
 
 // components
 import SearchItemKebabDropdown from "./SearchItemKebabDropdown";
@@ -15,6 +15,7 @@ import { likeBookmarkList, unlikeBookmarkList } from "../../../api/bookmarkListA
 
 // stores
 import { authStore } from "../../../stores/authStore";
+import { searchStore } from "../../../stores/searchStore";
 
 interface Tag {
   title: string;
@@ -44,8 +45,7 @@ interface TagProps {
 const SearchTagItemList: React.FC<TagProps> = ({ item }) => {
 
   const userId = authStore(state => state.userId);
-  const [ isLiked, setIsLiked ] = useState(item.isLiked);
-  const [ likeCount, setLikeCount ] = useState(item.likeCount);
+  const { updateBookmarkItem } = searchStore();
 
   // 더보기 버튼 기능이 NavLink와 안겹치게 설정
   const handleNavLink = (e: React.MouseEvent) => {
@@ -66,23 +66,23 @@ const SearchTagItemList: React.FC<TagProps> = ({ item }) => {
     e.stopPropagation();
 
     try {
-      if (isLiked) {
+      if (item.isLiked) {
         await unlikeBookmarkList(userId, item.id);
-        setLikeCount(prev => prev - 1);
+        updateBookmarkItem(item.id, { isLiked: false, likeCount: item.likeCount - 1 });
       } else {
         await likeBookmarkList(userId, item.id);
-        setLikeCount(prev => prev + 1);
+        updateBookmarkItem(item.id, { isLiked: true, likeCount: item.likeCount + 1 });
       }
-      setIsLiked(!isLiked);
     } catch (error) {
       console.error("좋아요 처리 중 오류 발생:", error);
     }
   };
 
-  // 설명 텍스트를 30자로 제한하는 함수
-  const truncateDescription = (text: string, maxLength: number = 30) => {
-    if (text.length <= maxLength) return text;
-    return text.slice(0, maxLength) + '...';
+  // 태그 목록을 "#tag1 #tag2 #tag3" 형식으로 변환하는 함수
+  const formatTags = (tags: Tag[], maxLength: number = 30) => {
+    const tagString = tags.map(tag => `#${tag.title}`).join(' ');
+    if (tagString.length <= maxLength) return tagString;
+    return tagString.slice(0, maxLength) + '...';
   };
 
   return (
@@ -100,14 +100,14 @@ const SearchTagItemList: React.FC<TagProps> = ({ item }) => {
           </div>
         </div>
 
-        <p className="text-gray-500">{truncateDescription(item.description)}</p>
+        <p className="text-gray-500">{formatTags(item.tags)}</p>
 
         <button 
           className="btn btn-ghost btn-xs text-sm flex items-center" 
           onClick={handleLike}
         >
-          {isLiked ? <FaHeart color="red" /> : <FaRegHeart />}
-          <span className="ml-1">{likeCount}</span>
+          {item.isLiked ? <FaHeart color="red" /> : <FaRegHeart />}
+          <span className="ml-1">{item.likeCount}</span>
         </button>
 
         <div onClick={handleNavLink}>

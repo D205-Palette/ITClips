@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import React, { useState } from "react";
+import React from "react";
 
 // components
 import SearchItemKebabDropdown from "./SearchItemKebabDropdown";
@@ -15,6 +15,7 @@ import { likeBookmarkList, unlikeBookmarkList } from "../../../api/bookmarkListA
 
 // stores
 import { authStore } from "../../../stores/authStore";
+import { searchStore } from "../../../stores/searchStore";
 
 interface Tag {
   title: string;
@@ -38,14 +39,13 @@ interface BookmarkListItem {
 }
 
 interface BookmarkListItemProps {
-item: BookmarkListItem;
+  item: BookmarkListItem;
 }
 
 const SearchBookmarkListItemList: React.FC<BookmarkListItemProps> = ({ item }) => {
 
   const userId = authStore(state => state.userId);
-  const [ isLiked, setIsLiked ] = useState(item.isLiked);
-  const [ likeCount, setLikeCount ] = useState(item.likeCount);
+  const { updateBookmarkItem } = searchStore();
 
   // 더보기 버튼 기능이 NavLink와 안겹치게 설정
   const handleNavLink = (e: React.MouseEvent) => {
@@ -66,14 +66,13 @@ const SearchBookmarkListItemList: React.FC<BookmarkListItemProps> = ({ item }) =
     e.stopPropagation();
 
     try {
-      if (isLiked) {
+      if (item.isLiked) {
         await unlikeBookmarkList(userId, item.id);
-        setLikeCount(prev => prev - 1);
+        updateBookmarkItem(item.id, { isLiked: false, likeCount: item.likeCount - 1 });
       } else {
         await likeBookmarkList(userId, item.id);
-        setLikeCount(prev => prev + 1);
+        updateBookmarkItem(item.id, { isLiked: true, likeCount: item.likeCount + 1 });
       }
-      setIsLiked(!isLiked);
     } catch (error) {
       console.error("좋아요 처리 중 오류 발생:", error);
     }
@@ -106,8 +105,8 @@ const SearchBookmarkListItemList: React.FC<BookmarkListItemProps> = ({ item }) =
           className="btn btn-ghost btn-xs text-sm flex items-center" 
           onClick={handleLike}
         >
-          {isLiked ? <FaHeart color="red" /> : <FaRegHeart />}
-          <span className="ml-1">{likeCount}</span>
+          {item.isLiked ? <FaHeart color="red" /> : <FaRegHeart />}
+          <span className="ml-1">{item.likeCount}</span>
         </button>
 
         <div onClick={handleNavLink}>

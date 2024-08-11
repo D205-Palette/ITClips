@@ -15,6 +15,7 @@ import { likeRoadmap, unlikeRoadmap } from "../../../api/roadmapApi";
 
 // stores
 import { authStore } from "../../../stores/authStore";
+import { searchStore } from "../../../stores/searchStore";
 
 interface Step {
   id: number;
@@ -47,8 +48,7 @@ interface RoadmapProps {
 const SearchRoadmapItemList: React.FC<RoadmapProps> = ({ item }) => {
 
   const userId = authStore(state => state.userId);
-  const [ isLiked, setIsLiked ] = useState(item.isLiked);
-  const [ likeCount, setLikeCount ] = useState(item.likeCnt);
+  const { updateRoadmapItem } = searchStore();
 
   // 더보기 버튼 기능이 NavLink와 안겹치게 설정
   const handleNavLink = (e: React.MouseEvent) => {
@@ -62,14 +62,13 @@ const SearchRoadmapItemList: React.FC<RoadmapProps> = ({ item }) => {
     e.stopPropagation();
 
     try {
-      if (isLiked) {
+      if (item.isLiked) {
         await unlikeRoadmap(item.id, userId);
-        setLikeCount(prev => prev - 1);
+        updateRoadmapItem(item.id, { isLiked: false, likeCnt: item.likeCnt - 1 });
       } else {
         await likeRoadmap(item.id, userId);
-        setLikeCount(prev => prev + 1);
+        updateRoadmapItem(item.id, { isLiked: true, likeCnt: item.likeCnt + 1 });
       }
-      setIsLiked(!isLiked);
     } catch (error) {
       console.error("좋아요 처리 중 오류 발생:", error);
     }
@@ -102,8 +101,8 @@ const SearchRoadmapItemList: React.FC<RoadmapProps> = ({ item }) => {
           className="btn btn-ghost btn-xs text-sm flex items-center" 
           onClick={handleLike}
         >
-          {isLiked ? <FaHeart color="red" /> : <FaRegHeart />}
-          <span className="ml-1">{likeCount}</span>
+          {item.isLiked ? <FaHeart color="red" /> : <FaRegHeart />}
+          <span className="ml-1">{item.likeCnt}</span>
         </button>
 
         <div onClick={handleNavLink}>

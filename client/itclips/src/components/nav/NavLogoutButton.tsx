@@ -9,6 +9,7 @@ import { asideStore } from "../../stores/asideStore";
 const LogoutButton = () => {
 
   const toggleMessage = asideStore(state => state.toggleMessage);
+  const isMessageOpen = asideStore(state => state.isMessageOpen);
   const navigate = useNavigate();
   const { logout, token } = authStore();
 
@@ -22,7 +23,9 @@ const LogoutButton = () => {
         window.alert("로그아웃 실패");
       });
     // 로그아웃 하면서 메세지창 닫기
-    toggleMessage();
+    if (isMessageOpen) {
+      toggleMessage();
+    }
     navigate("/login");
   };
 

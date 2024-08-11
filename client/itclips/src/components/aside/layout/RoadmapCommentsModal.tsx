@@ -13,7 +13,7 @@ import CommentWrite from "../ui/CommentWrite";
 import { authStore } from "../../../stores/authStore";
 
 // apis
-import { getRoadmapInfo, writeRoadmapComment, deleteRoadmapComment } from "../../../api/roadmapApi";
+import { getRoadmapInfo, writeRoadmapComment, deleteRoadmapComment, editRoadmapComment } from "../../../api/roadmapApi";
 
 type Comment = {
   id: number;
@@ -104,10 +104,25 @@ const RoadmapCommentsModal: FC<Props> = ({ id, isOpen, onClose, onCommentCountCh
 
   // 댓글 수정 기능은 API가 없으므로 UI만 유지
   const handleSaveComment = async (commentId: number) => {
-    // API 구현 후 이 부분을 수정
-    console.log("댓글 수정 기능 아직 구현안됨.");
-    setEditingId(null);
-    setEditContent("");
+    if (!userInfo?.id) {
+      console.error("사용자 정보가 없습니다.");
+      return;
+    }
+
+    try {
+      await editRoadmapComment(commentId, userInfo.id, editContent);
+      setComments(prevComments => 
+        prevComments.map(comment => 
+          comment.id === commentId ? { ...comment, comment: editContent } : comment
+        )
+      );
+      setEditingId(null);
+      setEditContent("");
+      setNotification({ message: "댓글이 수정되었습니다.", type: 'success' });
+    } catch (error) {
+      console.error("댓글 수정 중 오류가 발생했습니다:", error);
+      setNotification({ message: "댓글 수정에 실패했습니다.", type: 'error' });
+    }
   };
 
   const handleDeleteComment = async (commentId: number) => {
@@ -133,6 +148,7 @@ const RoadmapCommentsModal: FC<Props> = ({ id, isOpen, onClose, onCommentCountCh
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-base-100 rounded-lg p-6 w-11/12 max-w-2xl h-[80vh] flex flex-col">
         <h2 className="text-2xl font-bold mb-4">댓글</h2>
+        {/* 댓글 작성창 */}
         <CommentWrite onCommentSubmit={handleCommentSubmit} />
         <div className="flex-grow relative overflow-hidden mt-4">
           <div 
@@ -145,7 +161,7 @@ const RoadmapCommentsModal: FC<Props> = ({ id, isOpen, onClose, onCommentCountCh
                   <span className="font-semibold">{comment.userName}</span>
                   {userInfo.id === comment.userId && (
                     <div className="flex space-x-2">
-                      {editingId === comment.userId ? (
+                      {editingId === comment.id ? (
                         <>
                           <button onClick={() => handleSaveComment(comment.id)} className="text-green-500">
                             <MdCheck />
@@ -167,7 +183,8 @@ const RoadmapCommentsModal: FC<Props> = ({ id, isOpen, onClose, onCommentCountCh
                     </div>
                   )}
                 </div>
-                {editingId === comment.userId ? (
+                {/* 댓글 수정칸 */}
+                {editingId === comment.id ? (
                   <input
                     type="text"
                     value={editContent}
@@ -182,6 +199,7 @@ const RoadmapCommentsModal: FC<Props> = ({ id, isOpen, onClose, onCommentCountCh
             ))}
           </div>
         </div>
+        {/* 닫기 버튼 */}
         <button 
           onClick={onClose} 
           className="btn btn-info text-base-100 mt-4 w-full"

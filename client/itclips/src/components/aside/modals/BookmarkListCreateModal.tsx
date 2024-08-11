@@ -162,7 +162,7 @@ useEffect(()=>{
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white rounded-lg p-6 w-96 ">
+      <div className="bg-base-100 rounded-lg p-6 w-96 ">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">북마크 리스트 생성</h2>
           <button

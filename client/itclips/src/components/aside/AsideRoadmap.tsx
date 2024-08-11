@@ -25,7 +25,7 @@ const AsideRoadmap :  React.FC<Props> = ({roadmap}) => {
   const isDark = darkModeStore(state => state.isDark);
 
   return (
-    <div className={`${ isDark ? "bg-base-300" : "bg-sky-100" } rounded-3xl w-80 p-8 flex flex-col items-center`}>
+    <div className={`${ isDark ? "bg-base-300" : "bg-sky-50" } rounded-3xl w-80 p-8 flex flex-col items-center`}>
       {/* 더보기 버튼 */}
       {<AsideRoadmapKebabDropdown isRoadmap={true} id={roadmap.id}/> }
       {/* 북마크리스트 썸네일 */}

@@ -159,7 +159,7 @@ const Bookmark: FC<Props> = ({
                     type="text"
                     value={tempTitle}
                     onChange={(e) => editTempTitle(e.target.value)}
-                    className="text-xl font-bold border-slate-400 border rounded-md"
+                    className="text-xl font-bold border-slate-400 border rounded-md w-52"
                   />
                 ) : (
                   <h2 className="flex-auto card-title">{tempBookmark.title}</h2>
@@ -190,7 +190,7 @@ const Bookmark: FC<Props> = ({
                       type="text"
                       value={tempTag}
                       onChange={(e) => editTempTag(e.target.value)}
-                      className="w-full border border-slate-400 rounded-md"
+                      className="w-full border border-slate-400 rounded-md ps-2"
                     />
                   </form>
                 ) : (
@@ -205,7 +205,7 @@ const Bookmark: FC<Props> = ({
 
               {isEdit ? (
                 <button
-                  className="bg-sky-500 rounded-xl text-white py-2 px-3 hover:bg-sky-600"
+                  className="bg-sky-500 rounded-xl text-white py-2 px-3 hover:bg-sky-600 ms-2"
                   onClick={completeEdit}
                 >
                   수정

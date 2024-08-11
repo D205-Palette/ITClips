@@ -24,9 +24,9 @@ interface Item {
 const Tags = (data: BookmarkListDetailType) => {
 
   return (
-    <div className="m-2 flex">
+    <div className="mb-3 flex w-full ps-4 text-sm text-slate-500">
       {data.tags.map((tag) => (
-        <p>{tag.title}&nbsp;</p>
+        <p># {tag.title}&nbsp;</p>
       ))}
     </div>
   );

@@ -30,13 +30,13 @@ const NavBar = () => {
 
   return (
     <div>
-      <nav ref={navbarRef} className="fixed top-0 left-0 w-full flex justify-between items-center p-4 h-16 bg-base-100 z-40">
+      <nav ref={navbarRef} className="fixed top-0 left-0 w-full flex justify-between items-center py-4 px-12 h-16 bg-base-100 z-40">
         {/* 좌측 네비게이션 링크들 */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 ">
           <HomeButton />
           {/* 로그인 시에만 보임 */}
           {isLoggedIn && (
-            <ul className="flex gap-4 list-none">
+            <ul className="flex gap-6 list-none">
               <NavLink
                 to={userId ? `/user/${userId}` : "/login"}
                 className={({ isActive }) =>
@@ -66,7 +66,7 @@ const NavBar = () => {
         </div>
 
         {/* 우측 네비게이션 링크들 */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 ">
           <DarkModeToggle />
 
           {/* 로그인 전 */}

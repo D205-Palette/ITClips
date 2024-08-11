@@ -81,22 +81,22 @@ const LikesFavoritesCount = (data: BookmarkListDetailType) => {
 
 
   return (
-    <div className="grid grid-cols-6">
-      <div className="col-start-2 flex items-center">
+    <div className="flex flex-row justify-start w-full ps-4 mb-4">
+      <div className="col-start-2 flex items-center me-6">
         <div className="me-2 hover:cursor-pointer" onClick={()=>clickHeart()}>
-        {isLike ? <FaHeart color="red"  size={20}/> : <FaRegHeart size={20}/>}
+        {isLike ? <FaHeart color="red"  size={12}/> : <FaRegHeart color="gray" size={12}/>}
         </div>
-        <div>
-          <span  className="font-bold">{likeCount}</span>
+        <div className="w-3">
+          <span  className={isLike? "" : "text-slate-400"}>{likeCount}</span>
         </div>
       </div>
       <div className="col-start-5 flex items-center">
         <div className="me-2 hover:cursor-pointer " onClick={()=>clickStar()}>
-        {isScraped? <FaStar color="yellow"  size={20}/> : <FaRegStar size={20} />}
+        {isScraped? <FaStar color="skyblue"  size={14}/> : <FaRegStar color="gray" size={14} />}
     
         </div>
         <div>
-          <span className="font-bold">{scrapCount}</span>
+          <span className={isScraped ? "" : "text-slate-400"}>{scrapCount}</span>
         </div>
       </div>
     </div>

@@ -51,13 +51,13 @@ const ListItem: FC<Props> = ({ list,whatMenu }) => {
       <div
         className={
           (isDark ? "hover:bg-slate-700" : "hover:bg-slate-100") +
-          " card card-side bg-base-100 h-28 "
+          " card card-side bg-base-100 h-28 rounded-lg "
         }
       >
         <>
           <figure
             onClick={() => navigate(`/bookmarklist/${list.id}`)}
-            className="hover:cursor-pointer w-1/6 overflow-hidden"
+            className="hover:cursor-pointer w-28 overflow-hidden rounded-e-lg"
           >
             <img
               src={list.image==="default"?  noImg : list.image }

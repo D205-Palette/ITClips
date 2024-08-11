@@ -58,7 +58,7 @@ const CategoryTab: FC<Props> = ({ listId, categories, canEdit, editMode,setEditM
   // 뒤로가기 버튼
   const BackButton = (): any => {
     return (
-      <button className="me-5  " onClick={() => navigate(-1)}>
+      <button className="me-2  " onClick={() => navigate(-1)}>
         <IoIosArrowBack size="36px" />{" "}
       </button>
     );
@@ -139,7 +139,7 @@ const CategoryTab: FC<Props> = ({ listId, categories, canEdit, editMode,setEditM
   return (
     <>
       <div className="flex flex-row m-3 items-center py-5 static z-20 w-10/12">
-        <div className={editMode ? "hidden" : "h-9"}>
+        <div className={editMode ? "hidden" : "h-9 "}>
           <BackButton />
         </div>
         <div

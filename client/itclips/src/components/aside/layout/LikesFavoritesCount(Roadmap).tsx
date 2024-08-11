@@ -61,26 +61,16 @@ const LikesFavoritesCount = (data: RoadmapDetailType) => {
 
 
   return (
-    <div className="grid grid-cols-6">
+    <div className="flex flex-row justify-start w-full ps-4 mb-4">
       <div className="col-start-2 flex items-center">
         <div className="me-2 hover:cursor-pointer" onClick={()=>clickHeart()}>
-        {isLike ? <FaHeart color="red"  size={20}/> : <FaRegHeart size={20}/>}
+        {isLike ? <FaHeart color="red"  size={12}/> : <FaRegHeart size={12}/>}
         </div>
         <div>
-          <span  className="font-bold">{likeCount}</span>
+          <span  className={isLike? "":"text-slate-400"}>{likeCount}</span>
         </div>
       </div>
-      <div className="col-start-5 flex items-center">
-        <div className="me-2 hover:cursor-pointer " >
-        {/* {isScraped? <FaStar color="yellow"  size={20}/> :  */}
-        <FaRegStar size={20} />
-        {/* } */}
-    
-        </div>
-        <div>
-          <span className="font-bold">{scrapCount}</span>
-        </div>
-      </div>
+
     </div>
   );
 };

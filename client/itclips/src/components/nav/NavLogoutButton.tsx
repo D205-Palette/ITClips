@@ -3,7 +3,12 @@ import { authStore } from "../../stores/authStore";
 import { useNavigate } from "react-router-dom";
 import { logoutApi } from "../../api/authApi";
 
+// stores
+import { asideStore } from "../../stores/asideStore";
+
 const LogoutButton = () => {
+
+  const toggleMessage = asideStore(state => state.toggleMessage);
   const navigate = useNavigate();
   const { logout, token } = authStore();
 
@@ -16,6 +21,8 @@ const LogoutButton = () => {
       .catch((error) => {
         window.alert("로그아웃 실패");
       });
+    // 로그아웃 하면서 메세지창 닫기
+    toggleMessage();
     navigate("/login");
   };
 

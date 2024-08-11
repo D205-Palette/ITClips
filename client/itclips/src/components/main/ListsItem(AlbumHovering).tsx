@@ -19,15 +19,17 @@ const ListItem: FC<Props> = ({ list }) => {
   return (
     <>
       <div
-        className="card bg-base-100 image-full size-64 shadow-xl hover:cursor-pointer"
+        className="card bg-base-100 image-full size-64 shadow-xl hover:cursor-pointer w-full"
         onClick={() => navigate(`/bookmarklist/${list.id}`)}
       >
         <figure>
-          <img src={list.image} alt="Shoes" className="w-56" />
+          <img src={list.image} alt="Shoes" className="w-full object-fill" />
         </figure>
 
         <div className="card-body flex flex-row justify-center items-center">
-          <p>{list.description}</p>
+          <div className="flex flex-row justify-center">
+            <p>{list.description}</p>
+          </div>
         </div>
       </div>
     </>

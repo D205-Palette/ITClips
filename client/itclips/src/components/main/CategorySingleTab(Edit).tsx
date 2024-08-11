@@ -147,7 +147,7 @@ const CategorySingleTab: FC<Props> = ({
       <button
         className={(isMaxLength? "border-red-500 ":" border-sky-500 " ) + 
           (tempCategory.categoryName === whatCategory.categoryName
-            ? "bg-sky-500 text-slate-100 border-solidborder-2 p-1"
+            ? "bg-sky-500 text-slate-100 border-solid  border-2 p-1"
             : color) + " rounded-2xl mx-2 ps-3 w-36"
         }
       >

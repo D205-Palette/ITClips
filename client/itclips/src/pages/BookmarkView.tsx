@@ -178,8 +178,10 @@ const MyBookmark = () => {
               )}
             </div>
 
+          </div>
+          
             {/* 에디터 모드 전환 버튼 */}
-            <div className="flex justify-end sticky ">
+            <div className="flex justify-end fixed bottom-24 right-16">
               {editMode ? (
                 <div className="flex flex-col ">
                   <FaPlus
@@ -209,7 +211,6 @@ const MyBookmark = () => {
                 <></>
               )}
             </div>
-          </div>
         </div>
       ) : (
         <NoContent content={"비공개리스트"} />

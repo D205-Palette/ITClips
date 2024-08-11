@@ -198,18 +198,43 @@ const RoadmapEditView: React.FC = () => {
     setItems(initialItems[tab]);
   };
 
+  
   // 로드맵 이미지 변경 핸들러
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const resizeFile = (file: File): Promise<File> =>
+    new Promise((resolve, reject) => {
+      FileResizer.imageFileResizer(
+        file,
+        200, // 이미지 너비
+        200, // 이미지 높이
+        "SVG", // 파일 형식 - SVG 대신 JPEG로 변경
+        100, // 이미지 퀄리티
+        0,
+        (uri) => {
+          if (uri) {
+            resolve(uri as File); // Promise를 사용하여 비동기 처리
+          } else {
+            reject(new Error("Resizing failed"));
+          }
+        },
+        "file" // 출력 타입
+      );
+    });
+
+
+  // 로드맵 이미지 변경 핸들러
+  const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]; // 파일이 선택되지 않았을 때 null 처리
+    
     if (file) {
-      setRoadmapImage(file); // 파일 자체를 상태에 저장
+      const compressedFile = await resizeFile(file); 
+      setRoadmapImage(compressedFile); // 파일 자체를 상태에 저장
       setImageState("new"); // 새로운 이미지로 변경하려고 할 때 상태 변경
       // 미리보기 URL 생성
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewImageUrl(reader.result as string);
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(compressedFile);
     } else {
       if (roadmapItem?.image === "default") {
         setRoadmapImage(roadmapItem.image);

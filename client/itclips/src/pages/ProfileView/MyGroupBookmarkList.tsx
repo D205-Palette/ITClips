@@ -53,7 +53,7 @@ const MyGroupBookmarkList = () => {
 
   return (
     <>
-      <div className="fixed z-10 w-7/12">
+      <div className="sticky top-16 z-20 w-full">
         <div className="bg-base-100">
           <MainTab userId={Number(params.userId)} />
           <SearchBar

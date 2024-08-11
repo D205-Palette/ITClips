@@ -157,11 +157,11 @@ const CommentsContainer :FC<Props> = ({ id }) => {
   };
 
   return (
-    <div className="flex flex-col">
-      <h3 className="ms-4 font-bold mb-2 text-lg">댓글</h3>
+    <div className="flex flex-col mt-4">
+      <h3 className="ms-4 font-bold  text-md text-slate-500">댓글</h3>
       <div className="w-full rounded-lg">
         <div
-          className="max-h-32 overflow-y-auto space-y-2"
+          className="max-h-32 overflow-y-auto space-y-2 my-2"
           style={{
             scrollbarWidth: "thin",
             scrollbarColor: "#CBD5E0 #EDF2F7"

@@ -18,17 +18,17 @@ import axios from "axios";
 
 interface Props {
   list: BookmarkListSumType;
-  whatMenu:string;
-  canEdit:boolean
+  whatMenu: string;
+  canEdit: boolean;
 }
 
-const ListItem: FC<Props> = ({ list,whatMenu,canEdit }) => {
+const ListItem: FC<Props> = ({ list, whatMenu, canEdit }) => {
   const { token, userId } = authStore();
   const navigate = useNavigate();
 
   const [isHover, setIsHovering] = useState(false);
   const [isLike, setIsLike] = useState(list.isLiked);
-  const [likeCount, changeLikeCount] = useState(list.likeCount)
+  const [likeCount, changeLikeCount] = useState(list.likeCount);
 
   const clickHeart = (): void => {
     if (isLike) {
@@ -36,7 +36,8 @@ const ListItem: FC<Props> = ({ list,whatMenu,canEdit }) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }); changeLikeCount(likeCount -1 )
+      });
+      changeLikeCount(likeCount - 1);
     } else {
       {
         axios.post(`${API_BASE_URL}/api/list/like/${userId}/${list.id}`, {
@@ -45,8 +46,9 @@ const ListItem: FC<Props> = ({ list,whatMenu,canEdit }) => {
           },
         });
       }
-      changeLikeCount(likeCount + 1 )
-    } setIsLike(!isLike);
+      changeLikeCount(likeCount + 1);
+    }
+    setIsLike(!isLike);
   };
   const isDark = darkModeStore((state) => state.isDark);
 
@@ -54,7 +56,7 @@ const ListItem: FC<Props> = ({ list,whatMenu,canEdit }) => {
     <>
       <div
         className={
-          "card border bg-base-100 " +
+          "card  bg-base-100 rounded-lg " +
           (isDark ? "hover:bg-slate-700" : "hover:bg-slate-100")
         }
         onMouseOver={() => setIsHovering(true)}
@@ -62,24 +64,23 @@ const ListItem: FC<Props> = ({ list,whatMenu,canEdit }) => {
       >
         <figure
           className={
-            "h-56 " +
-            (isDark ? "hover:brightness-150" : "hover:brightness-95")
+            "size-64 rounded-b-lg " + (isDark ? "hover:brightness-150" : "hover:brightness-95")
           }
         >
           {isHover ? (
-            <ListItemHover list={list}/>
+            <ListItemHover list={list} />
           ) : (
             <>
-              <img src={`${list.image}`} alt="Movie" className=" w-56 " />
+              <img src={`${list.image}`} alt="Movie" className=" w-full object-fill" />
             </>
           )}
         </figure>
 
-        <div className="card-body flex flex-col p-6 relative ">
+        <div className="card-body flex flex-col py-2 px-6  relative ">
           <div className="absolute top-0 right-0 z-40">
             <KebabDropdown whatMenu={whatMenu} id={list.id} />
           </div>
-          <div className="flex flex-col flex-auto justify-around hover:cursor-pointer ">
+          <div className="flex flex-col justify-around hover:cursor-pointer ">
             <div>
               <h5
                 onClick={() => navigate(`/bookmarklist/${list.id}`)}
@@ -89,26 +90,23 @@ const ListItem: FC<Props> = ({ list,whatMenu,canEdit }) => {
               </h5>
             </div>
 
-            <div className="flex justify-between">
-              <div className="flex flex-col">
-                {list.tags.map((tag: { title: string }) => (
-                  <span>{" # " + tag.title}</span>
-                ))}
-              </div>
-              <div>
-                <button onClick={clickHeart} className="btn btn-ghost p-1">
-                  {isLike ? <FaHeart color="red" /> : <FaRegHeart />}
-
+            <div className="flex text-slate-400 text-md flex-wrap ">
+              {list.tags.map((tag: { title: string }) => (
+                <span className="me-3">{" # " + tag.title}</span>
+              ))}
+            </div>
+            <div>
+              <button onClick={clickHeart} className="btn btn-ghost p-1">
+                {isLike ? <FaHeart color="red" /> : <FaRegHeart color="gray" />}
+                <span className={isLike ? "" : "text-slate-500"}>
+                  
                   {likeCount}
-                </button>
-              </div>
+                </span>
+              </button>
             </div>
           </div>
 
-
-          <div className="card-actions justify-end flex items-center">
-
-          </div>
+          <div className="card-actions justify-end flex items-center"></div>
         </div>
       </div>
     </>

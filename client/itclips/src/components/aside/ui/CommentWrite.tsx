@@ -17,7 +17,7 @@ const CommentWrite: React.FC<CommentWriteProps> = ({ onCommentSubmit }) => {
   };
 
   return (
-    <div className="mt-3">
+    <div className="">
       <form className="relative flex items-center" onSubmit={handleSubmit}>
         <input 
           type="text" 

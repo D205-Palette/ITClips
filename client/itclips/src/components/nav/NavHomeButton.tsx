@@ -8,7 +8,7 @@ export default function HomeButton() {
   return (
     <>
       <Link to={isLoggedIn ? `user/${userId}` : "intro"}>
-        <h1 className="font-extrabold text-2xl">
+        <h1 className="font-extrabold text-2xl me-8">
           <span className="text-sky-500">IT</span> Clips
         </h1>
       </Link>

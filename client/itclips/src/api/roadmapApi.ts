@@ -24,3 +24,13 @@ export const deleteRoadmapComment = (commentId: number, userId: number) => {
 export const editRoadmapComment = (commentId: number, userId: number, comment: string) => {
   return authenticatedRequest("put", `/roadmap/comment/${commentId}/${userId}`, { comment }, { commentId, userId });
 };
+
+// 로드맵 좋아요
+export const likeRoadmap = (roadmapId: number, userId: number) => {
+  return authenticatedRequest("post", `/roadmap/like/${roadmapId}/${userId}`, undefined, { roadmapId, userId });
+};
+
+// 로드맵 좋아요 취소
+export const unlikeRoadmap = (roadmapId: number, userId: number) => {
+  return authenticatedRequest("delete", `/roadmap/like/${roadmapId}/${userId}`, undefined, { roadmapId, userId });
+};

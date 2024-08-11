@@ -8,6 +8,7 @@ import { FaBell, FaTimes, FaCheck } from "react-icons/fa";
 // stores
 import notificationStore from "../../stores/notificationStore";
 import { authStore } from "../../stores/authStore";
+import darkModeStore from "../../stores/darkModeStore";
 
 interface Notification {
   id: number;
@@ -23,6 +24,7 @@ interface Notification {
 const NotificationDropdown: React.FC = () => {
 
   const userId = authStore(state => state.userId);
+  const isDark = darkModeStore(state => state.isDark);
 
   const { notifications, fetchNotifications, markAllAsRead, deleteNotification } = notificationStore();
   const [ isOpen, setIsOpen ] = useState(false);
@@ -113,8 +115,8 @@ const NotificationDropdown: React.FC = () => {
         </div>
       </label>
       {isOpen && (
-        <div tabIndex={0} className="mt-3 z-[1] card card-compact dropdown-content w-96 bg-base-100 shadow">
-          <div className="card-body">
+        <div tabIndex={0} className="mt-3 z-[1] dropdown-content w-96 bg-base-100 shadow rounded-box">
+          <div className={`p-4 ${isDark ? "bg-base-200" : "bg-sky-200"} rounded-t-box`}>
             <div className="flex justify-between items-center">
               <h3 className="font-bold text-lg">알림</h3>
               {unreadCount > 0 && (
@@ -123,35 +125,35 @@ const NotificationDropdown: React.FC = () => {
                 </button>
               )}
             </div>
-            <div className="max-h-96 overflow-y-auto">
-              {sortedNotifications.length === 0 ? (
-                <p className="text-center py-2">알림이 없습니다.</p>
-              ) : (
-                <ul>
-                  {sortedNotifications.map((notification) => (
-                    <li key={notification.id} className={`py-2 border-b ${notification.read ? 'bg-gray-100' : 'bg-white'}`}>
-                      <NavLink 
-                        to={getNotificationLink(notification)}
-                        className="flex flex-col hover:bg-gray-50 p-2 rounded transition-colors duration-200"
-                      >
-                        <span className={`text-sm ${notification.read ? 'text-gray-600' : 'text-black font-semibold'}`}>
-                          {notification.contents}
-                        </span>
-                        <span className="text-xs text-gray-400 mt-1">
-                          {formatDate(notification.createdAt)}
-                        </span>
-                      </NavLink>
-                      <button 
-                        onClick={(event) => handleDelete(event, notification.id)} 
-                        className="btn btn-ghost btn-xs float-right -mt-8 mr-2"
-                      >
-                        <FaTimes />
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
+          </div>
+          <div className="p-4 max-h-96 overflow-y-auto scrollbar-hide">
+            {sortedNotifications.length === 0 ? (
+              <p className="text-center py-2">알림이 없습니다.</p>
+            ) : (
+              <ul>
+                {sortedNotifications.map((notification) => (
+                  <li key={notification.id} className={`py-2 border-b ${notification.read ? 'bg-base-200' : 'bg-white'} rounded`}>
+                    <NavLink 
+                      to={getNotificationLink(notification)}
+                      className="flex flex-col hover:bg-gray-50 p-2 rounded transition-colors duration-200"
+                    >
+                      <span className={`text-sm ${notification.read ? 'text-base-content' : 'text-black font-semibold'}`}>
+                        {notification.contents}
+                      </span>
+                      <span className="text-xs text-gray-400 mt-1">
+                        {formatDate(notification.createdAt)}
+                      </span>
+                    </NavLink>
+                    <button 
+                      onClick={(event) => handleDelete(event, notification.id)} 
+                      className="btn btn-ghost btn-xs float-right -mt-8 mr-2"
+                    >
+                      <FaTimes />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
       )}

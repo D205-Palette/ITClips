@@ -20,7 +20,6 @@ const GithubLoginButton = () => {
         src={github_logo}
         alt=""
       />
-<FaGithub size={32}/>
       <p>깃허브 로그인</p>
     </button>
   );

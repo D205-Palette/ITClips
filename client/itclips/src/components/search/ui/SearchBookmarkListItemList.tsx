@@ -79,6 +79,12 @@ const SearchBookmarkListItemList: React.FC<BookmarkListItemProps> = ({ item }) =
     }
   };
 
+  // 설명 텍스트를 30자로 제한하는 함수
+  const truncateDescription = (text: string, maxLength: number = 30) => {
+    if (text.length <= maxLength) return text;
+    return text.slice(0, maxLength) + '...';
+  };
+
   return (
     <div>
       <NavLink
@@ -94,7 +100,7 @@ const SearchBookmarkListItemList: React.FC<BookmarkListItemProps> = ({ item }) =
           </div>
         </div>
 
-        <p className="text-gray-500">{item.description}</p>
+        <p className="text-gray-500">{truncateDescription(item.description)}</p>
 
         <button 
           className="btn btn-ghost btn-xs text-sm flex items-center" 

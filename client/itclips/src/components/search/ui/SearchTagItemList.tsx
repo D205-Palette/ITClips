@@ -1,11 +1,20 @@
 import { NavLink } from "react-router-dom";
-import React from "react";
+import React, { useState } from "react";
 
 // components
 import SearchItemKebabDropdown from "./SearchItemKebabDropdown";
 
 // images
 import noImage from "../../../assets/images/noImg.gif"
+
+// icons
+import { FaHeart, FaRegHeart } from "react-icons/fa";
+
+// apis
+import { likeBookmarkList, unlikeBookmarkList } from "../../../api/bookmarkListApi";
+
+// stores
+import { authStore } from "../../../stores/authStore";
 
 interface Tag {
   title: string;
@@ -34,6 +43,10 @@ interface TagProps {
 
 const SearchTagItemList: React.FC<TagProps> = ({ item }) => {
 
+  const userId = authStore(state => state.userId);
+  const [ isLiked, setIsLiked ] = useState(item.isLiked);
+  const [ likeCount, setLikeCount ] = useState(item.likeCount);
+
   // 더보기 버튼 기능이 NavLink와 안겹치게 설정
   const handleNavLink = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -45,6 +58,25 @@ const SearchTagItemList: React.FC<TagProps> = ({ item }) => {
     if (users.length === 0) return "";
     if (users.length === 1) return users[0].nickName;
     return users.map(user => user.nickName).join(", ");
+  };
+
+  // 좋아요 기능
+  const handleLike = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    try {
+      if (isLiked) {
+        await unlikeBookmarkList(userId, item.id);
+        setLikeCount(prev => prev - 1);
+      } else {
+        await likeBookmarkList(userId, item.id);
+        setLikeCount(prev => prev + 1);
+      }
+      setIsLiked(!isLiked);
+    } catch (error) {
+      console.error("좋아요 처리 중 오류 발생:", error);
+    }
   };
 
   return (
@@ -64,7 +96,13 @@ const SearchTagItemList: React.FC<TagProps> = ({ item }) => {
 
         <p className="text-gray-500">리스트에 관한 설명</p>
 
-        <button className="btn btn-ghost btn-xs text-sm" onClick={handleNavLink}>❤️ {item.likeCount}</button>
+        <button 
+          className="btn btn-ghost btn-xs text-sm flex items-center" 
+          onClick={handleLike}
+        >
+          {isLiked ? <FaHeart color="red" /> : <FaRegHeart />}
+          <span className="ml-1">{likeCount}</span>
+        </button>
 
         <div onClick={handleNavLink}>
           <SearchItemKebabDropdown whatContent="리스트" id={item.id}/>

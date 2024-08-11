@@ -21,6 +21,6 @@ export const deleteRoadmapComment = (commentId: number, userId: number) => {
 };
 
 // 로드맵 댓글 수정
-// export const editRoadmapComment = (userId: number, commentId: number, contents: string) => {
-//   return authenticatedRequest("put", `/comment/update/${userId}/${commentId}`, { contents }, { userId, commentId });
-// };
+export const editRoadmapComment = (commentId: number, userId: number, comment: string) => {
+  return authenticatedRequest("put", `/roadmap/comment/${commentId}/${userId}`, { comment }, { commentId, userId });
+};

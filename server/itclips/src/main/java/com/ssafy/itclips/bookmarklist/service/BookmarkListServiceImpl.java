@@ -539,6 +539,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
                 .bookmarkCount(bookmarkList.getBookmarks().size())
                 .users(users)
                 .tags(tags)
+                .isPublic(bookmarkList.getIsPublic())
                 .build();
 
     }

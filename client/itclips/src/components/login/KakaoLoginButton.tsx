@@ -1,6 +1,7 @@
 import React from "react";
 import { SiKakaotalk } from "react-icons/si";
 import { API_BASE_URL } from "../../config";
+import kakao_logo from "../../assets/images/kakao_logo.svg"
 
 const KakaoLoginButton = () => {
   const KAKAO_AUTH_URL = `${API_BASE_URL}:8084/oauth2/authorize/kakao`;
@@ -14,8 +15,8 @@ const KakaoLoginButton = () => {
       onClick={loginWithKakao}
       type="button"
       className="btn btn-outline bg-base-100 w-3/4"
-    >
-      <SiKakaotalk className="w-5 h-5 text-yellow-400 bg-black rounded-sm" />
+    >      
+      <img className="w-8 h-8" src={kakao_logo} alt="" />
       <p>카카오 로그인</p>
     </button>
   );

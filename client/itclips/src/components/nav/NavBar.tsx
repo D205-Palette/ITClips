@@ -107,7 +107,7 @@ const NavBar = () => {
 
           {/* 모바일창 nav */}
       {isLoggedIn && (
-            <ul className="px-10 py-4 gap-4 list-none flex justify-between md:hidden fixed bottom-0 left-0 w-full z-50 bg-base-100 border border-black h-20">
+            <ul className="px-10 py-4 gap-4 list-none flex justify-between md:hidden fixed bottom-0 left-0 w-full z-50 bg-base-100 border h-20">
               <NavLink
                 to={userId ? `/user/${userId}` : "/login"}
                 className={({ isActive }) =>

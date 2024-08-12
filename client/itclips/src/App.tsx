@@ -31,7 +31,7 @@ const App = () => {
   const { globalNotification, setGlobalNotification } = toastStore();
 
   // 로그인하지 않아도 접근 가능한 경로들
-  const publicRoutes = ["/intro", "/", "/signup", "/socialsignup", "/login"];
+  const publicRoutes = ["/intro", "/", "/signup", "/socialsignup", "/login", "/oauth2/callback"];
 
   // 특정 경로에 따라 클래스 적용
   const isIntroPage = location.pathname === "/intro";

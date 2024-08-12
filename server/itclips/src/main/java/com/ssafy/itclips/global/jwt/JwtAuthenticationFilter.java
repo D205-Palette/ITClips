@@ -31,6 +31,11 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
 
+        if (shouldSkipFilter(request)) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         // 1. resolveToken() 메서드로 요청 헤더에서 JWT 토큰 추출
         String token = resolveToken(request);
 
@@ -64,6 +69,20 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             return bearerToken.substring(7);
         }
         return null;
+    }
+
+    private boolean shouldSkipFilter(HttpServletRequest request) {
+        String uri = request.getRequestURI();
+        return uri.equals("/") || uri.equals("/index.html") ||
+                uri.startsWith("/css/") || uri.startsWith("/images/") ||
+                uri.equals("/api/swagger-ui.html") || uri.startsWith("/api/v3/api-docs") ||
+                uri.startsWith("/swagger-resources") || uri.startsWith("/api/swagger-ui") ||
+                uri.equals("/api/user/signup") || uri.equals("/api/user/oauthSignup") ||
+                uri.equals("/api/user/login") || uri.equals("/api/user/refresh") ||
+                uri.startsWith("/api/user/nicknameCheck") || uri.startsWith("/api/user/emailCheck") ||
+                uri.startsWith("/api/user/mail/sendVerification") || uri.startsWith("/api/user/mail/verifyCode") ||
+                uri.startsWith("/api/user/pw/sendVerification") || uri.startsWith("/api/user/pw/verifyCode") ||
+                uri.startsWith("/api/tags");
     }
 
 }

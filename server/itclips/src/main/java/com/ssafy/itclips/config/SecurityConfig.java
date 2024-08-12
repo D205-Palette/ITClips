@@ -94,6 +94,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/user/login", "/api/user/refresh").permitAll()     // 로그인 접근 가능
                         .requestMatchers("/api/user/nicknameCheck", "/api/user/emailCheck", "/api/user/mail/sendVerification", "/api/user/mail/verifyCode",
                                 "/api/user/pw/sendVerification", "/api/user/pw/verifyCode").permitAll() // 회원가입, 로그인 관련 인증
+                        .requestMatchers("/api/tags/**").permitAll()
                         .anyRequest().authenticated()
                 )
 

@@ -1,12 +1,14 @@
 package com.ssafy.itclips.tag.service;
 
 import com.ssafy.itclips.tag.dto.TagDTO;
+import com.ssafy.itclips.tag.dto.UserTagDTO;
 import com.ssafy.itclips.tag.entity.Tag;
 import com.ssafy.itclips.tag.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -19,8 +21,16 @@ public class TagServiceImpl implements TagService {
     private final TagRepository tagRepository;
 
     @Override
-    public List<Tag> getOriginTags() throws RuntimeException {
-        return tagRepository.findByIsOrigin(true);
+    public List<UserTagDTO> getOriginTags() throws RuntimeException {
+        List<Tag> tags = tagRepository.findByIsOrigin(true);
+        List<UserTagDTO> result = new ArrayList<>();
+        for(Tag tag : tags) {
+            result.add(UserTagDTO.builder()
+                    .id(tag.getId())
+                    .title(tag.getTitle())
+                    .build());
+        }
+        return result;
     }
 
     @Override
@@ -79,7 +89,15 @@ public class TagServiceImpl implements TagService {
 
 
     @Override
-    public List<Tag> getAllTags() throws RuntimeException {
-        return tagRepository.findAll();
+    public List<UserTagDTO> getAllTags() throws RuntimeException {
+        List<Tag> tags = tagRepository.findAll();
+        List<UserTagDTO> result = new ArrayList<>();
+        for(Tag tag : tags) {
+            result.add(UserTagDTO.builder()
+                    .id(tag.getId())
+                    .title(tag.getTitle())
+                    .build());
+        }
+        return result;
     }
 }

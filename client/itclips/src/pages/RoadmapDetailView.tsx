@@ -55,8 +55,7 @@ const RoadmapView = () => {
           viewId:userId, 
         },
         })
-          .then((res) => {
-            console.log(res.data)
+          .then((res) => {            
           setRoadmap(res.data);
           setCheckCount(res.data.stepList.filter((list:any) => list.check===true).length)
           setTotalCount(res.data.stepList.length)  

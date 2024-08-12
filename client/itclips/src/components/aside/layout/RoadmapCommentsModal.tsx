@@ -104,15 +104,13 @@ const RoadmapCommentsModal: FC<Props> = ({ id, isOpen, onClose, onCommentCountCh
 
   // 댓글 수정 기능은 API가 없으므로 UI만 유지
   const handleSaveComment = async (commentId: number) => {
-    // API 구현 후 이 부분을 수정
-    console.log("댓글 수정 기능 아직 구현안됨.");
+    // API 구현 후 이 부분을 수정    
     setEditingId(null);
     setEditContent("");
   };
 
   const handleDeleteComment = async (commentId: number) => {
-    if (!userInfo?.id) {
-      console.error("사용자 정보가 없습니다.");
+    if (!userInfo?.id) {      
       return;
     }
 

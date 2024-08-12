@@ -216,8 +216,7 @@ const RoadmapEditView: React.FC = () => {
       } else {
         setRoadmapImage(null); // 파일이 없을 경우 상태를 null로 설정
         setPreviewImageUrl(null); // 미리보기 URL을 null로 설정
-      }
-      console.log("파일 없음");
+      }      
       // 수정이라 입력값 없으면 그대로 가면 될듯?
     }
   };
@@ -273,8 +272,7 @@ const RoadmapEditView: React.FC = () => {
         }
       );
 
-      if (roadmapImage) {
-        console.log("이미지 S3 등록");
+      if (roadmapImage) {        
         await axios.put(`${roadmapCreateResponse.data.url}`, roadmapImage, {
           // 리스폰스 받은 URL로 이미지 등록
           // headers: {

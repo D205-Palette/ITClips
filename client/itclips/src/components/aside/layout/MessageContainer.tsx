@@ -46,11 +46,11 @@ const MessageContainer: React.FC<MessageContainerProps> = ({ messages }) => {
   const handleScroll = () => {
     if (containerRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
-      const isAtTop = scrollTop === 0;
-      const isAtBottom = Math.abs(scrollHeight - clientHeight - scrollTop) < 1;
-
+      const isAtTop = scrollTop < 10; // 상단에서 10px 이내일 때 
+      const isNearBottom = scrollHeight - clientHeight - scrollTop < 10; // 하단에서 10px 이내일 때
+  
       setShowTopArrow(!isAtTop);
-      setShowBottomArrow(!isAtBottom);
+      setShowBottomArrow(!isNearBottom);
     }
   };
 

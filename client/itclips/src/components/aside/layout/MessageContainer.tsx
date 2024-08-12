@@ -80,22 +80,28 @@ const MessageContainer: React.FC<MessageContainerProps> = ({ messages }) => {
         className="flex-1 overflow-y-auto scrollbar-hide space-y-4 p-4"
         onScroll={handleScroll}
       >
-        {messages.map((message: Message) => {
-          const isMyMessage = message.senderName === userInfo.nickname;
-          return (
-            <div key={`${message.id}-${message.createdAt}`} className={`chat ${isMyMessage ? 'chat-end' : 'chat-start'} w-full`}>
-              <div className="chat-header mb-2">
-                {message.senderName}
-                <time className="text-xs opacity-50 ml-1">
-                  {formatMessageTime(message.createdAt)}
-                </time>
+        {messages.length === 0 ? (
+          <div className="flex items-center justify-center h-full">
+            <p className="text-gray-500 text-lg">대화를 시작해보세요</p>
+          </div>
+        ) : (
+          messages.map((message: Message) => {
+            const isMyMessage = message.senderName === userInfo.nickname;
+            return (
+              <div key={`${message.id}-${message.createdAt}`} className={`chat ${isMyMessage ? 'chat-end' : 'chat-start'} w-full`}>
+                <div className="chat-header mb-2">
+                  {message.senderName}
+                  <time className="text-xs opacity-50 ml-1">
+                    {formatMessageTime(message.createdAt)}
+                  </time>
+                </div>
+                <div className={`chat-bubble ${isMyMessage ? 'bg-sky-500 text-white' : 'bg-gray-200 text-gray-800'} break-words max-w-[90%] whitespace-pre-wrap overflow-hidden`}>
+                  {message.message}
+                </div>
               </div>
-              <div className={`chat-bubble ${isMyMessage ? 'bg-sky-500 text-white' : 'bg-gray-200 text-gray-800'} break-words max-w-[90%] whitespace-pre-wrap overflow-hidden`}>
-                {message.message}
-              </div>
-            </div>
-          );
-        })}
+            );
+          })
+        )}
       </div>
       {showBottomArrow && (
         <div className="absolute bottom-0 left-0 right-0 flex justify-center bg-gradient-to-t from-base-100 to-transparent py-2 z-10">

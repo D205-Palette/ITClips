@@ -97,7 +97,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 uri.startsWith("/api/user/nicknameCheck") || uri.startsWith("/api/user/emailCheck") ||
                 uri.startsWith("/api/user/mail/sendVerification") || uri.startsWith("/api/user/mail/verifyCode") ||
                 uri.startsWith("/api/user/pw/sendVerification") || uri.startsWith("/api/user/pw/verifyCode") ||
-                uri.startsWith("/api/tags");
+                uri.startsWith("/api/tags") || uri.startsWith("/api/ws");
     }
 
 }

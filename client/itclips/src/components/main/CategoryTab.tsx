@@ -21,16 +21,23 @@ import { API_BASE_URL } from "../../config";
 import { CategoryType } from "../../types/BookmarkListType";
 import Tab from "../../stores/mainTabStore";
 import mainStore from "../../stores/mainStore";
+import { useDraggable } from "react-use-draggable-scroll";
 interface Props {
   // categories: CategoryType[];
   listId: number;
   categories: CategoryType[];
   canEdit: boolean; // 본인 여부
   editMode: boolean; // 에딧 모드 여부
-  setEditMode : React.Dispatch<React.SetStateAction<boolean>>
+  setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const CategoryTab: FC<Props> = ({ listId, categories, canEdit, editMode,setEditMode }) => {
+const CategoryTab: FC<Props> = ({
+  listId,
+  categories,
+  canEdit,
+  editMode,
+  setEditMode,
+}) => {
   const { userId, token } = authStore();
   const isDark = darkModeStore((state) => state.isDark);
 
@@ -39,7 +46,9 @@ const CategoryTab: FC<Props> = ({ listId, categories, canEdit, editMode,setEditM
   const inputRef = useRef<HTMLInputElement>(null);
   const { setIsBookmarkListChange } = mainStore();
 
-  const [categoryLengthWarning, setCategoryLengthWarning] = useState(categories.length>=3);
+  const [categoryLengthWarning, setCategoryLengthWarning] = useState(
+    categories.length >= 3
+  );
 
   useEffect(() => {
     if (createMode && inputRef.current) {
@@ -50,7 +59,7 @@ const CategoryTab: FC<Props> = ({ listId, categories, canEdit, editMode,setEditM
   useEffect(() => {
     if (categories.length >= 3) {
       setCategoryLengthWarning(true);
-    } else{
+    } else {
       setCategoryLengthWarning(false);
     }
   }, [categories.length]);
@@ -71,7 +80,7 @@ const CategoryTab: FC<Props> = ({ listId, categories, canEdit, editMode,setEditM
         onClick={() => {
           modeChange(true);
         }}
-        className={categoryLengthWarning? "hidden" : ""}
+        className={categoryLengthWarning ? "hidden" : ""}
       >
         <FaPlus className="ms-2 " />
       </button>
@@ -135,6 +144,9 @@ const CategoryTab: FC<Props> = ({ listId, categories, canEdit, editMode,setEditM
       behavior: "smooth",
     });
   }
+  const ref =
+    useRef<HTMLDivElement>() as React.MutableRefObject<HTMLInputElement>;
+  const { events } = useDraggable(ref); // Now we pass the reference to the useDraggable hook:
 
   return (
     <>
@@ -142,21 +154,24 @@ const CategoryTab: FC<Props> = ({ listId, categories, canEdit, editMode,setEditM
         <div className={editMode ? "hidden" : "h-9 "}>
           <BackButton />
         </div>
-        <div
-          className=" flex flex-row  whitespace-nowrap  container "
-          onWheel={handleScroll}
-        >
-          {categories.map((category) =>
-            editMode ? (
-              <CategorySingleEditTab
-                tempCategory={category}
-                canEdit={canEdit}
-                setEditMode={setEditMode}
-              />
-            ) : (
-              <CategorySingleTab tempCategory={category} canEdit={canEdit} />
-            )
-          )}
+        <div className=" flex flex-row  whitespace-nowrap  overflow-scroll scrollbar-hide ">
+          <div
+            className="flex max-w-xl space-x-3 overflow-x-scroll scrollbar-hide"
+            {...events}
+            ref={ref}
+          >
+            {categories.map((category) =>
+              editMode ? (
+                <CategorySingleEditTab
+                  tempCategory={category}
+                  canEdit={canEdit}
+                  setEditMode={setEditMode}
+                />
+              ) : (
+                <CategorySingleTab tempCategory={category} canEdit={canEdit} />
+              )
+            )}
+          </div>
           {canEdit && editMode ? (
             createMode ? (
               <CreateCategorySection />

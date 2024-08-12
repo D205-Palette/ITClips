@@ -84,6 +84,7 @@ const MyBookmark = () => {
         .catch((err) => {
           console.error(err);
           // 비공개인 리스트에 접근했을때
+          console.log(err)
           if (err.response.status === 401) {
             setCanView(false);
           }
@@ -113,7 +114,7 @@ const MyBookmark = () => {
           {/* main자리 */}
           <div
             id="Main"
-            className="xl:col-start-5 xl:col-span-7 col-start-3 col-span-8 gap-4"
+            className="xl:col-start-5 xl:col-span-7 lg:col-start-3 lg:col-span-8 col-start-2 col-span-10 gap-4"
           >
             <div className="sticky top-16 bg-base-100 z-10">
               {/* 상단바 */}
@@ -141,7 +142,7 @@ const MyBookmark = () => {
                   </button>
                 </div>
               ) : bookmarkList ? (
-                <div className="static z-50">
+                <div className="static z-50 max-">
                   <CategoryTab
                     categories={bookmarkList.categories}
                     listId={bookmarkList.id}
@@ -181,7 +182,7 @@ const MyBookmark = () => {
           </div>
           
             {/* 에디터 모드 전환 버튼 */}
-            <div className="flex justify-end fixed bottom-24 right-16">
+            <div className="md:flex justify-end fixed bottom-24 right-16 hidden">
               {editMode ? (
                 <div className="flex flex-col ">
                   <FaPlus

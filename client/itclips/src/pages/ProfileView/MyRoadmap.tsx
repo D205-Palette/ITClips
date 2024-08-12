@@ -21,7 +21,7 @@ const MyRoadmap = () => {
   const [filterdRoadmaps, setFilterdRoadmaps] = useState<RoadmapSumType[]>([])
   const [filterText, changeFilterText] = useState("");
   const [canEdit, setCanEdit] = useState(false)
-
+  const [noContent, setNoContent] = useState(<div className="w-full flex flex-row justify-center"><span className="loading loading-spinner loading-lg text-sky-500"></span></div>)
   // 변경사항 있을때마다 로드맵 요약 불러오기
   useEffect(() => {
     async function fetchData() {
@@ -42,6 +42,7 @@ const MyRoadmap = () => {
         console.log('로드맵 변화 감지')
         if(String(userId)===params.userId){
           setCanEdit(true)}
+          setNoContent( <NoContent content={"로드맵"}/> )
       })
       .catch((err) => {
         console.error(err);
@@ -68,7 +69,7 @@ const MyRoadmap = () => {
 
       {/* 로드맵들 */}
       <div className="">
-      {filterdRoadmaps.length === 0 ? <NoContent content={"로드맵"}/> : <>
+      {filterdRoadmaps.length === 0 ?noContent : <>
         {filterdRoadmaps.map((roadmap) => (
           <Roadmap roadmap={roadmap} canEdit={canEdit}/>
         ))}</>}

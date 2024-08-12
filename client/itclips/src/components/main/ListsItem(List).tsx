@@ -51,7 +51,7 @@ const ListItem: FC<Props> = ({ list,whatMenu }) => {
       <div
         className={
           (isDark ? "hover:bg-slate-700" : "hover:bg-slate-100") +
-          " card card-side bg-base-100 h-28 rounded-lg "
+          " card card-side bg-base-100 h-28 rounded-lg  "
         }
       >
         <>
@@ -96,7 +96,7 @@ const ListItem: FC<Props> = ({ list,whatMenu }) => {
                 {isLike ? <FaHeart color="red" /> : <FaRegHeart />}
                 {likeCount}
               </button>
-              <div className="md:block hidden">
+              <div className="티:block hidden"> 
                 <KebabDropdown whatMenu={whatMenu} id={list.id} />
               </div>
             </div>

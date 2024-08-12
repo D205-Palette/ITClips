@@ -37,7 +37,7 @@ export default function MyView() {
   const params = useParams()
   const nowUserId = Number(params.userId)
 
-  
+  const [noContent, setNoContent] = useState(<div className="w-full flex flex-row justify-center"><span className="loading loading-spinner loading-lg text-sky-500"></span></div>)
   // 북마크 리스트 변화할때 유저의 북마크 리스트들 요약
   useEffect(() => {
     async function fetchData() {
@@ -56,6 +56,7 @@ export default function MyView() {
           setFilterdLists(res.data.filter((list:any) =>list.title.includes(filterText)))
           setIsBookmarkListChange(false)
           console.log("리스트 변화 감지")
+          setNoContent(  <NoContent content={"리스트"} />)
         })
         .catch((err) => {
           console.error(err);
@@ -120,7 +121,7 @@ export default function MyView() {
       {/* 북마크 리스트들*/}
       <div className="">
         {filterdLists.length === 0 ? (
-          <NoContent content={"리스트"} />
+          noContent
         ) : (
           <>
             {!isList ? (
@@ -146,7 +147,7 @@ export default function MyView() {
 
       {/* 리스트 생성 버튼 */}
 
-      <div className="fixed bottom-24 right-16 z-20 flex justify-end w-full">
+      <div className="fixed bottom-24 right-16 z-20 hidden md:flex justify-end w-full ">
         <button
           className={(nowUserId !== userId ? "hidden" : "") + " "}
           onClick={() => setIsCreateModalOpen(true)}

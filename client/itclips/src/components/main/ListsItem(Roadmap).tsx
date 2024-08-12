@@ -32,13 +32,13 @@ const ListItem: FC<Props> = ({ list,changeCount,count,canEdit }) => {
     if(isCheck){
       changeCount(count - 1)
       list.check = false
-      axios.put(`${API_BASE_URL}/api/roadmap/step/${list.id}/${userId}`,{headers: {
+      axios.put(`${API_BASE_URL}/api/roadmap/step/${list.id}/${userId}`,{},{headers: {
         Authorization: `Bearer ${token}`,
       },})
     } else {
       changeCount(count + 1)
       list.check = true
-      axios.put(`${API_BASE_URL}/api/roadmap/step/${list.id}/${userId}`,{headers: {
+      axios.put(`${API_BASE_URL}/api/roadmap/step/${list.id}/${userId}`,{},{headers: {
         Authorization: `Bearer ${token}`,
       },})
     }

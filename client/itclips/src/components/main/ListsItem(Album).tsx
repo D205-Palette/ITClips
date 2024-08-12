@@ -40,7 +40,9 @@ const ListItem: FC<Props> = ({ list, whatMenu, canEdit }) => {
       changeLikeCount(likeCount - 1);
     } else {
       {
-        axios.post(`${API_BASE_URL}/api/list/like/${userId}/${list.id}`, {
+        axios.post(`${API_BASE_URL}/api/list/like/${userId}/${list.id}`,
+          {},
+          {
           headers: {
             Authorization: `Bearer ${token}`,
           },

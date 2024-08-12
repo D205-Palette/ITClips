@@ -48,7 +48,9 @@ const LikesFavoritesCount = (data: BookmarkListDetailType) => {
       });
       changeLikeCount(likeCount - 1);
     } else {
-      axios.post(`${API_BASE_URL}/api/list/like/${userId}/${data.id}`, {
+      axios.post(`${API_BASE_URL}/api/list/like/${userId}/${data.id}`,
+        {},
+        {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -68,7 +70,9 @@ const LikesFavoritesCount = (data: BookmarkListDetailType) => {
       });
       changeScrapCount(scrapCount - 1);
     } else {
-      axios.post(`${API_BASE_URL}/api/list/scrap/${userId}/${data.id}`, {
+      axios.post(`${API_BASE_URL}/api/list/scrap/${userId}/${data.id}`,
+        {},
+        {
         headers: {
           Authorization: `Bearer ${token}`,
         },

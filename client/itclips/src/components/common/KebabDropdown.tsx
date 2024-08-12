@@ -65,7 +65,11 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id,contentUserId,users }) => {
       .catch((err) => {
         if (err.response.status === 400) {
           setIsMenuOpen(false);
-          axios.delete(`${API_BASE_URL}/api/list/scrap/${userId}/${id}`);
+          axios.delete(`${API_BASE_URL}/api/list/scrap/${userId}/${id}`,{
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
           setGlobalNotification({
             message: "즐겨찾기 삭제 완료",
             type: "error",
@@ -114,7 +118,11 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id,contentUserId,users }) => {
 
   function deleteFavorite(): void {
     setIsMenuOpen(false);
-    axios.delete(`${API_BASE_URL}/api/list/scrap/${userId}/${id}`).then(()=>{
+    axios.delete(`${API_BASE_URL}/api/list/scrap/${userId}/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }).then(()=>{
       setIsFavoriteChange(true)
     })
     setGlobalNotification({

@@ -32,7 +32,9 @@ const RoadMap: FC<Props> = ({ roadmap, canEdit }) => {
       changeLikeCount(likeCount - 1);
     } else {
       {
-        axios.post(`${API_BASE_URL}/api/roadmap/like/${roadmap.id}/${userId}`, {
+        axios.post(`${API_BASE_URL}/api/roadmap/like/${roadmap.id}/${userId}`, 
+          {},
+          {
           headers: {
             Authorization: `Bearer ${token}`,
           },

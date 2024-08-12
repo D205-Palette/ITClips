@@ -76,7 +76,9 @@ const Bookmark: FC<Props> = ({
       );
       setLikeCount(likeCount - 1);
     } else {
-      axios.post(`${API_BASE_URL}/api/bookmark/like/${userId}/${bookmark.id}`, {
+      axios.post(`${API_BASE_URL}/api/bookmark/like/${userId}/${bookmark.id}`,
+        {},
+        {
         headers: {
           Authorization: `Bearer ${token}`,
         },

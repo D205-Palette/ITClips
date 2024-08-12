@@ -28,7 +28,9 @@ const LikesFavoritesCount = (data: RoadmapDetailType) => {
       });
       changeLikeCount(likeCount - 1);
     } else {
-      axios.post(`${API_BASE_URL}/api/roadmap/like/${data.id}/${userId}`, {
+      axios.post(`${API_BASE_URL}/api/roadmap/like/${data.id}/${userId}`,
+        {},
+        {
         headers: {
           Authorization: `Bearer ${token}`,
         },

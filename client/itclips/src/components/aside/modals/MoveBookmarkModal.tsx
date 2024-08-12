@@ -57,15 +57,22 @@ const MoveBookmarkModal: FC<Move> = ({
             tags:editBookmark.tags,
             content:editBookmark.content,
           },
-          
-       ).then(()=>{
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }).then(()=>{
           setIsBookmarkListChange(true)
         })
       );
 
       if (whatMenu === "이동") {
         editBookmarks.map((editBookmark) =>
-          axios.delete(`${API_BASE_URL}/api/bookmark/delete/${editBookmark.id}?userId=${userId}`).then(()=>{
+          axios.delete(`${API_BASE_URL}/api/bookmark/delete/${editBookmark.id}?userId=${userId}`,{
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }).then(()=>{
             setIsBookmarkListChange(true)
           })
         );
@@ -98,7 +105,11 @@ const MoveBookmarkModal: FC<Move> = ({
 
       if (whatMenu === "이동") {
         editBookmarks.map((editBookmark) =>
-          axios.delete(`${API_BASE_URL}/api/bookmark/delete/${editBookmark.id}?userId=${userId}`).then(()=>{
+          axios.delete(`${API_BASE_URL}/api/bookmark/delete/${editBookmark.id}?userId=${userId}`,{
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }).then(()=>{
             setIsBookmarkListChange(true)
           })
         );

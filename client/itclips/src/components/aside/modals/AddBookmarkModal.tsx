@@ -98,7 +98,7 @@ const AddBookmarkModal: FC<move> = ({
     }
     // 모달 다 끄기
     tabModal(false);
-    toggleMode(false);
+    // toggleMode(false);
 
   };
 

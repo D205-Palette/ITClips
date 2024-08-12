@@ -22,6 +22,7 @@ import darkModeStore from "../stores/darkModeStore";
 import mainStore from "../stores/mainStore";
 import NoContent from "./ProfileView/NoContent";
 import toastStore from "../stores/toastStore";
+import DeleteContentModal from "../components/aside/modals/DeleteContentModal";
 const MyBookmark = () => {
   const params = useParams();
   const { isDark } = darkModeStore();
@@ -56,6 +57,7 @@ const MyBookmark = () => {
   const [filterdBookmarks, setFilterdBookmarks] = useState<BookmarkType[]>([]);
 
   const [canView, setCanView] = useState(true);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
   const [noContent, setNoContent] = useState(
     <div className="w-full flex flex-row justify-center">
@@ -142,9 +144,9 @@ const MyBookmark = () => {
                       "bg-red-500  text-slate-100 border border-red-500 rounded-2xl  px-4 font-bold hover:bg-red-600 hover:text-white h-9 w-24 "
                     }
                     disabled={editBookmarks.length !== 0 ? false : true}
-                    // onClick={() =>
-                    //   editBookmarks.length !== 0 ? tabEditModal(true) : ""
-                    // }
+                    onClick={() =>
+                      setIsDeleteModalOpen(true)
+                    }
                   >
                     삭제
                   </button>
@@ -254,6 +256,17 @@ const MyBookmark = () => {
           tabModal={tabAddModal}
           toggleMode={setEditMode}
           listId={listId}
+        />
+      )}
+      {/* 북마크 삭제 모달 */}
+        {isDeleteModalOpen && (
+        <DeleteContentModal
+          isOpen={isDeleteModalOpen}
+          onClose={() => setIsDeleteModalOpen(false)}
+          bookmarks={editBookmarks}
+          whatContent="북마크"
+          changeEditBookmarksIndex={changeEditBookmarksIndex}
+          toggleMode={setEditMode}
         />
       )}
     </>

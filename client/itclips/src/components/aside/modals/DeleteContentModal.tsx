@@ -8,13 +8,17 @@ import { useNavigate } from "react-router-dom";
 import mainStore from "../../../stores/mainStore";
 import { useEffect } from "react";
 import toastStore from "../../../stores/toastStore";
+import type { BookmarkType } from "../../../types/BookmarkType";
 interface DeleteConfirmModalProps {
   isOpen: boolean;
   onClose: () => void;
   // 삭제할게 북마크인지 리스트인지 로드맵인지 구분용
   whatContent: string;
-  id: number;
-  // 로드맵 스탭 삭제할때 필요한 stepId
+  // 북마크들 단체 삭제용 prop들 
+  id?: number;
+  bookmarks?:BookmarkType[]
+  changeEditBookmarksIndex?: React.Dispatch<React.SetStateAction<number[]>>
+  toggleMode?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const DeleteContentModal: React.FC<DeleteConfirmModalProps> = ({
@@ -22,6 +26,9 @@ const DeleteContentModal: React.FC<DeleteConfirmModalProps> = ({
   onClose,
   whatContent,
   id,
+  bookmarks,
+  changeEditBookmarksIndex,
+  toggleMode
 }) => {
 
 
@@ -46,7 +53,28 @@ const {setGlobalNotification} = toastStore()
           });
           navigate(`/user/${userId}`);
         });
-    } else if (whatContent === "북마크") {
+    } 
+    else if (whatContent === "북마크" && bookmarks) {
+      bookmarks?.map((bookmark) => { axios
+        .delete(`${API_BASE_URL}/api/bookmark/delete/${bookmark.id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            userId: userId,
+          },
+        })
+        .then(() => {
+          setIsBookmarkListChange(true);
+          setGlobalNotification({
+            message: "북마크 삭제완료",
+            type: "error",
+          });
+          changeEditBookmarksIndex&&changeEditBookmarksIndex([])
+          toggleMode&&toggleMode(false)
+        });})
+     
+    }else if (whatContent === "북마크") {
       axios
         .delete(`${API_BASE_URL}/api/bookmark/delete/${id}`, {
           headers: {

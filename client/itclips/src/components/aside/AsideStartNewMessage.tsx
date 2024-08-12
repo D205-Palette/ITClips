@@ -56,16 +56,6 @@ const AsideStartNewMessage: React.FC<InviteProps> = ({ onStartChat, onBack }) =>
   const [ notification, setNotification ] = useState<Notification | null>(null);
   const isDark = darkModeStore(state => state.isDark);
 
-  // 토스트 메세지 3초뒤 종료
-  useEffect(() => {
-    if (notification) {
-      const timer = setTimeout(() => {
-        setNotification(null);
-      }, 3000);  // 3초 후 메시지 제거
-
-      return () => clearTimeout(timer);
-    }
-  }, [notification]);
 
   // 유저검색
   useEffect(() => {

@@ -38,15 +38,6 @@ const CommentsContainer :FC<Props> = ({ id }) => {
   const [ editContent, setEditContent ] = useState("");
   const [ notification, setNotification ] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
 
-  // 토스트 메세지는 3초간 떠있음
-  useEffect(() => {
-    if (notification) {
-      const timer = setTimeout(() => {
-        setNotification(null);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [notification]);
 
   // 댓글 가져오기
   useEffect(() => {

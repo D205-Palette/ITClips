@@ -39,15 +39,6 @@ const BookmarkListCommentsModal: FC<Props> = ({ id, isOpen, onClose }) => {
 
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // 토스트 메세지 3초간 출력
-  useEffect(() => {
-    if (notification) {
-      const timer = setTimeout(() => {
-        setNotification(null);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [notification]);
 
   // 북마크리스트 댓글 조회
   useEffect(() => {

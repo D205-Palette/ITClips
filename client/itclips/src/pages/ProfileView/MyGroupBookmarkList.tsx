@@ -29,16 +29,6 @@ const MyGroupBookmarkList = () => {
   }
   const {globalNotification, setGlobalNotification} = toastStore()
 
-  // 토스트 알람 메뉴
-  useEffect(() => {
-    if (globalNotification) {
-      const timer = setTimeout(() => {
-        setGlobalNotification(null);
-      }, 3000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [globalNotification]);
   const [noContent, setNoContent] = useState(<div className="w-full flex flex-row justify-center mt-6"><span className="loading loading-spinner loading-lg text-sky-500"></span></div>)
   // 그룹 북마크들 api
   useEffect(() => {

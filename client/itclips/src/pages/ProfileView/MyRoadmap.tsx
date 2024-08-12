@@ -25,16 +25,6 @@ const MyRoadmap = () => {
   // 변경사항 있을때마다 로드맵 요약 불러오기
   const {globalNotification, setGlobalNotification} = toastStore()
 
-  // 토스트 알람 메뉴
-  useEffect(() => {
-    if (globalNotification) {
-      const timer = setTimeout(() => {
-        setGlobalNotification(null);
-      }, 3000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [globalNotification]);
 
   useEffect(() => {
     async function fetchData() {

@@ -1,5 +1,5 @@
 // 이미지 , 리스트명, 북마크 개수, 태그, 설명, 좋아요 버튼&좋아요 수, 리스트 세부 조작 버튼
-import { useState, FC } from "react";
+import { useState, FC, useEffect } from "react";
 import useStore from "../../stores/mainStore";
 import KebabDropdown from "../common/KebabDropdown";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
@@ -9,15 +9,14 @@ import { useNavigate } from "react-router-dom";
 import { LuChevronsUpDown } from "react-icons/lu";
 import MoveBookmarkModal from "../aside/modals/MoveBookmarkModal";
 import type { BookmarkType } from "../../types/BookmarkType";
-import mainTabStore from '../../stores/mainTabStore'
+import mainTabStore from "../../stores/mainTabStore";
 
 interface Props {
-
-  bookmark: BookmarkType
+  bookmark: BookmarkType;
   editBookmarks: BookmarkType[];
   changeEditBookmarks: React.Dispatch<React.SetStateAction<BookmarkType[]>>;
-  editBookmarksIndex : number[]
-  changeEditBookmarksIndex :React.Dispatch<React.SetStateAction<number[]>>;
+  editBookmarksIndex: number[];
+  changeEditBookmarksIndex: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
 const Bookmark: FC<Props> = ({
@@ -27,37 +26,54 @@ const Bookmark: FC<Props> = ({
   changeEditBookmarks,
   // index들은 삭제 용도
   editBookmarksIndex,
-  changeEditBookmarksIndex
+  changeEditBookmarksIndex,
 }) => {
   const navigate = useNavigate();
 
-  const [isLike, setIsLike] = useState(false);
-  const {whatCategory} = mainTabStore()
-  
-  const clickHeart = (): void => {
-    setIsLike(!isLike);
-    //여기에 좋아요 api호출
-  };
+  const { whatCategory } = mainTabStore();
+
   const isDark = darkModeStore((state) => state.isDark);
 
   function goExternalUrl(url: string): void {
     window.location.href = url;
   }
 
-  function toggleCheck(bookmark:BookmarkType): void {
-    if(editBookmarksIndex.includes(bookmark.id)){
-      changeEditBookmarksIndex(editBookmarksIndex.filter((editBookmark)=>editBookmark!==bookmark.id))
-      changeEditBookmarks(editBookmarks.filter((editBookmark)=>editBookmark.id!==bookmark.id))
-    } else{
-      changeEditBookmarksIndex([...editBookmarksIndex,bookmark.id ])
-      changeEditBookmarks([...editBookmarks,bookmark ])
+  function toggleCheck(bookmark: BookmarkType): void {
+    setChangeCheck(true)
+    if (editBookmarksIndex.includes(bookmark.id)) {
+      changeEditBookmarksIndex(
+        editBookmarksIndex.filter(
+          (editBookmark) => editBookmark !== bookmark.id
+        )
+      );
+      changeEditBookmarks(
+        editBookmarks.filter((editBookmark) => editBookmark.id !== bookmark.id)
+      );
+    } else {
+      changeEditBookmarksIndex([...editBookmarksIndex, bookmark.id]);
+      changeEditBookmarks([...editBookmarks, bookmark]);
     }
   }
+  const [isCheck, setIsCheck] = useState(false);
+  const [changeCheck, setChangeCheck] = useState(false)
+  useEffect(() => {
+    if (editBookmarksIndex.includes(bookmark.id)) {
+      setIsCheck(true);
+      setChangeCheck(false)
+    } else {
+      setIsCheck(false);
+      setChangeCheck(false)
+    }
+  }, [changeCheck]);
 
   return (
     <>
       <div
-        className={(whatCategory.categoryName===bookmark.category || whatCategory.categoryName===""? "":"hidden ") +
+        className={
+          (whatCategory.categoryName === bookmark.category ||
+          whatCategory.categoryName === ""
+            ? ""
+            : "hidden ") +
           (isDark ? "hover:bg-slate-700" : "hover:bg-slate-100") +
           " card card-side bg-base-100 hover:cursor-pointer h-28 my-1 shadow-sm"
         }
@@ -68,9 +84,7 @@ const Bookmark: FC<Props> = ({
             <div className="form-control flex flex-row items-center">
               <input
                 type="checkbox"
-                defaultChecked={
-                editBookmarksIndex.includes(bookmark.id) ? true : false
-                }
+                defaultChecked={isCheck}
                 onClick={() => toggleCheck(bookmark)}
                 className="checkbox checkbox-info  [--chkfg:white] me-5"
               />
@@ -78,7 +92,7 @@ const Bookmark: FC<Props> = ({
             {/* 본문 */}
             <div
               className="flex flex-col flex-auto justify-around"
-              onClick={() => goExternalUrl(`https://${bookmark.url}`)}
+              onClick={() => toggleCheck(bookmark)}
             >
               <div>
                 {" "}
@@ -96,10 +110,10 @@ const Bookmark: FC<Props> = ({
 
             {/* 좋아요 버튼 */}
             <div className="card-actions justify-end flex items-center">
-              <button onClick={clickHeart} className="btn btn-ghost">
+              {/* <button onClick={clickHeart} className="btn btn-ghost">
                 {isLike ? <FaHeart color="red" /> : <FaRegHeart />}
                 {bookmark.likeCount}{" "}
-              </button>
+              </button> */}
               <button className="">
                 <LuChevronsUpDown />
               </button>
@@ -107,7 +121,6 @@ const Bookmark: FC<Props> = ({
           </div>
         </>
       </div>
-
     </>
   );
 };

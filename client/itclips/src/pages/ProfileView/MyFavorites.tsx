@@ -27,16 +27,7 @@ const MyGroupBookmarkList = () => {
   const {globalNotification, setGlobalNotification} = toastStore()
 
   const {isFavoriteChange,setIsFavoriteChange} = mainStore()
-  // 토스트 알람 메뉴
-  useEffect(() => {
-    if (globalNotification) {
-      const timer = setTimeout(() => {
-        setGlobalNotification(null);
-      }, 3000);
 
-      return () => clearTimeout(timer);
-    }
-  }, [globalNotification]);
   function tabList(): void {
     setTab(true);
   }

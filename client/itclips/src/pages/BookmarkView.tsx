@@ -66,15 +66,7 @@ const MyBookmark = () => {
   // 북마크 리스트 변경될때마다 리스트 불러오기
   const { globalNotification, setGlobalNotification } = toastStore();
   // 토스트 알람 메뉴
-  useEffect(() => {
-    if (globalNotification) {
-      const timer = setTimeout(() => {
-        setGlobalNotification(null);
-      }, 3000);
 
-      return () => clearTimeout(timer);
-    }
-  }, [globalNotification]);
 
   useEffect(() => {
     async function fetchData() {
@@ -147,10 +139,22 @@ const MyBookmark = () => {
                   />
                   <button
                     className={
+                      "bg-red-500  text-slate-100 border border-red-500 rounded-2xl  px-4 font-bold hover:bg-red-600 hover:text-white h-9 w-24 "
+                    }
+                    disabled={editBookmarks.length !== 0 ? false : true}
+                    // onClick={() =>
+                    //   editBookmarks.length !== 0 ? tabEditModal(true) : ""
+                    // }
+                  >
+                    삭제
+                  </button>
+
+                  <button
+                    className={
                       (editBookmarks.length === 0
                         ? "bg-white border text-sky-500"
                         : "bg-sky-500  text-slate-100 border") +
-                      "  border-sky-500 rounded-2xl  px-4 font-bold hover:bg-sky-600 hover:text-white h-9 "
+                      "  border-sky-500 rounded-2xl  px-4 font-bold hover:bg-sky-600 hover:text-white h-9 w-24 ms-2"
                     }
                     onClick={() =>
                       editBookmarks.length !== 0 ? tabEditModal(true) : ""
@@ -233,7 +237,6 @@ const MyBookmark = () => {
       ) : (
         <NoContent content={"비공개리스트"} />
       )}
-      
 
       {/* 북마크 이동 모달 */}
       {isEditModal && (

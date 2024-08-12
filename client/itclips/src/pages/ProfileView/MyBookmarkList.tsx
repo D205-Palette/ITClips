@@ -34,16 +34,7 @@ export default function MyView() {
   }
   const {globalNotification, setGlobalNotification} = toastStore()
 
-  // 토스트 알람 메뉴
-  useEffect(() => {
-    if (globalNotification) {
-      const timer = setTimeout(() => {
-        setGlobalNotification(null);
-      }, 3000);
 
-      return () => clearTimeout(timer);
-    }
-  }, [globalNotification]);
 
   // const filterdLists = lists.filter((list) => list.title.includes(filterText));
   const [filterdLists, setFilterdLists] = useState<BookmarkListSumType[]>([]);

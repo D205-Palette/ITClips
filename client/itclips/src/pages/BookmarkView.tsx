@@ -112,7 +112,7 @@ const MyBookmark = () => {
           {/* aside 자리 */}
           <div
             id="aside"
-            className="md:col-start-2 md:col-span-3 md:pe-4 col-start-2 col-span-10"
+            className="md:col-start-2 md:col-span-3 md:pe-20 col-start-2 col-span-10"
           >
             <div className="static">
               {bookmarkList ? (

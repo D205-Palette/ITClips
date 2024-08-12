@@ -41,7 +41,7 @@ const RoadmapView = () => {
           .then((res) => {            
           setRoadmap(res.data);
           setCheckCount(res.data.stepList.filter((list:any) => list.check===true).length)
-          setTotalCount(res.data.stepList.length)  
+          setTotalCount(res.data.stepList.length)
           if(res.data.userId === userId){
             setCanEdit(true)
 
@@ -98,7 +98,7 @@ const RoadmapView = () => {
     {canView? <><div id='Body' className="grid grid-cols-12 gap-4">
 
 {/* aside 자리 */}
-<div id="aside" className="md:col-start-2 md:col-span-3 md:pe-4 col-start-2 col-span-10 ">
+<div id="aside" className="md:col-start-2 md:col-span-3 md:pe-20 col-start-2 col-span-10 ">
   <div className="sticky top-16 z-20">
     {roadmap?<AsideRoadmap roadmap={roadmap} />:<></>}
   </div>

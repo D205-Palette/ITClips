@@ -126,7 +126,7 @@ const RoadMap: FC<Props> = ({ roadmap, canEdit }) => {
               </button>
 
               <div className="hidden md:inline">
-                <KebabDropdown whatMenu="로드맵" id={roadmap.id} />
+                <KebabDropdown whatMenu="로드맵" id={roadmap.id} contentUserId={roadmap.userId}/>
               </div>
 
             </div>

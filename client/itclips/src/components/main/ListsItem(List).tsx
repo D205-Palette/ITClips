@@ -96,7 +96,7 @@ const ListItem: FC<Props> = ({ list,whatMenu }) => {
                 {likeCount}
               </button>
               <div className="xl:block hidden"> 
-                <KebabDropdown whatMenu={whatMenu} id={list.id} />
+                <KebabDropdown whatMenu={whatMenu} id={list.id} users={list.users}/>
               </div>
             </div>
           </div>

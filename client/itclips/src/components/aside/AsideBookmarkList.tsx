@@ -10,6 +10,7 @@ import LikesFavoritesCount from "./layout/LikesFavoritesCount(List)";
 import Tags from "./layout/Tags";
 import BookmarkListCommentsModal from "./layout/BookmarkListCommentsModal";
 
+import KebabDropdown from "../common/KebabDropdown";
 // stores
 import darkModeStore from "../../stores/darkModeStore";
 
@@ -43,9 +44,11 @@ const AsideBookmarkList : React.FC<ItemProps> = ({ bookmarkList }) => {
   }, [bookmarkList.id]);
 
   return (
-    <div className={`${ isDark ? "bg-base-300" : "bg-sky-50" } rounded-3xl w-80 p-8 flex flex-col items-center ` }>
+    <div className={`${ isDark ? "bg-base-300" : "bg-sky-50" } rounded-3xl  p-8 flex flex-col items-center ` }>
       {/* 더보기 버튼 */}
-      {<AsideBookmarkListKebabDropdown isRoadmap={false} id={bookmarkList.id}/> }
+      <div className="w-full flex flex-row justify-end">
+      {<KebabDropdown whatMenu="북마크 리스트" id={bookmarkList.id} users={bookmarkList.users}/> }
+      </div>
       {/* 북마크리스트 썸네일 */}
       <ImageContainer src={bookmarkList.image} whatContent="북마크리스트"/>
       {/* 북마크리스트 정보 */}

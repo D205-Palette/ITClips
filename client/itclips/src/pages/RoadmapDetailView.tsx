@@ -98,7 +98,7 @@ const RoadmapView = () => {
     {canView? <><div id='Body' className="grid grid-cols-12 gap-4">
 
 {/* aside 자리 */}
-<div id="aside" className="xl:col-start-2 xl:col-span-3 hidden xl:block ">
+<div id="aside" className="md:col-start-2 md:col-span-3 md:pe-4 col-start-2 col-span-10 ">
   <div className="sticky top-16 z-20">
     {roadmap?<AsideRoadmap roadmap={roadmap} />:<></>}
   </div>
@@ -106,13 +106,13 @@ const RoadmapView = () => {
 
 
 {/* main자리 */}
-<div id="Main" className="xl:col-start-5 xl:col-span-7 col-start-3 col-span-8 gap-4">
+<div id="Main" className="md:col-start-5 md:col-span-7 col-start-2 col-span-10 gap-4">
   {/* <MainTab /> */}
   <div className="grid  grid-cols-7 ">
-    <div className="fixed z-10 w-7/12">
-        <div className="col-span-7">
+    <div className="sticky top-16 z-20 col-start-1 col-span-7">
+      
           <MainTab userId={roadmap?.userId!}/>
-        </div>
+      
         </div>
         <div className="col-span-7 flex flex-row justify-between my-12">
           <div>

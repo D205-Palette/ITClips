@@ -46,7 +46,7 @@ const [canEdit, setCanEdit] = useState(false)
                 <a>팔로우 취소</a>
               </li>
             </>
-           : 
+           :  
             <></>
           }
         </ul>

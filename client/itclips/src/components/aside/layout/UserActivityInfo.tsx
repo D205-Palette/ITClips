@@ -12,9 +12,9 @@ const UserActivityInfo = () => {
   const { userId } = authStore();
 
   return (
-    <div className="w-full grid grid-cols-1 gap-y-4 mt-2  mb-12">
+    <div className="w-full grid grid-cols-1 gap-y-1 md:gap-y-4 mt-0 md:mt-2 md:mb-8">
       <div className="grid grid-cols-12">
-        <div className="col-start-3 col-span-5 text-start text-gray-500">
+        <div className="col-start-4 col-span-5 text-start text-gray-500 text-xs md:text-base">
           팔로워
         </div>
         <div className="col-start-9">
@@ -27,15 +27,15 @@ const UserActivityInfo = () => {
           >
             <button
               id="followers"
-              className="text-start font-bold hover:bg-sky-200 hover:rounded"
+              className="text-start text-xs md:text-base font-bold hover:bg-sky-200 hover:rounded"
             >
-              {urlUserInfo?.followerCount}
+              {urlUserInfo?.followerCount ?? 0}
             </button>
           </NavLink>
         </div>
       </div>
       <div className="grid grid-cols-12">
-        <div className="col-start-3 col-span-5 text-start text-gray-500">
+        <div className="col-start-4 col-span-5 text-start text-gray-500 text-xs md:text-base">
           팔로잉
         </div>
         <div className="col-start-9">
@@ -48,26 +48,26 @@ const UserActivityInfo = () => {
           >
             <button
               id="following"
-              className="text-start font-bold hover:bg-sky-200 hover:rounded"
+              className="text-start text-xs md:text-base font-bold hover:bg-sky-200 hover:rounded"
             >
-              {urlUserInfo?.followingCount}
+              {urlUserInfo?.followingCount ?? 0}
             </button>
           </NavLink>
         </div>
       </div>
       <div className="grid grid-cols-12">
-        <div className="col-start-3 col-span-5 text-start text-gray-500">
+        <div className="hidden md:block col-start-4 col-span-5 text-start text-gray-500">
           리스트 개수
         </div>
-        <div className="col-start-9 text-start font-bold">
+        <div className="hidden md:block col-start-9 text-start font-bold">
           {urlUserInfo?.bookmarkListCount ?? 0}
         </div>
       </div>
       <div className="grid grid-cols-12">
-        <div className="col-start-3 col-span-5 text-start text-gray-500">
+        <div className="hidden md:block col-start-4 col-span-5 text-start text-gray-500">
           로드맵 개수
         </div>
-        <div className="col-start-9 text-start font-bold">
+        <div className="hidden md:block col-start-9 text-start font-bold">
           {urlUserInfo?.roadmapCount ?? 0}
         </div>
       </div>

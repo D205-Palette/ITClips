@@ -144,40 +144,61 @@ const AsideProfile = () => {
     <div
       className={`${
         isDark ? "bg-base-300" : "bg-sky-50"
-      } rounded-3xl  p-8 flex flex-col items-center`}
+      } rounded-3xl p-2 md:p-8 flex flex-col`}
     >
-      {/* 피드 페이지에서 urlUserId가 undefined이므로 예외처리 */}
-      {/* 다른 유저일때 채팅하기 버튼 또는 환경설정 활성화 */}
-      {myInfo.id !== urlUserId && urlUserId !== undefined ? (
-        <button
-          className="btn btn-ghost btn-circle ms-44"
-          onClick={onClickStartChat}
-        >
-          <IoChatboxEllipsesOutline className="h-8 w-8" />
-        </button>
-      ) : (
-        <button className="btn btn-ghost btn-circle ms-44" onClick={openModal}>
-          <IoSettingsOutline className="h-6 w-6" />
-        </button>
-      )}
-      {/* 프로필 이미지 컨테이너 */}
-      <ImageContainer src={urlUserInfo?.image ? urlUserInfo.image : 'default'} whatContent="프로필"/>
+      {/* 상단 영역: 채팅/설정 버튼 */}
+      <div className="self-end md:mb-4">
+        {myInfo.id !== urlUserId && urlUserId !== undefined ? (
+          <button
+            className="btn btn-ghost btn-circle"
+            onClick={onClickStartChat}
+          >
+            <IoChatboxEllipsesOutline className="h-6 w-6 md:h-8 md:w-8" />
+          </button>
+        ) : (
+          <button className="btn btn-ghost btn-circle" onClick={openModal}>
+            <IoSettingsOutline className="h-5 w-5 md:h-6 md:w-6" />
+          </button>
+        )}
+      </div>
 
-      {/* 닉네임, 이메일, 소개글 정보 컨테이너 */}
-      {myInfo && <UserDetailInfo {...urlUserInfo} />}
-      {/* 자기인지 아닌지에 따라 활성화되는 팔로우 버튼 */}
-      {myInfo.id !== urlUserId && urlUserId !== undefined ? (
-        <button
-          className={`text-white btn ${isFollow ? "btn-error" : "btn-info"}`}
-          onClick={onClickFollow}
-        >
-          {isFollow ? "언팔로우" : "팔로우"}
-        </button>
-      ) : (
-        <div className="m-6"></div>
-      )}
-      {/* 팔로워, 팔로잉, 리스트, 북마크 수 출력 컨테이너 */}
-      <UserActivityInfo />
+      {/* 중앙 영역: 이미지와 상세 정보 */}
+      <div className="flex flex-row md:flex-col items-center justify-around md:mb-2">
+        {/* 프로필 이미지 */}
+        <div className="flex md:mb-4">
+          <ImageContainer 
+            src={urlUserInfo?.image ? urlUserInfo.image : 'default'} 
+            whatContent="프로필"
+          />
+        </div>
+
+        {/* 상세 정보 */}
+        <div className="md:w-full pl-4 md:pl-0">
+          {myInfo && <UserDetailInfo {...urlUserInfo} />}
+        </div>
+      </div>
+
+      {/* 하단 영역: 팔로우 버튼과 활동 정보 */}
+      <div className="flex flex-row md:flex-col justify-around">
+        <div className="md:w-full md:flex md:justify-center md:mb-4">
+          {myInfo.id !== urlUserId && urlUserId !== undefined ? (
+            <button
+              className={`text-white btn ${isFollow ? "btn-error" : "btn-info"} w-full md:w-auto h-8 md:h-10 min-h-0 md:min-h-[2.5rem] text-xs md:text-sm px-2 md:px-4`}
+              onClick={onClickFollow}
+            >
+              {isFollow ? "언팔로우" : "팔로우"}
+            </button>
+          ) : (
+            <div className="md:hidden">
+              {/* 빈 div로 공간 유지 */}
+            </div>
+          )}
+        </div>
+        <div>
+          <UserActivityInfo />
+        </div>
+      </div>
+
       {/* 프로필 설정 모달 */}
       <ProfileSettingsModal
         isOpen={isModalOpen}
@@ -185,6 +206,7 @@ const AsideProfile = () => {
         updateAsideInfo={updateAsideInfo}
         setGlobalNotification={setGlobalNotification}
       />
+
       {/* 토스트 알람 */}
      
     </div>

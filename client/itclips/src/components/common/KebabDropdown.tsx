@@ -81,7 +81,6 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id,contentUserId,users }) => {
   const [canEdit, setCanEdit] = useState(false)
   
   useEffect(()=>{
-    console.log(users)
     if(users){
       users.map((user) => user.id===userId? setCanEdit(true): "")
     }

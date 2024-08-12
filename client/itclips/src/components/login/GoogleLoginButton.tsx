@@ -16,7 +16,7 @@ const GoogleLoginButton = () => {
       className="btn btn-outline bg-base-100 w-3/4"
     >
       <img className="w-8 h-8" src={google_logo} alt="" />      
-      <p>구글 로그인</p>
+      <p>Google 로그인</p>
     </button>
   );
 };

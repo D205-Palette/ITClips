@@ -17,7 +17,7 @@ const KakaoLoginButton = () => {
       className="btn btn-outline bg-base-100 w-3/4"
     >      
       <img className="w-8 h-8" src={kakao_logo} alt="" />
-      <p>카카오 로그인</p>
+      <p>Kakao 로그인</p>
     </button>
   );
 };

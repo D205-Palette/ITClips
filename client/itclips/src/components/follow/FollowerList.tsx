@@ -27,8 +27,7 @@ const FollowerList = () => {
       if (userId) {
         try {
           const response = await getFollowerList(parseInt(userId, 10));
-          setFollowerList(response.data);
-          console.log(response);
+          setFollowerList(response.data);          
         } catch (error) {
           console.error("팔로워 목록 조회 실패", error);
         }

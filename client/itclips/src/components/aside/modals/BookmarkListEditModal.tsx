@@ -136,8 +136,7 @@ useEffect(()=>{
             }, // 파일의 MIME 타입 설정
           });
 
-        }
-        console.log(res.data.url)
+        }        
         window.alert("북마크리스트를 수정하였습니다.");
         setIsBookmarkListChange(true)
         onClose();

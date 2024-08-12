@@ -19,10 +19,8 @@ const FeedBookmarkLists = () => {
       );
       setDataLoaded(true);
 
-      setfeedList(feedListResponse.data.reverse());
-      console.log(feedList);
-    } catch (error) {
-      console.log("데이터 불러오기 실패:", error);
+      setfeedList(feedListResponse.data.reverse());      
+    } catch (error) {      
     }
   };
 

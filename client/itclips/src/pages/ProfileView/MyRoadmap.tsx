@@ -38,8 +38,7 @@ const MyRoadmap = () => {
       .then((res) => {
         setRoadmaps(res.data)
         setFilterdRoadmaps(res.data.filter((roadmap:any) =>roadmap.title.includes(filterText)))
-        setIsRoadmapChange(false)
-        console.log('로드맵 변화 감지')
+        setIsRoadmapChange(false)        
         if(String(userId)===params.userId){
           setCanEdit(true)}
           setNoContent( <NoContent content={"로드맵"}/> )

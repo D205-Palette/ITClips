@@ -55,8 +55,9 @@ export default function MyView() {
           setLists(res.data);
           setFilterdLists(res.data.filter((list:any) =>list.title.includes(filterText)))
           setIsBookmarkListChange(false)
-          console.log("리스트 변화 감지")
+
           setNoContent(  <NoContent content={"리스트"} />)
+       
         })
         .catch((err) => {
           console.error(err);

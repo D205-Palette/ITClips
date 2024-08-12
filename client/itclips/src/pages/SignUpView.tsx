@@ -256,7 +256,7 @@ const SignUpView = () => {
               }
             })
             .catch((error: any) => {
-              console.log(error);
+              
             });
         } else {
           return Promise.reject(

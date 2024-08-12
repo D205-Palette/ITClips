@@ -1,6 +1,5 @@
 package com.ssafy.itclips.user.controller;
 
-import com.ssafy.itclips.error.CustomException;
 import com.ssafy.itclips.follow.service.FollowService;
 import com.ssafy.itclips.global.file.DataResponseDto;
 import com.ssafy.itclips.global.file.FileService;
@@ -13,7 +12,6 @@ import com.ssafy.itclips.user.dto.UserInfoDTO;
 import com.ssafy.itclips.user.dto.UserInfoDetailDTO;
 import com.ssafy.itclips.user.entity.*;
 import com.ssafy.itclips.user.repository.UserRepository;
-import com.ssafy.itclips.user.service.AuthenticatedUser;
 import com.ssafy.itclips.user.service.MailService;
 import com.ssafy.itclips.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,13 +22,11 @@ import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
@@ -58,14 +54,11 @@ public class UserController {
 
     private final JwtTokenProvider tokenProvider;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final AuthenticatedUser authenticatedUser;
 
     private final ConcurrentHashMap<String, String> verificationCodes = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, String> passwordResetCodes = new ConcurrentHashMap<>();
 
     private static final String UNAUTHORIZED_MESSAGE = "Unauthorized";
-    private static final String PROFILE_IMAGE_UPDATE_SUCCESS = "프로필 이미지가 성공적으로 업데이트 되었습니다.";
-    private static final String USER_NOT_FOUND_MESSAGE = "회원 정보를 찾을 수 없습니다.";
     private static final String USER_UPDATE_SUCCESS = "회원 정보가 성공적으로 수정되었습니다.";
     private static final String USER_DELETE_SUCCESS = "회원이 성공적으로 탈퇴되었습니다.";
     private static final String USER_UPDATE_FAIL = "회원 정보 수정에 실패했습니다.";

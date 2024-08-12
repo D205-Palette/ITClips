@@ -40,7 +40,7 @@ public class Bookmark {
     @Column(name = "description")
     private String description;
 
-    @Size(max = 255)
+    @Size(max = 511)
     @NotNull
     @Column(name = "url", nullable = false)
     private String url;

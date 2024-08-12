@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { NavLink } from "react-router-dom";
-import { format } from "date-fns";
+import { format, parseISO, addHours } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 
 // icons
 import { FaBell, FaTimes, FaCheck } from "react-icons/fa";
@@ -97,10 +98,11 @@ const NotificationDropdown: React.FC = () => {
     }
   };
 
-  // 알림 시간 변환
+  // 알림 시간 변환 (서버에서 +18시간 - 받아올때 -18시간해서 가져옴)
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return format(date, "yyyy-MM-dd HH:mm");
+    const date = parseISO(dateString);
+    const adjustedDate = addHours(date, 18);
+    return format(adjustedDate, "yyyy-MM-dd HH:mm");
   };
 
   return (

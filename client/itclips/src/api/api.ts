@@ -26,4 +26,46 @@ api.interceptors.request.use(
   }
 );
 
+// 응답 인터셉터를 사용해 401 에러 처리 및 토큰 갱신
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      try {
+        // authStore에서 리프레시 토큰 가져오기
+        const refreshToken = authStore.getState().refreshToken;
+        if (!refreshToken) {
+          throw new Error("No refresh token available");
+        }
+
+        // 리프레시 토큰으로 새로운 액세스 토큰 요청
+        const { data } = await axios.post(`${API_BASE_URL}/api/user/refresh`, null, {
+          headers: {
+            "Authorization-Refresh": refreshToken,
+          },
+        });
+
+        // 새로운 액세스 토큰을 authStore에 저장
+        authStore.getState().fetchUserToken(data.accessToken);
+
+        // 원래 요청에 새로운 액세스 토큰 설정 후 재시도
+        originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
+        return api(originalRequest);
+      } catch (refreshError) {
+        console.error("Failed to refresh token", refreshError);
+        // 리프레시 토큰이 만료되었거나 유효하지 않으면 로그아웃 처리 등 추가 로직 수행 가능
+        authStore.getState().logout();
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
+
 export default api;

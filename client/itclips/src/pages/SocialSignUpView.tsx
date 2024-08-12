@@ -59,7 +59,7 @@ const SocialSignupView = () => {
     "기타",
   ];
 
-  const { login, fetchUserToken, fetchUserId, fetchUserInfo, userId } = authStore();
+  const { login, fetchUserToken, fetchUserId, fetchUserInfo, userId, fetchRefreshToken } = authStore();
 
   // 생년월일 유효성 검사
   useEffect(() => {
@@ -143,6 +143,7 @@ const SocialSignupView = () => {
 
         const userInfoResponse = await checkUserInfo(userId, userId);
         if (userInfoResponse.status === 200) {
+          fetchRefreshToken(response.data.refreshToken); // 로컬 스토리지에 리프레시 토큰 업데이트
           fetchUserInfo(userInfoResponse.data); // 로컬 스토리지에 유저 정보 업데이트
           window.alert(`환영합니다 ${userInfoResponse.data.nickname}님!`);
           navigate(`/user/${response.data.userId}`); // 로그인 후 페이지 이동

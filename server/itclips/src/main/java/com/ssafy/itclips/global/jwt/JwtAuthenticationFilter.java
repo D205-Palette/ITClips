@@ -1,5 +1,6 @@
 package com.ssafy.itclips.global.jwt;
 
+import com.ssafy.itclips.error.CustomException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
@@ -7,6 +8,7 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,25 +42,39 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         String token = resolveToken(request);
 
         // 2. JwtTokenProvider의 validateToken() 메서드로 JWT 토큰 유효성 검증
-        if (token != null && jwtTokenProvider.validateToken(token)) {
-            try {
-                // 3. 유효한 토큰인 경우 JwtTokenProvider의 getAuthentication() 메서드로
-                //      인증 객체 가져와서 SecurityContext에 저장 => 요청 처리 동안 인증 정보 유지
-                Authentication auth = jwtTokenProvider.getAuthentication(token);
-                SecurityContextHolder.getContext().setAuthentication(auth);
-            } catch (AuthenticationException e) {
-                // 4. 인증 실패 시 401 응답 반환
+        try {
+            if (token != null && jwtTokenProvider.validateToken(token)) {
+                try {
+                    // 3. 유효한 토큰인 경우 JwtTokenProvider의 getAuthentication() 메서드로
+                    //      인증 객체 가져와서 SecurityContext에 저장 => 요청 처리 동안 인증 정보 유지
+                    Authentication auth = jwtTokenProvider.getAuthentication(token);
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                } catch (AuthenticationException e) {
+                    // 4. 인증 실패 시 401 응답 반환
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired token");
+                    return;
+                }
+            } else {
+                // 4. 토큰이 유효하지 않은 경우 401 응답 반환
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired token");
                 return;
             }
-        } else {
-            // 4. 토큰이 유효하지 않은 경우 401 응답 반환
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired token");
-            return;
+        } catch (CustomException e) {
+            handleException(response, e);
+            return; // 예외 발생 시 필터 체인 중단
         }
+
 
         // 5. chain.doFilter() 호출하여 다음 필터로 요청 전달
         chain.doFilter(req, res);
+    }
+
+    private void handleException(HttpServletResponse response, CustomException e) throws IOException {
+        response.setStatus(e.getErrorCode().getHttpStatus().value());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.getWriter().write("토큰이 만료되었습니다");
+        response.getWriter().flush();
+        response.getWriter().close(); // 응답 후 스트림 닫기
     }
 
     // Request Header에서 토큰 정보 추출

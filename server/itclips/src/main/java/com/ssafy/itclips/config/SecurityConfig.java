@@ -1,6 +1,7 @@
 package com.ssafy.itclips.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.itclips.global.jwt.JwtAuthenticationEntryPoint;
 import com.ssafy.itclips.global.jwt.JwtAuthenticationFilter;
 import com.ssafy.itclips.global.jwt.JwtTokenProvider;
 import com.ssafy.itclips.global.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
@@ -113,11 +114,14 @@ public class SecurityConfig {
                         .successHandler(oAuth2AuthenticationSuccessHandler)
                         .failureHandler(oAuth2AuthenticationFailureHandler)
                 )
+                .exceptionHandling(e-> e
+                        .authenticationEntryPoint(new JwtAuthenticationEntryPoint()))
                 // 원래 스프링 시큐리티 필터 순서가 LogoutFilter 이후에 로그인 필터 동작
                 // 따라서, LogoutFilter 이후에 우리가 만든 필터 동작하도록 설정
                 // 순서 : LogoutFilter -> JwtAuthenticationProcessingFilter -> CustomJsonUsernamePasswordAuthenticationFilter
                 .addFilterAfter(customJsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class)
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+
 
         return http.build();
     }

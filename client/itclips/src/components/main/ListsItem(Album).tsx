@@ -56,11 +56,11 @@ const ListItem: FC<Props> = ({ list, whatMenu, canEdit }) => {
     <>
       <div
         className={
-          "card  bg-base-100 rounded-lg " +
+          "card  bg-base-100 rounded-lg w-64 " +
           (isDark ? "hover:bg-slate-700" : "hover:bg-slate-100")
         }
         onMouseOver={() => setIsHovering(true)}
-        onMouseOut={() => setIsHovering(false)}
+        onMouseOut={() => setIsHovering(false)} 
       >
         <figure
           className={

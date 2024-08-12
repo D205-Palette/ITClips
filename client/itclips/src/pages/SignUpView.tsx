@@ -23,6 +23,7 @@ import { MdOutlineWorkOutline } from "react-icons/md";
 import { authStore } from "../stores/authStore";
 import { useNavigate } from "react-router-dom";
 import toastStore from "../stores/toastStore";
+import darkModeStore from "../stores/darkModeStore";
 
 const SignUpView = () => {
   const {
@@ -69,7 +70,7 @@ const SignUpView = () => {
     boolean | null
   >(null); // 닉네임 길이 유효성
   const { globalNotification, setGlobalNotification } = toastStore();
-
+const {isDark} = darkModeStore()
   // 개발자 직업 목록 배열
   const jobOptions = [
     "프론트엔드 개발자",
@@ -338,7 +339,7 @@ const SignUpView = () => {
               <button
                 onClick={handleEmailSubmit}
                 type="button"
-                className="btn btn-outline btn-primary"
+                className="btn btn-outline btn-info"
                 disabled={!email || isEmailValid === false}
               >
                 본인 인증

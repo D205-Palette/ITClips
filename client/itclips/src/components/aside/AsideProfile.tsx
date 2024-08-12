@@ -153,7 +153,7 @@ const {userId} = authStore()
     <div
       className={`${
         isDark ? "bg-base-300" : "bg-sky-50"
-      } rounded-3xl w-80 p-8 flex flex-col items-center`}
+      } rounded-3xl p-8 flex flex-col items-center`}
     >
       {/* 피드 페이지에서 urlUserId가 undefined이므로 예외처리 */}
       {/* 다른 유저일때 채팅하기 버튼 또는 환경설정 활성화 */}

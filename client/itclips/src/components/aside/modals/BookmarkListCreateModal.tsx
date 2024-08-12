@@ -13,6 +13,7 @@ import noImg from "../../../assets/images/noImg.gif";
 
 import FileResizer from "react-image-file-resizer";
 import toastStore from "../../../stores/toastStore";
+import darkModeStore from "../../../stores/darkModeStore";
 interface EditModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -40,14 +41,14 @@ const BookmarkListCreateModal: React.FC<EditModalProps> = ({
   const [tagsLengthWarning, setTagsLengthWarning] = useState(false)
 
   const {setGlobalNotification} = toastStore()
-
-  const handleAddTag = () => {
- 
-    if (tempTag.trim() !== "") {
+const {isDark} = darkModeStore()
+const darkButton = " bg-sky-600 hover:bg-sky-800 text-slate-200 hover:text-slate-300  border-sky-600 hover:border-sky-800 "
+const lightButton =  " bg-sky-500 hover:bg-sky-700 text-slate-100  border-sky-500 hover:border-sky-700 "
+  const handleAddTag = () => { 
+    if (tempTag.trim() !== "") { 
       setTempTags([...tempTags, { title: tempTag.trim() }]);
       setTempTag("");
     }
-  
   };
 
   const handleRemoveTag = (inputText: string) => {
@@ -202,7 +203,7 @@ useEffect(()=>{
               </div>
               {/* 이미지 컨트롤러 */}
               <div className="flex flex-col gap-y-2">
-                <label className="btn bg-sky-500 hover:bg-sky-700 text-slate-100 btn-outline">
+                <label className={(isDark? darkButton + " ": lightButton + " ")  + " btn "}>
                   이미지 업로드
                   <input
                     type="file"
@@ -259,10 +260,10 @@ useEffect(()=>{
             {tempTags.map((tag, index) => (
               <span
                 key={index}
-                className="bg-gray-200 px-2 py-1 rounded-full text-sm flex items-center"
+                className={(isDark? "bg-black" : "bg-gray-200")  + " px-2 py-1 rounded-full text-sm flex items-center"}
               >
                 {tag.title}
-                <button
+                <button 
                   onClick={() => handleRemoveTag(tag.title)}
                   className="ml-1 text-gray-500 hover:text-gray-700"
                 >
@@ -276,13 +277,13 @@ useEffect(()=>{
               type="text"
               value={tempTag}
               onChange={(e) => setTempTag(e.target.value)}
-              className={" flex-grow px-3 py-2 border-2 rounded-l-md  "}
+              className={" flex-grow px-3 py-2 border rounded-l-md  "}
               placeholder={tagsLengthWarning? "태그는 3개까지 가능합니다" :"새 태그 입력"}
               disabled={tagsLengthWarning}
             />
             <button
               onClick={handleAddTag}
-              className="btn bg-sky-500 hover:bg-sky-700 text-slate-100 rounded-l-none"
+              className={(isDark? darkButton + " border-sky-600 hover:border-sky-800 ": lightButton + " border-sky-500 hover:border-sky-700 ") + "btn rounded-l-none border-2 "}
               disabled={tagsLengthWarning}
             >
               +
@@ -300,7 +301,7 @@ useEffect(()=>{
             </div>
         </div>
 
-        <button className="btn bg-sky-500 hover:bg-sky-700 text-slate-100 w-full" onClick={() => endCreate()}>
+        <button className={(isDark? darkButton: lightButton) + " btn w-full"} onClick={() => endCreate()}>
           생성
         </button>
       </div>

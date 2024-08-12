@@ -92,7 +92,7 @@ const MessageLayout = () => {
   return (
     <div
       ref={messageLayoutRef}
-      className="bg-base-100 rounded-3xl w-96 h-[42rem] overflow-hidden shadow-xl transition-all duration-300 border border-gray-200"
+      className="bg-base-100 w-full h-[calc(100vh-var(--navbar-height)-5rem)] md:h-[42rem] overflow-hidden shadow-xl transition-all duration-300 border border-gray-200 md:w-96 md:rounded-3xl"
     >
       <div className="w-full h-full overflow-hidden flex flex-col">
         {selectedChat === null && showInvite === null && (

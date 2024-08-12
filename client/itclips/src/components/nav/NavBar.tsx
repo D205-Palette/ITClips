@@ -157,7 +157,7 @@ const NavBar = () => {
 
       {/* 메세지창 */}
       {isMessageOpen && (
-        <div className="fixed top-[var(--navbar-height)] right-20 z-50">
+        <div className="fixed inset-0 z-40 top-[var(--navbar-height)] md:right-20 md:left-auto md:bottom-auto">
           <MessageLayout />
         </div>
       )}

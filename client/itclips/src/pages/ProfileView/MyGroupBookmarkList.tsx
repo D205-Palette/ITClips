@@ -12,6 +12,7 @@ import NoContent from "./NoContent";
 import { authStore } from "../../stores/authStore";
 import { API_BASE_URL } from "../../config";
 import { useParams } from "react-router-dom";
+import toastStore from "../../stores/toastStore";
 const MyGroupBookmarkList = () => {
   const [filterText, changeFilterText] = useState("");
   const [isList, setTab] = useState(true);
@@ -26,6 +27,18 @@ const MyGroupBookmarkList = () => {
   function tabAlbum(): void {
     setTab(false);
   }
+  const {globalNotification, setGlobalNotification} = toastStore()
+
+  // 토스트 알람 메뉴
+  useEffect(() => {
+    if (globalNotification) {
+      const timer = setTimeout(() => {
+        setGlobalNotification(null);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [globalNotification]);
   const [noContent, setNoContent] = useState(<div className="w-full flex flex-row justify-center mt-6"><span className="loading loading-spinner loading-lg text-sky-500"></span></div>)
   // 그룹 북마크들 api
   useEffect(() => {
@@ -135,6 +148,7 @@ const MyGroupBookmarkList = () => {
           </>
         )}
       </div>
+      
     </>
   );
 };

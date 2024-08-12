@@ -59,10 +59,10 @@ const[isMenuOpen, setIsMenuOpen] = useState(false)
           </li>
           {/*  */}
 
-          <li onClick={() => setGlobalNotification({
+          <li onClick={() =>{ setGlobalNotification({
                   message: "url 복사 완료",
                   type: "success",
-                })}>
+                }); setIsMenuOpen(false)}}>
             <a onClick={() => navigator.clipboard.writeText(bookmark.url)}>
               url 복사
             </a>
@@ -71,6 +71,7 @@ const[isMenuOpen, setIsMenuOpen] = useState(false)
             onClick={() => {
               setIsAIOpen(true);
               toggleEdit(false);
+              setIsMenuOpen(false)
             }}
           >
             <a>AI 요약</a>

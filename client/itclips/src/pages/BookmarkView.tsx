@@ -21,7 +21,7 @@ import { authStore } from "../stores/authStore";
 import darkModeStore from "../stores/darkModeStore";
 import mainStore from "../stores/mainStore";
 import NoContent from "./ProfileView/NoContent";
-
+import toastStore from "../stores/toastStore";
 const MyBookmark = () => {
   const params = useParams();
   const { isDark } = darkModeStore();
@@ -38,7 +38,6 @@ const MyBookmark = () => {
 
   const whatCategory = mainTabStore((state) => state.whatCategory);
   const changeCategory = mainTabStore((state) => state.changeCategory);
- 
 
   // 수정&이동용 북마크 정보들
   const [editBookmarks, changeEditBookmarks] = useState<BookmarkType[]>([]);
@@ -58,11 +57,25 @@ const MyBookmark = () => {
 
   const [canView, setCanView] = useState(true);
 
-  const [noContent, setNoContent] = useState(<div className="w-full flex flex-row justify-center"><span className="loading loading-spinner loading-lg text-sky-500"></span></div>)
- 
-  // 북마크 리스트 변경될때마다 리스트 불러오기
+  const [noContent, setNoContent] = useState(
+    <div className="w-full flex flex-row justify-center">
+      <span className="loading loading-spinner loading-lg text-sky-500"></span>
+    </div>
+  );
 
-  
+  // 북마크 리스트 변경될때마다 리스트 불러오기
+  const { globalNotification, setGlobalNotification } = toastStore();
+  // 토스트 알람 메뉴
+  useEffect(() => {
+    if (globalNotification) {
+      const timer = setTimeout(() => {
+        setGlobalNotification(null);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [globalNotification]);
+
   useEffect(() => {
     async function fetchData() {
       axios({
@@ -80,17 +93,16 @@ const MyBookmark = () => {
           setBookmarkList(res.data);
           setFilterdBookmarks(res.data.bookmarks);
 
-
           res.data.users.map((user: { id: number; nickName: string }) =>
             user.id === userId ? setCanEdit(true) : <></>
           );
           setIsBookmarkListChange(false);
-          setNoContent(  <NoContent content={"북마크"} />)
+          setNoContent(<NoContent content={"북마크"} />);
         })
         .catch((err) => {
           console.error(err);
           // 비공개인 리스트에 접근했을때
-          console.log(err)
+          console.log(err);
           if (err.response?.status === 401) {
             setCanView(false);
           }
@@ -184,44 +196,44 @@ const MyBookmark = () => {
                 )
               )}
             </div>
-
           </div>
-          
-            {/* 에디터 모드 전환 버튼 */}
-            <div className="md:flex justify-end fixed bottom-24 right-16 hidden">
-              {editMode ? (
-                <div className="flex flex-col ">
-                  <FaPlus
-                    size={50}
-                    onClick={() => {
-                      tabAddModal(true);
-                    }}
-                    className="hover:cursor-pointer hover:text-sky-600 text-sky-400"
-                  />{" "}
-                  <IoClose
-                    size={50}
-                    onClick={() => {
-                      setEditMode(false);
-                      changeEditBookmarks([]);
-                      changeEditBookmarksIndex([]);
-                    }}
-                    className="hover:cursor-pointer hover:text-slate-500"
-                  />
-                </div>
-              ) : canEdit ? (
-                <FaEdit
+
+          {/* 에디터 모드 전환 버튼 */}
+          <div className="md:flex justify-end fixed bottom-24 right-16 hidden">
+            {editMode ? (
+              <div className="flex flex-col ">
+                <FaPlus
                   size={50}
-                  onClick={() => setEditMode(true)}
-                  className="hover:cursor-pointer hover:text-sky-600"
+                  onClick={() => {
+                    tabAddModal(true);
+                  }}
+                  className="hover:cursor-pointer hover:text-sky-600 text-sky-400"
+                />{" "}
+                <IoClose
+                  size={50}
+                  onClick={() => {
+                    setEditMode(false);
+                    changeEditBookmarks([]);
+                    changeEditBookmarksIndex([]);
+                  }}
+                  className="hover:cursor-pointer hover:text-slate-500"
                 />
-              ) : (
-                <></>
-              )}
-            </div>
+              </div>
+            ) : canEdit ? (
+              <FaEdit
+                size={50}
+                onClick={() => setEditMode(true)}
+                className="hover:cursor-pointer hover:text-sky-600"
+              />
+            ) : (
+              <></>
+            )}
+          </div>
         </div>
       ) : (
         <NoContent content={"비공개리스트"} />
       )}
+      
 
       {/* 북마크 이동 모달 */}
       {isEditModal && (

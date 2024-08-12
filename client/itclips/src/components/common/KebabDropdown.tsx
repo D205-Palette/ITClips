@@ -35,11 +35,12 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
   const [isScrapModalOpen, setIsScrapModalOpen] = useState<boolean>(false);
   const { setGlobalNotification } = toastStore();
 
-  const[isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const params = useParams();
   const nowUserId = params.userId;
   const navigate = useNavigate();
-  const { setIsRoadmapChange } = mainStore();
+  const { setIsRoadmapChange,setIsFavoriteChange } = mainStore();
+
   // 유저 아이디 임시값. 나중엔 스토리지서 받아오면됨
   const { userId, token } = authStore();
   // 리스트 즐겨찾기
@@ -52,7 +53,7 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
       },
     })
       .then(() => {
-        setIsMenuOpen(false)
+        setIsMenuOpen(false);
         setGlobalNotification({
           message: "즐겨찾기 추가 완료",
           type: "success",
@@ -60,10 +61,11 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
       })
       .catch((err) => {
         if (err.response.status === 400) {
-          setIsMenuOpen(false)
+          setIsMenuOpen(false);
+          axios.delete(`${API_BASE_URL}/api/list/scrap/${userId}/${id}`);
           setGlobalNotification({
             message: "즐겨찾기 삭제 완료",
-            type: "success",
+            type: "error",
           });
         } else {
         }
@@ -79,7 +81,7 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
       })
       .then(() => {
         setIsRoadmapChange(true);
-        setIsMenuOpen(false)
+        setIsMenuOpen(false);
         setGlobalNotification({
           message: "로드맵 스크랩 완료",
           type: "success",
@@ -91,79 +93,105 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
     // 뭐가 들어오는지에 따라 url값이 바뀜
     // navigator.clipboard.writeText(bookmark.url)
     // 이건좀 생각해봐야할듯
-    setIsMenuOpen(false)
+    setIsMenuOpen(false);
     setGlobalNotification({
       message: "url 복사 완료",
       type: "success",
     });
   }
 
+  function deleteFavorite(): void {
+    setIsMenuOpen(false);
+    axios.delete(`${API_BASE_URL}/api/list/scrap/${userId}/${id}`).then(()=>{
+      setIsFavoriteChange(true)
+    })
+    setGlobalNotification({
+      message: "즐겨찾기 삭제 완료",
+      type: "error",
+    });
+  }
   return (
     <>
       <div className="dropdown dropdown-bottom dropdown-end ">
-        <div tabIndex={0} role="button" className="btn m-1 btn-ghost " onClick={()=>setIsMenuOpen(true)}>
+        <div
+          tabIndex={0}
+          role="button"
+          className="btn m-1 btn-ghost "
+          onClick={() => setIsMenuOpen(true)}
+        >
           <VscKebabVertical />
         </div>
-        {isMenuOpen&& <ul
-          tabIndex={0}
-          className="dropdown-content menu bg-base-100 rounded-box w-52 p-2 shadow z-30"
-        >
-          {/* 수정 삭제는 남꺼일때 안 보이게 */}
-          {String(userId) !== nowUserId ? (
-            <></>
-          ) : (
-            <>
-              <li
-                className={whatMenu === "즐겨찾기" ? "hidden " : ""}
-                onClick={() => {
-                  whatMenu === "로드맵"
-                    ? navigate(`/roadmap/${id}/edit`)
-                    : setIsEditModalOpen(true);
-                }}
-              >
-                <a>수정하기</a>
-              </li>
+        {isMenuOpen && (
+          <ul
+            tabIndex={0}
+            className="dropdown-content menu bg-base-100 rounded-box w-52 p-2 shadow z-30"
+          >
+            {/* 수정 삭제는 남꺼일때 안 보이게 */}
+            {String(userId) !== nowUserId ? (
+              <></>
+            ) : (
+              <>
+                <li
+                  className={whatMenu === "즐겨찾기" ? "hidden " : ""}
+                  onClick={() => {
+                    whatMenu === "로드맵"
+                      ? navigate(`/roadmap/${id}/edit`)
+                      : setIsEditModalOpen(true);
+                  }}
+                >
+                  <a>수정하기</a>
+                </li>
 
-              <li onClick={() => setIsDeleteModalOpen(true)}>
-                <a>삭제하기</a>
-              </li>
-            </>
-          )}
-          {/*  */}
+                <li
+                  className={whatMenu === "즐겨찾기" ? "hidden" : ""}
+                  onClick={() => setIsDeleteModalOpen(true)}
+                >
+                  <a>삭제하기</a>
+                </li>
+              </>
+            )}
+            {/*  */}
 
-          <li onClick={()=>copyUrl()}>
-            <a>url 복사</a>
-          </li>
-          <li
-            className={
-              whatMenu === "로드맵" ||
-              whatMenu === "북마크" ||
-              whatMenu === "즐겨찾기"
-                ? "hidden "
-                : ""
-            }
-            onClick={() => {
-              addFavorite();
-            }}
-          >
-            <a>즐겨찾기</a>
-          </li>
-          <li
-            className={whatMenu === "로드맵" ? "" : "hidden "}
-            onClick={() => {
-              addScrap();
-            }}
-          >
-            <a>스크랩</a>
-          </li>
-          <li
-            className={whatMenu === "로드맵" ? "hidden " : ""}
-            onClick={() => setIsReportModalOpen(true)}
-          >
-            <a>신고하기</a>
-          </li>
-        </ul>}
-        
+            <li onClick={() => copyUrl()}>
+              <a>url 복사</a>
+            </li>
+
+            <li
+              className={whatMenu === "즐겨찾기" ? "" : "hidden"}
+              onClick={() => deleteFavorite()}
+            >
+              <a>즐겨찾기 삭제</a>
+            </li>
+            <li
+              className={
+                whatMenu === "로드맵" ||
+                whatMenu === "북마크" ||
+                whatMenu === "즐겨찾기"
+                  ? "hidden "
+                  : ""
+              }
+              onClick={() => {
+                addFavorite();
+              }}
+            >
+              <a>즐겨찾기</a>
+            </li>
+            <li
+              className={whatMenu === "로드맵" ? "" : "hidden "}
+              onClick={() => {
+                addScrap();
+              }}
+            >
+              <a>스크랩</a>
+            </li>
+            <li
+              className={whatMenu === "로드맵" ? "hidden " : ""}
+              onClick={() => setIsReportModalOpen(true)}
+            >
+              <a>신고하기</a>
+            </li>
+          </ul>
+        )}
       </div>
 
       {isEditModalOpen && (

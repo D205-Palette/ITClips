@@ -11,7 +11,7 @@ import { authStore } from "../../stores/authStore";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom"; 
 import mainStore from "../../stores/mainStore";
-
+import toastStore from "../../stores/toastStore";
 const MyRoadmap = () => {
   const navigate = useNavigate()
   const {userId, token} = authStore()
@@ -23,6 +23,19 @@ const MyRoadmap = () => {
   const [canEdit, setCanEdit] = useState(false) 
   const [noContent, setNoContent] = useState(<div className="w-full flex flex-row justify-center mt-6"><span className="loading loading-spinner loading-lg text-sky-500"></span></div>)
   // 변경사항 있을때마다 로드맵 요약 불러오기
+  const {globalNotification, setGlobalNotification} = toastStore()
+
+  // 토스트 알람 메뉴
+  useEffect(() => {
+    if (globalNotification) {
+      const timer = setTimeout(() => {
+        setGlobalNotification(null);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [globalNotification]);
+
   useEffect(() => {
     async function fetchData() {
       axios({
@@ -81,7 +94,7 @@ const MyRoadmap = () => {
         <FaPlus color="skyblue" size={56}/>
       </button>: <></> }
       
-
+     
     </>
   );
 };

@@ -7,17 +7,14 @@ interface AuthStore {
   logout: () => void;
   isLoggedIn: boolean;
   token: string;
+  refreshToken: string; // 리프레시 토큰 추가
   fetchUserToken: (inputUserToken: string) => void;
+  fetchRefreshToken: (inputRefreshToken: string) => void; // 리프레시 토큰 저장 함수 추가
   userInfo: UserInfo;
   fetchUserInfo: (inputUserInfo: UserInfo) => void;
   userId: number;
   fetchUserId: (inputUserId: number) => void;
 }
-
-// interface AccessTokenStore {
-//   accessToken: string;
-//   fetchAccessToken: (inputUserToken: string) => void;
-// }
 
 // AuthStore를 localStorage에 저장
 export const authStore = create<AuthStore>()(
@@ -26,9 +23,11 @@ export const authStore = create<AuthStore>()(
       isLoggedIn: false,
       login: () => set({ isLoggedIn: true }),
       logout: () =>
-        set({ isLoggedIn: false, token: "", userInfo: {} as UserInfo, userId: 0 }),
+        set({ isLoggedIn: false, token: "", refreshToken: "", userInfo: {} as UserInfo, userId: 0 }), // 로그아웃 시 리프레시 토큰 초기화
       token: "",
+      refreshToken: "", // 리프레시 토큰 초기값
       fetchUserToken: (inputUserToken: string) => set({ token: inputUserToken }),
+      fetchRefreshToken: (inputRefreshToken: string) => set({ refreshToken: inputRefreshToken }), // 리프레시 토큰 저장 함수
       userInfo: {} as UserInfo,
       fetchUserInfo: (inputUserInfo: UserInfo) => set({ userInfo: inputUserInfo }),
       userId: 0,
@@ -40,25 +39,10 @@ export const authStore = create<AuthStore>()(
       partialize: (state) => ({
         isLoggedIn: state.isLoggedIn,
         token: state.token,
+        refreshToken: state.refreshToken, // 리프레시 토큰도 저장
         userInfo: state.userInfo,
         userId: state.userId,
       }),
     }
   )
 );
-
-// // AccessTokenStore를 sessionStorage에 저장
-// export const tokenStore = create<AccessTokenStore>()(
-//   persist(
-//     (set) => ({
-//       accessToken: "",
-//       fetchAccessToken: (inputUserToken: string) =>
-//         set({ accessToken: inputUserToken }),
-//     }),
-//     {
-//       name: "accessToken",
-//       storage: createJSONStorage(() => sessionStorage), // 세션 스토리지 사용
-//       partialize: (state) => ({ accessToken: state.accessToken }),
-//     }
-//   )
-// );

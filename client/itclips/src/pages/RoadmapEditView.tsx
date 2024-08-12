@@ -20,7 +20,7 @@ import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import noImg from "../assets/images/noImg.gif";
 import FileResizer from "react-image-file-resizer";
-
+import toastStore from "../stores/toastStore";
 // 타입 정의
 interface Item extends BookmarkListSumType {
   originalId?: string; // 원본 아이디를 저장할 수 있는 필드
@@ -49,7 +49,7 @@ const RoadmapEditView: React.FC = () => {
   const [roadmapItem, setRoadmapItem] = useState<RoadmapItem | null>(null);
   const { roadmapId } = useParams<{ roadmapId: string }>();
   const [imageState, setImageState] = useState<string>("edit"); // 이미지 변경 상태 체크
-
+const {globalNotification, setGlobalNotification} = toastStore()
   // API로부터 데이터 불러오기
   const fetchData = async () => {
     try {
@@ -306,10 +306,18 @@ const RoadmapEditView: React.FC = () => {
         });
       }
 
-      window.alert("로드맵을 수정하였습니다.");
+      // window.alert("로드맵을 수정하였습니다.");
+      setGlobalNotification({
+        message: "로드맵 수정 완료",
+        type: "success",
+      });
       navigate(`/user/${userId}/roadmap`);
     } catch (error) {
       console.error(error);
+      setGlobalNotification({
+        message: "로드맵 수정 실패",
+        type: "error",
+      });
     }
   };
 

@@ -168,7 +168,7 @@ const CategoryTab: FC<Props> = ({
                   setEditMode={setEditMode}
                 />
               ) : (
-                <CategorySingleTab tempCategory={category} canEdit={canEdit} />
+                <CategorySingleTab tempCategory={category}/>
               )
             )}
           </div>

@@ -47,43 +47,58 @@ const MoveBookmarkModal: FC<Move> = ({
     toggleMode(false);
     // 카테고리 선택 안했으면 그냥 보내기
     if (selectCategory === 0) {
+      /// 카테고리 선택했을떄
       editBookmarks.map((editBookmark) =>
         axios.post(
-          `${API_BASE_URL}/api/bookmark/add/${selectListId}`,
-          editBookmark
-        ).then(()=>{
-          setIsBookmarkListChange(true)
+          `${API_BASE_URL}/api/bookmark/add/${selectListId}?userId=${userId}`,
+          {
+            url:editBookmark.url,
+            title:editBookmark.title,
+            tags:editBookmark.tags,
+            content:editBookmark.content,
+          },
           
-        })
-      );
-      if (whatMenu === "이동") {
-        editBookmarks.map((editBookmark) =>
-          axios.delete(`${API_BASE_URL}/api/bookmark/delete/${editBookmark.id}`).then(()=>{
-            setIsBookmarkListChange(true)
-            
-          })
-        );
-        changeEditBookmarksIndex([]);
-        const toastText = whatMenu==='이동'? '이동': '추가'
-        setGlobalNotification({
-          message: `북마크 ${toastText} 완료`,
-          type: "success",
-        });
-      }
-    } else {
-      /// 추가면 복사 처럼 원본도 남기고, 이동이면 원본 삭제하는 식으로
-      editBookmarks.map((editBookmark) =>
-        axios.post(
-          `${API_BASE_URL}/api/bookmark/add/${selectListId}/${selectCategory}`,
-          editBookmark
-        ).then(()=>{
+       ).then(()=>{
           setIsBookmarkListChange(true)
         })
       );
 
       if (whatMenu === "이동") {
         editBookmarks.map((editBookmark) =>
-          axios.delete(`${API_BASE_URL}/api/bookmark/delete/${editBookmark.id}`).then(()=>{
+          axios.delete(`${API_BASE_URL}/api/bookmark/delete/${editBookmark.id}?userId=${userId}`).then(()=>{
+            setIsBookmarkListChange(true)
+          })
+        );
+        changeEditBookmarksIndex([]);
+      }
+      const toastText = whatMenu==='이동'? '이동': '추가'
+        setGlobalNotification({
+          message: `북마크 ${toastText} 완료`,
+          type: "success",
+        });
+    } else {
+      /// 카테고리 선택했을떄
+      editBookmarks.map((editBookmark) =>
+        axios({
+          method:'post',
+          url:`${API_BASE_URL}/api/bookmark/add/${selectListId}/${selectCategory}?userId=${userId}`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          data:{
+            url:editBookmark.url,
+            title:editBookmark.title,
+            tags:editBookmark.tags,
+            content:editBookmark.content,
+          }
+        }).then(()=>{
+          setIsBookmarkListChange(true)
+        })
+      );
+
+      if (whatMenu === "이동") {
+        editBookmarks.map((editBookmark) =>
+          axios.delete(`${API_BASE_URL}/api/bookmark/delete/${editBookmark.id}?userId=${userId}`).then(()=>{
             setIsBookmarkListChange(true)
           })
         );

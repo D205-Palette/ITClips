@@ -13,7 +13,7 @@ import { webSocketStore } from "./stores/webSocketStore";
 import notificationStore from "./stores/notificationStore";
 import { authStore } from "./stores/authStore";
 import { chatStore } from "./stores/chatStore";
-
+import toastStore from "./stores/toastStore";
 // apis
 import { connectNotificationStream } from "./api/notificationApi";
 
@@ -29,7 +29,7 @@ const App = () => {
   const location = useLocation();
   // 특정 경로에 따라 클래스 적용
   const isIntroPage = location.pathname === "/intro"; // '/intro'를 인트로 페이지 경로로 변경
-
+const {globalNotification} = toastStore()
   // webSocket 연결하면서 채팅방 목록 조회 및 알림 가져오기
   useEffect(() => {
     const initializeChat = async () => {
@@ -77,6 +77,17 @@ const App = () => {
 
       <main className="mt-16 w-full">
         <Outlet />
+        {globalNotification && (
+          <div
+            className={`fixed bottom-8 left-1/2 transform -translate-x-1/2 p-4 rounded-md ${
+              globalNotification.type === "success"
+                ? "bg-green-500"
+                : "bg-red-500"
+            } text-white shadow-lg z-50 transition-opacity duration-300`}
+          >
+            {globalNotification.message}
+          </div>
+        )}
       </main>
 
       <footer

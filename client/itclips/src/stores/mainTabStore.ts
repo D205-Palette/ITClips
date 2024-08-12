@@ -8,22 +8,24 @@ interface TabState {
     categoryId: number;
     categoryName: string;
   }) => void;
-
 }
 
 const Tab = create<TabState>()(
-  devtools(
-    persist(
+
       (set) => ({
         whatCategory: { categoryId: 0, categoryName: "" },
-        changeCategory: (category) =>set((state) => ({ whatCategory: state.whatCategory.categoryName === category.categoryName && state.whatCategory.categoryId === category.categoryId ? { categoryId: 0, categoryName: "" }
+        changeCategory: (category) =>
+          set((state) => ({
+            whatCategory:
+              state.whatCategory.categoryName === category.categoryName &&
+              state.whatCategory.categoryId === category.categoryId
+                ? { categoryId: 0, categoryName: "" }
                 : category,
           })),
-  
       }),
-      { name: "TabState" }
+
     )
-  )
-);
+
+
 
 export default Tab;

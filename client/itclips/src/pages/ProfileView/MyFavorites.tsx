@@ -12,6 +12,9 @@ import NoContent from "./NoContent";
 import { API_BASE_URL } from "../../config";
 import { authStore } from "../../stores/authStore";
 import { useParams } from "react-router-dom";
+import toastStore from "../../stores/toastStore";
+import mainStore from "../../stores/mainStore";
+
 const MyGroupBookmarkList = () => {
   const [filterText, changeFilterText] = useState("");
   const [isList, setTab] = useState(true);
@@ -21,7 +24,19 @@ const MyGroupBookmarkList = () => {
   const params = useParams();
 
   const [canView, setCanView] = useState(false);
+  const {globalNotification, setGlobalNotification} = toastStore()
 
+  const {isFavoriteChange,setIsFavoriteChange} = mainStore()
+  // 토스트 알람 메뉴
+  useEffect(() => {
+    if (globalNotification) {
+      const timer = setTimeout(() => {
+        setGlobalNotification(null);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [globalNotification]);
   function tabList(): void {
     setTab(true);
   }
@@ -50,6 +65,7 @@ const MyGroupBookmarkList = () => {
             );
           }
           setNoContent(<NoContent content={"즐겨찾기"} />);
+          setIsFavoriteChange(false)
 
         })
         .catch((err) => {
@@ -57,7 +73,7 @@ const MyGroupBookmarkList = () => {
         });
     }
     fetchData();
-  }, []);
+  }, [isFavoriteChange]);
 
   return (
     <>
@@ -138,6 +154,7 @@ const MyGroupBookmarkList = () => {
           </>
         )}
       </div>
+      
     </>
   );
 };

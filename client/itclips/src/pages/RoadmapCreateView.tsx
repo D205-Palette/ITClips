@@ -20,7 +20,7 @@ import { IoIosWarning } from "react-icons/io";
 import FileResizer from "react-image-file-resizer";
 import RoadMap from "../components/main/Roadmap";
 import RecommendModal from "../components/common/RecommendModal";
-
+import toastStore from "../stores/toastStore";
 // 타입 정의
 interface Item extends BookmarkListSumType {
   originalId?: string; // 원본 아이디를 저장할 수 있는 필드
@@ -47,7 +47,7 @@ const RoadmapCreateView: React.FC = () => {
   const [recommendMessage, setRecommendMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
+const {globalNotification, setGlobalNotification} = toastStore()
   // API로부터 데이터 불러오기
   const fetchData = async () => {
     try {
@@ -259,11 +259,18 @@ const RoadmapCreateView: React.FC = () => {
           }, // 파일의 MIME 타입 설정
         });
       }
-
-      window.alert("로드맵을 생성하였습니다.");
+      setGlobalNotification({
+        message: "로드맵 생성 완료",
+        type: "success",
+      });
+      // window.alert("로드맵을 생성하였습니다.");
       navigate(`/user/${userId}/roadmap`);
     } catch (error) {
-      window.alert("로드맵을 생성을 실패하였습니다.");
+      // window.alert("로드맵을 생성을 실패하였습니다.");
+      setGlobalNotification({
+        message: "로드맵 생성 실패",
+        type: "success",
+      });
       console.error(error);
     }
   };

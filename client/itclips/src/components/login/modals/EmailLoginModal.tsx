@@ -9,7 +9,7 @@ import { emailLogin, checkUserInfo } from '../../../api/authApi';
 const EmailLoginModal: React.FC = () => {
   const navigate = useNavigate();
   const { setLoginListOpen, setEmailLoginOpen, setPasswordResetOpen } = navStore();
-  const { login, fetchUserInfo, fetchUserToken, fetchUserId } = authStore();
+  const { login, fetchUserInfo, fetchUserToken, fetchRefreshToken, fetchUserId } = authStore();
   const [errorMessage, setErrorMessage] = React.useState<string>('');
   const [loading, setLoading] = React.useState<boolean>(false);
 
@@ -30,8 +30,9 @@ const EmailLoginModal: React.FC = () => {
         const response = await emailLogin(values.email, values.password);
 
         if (response.status === 200) {      
-          fetchUserToken(response.data.accessToken); // 로컬 스토리지에 유저 토큰 업데이트
-          fetchUserId(response.data.userId) // 로컬 스토리지에 유저 아이디 업데이트
+          fetchUserToken(response.data.accessToken); // 로컬 스토리지에 액세스 토큰 업데이트
+          fetchRefreshToken(response.data.refreshToken); // 로컬 스토리지에 리프레시 토큰 업데이트
+          fetchUserId(response.data.userId); // 로컬 스토리지에 유저 아이디 업데이트
           const userInfoResponse = await checkUserInfo(response.data.userId, response.data.userId);          
           fetchUserInfo(userInfoResponse.data); // 로컬 스토리지에 유저 정보 업데이트
           login(); // 로그인 상태 업데이트          

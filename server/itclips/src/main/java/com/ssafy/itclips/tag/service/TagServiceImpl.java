@@ -38,9 +38,8 @@ public class TagServiceImpl implements TagService {
         }
         // 태그 제목을 리스트로 추출하고 첫 글자는 대문자, 나머지는 소문자로 변환
         List<String> titles = tags.stream()
-                .map(dto -> capitalizeFirstLetter(dto.getTitle()))
+                .map(TagDTO::getTitle)
                 .collect(Collectors.toList());
-
         // 기존 DB에서 제목이 존재하는 태그를 조회
         Set<String> existingTitles = getExistingTitles(titles);
         // 새로운 태그만 추가
@@ -74,14 +73,6 @@ public class TagServiceImpl implements TagService {
         return existingTags.stream()
                 .map(Tag::getTitle)
                 .collect(Collectors.toSet());
-    }
-
-    // 첫 글자를 대문자로, 나머지는 소문자로 변환하는 메소드
-    private String capitalizeFirstLetter(String title) {
-        if (title == null || title.isEmpty()) {
-            return title; // null 또는 빈 문자열인 경우 그대로 반환
-        }
-        return title.substring(0, 1).toUpperCase() + title.substring(1).toLowerCase();
     }
 
 

@@ -1,5 +1,7 @@
 package com.ssafy.itclips.global.jwt;
 
+import com.ssafy.itclips.error.CustomException;
+import com.ssafy.itclips.error.ErrorCode;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.xml.bind.DatatypeConverter;
@@ -145,6 +147,7 @@ public class JwtTokenProvider {
             log.info("Invalid JWT Token", e);
         } catch (ExpiredJwtException e) {
             log.info("Expired JWT Token", e);
+            throw new CustomException(ErrorCode.UNAUTHORIZED_ACCESS_TOKEN_EXPIRED);
         } catch (UnsupportedJwtException e) {
             log.info("Unsupported JWT Token", e);
         } catch (IllegalArgumentException e) {

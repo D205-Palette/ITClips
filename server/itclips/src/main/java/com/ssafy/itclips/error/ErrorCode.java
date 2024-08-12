@@ -25,9 +25,9 @@ public enum ErrorCode {
     ROADMAP_LIKE_NOT_FOUND(HttpStatus.NOT_FOUND,"RLNF-001","좋아요한 리스트가 아닙니다."),
     LIKE_USER_NOT_FOUND(HttpStatus.NOT_FOUND,"LUNF-001","좋아요한 사용자가 없습니다."),
     STEP_NOT_FOUND(HttpStatus.NOT_FOUND,"SNF-001","해당 로드맵 단계를 찾을 수 없습니다."),
-    COMMENT_NOT_ALLOWED(HttpStatus.UNAUTHORIZED,"CM-002","댓글에 접근할 권한이 없습니다."),
+    COMMENT_NOT_ALLOWED(HttpStatus.FORBIDDEN,"CM-002","댓글에 접근할 권한이 없습니다."),
     REPORT_ALREADY_EXIST(HttpStatus.BAD_REQUEST,"RP-001","이미 신고한 정보입니다"),
-    UNAUTHORIZED_USER(HttpStatus.UNAUTHORIZED, "UU-001", "권한이 없습니다."),
+    UNAUTHORIZED_USER(HttpStatus.FORBIDDEN, "UU-001", "권한이 없습니다."),
     CHAT_NOT_FOUND(HttpStatus.NOT_FOUND,"CNF-001","채팅이 없습니다."),
     CHAT_ROOM_NOT_FOUND(HttpStatus.NOT_FOUND,"CRNF-001","채팅방이 없습니다."),
 
@@ -45,7 +45,7 @@ public enum ErrorCode {
     USER_TAG_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "ACCOUNT-010", "이미 존재하는 관심사입니다."),
     PASSWORD_RESET_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "ACCOUNT-011", "임시 비밀번호 발송 중 오류가 발생했습니다."),
     PASSWORD_CHANGE_FAIL(HttpStatus.BAD_REQUEST, "ACCOUNT-012", "기존 비밀번호가 일치하지 않습니다."),
-    USER_NOT_AUTHENTICATED(HttpStatus.UNAUTHORIZED, "ACCOUNT-013", "인증되지 않은 사용자입니다."),
+    USER_NOT_AUTHENTICATED(HttpStatus.FORBIDDEN, "ACCOUNT-013", "인증되지 않은 사용자입니다."),
     FILE_UPLOAD_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "ACCOUNT-014", "파일 업로드 중 오류가 발생했습니다."),
     EMAIL_SEND_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "ACCOUNT-015", "이메일 발송 중 오류가 발생했습니다."),
 

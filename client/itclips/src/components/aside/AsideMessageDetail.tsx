@@ -12,6 +12,7 @@ import { authStore } from "../../stores/authStore";
 import { webSocketStore } from "../../stores/webSocketStore";
 import { chatStore } from "../../stores/chatStore";
 import darkModeStore from "../../stores/darkModeStore";
+import toastStore from "../../stores/toastStore";
 
 interface AsideMessageDetailProps {
   roomId: number;
@@ -34,7 +35,7 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack,
   
   const userInfo = authStore(state => state.userInfo);
   const isDark = darkModeStore(state => state.isDark);
-
+  const { globalNotification, setGlobalNotification } = toastStore();
   const { isConnected, stompClient } = webSocketStore();
   const { 
     currentRoomMessages, 
@@ -205,7 +206,10 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack,
       addMessage(newMessage);
       setInputMessage('');
     } else {
-      alert('메시지를 전송할 수 없습니다. 연결 상태를 확인해주세요.');
+      setGlobalNotification({
+        message: `메시지를 전송할 수 없습니다. 연결 상태를 확인해주세요.`,
+        type: "error",
+      });      
     }
   };
 

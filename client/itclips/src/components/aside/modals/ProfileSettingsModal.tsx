@@ -56,7 +56,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
   const userInfo = authStore((state) => state.userInfo);
   const fetchUserInfo = authStore((state) => state.fetchUserInfo);
   const logout = authStore((state) => state.logout);
-  const {setIsProfileChange} = mainStore()
+  const { setIsProfileChange } = mainStore();
   const [notification, setNotification] = useState<{
     message: string;
     type: "success" | "error";
@@ -127,24 +127,26 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
         file,
         200, // 이미지 너비
         200, // 이미지 높이
-        'SVG', // 파일 형식 - SVG 대신 JPEG로 변경
+        "SVG", // 파일 형식 - SVG 대신 JPEG로 변경
         100, // 이미지 퀄리티
         0,
         (uri) => {
           if (uri) {
             resolve(uri as File); // Promise를 사용하여 비동기 처리
           } else {
-            reject(new Error('Resizing failed'));
+            reject(new Error("Resizing failed"));
           }
         },
-        'file' // 출력 타입
+        "file" // 출력 타입
       );
     });
   // 프로필 이미지 선택 핸들러
-  const handleImageSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageSelect = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (file) {
-      const compressedFile = await resizeFile(file)
+      const compressedFile = await resizeFile(file);
       await setSelectedFile(compressedFile);
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -167,25 +169,29 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
         );
 
         if (profileImageResponse.status === 200) {
-          window.alert("프로필 이미지가 성공적으로 변경되었습니다.");
+          setGlobalNotification({
+            message: "프로필 이미지가 성공적으로 변경되었습니다.",
+            type: "success",
+          });
           axios.put(`${profileImageResponse.data.url}`, selectedFile, {
             headers: {
               "Content-Type": selectedFile.type,
             }, // 파일의 MIME 타입 설정
           });
-   
         }
         // setIsProfileChange(true);
-
       } catch (error) {
-        console.error("프로필 이미지 변경 중 오류가 발생했습니다:", error);
+        setGlobalNotification({
+          message: "프로필 이미지 변경 중 오류가 발생했습니다.",
+          type: "error",
+        });
       }
     }
   };
 
   // 프로필 이미지 지우기 핸들러
   const handleImageDelete = async () => {
-    // 프로필 이미지 삭제하는 로직 추가하기    
+    // 프로필 이미지 삭제하는 로직 추가하기
     try {
       if (userInfo.email) {
         const profileImageResponse = await updateProfileImage(
@@ -194,11 +200,17 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
         );
         setProfileImage(null);
         setSelectedFile(null);
-        window.alert('프로필 이미지가 삭제되었습니다.')
+        setGlobalNotification({
+          message: "프로필 이미지가 삭제되었습니다.",
+          type: "success",
+        });
       }
       // setIsProfileChange(true)
     } catch (error) {
-      console.error("프로필 이미지 변경 중 오류가 발생했습니다:", error);
+      setGlobalNotification({
+        message: "프로필 이미지 변경 중 오류가 발생했습니다",
+        type: "error",
+      });
     }
   };
 
@@ -248,7 +260,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
   const handleDeleteAccount = async () => {
     if (userInfo.id) {
       try {
-        await deleteUserAccount(userInfo.id);        
+        await deleteUserAccount(userInfo.id);
         await logoutApi();
         logout();
         setIsDeleteAccountModalOpen(false);
@@ -337,14 +349,14 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
         type: "error",
       });
     }
-    setIsProfileChange(true)
+    setIsProfileChange(true);
   };
 
   const handleCloseModal = async () => {
     // 프로필 수정 후 닫을 때 유저정보 갱신
     if (userInfo.id !== undefined) {
       const userInfoResponse = await checkUserInfo(userInfo.id, userInfo.id);
-      setIsProfileChange(true)
+      setIsProfileChange(true);
       fetchUserInfo(userInfoResponse.data);
     }
     onClose();
@@ -563,7 +575,11 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
               <label className="block text-sm font-medium mb-2">성별</label>
               <div className="flex items-center gap-4">
                 <button
-                  className={`btn ${genderBoolean ? "btn bg-sky-500 hover:bg-sky-700 text-slate-100" : "btn"} flex-1`}
+                  className={`btn ${
+                    genderBoolean
+                      ? "btn bg-sky-500 hover:bg-sky-700 text-slate-100"
+                      : "btn"
+                  } flex-1`}
                   onClick={(event) => {
                     event.preventDefault();
                     setGenderBoolean(true);
@@ -573,7 +589,11 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
                   남성
                 </button>
                 <button
-                  className={`btn ${!genderBoolean ? "btn  bg-sky-500 hover:bg-sky-700 text-slate-100" : "btn"} flex-1`}
+                  className={`btn ${
+                    !genderBoolean
+                      ? "btn  bg-sky-500 hover:bg-sky-700 text-slate-100"
+                      : "btn"
+                  } flex-1`}
                   onClick={(event) => {
                     event.preventDefault();
                     setGenderBoolean(false);
@@ -589,7 +609,12 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
 
         {/* 변경완료 버튼 */}
         <div className="flex justify-end items-center mt-6">
-          <button className="btn bg-sky-500 text-slate-100 hover:bg-sky-700" onClick={handleUpdateProfile}>변경 완료</button>
+          <button
+            className="btn bg-sky-500 text-slate-100 hover:bg-sky-700"
+            onClick={handleUpdateProfile}
+          >
+            변경 완료
+          </button>
         </div>
 
         {/* 비밀번호 변경 모달 */}

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 // stores
 import { authStore } from "../../../stores/authStore";
+import toastStore from "../../../stores/toastStore";
 
 interface DeleteAccountModalProps {
   isOpen: boolean;
@@ -15,6 +16,7 @@ const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({ isOpen, onClose
   const [isDeletedModalOpen, setIsDeletedModalOpen] = useState(false);
   const navigate = useNavigate();
   const logout = authStore(state => state.logout);
+  const { globalNotification, setGlobalNotification } = toastStore();
 
   const handleConfirm = async () => {
     if (isConfirmed) {
@@ -24,7 +26,10 @@ const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({ isOpen, onClose
       } catch (error) {
         console.error("회원 탈퇴 중 오류 발생:", error);
         // 에러 발생 시 사용자에게 알림
-        alert("회원 탈퇴 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+        setGlobalNotification({
+          message: "회원 탈퇴 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
+          type: "error",
+        });        
       }
     }
   };

@@ -6,6 +6,7 @@ import {
   checkUserInfo,
 } from "../api/authApi"; // 필요한 API 함수만 임포트합니다.
 import { authStore } from "../stores/authStore";
+import toastStore from "../stores/toastStore";
 
 // 아이콘
 import {
@@ -19,7 +20,7 @@ import { MdOutlineWorkOutline } from "react-icons/md";
 
 const SocialSignupView = () => {
   const navigate = useNavigate(); // useNavigate 훅을 사용하여 페이지 이동을 처리합니다.
-
+  const { globalNotification, setGlobalNotification } = toastStore();
   // 사용자 입력 데이터 상태
   const [userData, setUserData] = useState({
     nickname: "",
@@ -35,6 +36,7 @@ const SocialSignupView = () => {
   const [isNicknameValid, setIsNicknameValid] = useState<boolean | null>(null); // 닉네임 유효성
   const [birthdayMessage, setBirthdayMessage] = useState(""); // 생년월일 관련 메시지
   const [isBirthdayValid, setIsBirthdayValid] = useState<boolean | null>(null); // 생년월일 유효성
+  
 
   // 개발자 직업 목록 배열
   const jobOptions = [
@@ -138,14 +140,20 @@ const SocialSignupView = () => {
       const response = await socialSignup(userId, userDataToSend);
 
       if (response.status === 200) {
-        window.alert("소셜 회원가입을 완료하였습니다.");
+        setGlobalNotification({
+          message: "소셜 회원가입을 완료하였습니다.",
+          type: "success",
+        });        
         login(); // 로그인 상태 업데이트
 
         const userInfoResponse = await checkUserInfo(userId, userId);
         if (userInfoResponse.status === 200) {
           fetchRefreshToken(response.data.refreshToken); // 로컬 스토리지에 리프레시 토큰 업데이트
           fetchUserInfo(userInfoResponse.data); // 로컬 스토리지에 유저 정보 업데이트
-          window.alert(`환영합니다 ${userInfoResponse.data.nickname}님!`);
+          setGlobalNotification({
+            message: `환영합니다 ${userInfoResponse.data.nickname}님!`,
+            type: "success",
+          });                  
           navigate(`/user/${response.data.userId}`); // 로그인 후 페이지 이동
         } else {
           throw new Error("유저 정보를 불러오는데 실패했습니다.");
@@ -155,7 +163,10 @@ const SocialSignupView = () => {
       }
     } catch (error: any) {
       console.error(error);
-      window.alert("소셜 회원가입에 실패하였습니다.  다시 시도해 주세요.");
+      setGlobalNotification({
+        message: "소셜 회원가입에 실패하였습니다.  다시 시도해 주세요.",
+        type: "error",
+      });                       
     }
   };
 

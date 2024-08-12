@@ -168,7 +168,10 @@ const {globalNotification, setGlobalNotification} = toastStore()
           (r) => r.originalId?.toString() === item.originalId?.toString()
         );
         if (isAlreadyInRoadmap) {
-          alert("이미 추가되어 있습니다."); // 알림 메시지 출력
+          setGlobalNotification({
+            message: "이미 추가되어 있습니다.", // 알림 메시지 출력
+            type: "error",
+          });          
           return;
         }
 
@@ -306,7 +309,7 @@ const {globalNotification, setGlobalNotification} = toastStore()
         });
       }
 
-      // window.alert("로드맵을 수정하였습니다.");
+      
       setGlobalNotification({
         message: "로드맵 수정 완료",
         type: "success",

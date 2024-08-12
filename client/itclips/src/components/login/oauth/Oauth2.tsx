@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { authStore } from "../../../stores/authStore";
+import toastStore from "../../../stores/toastStore";
 import { checkUserInfo } from "../../../api/authApi";
 
 export default function Oauth2() {
@@ -8,6 +9,7 @@ export default function Oauth2() {
   const [accessToken, setAccessToken] = useState("");
   const [userId, setUserId] = useState<number | null>(null); // 초기값을 null로 설정
   const navigate = useNavigate();
+  const { globalNotification, setGlobalNotification } = toastStore();
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -28,8 +30,11 @@ export default function Oauth2() {
           if (response.data.nickname) {
             fetchUserInfo(response.data); // 스토리지에 유저 정보 갱신
             login(); // 로그인 처리          
-            navigate(`/user/${userIdNumber}`); // 로그인 후 이동할 페이지
-            window.alert(`환영합니다 ${response.data.nickname}님!`);
+            navigate(`/user/${userIdNumber}`); // 로그인 후 이동할 페이지            
+            setGlobalNotification({
+              message: `환영합니다 ${response.data.nickname}님!`,
+              type: "success",
+            });
           } else {
             // 닉네임이 없는 경우: 추가 회원정보를 입력받기 위한 페이지로 리디렉션
             if (window.opener) {

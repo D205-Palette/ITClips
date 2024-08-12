@@ -22,9 +22,17 @@ import { CiMail } from "react-icons/ci";
 import { MdOutlineWorkOutline } from "react-icons/md";
 import { authStore } from "../stores/authStore";
 import { useNavigate } from "react-router-dom";
+import toastStore from "../stores/toastStore";
 
 const SignUpView = () => {
-  const { login, userInfo, fetchUserInfo, fetchUserToken, fetchUserId, fetchRefreshToken } = authStore();
+  const {
+    login,
+    userInfo,
+    fetchUserInfo,
+    fetchUserToken,
+    fetchUserId,
+    fetchRefreshToken,
+  } = authStore();
   const navigate = useNavigate();
 
   // 사용자 입력 데이터 상태
@@ -54,8 +62,13 @@ const SignUpView = () => {
   const [verificationMessage, setVerificationMessage] = useState(""); // 인증 관련 메시지
   const [birthdayMessage, setBirthdayMessage] = useState(""); // 생년월일 관련 메시지
   const [isBirthdayValid, setIsBirthdayValid] = useState<boolean | null>(null); // 생년월일 유효성
-  const [isPasswordLengthValid, setIsPasswordLengthValid] = useState<boolean | null>(null); // 비밀번호 길이 유효성
-  const [isNicknameLengthValid, setIsNicknameLengthValid] = useState<boolean | null>(null); // 닉네임 길이 유효성
+  const [isPasswordLengthValid, setIsPasswordLengthValid] = useState<
+    boolean | null
+  >(null); // 비밀번호 길이 유효성
+  const [isNicknameLengthValid, setIsNicknameLengthValid] = useState<
+    boolean | null
+  >(null); // 닉네임 길이 유효성
+  const { globalNotification, setGlobalNotification } = toastStore();
 
   // 개발자 직업 목록 배열
   const jobOptions = [
@@ -162,12 +175,18 @@ const SignUpView = () => {
             .then((response) => {
               if (response.status === 200) {
                 // 이메일 발송 성공 시 상태 업데이트
-                window.alert("이메일로 인증번호를 발송하였습니다.");
+                setGlobalNotification({
+                  message: "이메일로 인증번호를 발송하였습니다.",
+                  type: "success",
+                });
                 setIsEmailSent(true);
                 setIsVerificationSuccess(null); // 인증 성공 상태 초기화
                 setVerificationMessage(""); // 인증 메시지 초기화
               } else {
-                window.alert("인증번호 발송을 실패하였습니다.");
+                setGlobalNotification({
+                  message: "이메일로 인증번호 발송을 실패하였습니다.",
+                  type: "error",
+                });
                 setVerificationMessage("인증번호 발송을 실패하였습니다.");
               }
             })
@@ -184,7 +203,13 @@ const SignUpView = () => {
         }
       })
       .catch((error) => {
-        window.alert("이메일이 중복 되었습니다. 다른 이메일을 입력해주세요.");
+        setVerificationMessage(
+          "이메일이 중복 되었습니다. 다른 이메일을 입력해주세요."
+        );
+        setGlobalNotification({
+          message: "이메일이 중복 되었습니다. 다른 이메일을 입력해주세요.",
+          type: "error",
+        });
       });
   };
 
@@ -239,26 +264,30 @@ const SignUpView = () => {
     signup(userDataToSend)
       .then((response: any) => {
         if (response.status === 200) {
-          window.alert("회원가입을 완료하였습니다.");
+          setGlobalNotification({
+            message: "회원가입을 완료하였습니다.",
+            type: "success",
+          });
 
           emailLogin(email, password)
             .then((response: any) => {
-              if (response.status === 200) {                  
+              if (response.status === 200) {
                 fetchUserToken(response.data.accessToken); // 로컬 스토리지에 유저 토큰 업데이트
                 fetchRefreshToken(response.data.refreshToken); // 로컬 스토리지에 리프레시 토큰 업데이트
-                fetchUserId(response.data.userId) // 로컬 스토리지에 유저 아이디 업데이트
+                fetchUserId(response.data.userId); // 로컬 스토리지에 유저 아이디 업데이트
                 checkUserInfo(response.data.userId, response.data.userId) // 유저 정보 불러 오기
-                .then((response) => {
-                  fetchUserInfo(response.data); // 로컬 스토리지에 유저 정보 업데이트
+                  .then((response) => {
+                    fetchUserInfo(response.data); // 로컬 스토리지에 유저 정보 업데이트
+                  });
+                login(); // 로그인 상태 업데이트
+                setGlobalNotification({
+                  message: `환영합니다 ${userData.nickname}님!`,
+                  type: "success",
                 });
-                login(); // 로그인 상태 업데이트                          
-                window.alert(`환영합니다 ${userData.nickname}님!`);
                 navigate(`/user/${response.data.userId}`); // 로그인 후 페이지 이동
               }
             })
-            .catch((error: any) => {
-              
-            });
+            .catch((error: any) => {});
         } else {
           return Promise.reject(
             new Error("회원가입에 실패했습니다. 다시 시도해 주세요.")
@@ -267,7 +296,10 @@ const SignUpView = () => {
       })
       .catch((error: any) => {
         // 에러 처리
-        window.alert("회원가입에 실패하였습니다.");
+        setGlobalNotification({
+          message: "회원가입에 실패하였습니다.",
+          type: "error",
+        });
       });
   };
 

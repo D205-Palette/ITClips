@@ -48,7 +48,7 @@ const NavBar = () => {
     <div>
       <nav
         ref={navbarRef}
-        className="fixed top-0 left-0 w-full flex justify-between items-center py-4 px-12 h-16 bg-base-100 z-40"
+        className="fixed top-0 left-0 w-full flex justify-between items-center py-4 px-6 md:px-12 h-16 bg-base-100 z-40"
       >
         {/* 좌측 네비게이션 링크들 */}
         <div className="flex items-center gap-4 ">

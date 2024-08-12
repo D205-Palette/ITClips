@@ -94,6 +94,23 @@ public class SecurityConfig {
                         .requestMatchers("/api/user/login", "/api/user/refresh").permitAll()     // 로그인 접근 가능
                         .requestMatchers("/api/user/nicknameCheck", "/api/user/emailCheck", "/api/user/mail/sendVerification", "/api/user/mail/verifyCode",
                                 "/api/user/pw/sendVerification", "/api/user/pw/verifyCode").permitAll() // 회원가입, 로그인 관련 인증
+                        .requestMatchers("/api/user/**").permitAll()    // API 개발 중 접근 없이 swagger 테스트 하기 위함
+                        .requestMatchers("/api/roadmap/**").permitAll()    // API 개발 중 접근 없이 swagger 테스트 하기 위함
+                        .requestMatchers("/api/chat/**", "/api/ws/**").permitAll()    // API 개발 중 접근 없이 swagger 테스트 하기 위함
+                        .requestMatchers("/api/feed/**").permitAll()    // API 개발 중 접근 없이 swagger 테스트 하기 위함
+                        .requestMatchers("/api/list/**").permitAll()    // API 개발 중 접근 없이 swagger 테스트 하기 위함
+                        .requestMatchers("/api/file/**").permitAll()
+                        .requestMatchers("/api/category/**").permitAll()
+                        .requestMatchers("/api/bookmark/**").permitAll()
+                        .requestMatchers("/api/report/**").permitAll()
+                        .requestMatchers("/api/follow/**").permitAll()
+                        .requestMatchers("/api/tag/**").permitAll()
+                        .requestMatchers("/api/group/**").permitAll()
+                        .requestMatchers("/api/pub/**").permitAll()
+                        .requestMatchers("/api/sub/**").permitAll()
+                        .requestMatchers("/api/notify/**").permitAll()
+                        .requestMatchers("/api/comment/**").permitAll()
+                        .requestMatchers("/api/recommendations/**").permitAll()
                         .anyRequest().authenticated()
                 )
 

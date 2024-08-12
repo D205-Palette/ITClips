@@ -60,19 +60,23 @@ const LikesFavoritesCount = (data: RoadmapDetailType) => {
 
 
 
-  return (
-    <div className="flex flex-row justify-start w-full ps-4 mb-4">
-      <div className="col-start-2 flex items-center">
-        <div className="me-2 hover:cursor-pointer" onClick={()=>clickHeart()}>
-        {isLike ? <FaHeart color="red"  size={12}/> : <FaRegHeart size={12}/>}
-        </div>
-        <div>
-          <span  className={isLike? "":"text-slate-400"}>{likeCount}</span>
-        </div>
-      </div>
-
+return (
+  <div className="flex justify-center items-center w-full mb-4">
+    <div className="flex items-center">
+      <button
+        className="flex items-center justify-center mr-2 hover:cursor-pointer"
+        onClick={clickHeart}
+      >
+        {isLike ? (
+          <FaHeart color="red" size={12} />
+        ) : (
+          <FaRegHeart size={12} />
+        )}
+      </button>
+      <span className={isLike ? "" : "text-slate-400"}>{likeCount}</span>
     </div>
-  );
+  </div>
+);
 };
 
 export default LikesFavoritesCount;

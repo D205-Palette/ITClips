@@ -22,15 +22,12 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<UserTagDTO> getOriginTags() throws RuntimeException {
-        List<Tag> tags = tagRepository.findByIsOrigin(true);
-        List<UserTagDTO> result = new ArrayList<>();
-        for(Tag tag : tags) {
-            result.add(UserTagDTO.builder()
-                    .id(tag.getId())
-                    .title(tag.getTitle())
-                    .build());
-        }
-        return result;
+        return tagRepository.findByIsOrigin(true).stream()
+                .map(tag -> UserTagDTO.builder()
+                        .id(tag.getId())
+                        .title(tag.getTitle())
+                        .build())
+                .toList();
     }
 
     @Override
@@ -90,14 +87,11 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<UserTagDTO> getAllTags() throws RuntimeException {
-        List<Tag> tags = tagRepository.findAll();
-        List<UserTagDTO> result = new ArrayList<>();
-        for(Tag tag : tags) {
-            result.add(UserTagDTO.builder()
-                    .id(tag.getId())
-                    .title(tag.getTitle())
-                    .build());
-        }
-        return result;
+        return tagRepository.findAll().stream()
+                .map(tag -> UserTagDTO.builder()
+                        .id(tag.getId())
+                        .title(tag.getTitle())
+                        .build())
+                .toList();
     }
 }

@@ -157,14 +157,7 @@ const {userId} = authStore()
     >
       {/* 상단 영역: 채팅/설정 버튼 */}
       <div className="self-end md:mb-4">
-        {myInfo.id !== urlUserId && urlUserId !== undefined ? (
-          <button
-            className="btn btn-ghost btn-circle"
-            onClick={onClickStartChat}
-          >
-            <IoChatboxEllipsesOutline className="h-6 w-6 md:h-8 md:w-8" />
-          </button>
-        ) : (
+        {(myInfo.id === urlUserId || urlUserId === undefined) && (
           <button className="btn btn-ghost btn-circle" onClick={openModal}>
             <IoSettingsOutline className="h-5 w-5 md:h-6 md:w-6" />
           </button>

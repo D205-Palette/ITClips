@@ -367,7 +367,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
       <div className="bg-base-100 rounded-lg w-[800px] max-w-full max-h-[90vh] flex flex-col">
-        <div className="p-6 border-b">
+        <div className={`${ isDark ? "bg-base-200" : "bg-sky-200" } rounded-t-lg p-6 border-b`}>
           <div className="flex justify-between items-center">
             <h2 className="text-2xl font-bold">내 정보 변경</h2>
             <button

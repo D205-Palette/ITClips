@@ -24,9 +24,11 @@ interface Item {
 const Tags = (data: BookmarkListDetailType) => {
 
   return (
-    <div className="mb-3 flex w-full ps-4 text-sm text-slate-500">
-      {data.tags.map((tag) => (
-        <p># {tag.title}&nbsp;</p>
+    <div className="mb-3 flex flex-wrap justify-center items-center w-full text-sm text-slate-500">
+      {data.tags.map((tag, index) => (
+        <span className="mx-1">
+          #{tag.title}
+        </span>
       ))}
     </div>
   );

@@ -81,23 +81,34 @@ const LikesFavoritesCount = (data: BookmarkListDetailType) => {
 
 
   return (
-    <div className="flex flex-row justify-start w-full ps-4 mb-4">
-      <div className="col-start-2 flex items-center me-6">
-        <div className="me-2 hover:cursor-pointer" onClick={()=>clickHeart()}>
-        {isLike ? <FaHeart color="red"  size={12}/> : <FaRegHeart color="gray" size={12}/>}
-        </div>
-        <div className="w-3">
-          <span  className={isLike? "" : "text-slate-400"}>{likeCount}</span>
-        </div>
+    <div className="flex justify-center items-center w-full mb-4">
+      <div className="flex items-center mr-6">
+        <button
+          className="flex items-center justify-center mr-2 hover:cursor-pointer"
+          onClick={clickHeart}
+        >
+          {isLike ? (
+            <FaHeart color="red" size={12} />
+          ) : (
+            <FaRegHeart color="gray" size={12} />
+          )}
+        </button>
+        <span className={`w-3 ${isLike ? "" : "text-slate-400"}`}>
+          {likeCount}
+        </span>
       </div>
-      <div className="col-start-5 flex items-center">
-        <div className="me-2 hover:cursor-pointer " onClick={()=>clickStar()}>
-        {isScraped? <FaStar color="skyblue"  size={14}/> : <FaRegStar color="gray" size={14} />}
-    
-        </div>
-        <div>
-          <span className={isScraped ? "" : "text-slate-400"}>{scrapCount}</span>
-        </div>
+      <div className="flex items-center">
+        <button
+          className="flex items-center justify-center mr-2 hover:cursor-pointer"
+          onClick={clickStar}
+        >
+          {isScraped ? (
+            <FaStar color="skyblue" size={14} />
+          ) : (
+            <FaRegStar color="gray" size={14} />
+          )}
+        </button>
+        <span className={isScraped ? "" : "text-slate-400"}>{scrapCount}</span>
       </div>
     </div>
   );

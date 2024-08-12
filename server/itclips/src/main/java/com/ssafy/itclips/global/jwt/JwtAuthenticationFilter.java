@@ -28,31 +28,18 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
-        HttpServletRequest request = (HttpServletRequest) req;
-        HttpServletResponse response = (HttpServletResponse) res;
-
         // 1. resolveToken() 메서드로 요청 헤더에서 JWT 토큰 추출
-        String token = resolveToken(request);
+        String token = resolveToken((HttpServletRequest) req);
 
         // 2. JwtTokenProvider의 validateToken() 메서드로 JWT 토큰 유효성 검증
         if (token != null && jwtTokenProvider.validateToken(token)) {
-            try {
-                // 3. 유효한 토큰인 경우 JwtTokenProvider의 getAuthentication() 메서드로
-                //      인증 객체 가져와서 SecurityContext에 저장 => 요청 처리 동안 인증 정보 유지
-                Authentication auth = jwtTokenProvider.getAuthentication(token);
-                SecurityContextHolder.getContext().setAuthentication(auth);
-            } catch (AuthenticationException e) {
-                // 4. 인증 실패 시 401 응답 반환
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired token");
-                return;
-            }
-        } else {
-            // 4. 토큰이 유효하지 않은 경우 401 응답 반환
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired token");
-            return;
+            // 3. 유효한 토큰인 경우 JwtTokenProvider의 getAuthentication() 메서드로
+            //      인증 객체 가져와서 SecurityContext에 저장 => 요청 처리 동안 인증 정보 유지
+            Authentication auth = jwtTokenProvider.getAuthentication(token);
+            SecurityContextHolder.getContext().setAuthentication(auth);
         }
 
-        // 5. chain.doFilter() 호출하여 다음 필터로 요청 전달
+        // 4. chain.doFilter() 호출하여 다음 필터로 요청 전달
         chain.doFilter(req, res);
     }
 

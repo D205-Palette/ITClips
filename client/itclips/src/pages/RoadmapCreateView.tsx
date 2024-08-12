@@ -151,7 +151,10 @@ const {globalNotification, setGlobalNotification} = toastStore()
           (r) => r.originalId?.toString() === item.originalId?.toString()
         );
         if (isAlreadyInRoadmap) {
-          alert("이미 추가되어 있습니다."); // 알림 메시지 출력
+          setGlobalNotification({
+            message: "이미 추가되어 있습니다.", // 알림 메시지 출력
+            type: "error",
+          });          
           return;
         }
 
@@ -263,10 +266,10 @@ const {globalNotification, setGlobalNotification} = toastStore()
         message: "로드맵 생성 완료",
         type: "success",
       });
-      // window.alert("로드맵을 생성하였습니다.");
+      
       navigate(`/user/${userId}/roadmap`);
     } catch (error) {
-      // window.alert("로드맵을 생성을 실패하였습니다.");
+      
       setGlobalNotification({
         message: "로드맵 생성 실패",
         type: "success",

@@ -39,7 +39,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         }
 
         // 1. resolveToken() 메서드로 요청 헤더에서 JWT 토큰 추출
-        String token = resolveToken(request);
+        String token = resolveToken((HttpServletRequest) req);
 
         // 2. JwtTokenProvider의 validateToken() 메서드로 JWT 토큰 유효성 검증
         try {
@@ -63,7 +63,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             handleException(response, e);
             return; // 예외 발생 시 필터 체인 중단
         }
-
 
         // 5. chain.doFilter() 호출하여 다음 필터로 요청 전달
         chain.doFilter(req, res);

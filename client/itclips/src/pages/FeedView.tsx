@@ -14,7 +14,7 @@ export default function FeedView() {
     <>
       <div className="grid grid-cols-12 gap-4">
         {/* aside 자리 */}
-        <div id="aside" className="md:col-start-2 md:col-span-3 md:px-4 col-start-2 col-span-10 ">
+        <div id="aside" className="md:col-start-2 md:col-span-3 md:pe-4 col-start-2 col-span-10 ">
           {/* 메세지 뜨는 위치 */}
           <div className="sticky top-16 z-30">
             <AsideProfile />

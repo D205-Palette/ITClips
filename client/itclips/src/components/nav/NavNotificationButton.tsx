@@ -22,7 +22,6 @@ interface Notification {
 }
 
 const NotificationDropdown: React.FC = () => {
-
   const userId = authStore(state => state.userId);
   const isDark = darkModeStore(state => state.isDark);
 
@@ -30,12 +29,12 @@ const NotificationDropdown: React.FC = () => {
   const [ isOpen, setIsOpen ] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // 알림 버튼 눌러서 드롭다운 펼쳤다가 닫혔다가
+  // 알림 버튼 눌러서 열고 닫기 토글
   const handleToggle = () => {
     setIsOpen(!isOpen);
   };
 
-  // 다른 곳 클릭하면 알림창 닫히도록
+  // 알림창 외에 다른 곳을 클릭하면 알림창이 닫히도록
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -66,7 +65,7 @@ const NotificationDropdown: React.FC = () => {
   // 알림 삭제
   const handleDelete = (event: React.MouseEvent, notificationId: number) => {
     event.stopPropagation();
-    event.preventDefault();   // 삭제버튼 누른후 알림창 닫히지 않도록
+    event.preventDefault();
     deleteNotification(notificationId);
   };
 
@@ -115,8 +114,8 @@ const NotificationDropdown: React.FC = () => {
         </div>
       </label>
       {isOpen && (
-        <div tabIndex={0} className="mt-3 z-[1] dropdown-content w-96 bg-base-100 shadow rounded-box">
-          <div className={`p-4 ${isDark ? "bg-base-200" : "bg-sky-200"} rounded-t-box`}>
+        <div tabIndex={0} className="fixed inset-0 top-[var(--navbar-height)] z-40 bg-base-100 md:absolute md:inset-auto md:right-0 md:top-full md:mt-3 md:w-96 md:rounded-box md:shadow">
+          <div className={`p-4 ${isDark ? "bg-base-200" : "bg-sky-200"} md:rounded-t-box`}>
             <div className="flex justify-between items-center">
               <h3 className="font-bold text-lg">알림</h3>
               {unreadCount > 0 && (
@@ -126,7 +125,7 @@ const NotificationDropdown: React.FC = () => {
               )}
             </div>
           </div>
-          <div className="p-4 max-h-96 overflow-y-auto scrollbar-hide">
+          <div className="p-4 h-[calc(100vh-var(--navbar-height))] md:max-h-96 overflow-y-auto scrollbar-hide">
             {sortedNotifications.length === 0 ? (
               <p className="text-center py-2">알림이 없습니다.</p>
             ) : (

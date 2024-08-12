@@ -166,8 +166,8 @@ public class BookmarkServiceImpl implements BookmarkService {
     public GPTResponseDTO getUrlSummary(Long bookmarkId) throws RuntimeException {
         Bookmark bookmark = bookmarkRepository.findById(bookmarkId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_NOT_FOUND));
-        String prompt = bookmark.getUrl() + "을 다른 말과 번호 없이 개조식으로 첫 글자에 '-'를 추가해서 3줄로 요약 해 줘. " +
-                "동영상 사이트라면 '영상은 요약할 수 없습니다.'를 출력해줘. ";
+        String prompt = bookmark.getUrl() + "을 유효한 url이라면 다른 말과 번호 없이 개조식으로 첫 글자에 '-'를 추가해서 3줄로 요약 해 줘. " +
+                "유호하지 않은 url이거나 동영상 사이트라면 '요약할 수 없는 url입니다.' 이 내용만 출력해줘. ";
         ChatGPTRequest request = new ChatGPTRequest(model,prompt);
         ChatGPTResponse response = template.postForObject(apiURL, request, ChatGPTResponse.class);
         if(response == null) {

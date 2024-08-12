@@ -24,7 +24,7 @@ import { authStore } from "../stores/authStore";
 import { useNavigate } from "react-router-dom";
 
 const SignUpView = () => {
-  const { login, userInfo, fetchUserInfo, fetchUserToken, fetchUserId } = authStore();
+  const { login, userInfo, fetchUserInfo, fetchUserToken, fetchUserId, fetchRefreshToken } = authStore();
   const navigate = useNavigate();
 
   // 사용자 입력 데이터 상태
@@ -245,6 +245,7 @@ const SignUpView = () => {
             .then((response: any) => {
               if (response.status === 200) {                  
                 fetchUserToken(response.data.accessToken); // 로컬 스토리지에 유저 토큰 업데이트
+                fetchRefreshToken(response.data.refreshToken); // 로컬 스토리지에 리프레시 토큰 업데이트
                 fetchUserId(response.data.userId) // 로컬 스토리지에 유저 아이디 업데이트
                 checkUserInfo(response.data.userId, response.data.userId) // 유저 정보 불러 오기
                 .then((response) => {

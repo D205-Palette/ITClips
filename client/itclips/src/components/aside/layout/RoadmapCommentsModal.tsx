@@ -119,15 +119,13 @@ const RoadmapCommentsModal: FC<Props> = ({ id, isOpen, onClose, onCommentCountCh
       setEditingId(null);
       setEditContent("");
       setNotification({ message: "댓글이 수정되었습니다.", type: 'success' });
-    } catch (error) {
-      console.error("댓글 수정 중 오류가 발생했습니다:", error);
+    } catch (error) {      
       setNotification({ message: "댓글 수정에 실패했습니다.", type: 'error' });
     }
   };
 
   const handleDeleteComment = async (commentId: number) => {
-    if (!userInfo?.id) {
-      console.error("사용자 정보가 없습니다.");
+    if (!userInfo?.id) {      
       return;
     }
 

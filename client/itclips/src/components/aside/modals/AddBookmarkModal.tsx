@@ -45,8 +45,7 @@ const AddBookmarkModal: FC<move> = ({
   const [createMode, changeCreateMode] = useState(false);
 
   const {isBookmarkListChange,setIsBookmarkListChange} = mainStore()
-  const handleSubmit = () => {
-    console.log(whatCategory);
+  const handleSubmit = () => {    
     // 카테고리가 있냐 없냐에 따라 분기
     if (whatCategory.categoryId) {
       axios({

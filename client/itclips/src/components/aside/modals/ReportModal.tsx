@@ -71,8 +71,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
         .then(() => {
           setIsConfirmationModalOpen(true);
         })
-        .catch((err) => {
-          console.log(err.response.status)
+        .catch((err) => {          
           if (err.response.status === 400) {
             setIsErrorModalOpen(true)
             

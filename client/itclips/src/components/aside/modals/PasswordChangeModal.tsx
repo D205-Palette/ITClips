@@ -30,8 +30,7 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({ isOpen, onClo
     if (userInfo.email) {
       try {
         const response = await changePassword(userInfo.email, oldPassword, newPassword);
-        if (response.status === 200) {
-          console.log('비밀번호가 성공적으로 변경되었습니다.');
+        if (response.status === 200) {          
           setNotification({ message: "비밀번호가 성공적으로 변경되었습니다.", type: 'success' });
           return true; // 성공적으로 변경됨
         } else {

@@ -78,13 +78,11 @@ const AsideProfile = () => {
         if (urlUserId) {
           const response = await checkUserInfo(userId, urlUserId);
           setUrlUserInfo(response.data);
-          setIsProfileChange(false)
-          console.log(response);
+          setIsProfileChange(false)          
         } else {
           const response = await checkUserInfo(userId, userId);
           setUrlUserInfo(response.data);
-          setIsProfileChange(false)
-          console.log(response);
+          setIsProfileChange(false)          
         }
       } catch (error) {
         console.error("유저 조회 실패", error);

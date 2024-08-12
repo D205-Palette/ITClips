@@ -58,8 +58,7 @@ const CategorySingleTab: FC<Props> = ({
             },
           }
         )
-        .then(() => {
-          console.log("ok");
+        .then(() => {          
           setIsBookmarkListChange(true);
           setEditMode(false);
         });

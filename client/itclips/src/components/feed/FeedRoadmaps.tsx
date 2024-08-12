@@ -19,11 +19,7 @@ const FeedRoadmaps = () => {
       );
       setDataLoaded(true);
       setfeedRoadmap(feedRoadmapResponse.data.reverse());
-
-      console.log(feedRoadmap);
-    } catch (error) {
-      console.log("데이터 불러오기 실패:", error);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -38,7 +34,7 @@ const FeedRoadmaps = () => {
       <div id="feedRoadmaps">
         <div className="flex flex-col gap-3">
           {!dataLoaded ? (
-            <div className="mt-10 flex justify-center">              
+            <div className="mt-10 flex justify-center">
               <span className="loading loading-spinner loading-lg"></span>
             </div>
           ) : feedRoadmap.length !== 0 ? (

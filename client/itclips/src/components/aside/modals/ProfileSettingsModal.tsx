@@ -248,8 +248,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
   const handleDeleteAccount = async () => {
     if (userInfo.id) {
       try {
-        await deleteUserAccount(userInfo.id);
-        console.log("회원 탈퇴가 성공적으로 처리되었습니다.");
+        await deleteUserAccount(userInfo.id);        
         await logoutApi();
         logout();
         setIsDeleteAccountModalOpen(false);

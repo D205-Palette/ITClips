@@ -49,8 +49,7 @@ const AsideBookmarkListKebabDropdown :FC<Props> = ({isRoadmap, id}) => {
     try {
       await navigator.clipboard.writeText(window.location.href);
       setIsUrlCopyModalOpen(true)
-    } catch (error) {
-      console.log(error);
+    } catch (error) {      
     }
   }
 

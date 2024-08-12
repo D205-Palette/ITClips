@@ -68,7 +68,7 @@ const RoadmapCreateView: React.FC = () => {
         })
         .catch((err) => {
           // 즐겨찾기 한 글 없으면 404 에러뜸
-          console.log(err);
+          
         });
 
       // 데이터 가공하여 설정
@@ -209,8 +209,6 @@ const RoadmapCreateView: React.FC = () => {
     if (file) {
       try {
         const compressedFile = await resizeFile(file); // "resizeFile" 함수를 통해서 업로드한 이미지 리사이징 및 인코딩
-        console.log(compressedFile); // 리사이징된 파일을 콘솔에 출력하여 확인
-
         await setRoadmapImage(compressedFile); // 리사이징된 파일을 상태에 저장
 
         // 미리보기 URL 생성
@@ -219,9 +217,7 @@ const RoadmapCreateView: React.FC = () => {
           setPreviewImageUrl(reader.result as string); // 미리보기 URL을 상태에 저장
         };
         reader.readAsDataURL(compressedFile); // compressedFile을 사용하여 미리보기 URL 생성
-      } catch (error) {
-        // 리사이징에 실패했을 시 console에 출력하게 한다.
-        console.log("file resizing failed", error);
+      } catch (error) {        
       }
     } else {
       setRoadmapImage(null); // 파일이 없을 경우 상태를 null로 설정

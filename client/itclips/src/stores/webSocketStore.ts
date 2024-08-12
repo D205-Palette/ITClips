@@ -41,19 +41,18 @@ export const webSocketStore = create<WebSocketStore>((set, get) => ({
       const socket = new SockJS(`${API_BASE_URL}/api/ws`);
       const client = new Client({
         webSocketFactory: () => socket,
-        debug: (str) => {
-          console.log(str);
+        debug: (str) => {          
         },
         reconnectDelay: 5000,
         heartbeatIncoming: 4000,
         heartbeatOutgoing: 4000,
         onConnect: () => {
-          console.log('WebSocket Connected');
+          
           set({ isConnected: true });
           get().subscribeToAllRooms();
         },
         onDisconnect: () => {
-          console.log('WebSocket Disconnected');
+          
           set({ isConnected: false });
         },
       });

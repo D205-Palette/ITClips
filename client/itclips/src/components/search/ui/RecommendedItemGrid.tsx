@@ -7,17 +7,35 @@ import noImage from "../../../assets/images/noImg.gif"
 // components
 import SearchItemKebabDropdown from "./SearchItemKebabDropdown";
 
+// icons
+import { FaHeart, FaRegHeart } from "react-icons/fa";
+
+// apis
+import { likeBookmarkList, unlikeBookmarkList } from "../../../api/bookmarkListApi";
+
+// stores
+import { authStore } from "../../../stores/authStore";
+import { searchStore } from "../../../stores/searchStore";
+
+interface Tag {
+  title: string;
+}
+
+interface User {
+  id: number;
+  nickName: string;
+}
+
 interface RecommendedItem {
   id: number;
   title: string;
   description: string;
   bookmarkCount: number;
-  createdAt: string;
   likeCount: number;
   image: string;
   isLiked: boolean;
-  tags: { title: string }[];
-  users: { id: number; nickName: string }[];
+  tags: Tag[];
+  users: User[];
 }
 
 interface RecommandedItemProps {
@@ -26,10 +44,31 @@ interface RecommandedItemProps {
 
 const RecommendedItemGrid: React.FC<RecommandedItemProps> = ({ item }) => {
 
+  const userId = authStore(state => state.userId);
+  const { updateBookmarkItem } = searchStore();
+
   // 더보기 버튼 기능이 NavLink와 안겹치게 설정
   const handleNavLink = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+  };
+
+  // 좋아요 기능
+  const handleLike = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    try {
+      if (item.isLiked) {
+        await unlikeBookmarkList(userId, item.id);
+        updateBookmarkItem(item.id, { isLiked: false, likeCount: item.likeCount - 1 });
+      } else {
+        await likeBookmarkList(userId, item.id);
+        updateBookmarkItem(item.id, { isLiked: true, likeCount: item.likeCount + 1 });
+      }
+    } catch (error) {
+      console.error("좋아요 처리 중 오류 발생:", error);
+    }
   };
 
   return (
@@ -60,7 +99,13 @@ const RecommendedItemGrid: React.FC<RecommandedItemProps> = ({ item }) => {
               </p>
             </div>
             <div className="flex justify-end mt-2">
-              <button className="btn btn-ghost btn-xs" onClick={handleNavLink}>❤️ {item.likeCount}</button>
+              <button 
+                className="btn btn-ghost btn-xs text-sm flex items-center" 
+                onClick={handleLike}
+              >
+                {item.isLiked ? <FaHeart color="red" /> : <FaRegHeart />}
+                <span className="ml-1">{item.likeCount}</span>
+              </button>
             </div>
           </div>
         </div>

@@ -4,17 +4,25 @@ import React from "react";
 import RecommandedItemList from "../ui/RecommendedItemList";
 import RecommandedItemGrid from "../ui/RecommendedItemGrid";
 
+interface Tag {
+  title: string;
+}
+
+interface User {
+  id: number;
+  nickName: string;
+}
+
 interface RecommendedItem {
   id: number;
   title: string;
   description: string;
   bookmarkCount: number;
-  createdAt: string;
   likeCount: number;
   image: string;
   isLiked: boolean;
-  tags: { title: string }[];
-  users: { id: number; nickName: string }[];
+  tags: Tag[];
+  users: User[];
 }
 
 interface Props {

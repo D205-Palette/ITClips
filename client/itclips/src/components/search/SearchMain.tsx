@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 // components
 import RecommendedItemsContainer from "./layout/RecommendedItemsContainer";
@@ -14,6 +15,7 @@ import { getRecommendedBookmarks } from "../../api/searchApi";
 
 // stores
 import { authStore } from "../../stores/authStore";
+import { searchStore } from "../../stores/searchStore";
 
 interface RecommendedItem {
   id: number;
@@ -32,7 +34,7 @@ const SearchMain = () => {
 
   const userId = authStore(state => state.userId);
   const [ viewMode, setViewMode ] = useState<'grid' | 'list'>('list');
-  const [ recommendedItems, setRecommendedItems ] = useState<RecommendedItem[]>([]);
+  const { bookmarkListItems, setBookmarkListItems } = searchStore();
   const [ error, setError ] = useState<string | null>(null);
   
   // 추천 목록 조회
@@ -41,15 +43,15 @@ const SearchMain = () => {
       setError(null);
       try {
         const response = await getRecommendedBookmarks(userId);
-        setRecommendedItems(response.data);
+        setBookmarkListItems(response.data);
       } catch (err) {
         setError("관심사 태그가 없거나 맞는 추천 아이템이 없습니다.");
-        console.error("Error fetching recommended items:", err);
+        setBookmarkListItems([]);
       }
     };
 
     fetchRecommendedItems();
-  }, [userId]);
+  }, [userId, setBookmarkListItems]);
 
   const tabList = () => {
     setViewMode("list");
@@ -90,7 +92,7 @@ const SearchMain = () => {
           </div>
         </div>
       ) : (
-        <RecommendedItemsContainer items={recommendedItems} viewMode={viewMode} />
+        <RecommendedItemsContainer items={bookmarkListItems} viewMode={viewMode} />
       )}
     </div>
   );

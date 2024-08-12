@@ -35,7 +35,7 @@ const SearchBar: React.FC<ChildProps> = ({ handleCategory }) => {
         onChange={(e) => setSearchKeyword(e.target.value)}
       />
       {/* 검색 버튼 */}
-      <button type="submit" className="btn btn-primary">검색</button>
+      <button type="submit" className="btn bg-sky-500 hover:bg-sky-700 text-slate-100">검색</button>
     </form>
   );
 };

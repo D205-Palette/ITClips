@@ -19,23 +19,6 @@ import { API_BASE_URL } from "../config";
 import { authStore } from "../stores/authStore";
 import FileResizer from "react-image-file-resizer";
 import NoContent from "./ProfileView/NoContent";
-type StepTListType = {
-    id: number;
-    roadmapId: number;
-    bookmarkListResponseDTO: {
-      id: number;
-      title: string;
-      description: string;
-      bookmarkCount: number;
-      likeCount: number;
-      image: string;
-      tags: {title:string}[];
-      users: {id:number, nickName:string}[];
-    };
-    check: boolean;
-    order: number;
-  }
-
 
 const RoadmapView = () => {
   const params = useParams()
@@ -161,13 +144,6 @@ const RoadmapView = () => {
 
 </div>
 </div></> : <> <NoContent content="비공개로드맵"/> </>}
-
-
-
-
-
-
-
 
       
     </>

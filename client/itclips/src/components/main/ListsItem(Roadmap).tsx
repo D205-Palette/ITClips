@@ -10,8 +10,8 @@ import { authStore } from "../../stores/authStore";
 import { API_BASE_URL } from "../../config";
 import type { StepListType } from "../../types/RoadmapType";
 import noImg from "../../assets/images/noImg.gif"
-
-
+import { BsArrowDownRight } from "react-icons/bs";
+import { BsArrowDownLeft } from "react-icons/bs";
 interface Props {
   list:StepListType
   count:number;
@@ -47,6 +47,7 @@ const ListItem: FC<Props> = ({ list,changeCount,count,canEdit }) => {
   
   return (
     <>
+
       <div
         className={
           (isDark ? "hover:brightness-125" : "hover:brightness-95") +
@@ -60,7 +61,7 @@ const ListItem: FC<Props> = ({ list,changeCount,count,canEdit }) => {
           >
             <img              
               src={list.bookmarkListRoadmapDTO.image === "default" ? noImg : list.bookmarkListRoadmapDTO.image}
-              alt="Movie"
+              alt="noImage"
               className="size-28 hidden lg:inline "
             />
           </figure>
@@ -83,6 +84,12 @@ const ListItem: FC<Props> = ({ list,changeCount,count,canEdit }) => {
           </div>
         </>
       </div>
+      {/* <div className="odd:col-start-5 col-span-1 even:hidden">
+      <BsArrowDownRight />
+    </div>
+    <div className="even:col-start-3 col-span-1 odd:hidden">
+      <BsArrowDownLeft />
+    </div> */}
     </>
   );
 };

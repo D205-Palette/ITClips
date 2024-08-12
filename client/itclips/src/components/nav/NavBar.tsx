@@ -12,6 +12,10 @@ import MessageButton from "../nav/NavMessageButton";
 import darkModeStore from "../../stores/darkModeStore";
 import { asideStore } from "../../stores/asideStore";
 
+import { FaHome } from "react-icons/fa";
+import { MdOutlineFeed } from "react-icons/md";
+import { FaSearch } from "react-icons/fa";
+
 const NavBar = () => {
   const { isLoggedIn, userId } = authStore();
 
@@ -36,7 +40,7 @@ const NavBar = () => {
           <HomeButton />
           {/* 로그인 시에만 보임 */}
           {isLoggedIn && (
-            <ul className="flex gap-6 list-none">
+            <ul className="gap-4 list-none hidden md:flex">
               <NavLink
                 to={userId ? `/user/${userId}` : "/login"}
                 className={({ isActive }) =>
@@ -100,6 +104,42 @@ const NavBar = () => {
           )}
         </div>
       </nav>
+
+          {/* 모바일창 nav */}
+      {isLoggedIn && (
+            <ul className="px-10 py-4 gap-4 list-none flex justify-between md:hidden fixed bottom-0 left-0 w-full z-50 bg-base-100 border h-20">
+              <NavLink
+                to={userId ? `/user/${userId}` : "/login"}
+                className={({ isActive }) =>
+                  isActive ? "text-sky-500 font-bold" : textColor + " font-bold"
+                }
+              >
+                <FaHome size={24}/>
+                MY
+              </NavLink>
+              <NavLink
+                to="feed/bookmarklists"
+                className={({ isActive }) =>
+                  isActive ? "text-sky-500 font-bold" : textColor + " font-bold"
+                }
+              >
+                <MdOutlineFeed size={24}/>
+                피드
+              </NavLink>
+              <NavLink
+                to="search"
+                className={({ isActive }) =>
+                  isActive ? "text-sky-500 font-bold" : textColor + " font-bold"
+                }
+              >
+                <FaSearch size={24}/>
+                검색
+              </NavLink>
+            </ul>
+          )}
+
+
+
       {/* 메세지창 */}
       {isMessageOpen && (
         <div className="fixed top-[var(--navbar-height)] right-20 z-50">

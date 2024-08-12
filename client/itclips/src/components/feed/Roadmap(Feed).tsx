@@ -122,9 +122,9 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
         </button>
       </div>
 
-      <figure className="border rounded-xl mx-5 overflow-hidden h-64">
+      <figure className="border rounded-xl mx-5 overflow-hidden h-64 bg-sky-100">
         <img
-          className="w-full h-full object-contain"
+          className="w-full h-full object-contain "
           src={roadmap.image === "default" ? noImg : roadmap.image}
           alt="RoadmapImg"
         />

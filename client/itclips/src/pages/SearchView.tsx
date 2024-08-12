@@ -1,4 +1,4 @@
-import React, { useState, useEffect  } from "react";
+import React, { useState, useEffect } from "react";
 
 // components
 import SearchBar from "../components/search/ui/SearchBar";
@@ -14,10 +14,9 @@ import RealtimeSidebar from "../components/search/layout/RealtimeSidebar";
 import { asideStore } from "../stores/asideStore";
 
 const SearchView = () => {
-
-  const [ whatCategory, setWhatCategory ] = useState("카테고리");
-  const [ keyword, setKeyword ] = useState("");
-  const [ notification, setNotification ] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const [whatCategory, setWhatCategory] = useState("카테고리");
+  const [keyword, setKeyword] = useState("");
+  const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
   const selectCategory = (category: string, keyword: string) => {
     if (category === "카테고리") {
@@ -26,7 +25,7 @@ const SearchView = () => {
     }
     setWhatCategory(category);
     setKeyword(keyword);
-  }
+  };
 
   // 3초간 토스트알림 띄우기
   useEffect(() => {
@@ -39,37 +38,37 @@ const SearchView = () => {
     }
   }, [notification]);
 
-  // 검색바에서 어떤 카테고리 골랐는지에 따라 검색 메인에 출력되는 컴포넌트 다르게
-
   return (
     <>
-      <div id='Body' className="grid grid-cols-12 gap-4">        
-
-        {/* main자리 */}
-        <div id="Main" className="lg:col-start-2 lg:col-span-8 md:col-start-2 md:col-span-5 sm:col-start-2 sm:col-span-6">
+      <div id="Body" className="grid grid-cols-12 gap-4">
+        {/* main 자리 */}
+        <div
+          id="Main"
+          className="md:col-start-2 md:col-span-7 col-start-2 col-span-10"
+        >
           <div className="container mx-auto p-4">
-            <div className=" md:flex-row justify-between gap-4 mb-4">
+            <div className="md:flex-row justify-between gap-4 mb-4">
               {/* 검색 바 */}
               <div className="w-full">
                 <SearchBar handleCategory={selectCategory} />
               </div>
               {/* 카테고리 조건에 따라 검색 컴포넌트 변경 */}
               {/* 검색 버튼을 눌렀을 때 적용되게 */}
-              { whatCategory === "카테고리" && <SearchMain /> }
-              { whatCategory === "유저" && <SearchUser keyword={keyword} /> }
-              { whatCategory === "북마크리스트" && <SearchBookmarkList keyword={keyword} /> }
-              { whatCategory === "로드맵" && <SearchRoadmap keyword={keyword} /> }
-              { whatCategory === "태그" && <SearchTag keyword={keyword} /> }
+              {whatCategory === "카테고리" && <SearchMain />}
+              {whatCategory === "유저" && <SearchUser keyword={keyword} />}
+              {whatCategory === "북마크리스트" && <SearchBookmarkList keyword={keyword} />}
+              {whatCategory === "로드맵" && <SearchRoadmap keyword={keyword} />}
+              {whatCategory === "태그" && <SearchTag keyword={keyword} />}
             </div>
           </div>
         </div>
 
-        <div className="col-start-10 col-span-2">
+        {/* RealtimeSidebar 및 RealtimeList - md 이하에서 숨김 */}
+        <div className="hidden md:block col-start-8 col-span-3 md:col-start-9 md:col-span-3">
           <div className="my-6">
             <RealtimeSidebar />
           </div>
-          {/* 실시간 인기 순위는 검색 메인에서만 */}
-          { whatCategory === "카테고리" && (
+          {whatCategory === "카테고리" && (
             <div className="w-60">
               <RealtimeList />
             </div>

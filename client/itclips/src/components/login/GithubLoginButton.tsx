@@ -15,12 +15,14 @@ const GithubLoginButton = () => {
       type="button"
       className="btn btn-outline bg-base-100 w-3/4"
     >
-      <img
-        className="w-8 h-8 bg-gray-100 border border-white rounded-full"
-        src={github_logo}
-        alt=""
-      />
-      <p>깃허브 로그인</p>
+      
+        <img
+          className="w-8 h-8 bg-gray-100 border border-white rounded-full"
+          src={github_logo}
+          alt=""
+        />
+      
+      <p>GitHub 로그인</p>
     </button>
   );
 };

@@ -16,7 +16,7 @@ export default function NaverLoginButton() {
       className="btn btn-outline bg-base-100 w-3/4"
     >
       <SiNaver className="w-5 h-5 text-green-500"/>
-      <p>네이버 로그인</p>
+      <p>Naver 로그인</p>
     </button>
   );
 }

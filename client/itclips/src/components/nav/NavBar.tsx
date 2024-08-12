@@ -23,18 +23,33 @@ const NavBar = () => {
   const textColor = isDark ? "text-slate-300" : "text-slate-900";
   const isMessageOpen = asideStore((state) => state.isMessageOpen);
   const navbarRef = useRef<HTMLDivElement | null>(null);
+  const [borderColor, setBorderColor] = useState("border-gray-300"); // 기본 보더 색상
 
   useEffect(() => {
+    // localStorage에서 theme 값을 가져와서 border 색상을 설정
+    const theme = localStorage.getItem("theme");
+    if (theme === "dark") {
+      setBorderColor("border-gray-900"); // 다크 모드일 때 보더 색상
+    } else {
+      setBorderColor("border-gray-300"); // 라이트 모드일 때 보더 색상
+    }
+
     // Navbar의 높이를 계산하여 MessageLayout의 위치를 설정
     if (navbarRef.current) {
       const navbarHeight = navbarRef.current.offsetHeight;
-      document.documentElement.style.setProperty('--navbar-height', `${navbarHeight}px`);
+      document.documentElement.style.setProperty(
+        "--navbar-height",
+        `${navbarHeight}px`
+      );
     }
-  }, []);
+  }, [isDark]);
 
   return (
     <div>
-      <nav ref={navbarRef} className="fixed top-0 left-0 w-full flex justify-between items-center py-4 px-12 h-16 bg-base-100 z-40">
+      <nav
+        ref={navbarRef}
+        className="fixed top-0 left-0 w-full flex justify-between items-center py-4 px-12 h-16 bg-base-100 z-40"
+      >
         {/* 좌측 네비게이션 링크들 */}
         <div className="flex items-center gap-4 ">
           <HomeButton />
@@ -105,40 +120,40 @@ const NavBar = () => {
         </div>
       </nav>
 
-          {/* 모바일창 nav */}
+      {/* 모바일창 nav */}
       {isLoggedIn && (
-            <ul className="px-10 py-4 gap-4 list-none flex justify-between md:hidden fixed bottom-0 left-0 w-full z-50 bg-base-100 border h-20">
-              <NavLink
-                to={userId ? `/user/${userId}` : "/login"}
-                className={({ isActive }) =>
-                  isActive ? "text-sky-500 font-bold" : textColor + " font-bold"
-                }
-              >
-                <FaHome size={24}/>
-                MY
-              </NavLink>
-              <NavLink
-                to="feed/bookmarklists"
-                className={({ isActive }) =>
-                  isActive ? "text-sky-500 font-bold" : textColor + " font-bold"
-                }
-              >
-                <MdOutlineFeed size={24}/>
-                피드
-              </NavLink>
-              <NavLink
-                to="search"
-                className={({ isActive }) =>
-                  isActive ? "text-sky-500 font-bold" : textColor + " font-bold"
-                }
-              >
-                <FaSearch size={24}/>
-                검색
-              </NavLink>
-            </ul>
-          )}
-
-
+        <ul
+          className={`px-10 py-4 gap-4 list-none flex justify-between md:hidden fixed bottom-0 left-0 w-full z-50 bg-base-100 h-20 border ${borderColor}`}
+        >
+          <NavLink
+            to={userId ? `/user/${userId}` : "/login"}
+            className={({ isActive }) =>
+              isActive ? "text-sky-500 font-bold" : textColor + " font-bold"
+            }
+          >
+            <FaHome size={24} />
+            MY
+          </NavLink>
+          <NavLink
+            to="feed/bookmarklists"
+            className={({ isActive }) =>
+              isActive ? "text-sky-500 font-bold" : textColor + " font-bold"
+            }
+          >
+            <MdOutlineFeed size={24} />
+            피드
+          </NavLink>
+          <NavLink
+            to="search"
+            className={({ isActive }) =>
+              isActive ? "text-sky-500 font-bold" : textColor + " font-bold"
+            }
+          >
+            <FaSearch size={24} />
+            검색
+          </NavLink>
+        </ul>
+      )}
 
       {/* 메세지창 */}
       {isMessageOpen && (

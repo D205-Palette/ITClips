@@ -9,10 +9,11 @@ import { asideStore } from "../../../stores/asideStore";
 import { useParams } from "react-router-dom";
 import { authStore } from "../../../stores/authStore";
 interface Props {
+  targetId: number;
   onDeleteFollowing: () => void;
 }
 
-const FollowingItemKebabDropdown: React.FC<Props> = ({ onDeleteFollowing }) => {
+const FollowingItemKebabDropdown: React.FC<Props> = ({ targetId, onDeleteFollowing }) => {
 const {userId} = authStore()
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -25,7 +26,7 @@ const params = useParams()
   // 채팅 시작하는 함수
   const startSendMessage = () => {
     const startNewChat = asideStore.getState().startNewChat;
-    startNewChat(1);
+    startNewChat(userId, targetId);
   }
 
   const handleMenu = (menu: string) => {

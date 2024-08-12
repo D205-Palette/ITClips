@@ -100,6 +100,7 @@ const FollowerItem: React.FC<Props> = ({ items }) => {
             {userId === urlUserId ? (
               <div onClick={handleNavLink}>
                 <FollowerItemKebabDropdown
+                  targetId={item.fromUserId}
                   onDeleteFollower={() =>
                     rmFollower(item.fromUserId, item.toUserId)
                   }

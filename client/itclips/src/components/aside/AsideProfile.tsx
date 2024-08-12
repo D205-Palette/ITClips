@@ -20,6 +20,7 @@ import darkModeStore from "../../stores/darkModeStore";
 import { authStore } from "../../stores/authStore";
 import { profileStore } from "../../stores/profileStore";
 import mainStore from "../../stores/mainStore";
+import { asideStore } from "../../stores/asideStore";
 
 interface UserInfo {
   id?: number;
@@ -40,7 +41,8 @@ interface UserInfo {
 const AsideProfile = () => {
   // 내 정보 가져오기
   const myInfo = authStore((state) => state.userInfo);
-const {userId} = authStore()
+  const {userId} = authStore();
+  const startNewChat = asideStore(state => state.startNewChat);
   const {isProfileChange, setIsProfileChange} = mainStore()
   // url에서 user_id 가져오기
   const params = useParams<{ userId?: string }>();
@@ -114,7 +116,9 @@ const {userId} = authStore()
   }, [urlUserId, myInfo.id, isProfileChange]); // urlUserId와 myInfo.id가 변경될 때마다 호출
 
   const onClickStartChat = (): void => {
-    alert("채팅을 시작합니다.");
+    if (userId !== undefined && urlUserId !== undefined) {
+      startNewChat(userId, urlUserId);
+    }
   };
 
   // 팔로우 or 언팔로우 버튼을 눌렀을 때 동작
@@ -157,7 +161,14 @@ const {userId} = authStore()
     >
       {/* 상단 영역: 채팅/설정 버튼 */}
       <div className="self-end md:mb-4">
-        {(myInfo.id === urlUserId || urlUserId === undefined) && (
+        {myInfo.id !== urlUserId && urlUserId !== undefined ? (
+          <button
+            className="btn btn-ghost btn-circle"
+            onClick={onClickStartChat}
+          >
+            <IoChatboxEllipsesOutline className="h-6 w-6 md:h-8 md:w-8" />
+          </button>
+        ) : (
           <button className="btn btn-ghost btn-circle" onClick={openModal}>
             <IoSettingsOutline className="h-5 w-5 md:h-6 md:w-6" />
           </button>

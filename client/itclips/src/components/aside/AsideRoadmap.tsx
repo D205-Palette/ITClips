@@ -9,7 +9,7 @@ import ItemDetailInfo from "./layout/ItemDetailInfo";
 import LikesFavoritesCount from "./layout/LikesFavoritesCount(Roadmap)";
 import Tags from "./layout/Tags";
 import RoadmapCommentsModal from "./layout/RoadmapCommentsModal";
-
+import KebabDropdown from "../common/KebabDropdown";
 // stores
 import darkModeStore from "../../stores/darkModeStore";
 
@@ -49,9 +49,11 @@ const AsideRoadmap :  React.FC<Props> = ({ roadmap }) => {
   };
 
   return (
-    <div className={`${ isDark ? "bg-base-300" : "bg-sky-50" } rounded-3xl w-80 p-8 flex flex-col items-center`}>
+    <div className={`${ isDark ? "bg-base-300" : "bg-sky-50" } rounded-3xl p-8 flex flex-col items-center`}>
       {/* 더보기 버튼 */}
-      {<AsideRoadmapKebabDropdown isRoadmap={true} id={roadmap.id}/> }
+      <div className="flex flex-row justify-end w-full">
+      {<KebabDropdown whatMenu="로드맵" id={roadmap.id} contentUserId={roadmap.userId}/> }
+      </div>
       {/* 북마크리스트 썸네일 */}
       <ImageContainer src={roadmap.image} whatContent="로드맵" />
       {/* 북마크리스트 정보 */}

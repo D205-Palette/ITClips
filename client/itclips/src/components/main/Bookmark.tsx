@@ -19,6 +19,7 @@ interface Props {
   changeEditBookmarks: React.Dispatch<React.SetStateAction<BookmarkType[]>>;
   editBookmarksIndex: number[];
   changeEditBookmarksIndex: React.Dispatch<React.SetStateAction<number[]>>;
+  canEdit:boolean
 }
 
 const Bookmark: FC<Props> = ({
@@ -27,6 +28,7 @@ const Bookmark: FC<Props> = ({
   changeEditBookmarks,
   editBookmarksIndex,
   changeEditBookmarksIndex,
+  canEdit,
 }) => {
   const [tempBookmark, editTempBookmark] = useState<BookmarkType>(bookmark);
   const [tempTitle, editTempTitle] = useState<string>(bookmark.title);
@@ -129,7 +131,7 @@ const Bookmark: FC<Props> = ({
           whatCategory.categoryName === ""
             ? " "
             : " hidden") +
-          " card card-side bg-base-100 shadow-sm hover:cursor-pointer h-28 my-1"
+          " card card-side bg-base-100 shadow-sm hover:cursor-pointer h-28 my-1 w-full"
         }
       >
         <>
@@ -223,6 +225,7 @@ const Bookmark: FC<Props> = ({
                   editBookmarksIndex={editBookmarksIndex}
                   changeEditBookmarksIndex={changeEditBookmarksIndex}
                   setIsAIOpen={setIsAIOpen}
+                  canEdit={canEdit}
                 />
               )}
             </div>

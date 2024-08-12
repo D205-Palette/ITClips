@@ -1,5 +1,5 @@
 import { VscKebabVertical } from "react-icons/vsc";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import BookmarkListEditModal from "../aside/modals/BookmarkListEditModal";
 import FavoriteConfirmationModal from "../aside/modals/FavoriteConfirmModal";
 import FavoriteDeleteModal from "../aside/modals/FavoriteDeleteModal";
@@ -21,9 +21,11 @@ interface Props {
   whatMenu: string;
   // id 가 그떄그때마다 listID, roadmapId 달라짐
   id: number;
+  contentUserId?:number;
+  users?:{id:number,nickName:string}[]
 }
 
-const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
+const KebabDropdown: FC<Props> = ({ whatMenu, id,contentUserId,users }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [isUrlCopyModalOpen, setIsUrlCopyModalOpen] = useState<boolean>(false);
@@ -40,6 +42,7 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
   const nowUserId = params.userId;
   const navigate = useNavigate();
   const { setIsRoadmapChange,setIsFavoriteChange } = mainStore();
+
 
   // 유저 아이디 임시값. 나중엔 스토리지서 받아오면됨
   const { userId, token } = authStore();
@@ -71,6 +74,15 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
         }
       });
   }
+  const [canEdit, setCanEdit] = useState(false)
+  
+  useEffect(()=>{
+    console.log(users)
+    if(users){
+      users.map((user) => user.id===userId? setCanEdit(true): "")
+    }
+  },[])
+
   // 로드맵 스크랩
   function addScrap(): void {
     axios
@@ -127,27 +139,27 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
             className="dropdown-content menu bg-base-100 rounded-box w-52 p-2 shadow z-30"
           >
             {/* 수정 삭제는 남꺼일때 안 보이게 */}
-            {String(userId) !== nowUserId ? (
-              <></>
+            {userId === contentUserId || canEdit  ? (
+              <><li
+              className={whatMenu === "즐겨찾기" ? "hidden " : ""}
+              onClick={() => {
+                whatMenu === "로드맵"
+                  ? navigate(`/roadmap/${id}/edit`)
+                  : setIsEditModalOpen(true);
+              }}
+            >
+              <a>수정하기</a>
+            </li>
+
+            <li
+              className={whatMenu === "즐겨찾기" ? "hidden" : ""}
+              onClick={() => setIsDeleteModalOpen(true)}
+            >
+              <a>삭제하기</a>
+            </li></>
             ) : (
               <>
-                <li
-                  className={whatMenu === "즐겨찾기" ? "hidden " : ""}
-                  onClick={() => {
-                    whatMenu === "로드맵"
-                      ? navigate(`/roadmap/${id}/edit`)
-                      : setIsEditModalOpen(true);
-                  }}
-                >
-                  <a>수정하기</a>
-                </li>
-
-                <li
-                  className={whatMenu === "즐겨찾기" ? "hidden" : ""}
-                  onClick={() => setIsDeleteModalOpen(true)}
-                >
-                  <a>삭제하기</a>
-                </li>
+                
               </>
             )}
             {/*  */}
@@ -163,12 +175,12 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
               <a>즐겨찾기 삭제</a>
             </li>
             <li
-              className={
-                whatMenu === "로드맵" ||
+              className={(userId? "":"hidden ") + 
+               ( whatMenu === "로드맵" ||
                 whatMenu === "북마크" ||
                 whatMenu === "즐겨찾기"
-                  ? "hidden "
-                  : ""
+                  ? " hidden "
+                  : "")
               }
               onClick={() => {
                 addFavorite();
@@ -177,7 +189,7 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
               <a>즐겨찾기</a>
             </li>
             <li
-              className={whatMenu === "로드맵" ? "" : "hidden "}
+              className={(userId? "":"hidden ")+(whatMenu === "로드맵" ? "" : "hidden ")}
               onClick={() => {
                 addScrap();
               }}
@@ -185,7 +197,7 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
               <a>스크랩</a>
             </li>
             <li
-              className={whatMenu === "로드맵" ? "hidden " : ""}
+              className={(userId? "":"hidden ") + (whatMenu === "로드맵" ? "hidden " : "")}
               onClick={() => setIsReportModalOpen(true)}
             >
               <a>신고하기</a>

@@ -40,7 +40,7 @@ interface UserInfo {
 const AsideProfile = () => {
   // 내 정보 가져오기
   const myInfo = authStore((state) => state.userInfo);
-
+const {userId} = authStore()
   const {isProfileChange, setIsProfileChange} = mainStore()
   // url에서 user_id 가져오기
   const params = useParams<{ userId?: string }>();

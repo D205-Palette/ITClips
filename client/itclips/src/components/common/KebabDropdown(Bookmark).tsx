@@ -8,6 +8,7 @@ import DeleteBookmarkListModal from "../aside/modals/DeleteContentModal";
 import UrlCopyModal from "./UrlCopyModal";
 import ScrapConfirmationModal from "../aside/modals/ScrapComfirmModal";
 import toastStore from "../../stores/toastStore";
+import { authStore } from "../../stores/authStore";
 // 무슨 탭에서 눌렀는지 받는 인자
 // 리스트, 즐겨찾기, 로드맵, 북마크 4가지로 받을예정. 그룹 리스트랑 그냥 리스트는 차이 없음
 interface Props {
@@ -22,6 +23,7 @@ interface Props {
   tabModal: React.Dispatch<React.SetStateAction<boolean>>;
   toggleMode: React.Dispatch<React.SetStateAction<boolean>>;
   setIsAIOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  canEdit:boolean;
 }
 
 const KebabDropdown: FC<Props> = ({
@@ -31,59 +33,77 @@ const KebabDropdown: FC<Props> = ({
   changeEditBookmarks,
   toggleMode,
   setIsAIOpen,
+  canEdit,
 }) => {
   const [isOpen, onClose] = useState<boolean>(false);
   const [editModal, tabEditModal] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState<boolean>(false);
-
-const {globalNotification, setGlobalNotification} = toastStore()
-const[isMenuOpen, setIsMenuOpen] = useState(false)
+  const { userId } = authStore();
+  const { globalNotification, setGlobalNotification } = toastStore();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <>
       <div className="dropdown dropdown-bottom dropdown-end ">
-        <div tabIndex={0} role="button" className="btn m-1 btn-ghost " onClick={()=>setIsMenuOpen(true)}>
+        <div
+          tabIndex={0}
+          role="button"
+          className="btn m-1 btn-ghost "
+          onClick={() => setIsMenuOpen(true)}
+        >
           <VscKebabVertical />
         </div>
-        {isMenuOpen&& <ul
-          tabIndex={0}
-          className="dropdown-content menu bg-base-100 rounded-box w-52 p-2 shadow z-30"
-        >
-          {/* 이구간은 내꺼 남꺼일때& 즐겨찾기일떄 유무 */}
-          <li>
-            <a onClick={() => toggleEdit(true)}>수정하기</a>
-          </li>
-          <li onClick={() => setIsDeleteModalOpen(true)}>
-            <a>삭제하기</a>
-          </li>
-          {/*  */}
-
-          <li onClick={() =>{ setGlobalNotification({
+        {isMenuOpen && (
+          <ul
+            tabIndex={0}
+            className="dropdown-content menu bg-base-100 rounded-box w-52 p-2 shadow z-30"
+          >
+            {/* 이구간은 내꺼 남꺼일때& 즐겨찾기일떄 유무 */}
+            <div className={canEdit ? "" : "hidden"}>
+              <li>
+                <a onClick={() => toggleEdit(true)}>수정하기</a>
+              </li>
+              <li onClick={() => setIsDeleteModalOpen(true)}>
+                <a>삭제하기</a>
+              </li>
+            </div>
+            <li
+              onClick={() => {
+                setGlobalNotification({
                   message: "url 복사 완료",
                   type: "success",
-                }); setIsMenuOpen(false)}}>
-            <a onClick={() => navigator.clipboard.writeText(bookmark.url)}>
-              url 복사
-            </a>
-          </li>
-          <li
-            onClick={() => {
-              setIsAIOpen(true);
-              toggleEdit(false);
-              setIsMenuOpen(false)
-            }}
-          >
-            <a>AI 요약</a>
-          </li>
-          <li onClick={() => tabEditModal(true)}>
-            <a>내 리스트에 추가</a>
-          </li>
-          <li onClick={() => setIsReportModalOpen(true)}>
-            <a>신고하기</a>
-          </li>
-        </ul>}
-        
+                });
+                setIsMenuOpen(false);
+              }}
+            >
+              <a onClick={() => navigator.clipboard.writeText(bookmark.url)}>
+                url 복사
+              </a>
+            </li>
+            <li
+              onClick={() => {
+                setIsAIOpen(true);
+                toggleEdit(false);
+                setIsMenuOpen(false);
+              }}
+            >
+              <a>AI 요약</a>
+            </li>
+            <li
+              className={userId ? "" : "hidden"}
+              onClick={() => tabEditModal(true)}
+            >
+              <a>내 리스트에 추가</a>
+            </li>
+            <li
+              className={userId ? "" : "hidden "}
+              onClick={() => setIsReportModalOpen(true)}
+            >
+              <a>신고하기</a>
+            </li>
+          </ul>
+        )}
       </div>
 
       {/* 내 리스트에 추가 */}

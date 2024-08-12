@@ -12,6 +12,7 @@ import FavoriteConfirmationModal from "../modals/FavoriteConfirmModal";
 import ScrapConfirmationModal from "../modals/ScrapComfirmModal";
 import { useNavigate } from "react-router-dom";
 
+import { authStore } from "../../../stores/authStore";
 interface Props {
   isRoadmap: boolean;
   id: number;
@@ -27,7 +28,7 @@ const AsideRoadmapKebabDropdown: FC<Props> = ({ isRoadmap, id }) => {
   const [isScrapModalOpen, setIsScrapModalOpen] = useState<boolean>(false);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-
+  const { userId } = authStore();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   useEffect(() => {
@@ -56,8 +57,7 @@ const AsideRoadmapKebabDropdown: FC<Props> = ({ isRoadmap, id }) => {
     try {
       await navigator.clipboard.writeText(window.location.href);
       setIsUrlCopyModalOpen(true);
-    } catch (error) {      
-    }
+    } catch (error) {}
   };
 
   const handleMenu = (menu: string) => {
@@ -95,13 +95,18 @@ const AsideRoadmapKebabDropdown: FC<Props> = ({ isRoadmap, id }) => {
       {isDropdownOpen && (
         <div className="absolute right-0 top-full mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 z-10">
           <ul className="py-2 text-sm text-gray-700">
-            {categories.map((category) => (
-              <li key={category} onClick={() => handleMenu(category)}>
-                <div className="text-center block px-4 py-2 hover:bg-gray-100">
-                  {category}
-                </div>
-              </li>
-            ))}
+            <li className={userId === id ? "" : "hidden"} onClick={()=>navigate(`/roadmap/${id}/edit`)}>
+              <a>수정하기</a>
+            </li>
+            <li className={userId === id ? "" : "hidden"} onClick={()=>setIsDeleteModalOpen(true)}>
+              <a>삭제하기</a>
+            </li>
+            <li >
+              <a>url 복사</a>
+            </li>
+            <li className={userId? "" : "hidden"}>
+              <a>스크랩</a>
+            </li>
           </ul>
         </div>
       )}
@@ -109,12 +114,14 @@ const AsideRoadmapKebabDropdown: FC<Props> = ({ isRoadmap, id }) => {
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
       />
-      {isDeleteModalOpen && <DeleteContentModal
-        isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
-        whatContent="로드맵"
-        id={id}
-      />}
+      {isDeleteModalOpen && (
+        <DeleteContentModal
+          isOpen={isDeleteModalOpen}
+          onClose={() => setIsDeleteModalOpen(false)}
+          whatContent="로드맵"
+          id={id}
+        />
+      )}
       <UrlCopyModal
         isOpen={isUrlCopyModalOpen}
         onClose={() => setIsUrlCopyModalOpen(false)}

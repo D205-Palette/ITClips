@@ -12,8 +12,8 @@ const ImageContainer : React.FC<ImageSrc> = ({src, whatContent}) => {
   const imageSrc = src === "default" || src === null || src === undefined ? noImg : src;
   
   const containerClass = whatContent === '프로필' 
-    ? 'w-24 h-24 md:w-32 md:h-32 rounded-full' 
-    : 'w-32 h-32 md:w-48 md:h-48 rounded-xl';
+    ? 'w-32 h-32 md:w-32 md:h-32 rounded-full' 
+    : 'w-32 h-32 md:w-32 md:h-32 rounded-xl';
 
   return (
     <div className={`${containerClass} border overflow-hidden bg-gray-200 mb-4`}>

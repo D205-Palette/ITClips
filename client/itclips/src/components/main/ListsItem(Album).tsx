@@ -78,7 +78,7 @@ const ListItem: FC<Props> = ({ list, whatMenu, canEdit }) => {
 
         <div className="card-body flex flex-col py-2 px-6  relative ">
           <div className="absolute top-0 right-0 z-40">
-            <KebabDropdown whatMenu={whatMenu} id={list.id} />
+            <KebabDropdown whatMenu={whatMenu} id={list.id} users={list.users}/>
           </div>
           <div className="flex flex-col justify-around hover:cursor-pointer ">
             <div>

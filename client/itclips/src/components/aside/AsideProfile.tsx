@@ -40,7 +40,7 @@ interface UserInfo {
 const AsideProfile = () => {
   // 내 정보 가져오기
   const myInfo = authStore((state) => state.userInfo);
-
+const {userId} = authStore()
   const {isProfileChange, setIsProfileChange} = mainStore()
   // url에서 user_id 가져오기
   const params = useParams<{ userId?: string }>();
@@ -147,8 +147,8 @@ const AsideProfile = () => {
       } rounded-3xl p-2 md:p-8 flex flex-col`}
     >
       {/* 상단 영역: 채팅/설정 버튼 */}
-      <div className="self-end md:mb-4">
-        {myInfo.id !== urlUserId && urlUserId !== undefined ? (
+      {userId?  <div className="self-end md:mb-4">
+        {myInfo.id !== urlUserId ? (
           <button
             className="btn btn-ghost btn-circle"
             onClick={onClickStartChat}
@@ -160,7 +160,8 @@ const AsideProfile = () => {
             <IoSettingsOutline className="h-5 w-5 md:h-6 md:w-6" />
           </button>
         )}
-      </div>
+      </div>: <div className="h-8"></div>}
+     
 
       {/* 중앙 영역: 이미지와 상세 정보 */}
       <div className="flex flex-row md:flex-col items-center justify-around md:mb-2">

@@ -97,7 +97,7 @@ const MyBookmark = () => {
           console.error(err);
           // 비공개인 리스트에 접근했을때
           console.log(err);
-          if (err.response?.status === 401) {
+          if (err.response?.status === 401 || err.response?.status === 403) {
             setCanView(false);
           }
         });
@@ -112,7 +112,7 @@ const MyBookmark = () => {
           {/* aside 자리 */}
           <div
             id="aside"
-            className="xl:col-start-2 xl:col-span-3 hidden xl:block"
+            className="md:col-start-2 md:col-span-3 md:pe-4 col-start-2 col-span-10"
           >
             <div className="static">
               {bookmarkList ? (
@@ -126,7 +126,7 @@ const MyBookmark = () => {
           {/* main자리 */}
           <div
             id="Main"
-            className="xl:col-start-5 xl:col-span-7 lg:col-start-3 lg:col-span-8 col-start-2 col-span-10 gap-4"
+            className="md:col-start-5 md:col-span-7 col-start-2 col-span-10 gap-4"
           >
             <div className="sticky top-16 bg-base-100 z-10">
               {/* 상단바 */}
@@ -198,6 +198,7 @@ const MyBookmark = () => {
                     changeEditBookmarks={changeEditBookmarks}
                     editBookmarksIndex={editBookmarksIndex}
                     changeEditBookmarksIndex={changeEditBookmarksIndex}
+                    canEdit={canEdit}
                   />
                 )
               )}

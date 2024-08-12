@@ -15,7 +15,6 @@ import BookmarkListEditModal from "../aside/modals/BookmarkListEditModal";
 interface Props {
   list: BookmarkListSumType;
   whatMenu:string;
-
 }
 
 const ListItem: FC<Props> = ({ list,whatMenu }) => {
@@ -96,7 +95,7 @@ const ListItem: FC<Props> = ({ list,whatMenu }) => {
                 {isLike ? <FaHeart color="red" /> : <FaRegHeart />}
                 {likeCount}
               </button>
-              <div className="티:block hidden"> 
+              <div className="xl:block hidden"> 
                 <KebabDropdown whatMenu={whatMenu} id={list.id} />
               </div>
             </div>

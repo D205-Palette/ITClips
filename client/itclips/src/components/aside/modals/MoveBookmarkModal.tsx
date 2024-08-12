@@ -11,6 +11,7 @@ import { useParams } from "react-router-dom";
 import type { CategoryType } from "../../../types/BookmarkListType";
 import { authStore } from "../../../stores/authStore";
 import type { BookmarkListSumType } from "../../../types/BookmarkListType";
+import toastStore from "../../../stores/toastStore";
 interface Move {
   editBookmarks: BookmarkType[];
   changeEditBookmarksIndex: React.Dispatch<React.SetStateAction<number[]>>;
@@ -40,6 +41,7 @@ const MoveBookmarkModal: FC<Move> = ({
   const [tempCategories, setTempCategories] = useState<CategoryType[]>([]);
   const [lists, setLists] = useState<BookmarkListSumType[]>([]);
 
+  const {globalNotification, setGlobalNotification} = toastStore()
   function endMoving(): any {
     tabModal(false);
     toggleMode(false);
@@ -51,15 +53,22 @@ const MoveBookmarkModal: FC<Move> = ({
           editBookmark
         ).then(()=>{
           setIsBookmarkListChange(true)
+          
         })
       );
       if (whatMenu === "이동") {
         editBookmarks.map((editBookmark) =>
           axios.delete(`${API_BASE_URL}/api/bookmark/delete/${editBookmark.id}`).then(()=>{
             setIsBookmarkListChange(true)
+            
           })
         );
         changeEditBookmarksIndex([]);
+        const toastText = whatMenu==='이동'? '이동': '추가'
+        setGlobalNotification({
+          message: `북마크 ${toastText} 완료`,
+          type: "success",
+        });
       }
     } else {
       /// 추가면 복사 처럼 원본도 남기고, 이동이면 원본 삭제하는 식으로
@@ -80,6 +89,11 @@ const MoveBookmarkModal: FC<Move> = ({
         );
         changeEditBookmarksIndex([]);
       }
+      const toastText = whatMenu==='이동'? '이동': '추가'
+        setGlobalNotification({
+          message: `북마크 ${toastText} 완료`,
+          type: "success",
+        });
     }
   }
 

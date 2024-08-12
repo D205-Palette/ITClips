@@ -8,6 +8,7 @@ import ReportErrorModal from "./ReportErrorModal";
 import axios from "axios";
 import { API_BASE_URL } from "../../../config";
 import { authStore } from "../../../stores/authStore";
+import toastStore from "../../../stores/toastStore";
 interface ReportModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -29,7 +30,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
     useState<boolean>(false);
     const [formCertified, setFormCertified] = useState(false)
     const { userId, token } = authStore();
-  
+  const{setGlobalNotification} = toastStore()
   if (!isOpen) return null;
 
   const handleReport = () => {
@@ -48,11 +49,19 @@ const ReportModal: React.FC<ReportModalProps> = ({
         },
       })
         .then(() => {
-          setIsConfirmationModalOpen(true);
+          // setIsConfirmationModalOpen(true);
+          setGlobalNotification({
+            message: "신고가 접수되었습니다",
+            type: "success",
+          });
         })
         .catch((err) => {
           if (err.response.status === 400) {
-            setIsErrorModalOpen(true)
+            // setIsErrorModalOpen(true)
+            setGlobalNotification({
+              message: "이미 접수된 신고입니다.",
+              type: "error",
+            });
           } 
           
         });
@@ -69,12 +78,19 @@ const ReportModal: React.FC<ReportModalProps> = ({
         },
       })
         .then(() => {
-          setIsConfirmationModalOpen(true);
+          // setIsConfirmationModalOpen(true);
+          setGlobalNotification({
+            message: "신고가 접수되었습니다",
+            type: "success",
+          });
         })
         .catch((err) => {          
           if (err.response.status === 400) {
-            setIsErrorModalOpen(true)
-            
+            // setIsErrorModalOpen(true)
+            setGlobalNotification({
+              message: "이미 접수된 신고입니다.",
+              type: "error",
+            });
           } 
          
         });
@@ -85,14 +101,14 @@ const ReportModal: React.FC<ReportModalProps> = ({
     // 신고 처리 후 확인 모달
   };
 
-  const handleConfirmationClose = () => {
-    setIsConfirmationModalOpen(false);
-    onClose(); // 신고 모달 전부 닫기
-  };
-  const handleErrorClose = () => {
-    setIsErrorModalOpen(false);
-    onClose(); // 신고 모달 전부 닫기
-  };
+  // const handleConfirmationClose = () => {
+  //   setIsConfirmationModalOpen(false);
+  //   onClose(); // 신고 모달 전부 닫기
+  // };
+  // const handleErrorClose = () => {
+  //   setIsErrorModalOpen(false);
+  //   onClose(); // 신고 모달 전부 닫기
+  // };
 
   return (
     <>
@@ -142,14 +158,14 @@ const ReportModal: React.FC<ReportModalProps> = ({
           </div>
         </div>
       </div>
-      <ReportConfirmModal
+      {/* <ReportConfirmModal
         isOpen={isConfirmationModalOpen}
         onClose={handleConfirmationClose}
       />
       <ReportErrorModal
         isOpen={isErrorModalOpen}
         onClose={handleErrorClose}
-      />
+      /> */}
     </>
   );
 };

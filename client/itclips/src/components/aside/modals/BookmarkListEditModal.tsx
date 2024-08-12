@@ -16,6 +16,8 @@ import type { CategoryType } from "../../../types/BookmarkListType";
 import mainStore from "../../../stores/mainStore";
 import FileResizer from "react-image-file-resizer";
 
+import toastStore from "../../../stores/toastStore";
+
 interface EditModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -45,6 +47,7 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
   const [isPublic, setIsPublic] = useState(true);
   const [tagsLengthWarning, setTagsLengthWarning] = useState(false)
 
+  const {setGlobalNotification} = toastStore()
   useEffect(() => {
     async function fetchData() {
       axios({
@@ -137,7 +140,10 @@ useEffect(()=>{
           });
 
         }        
-        window.alert("북마크리스트를 수정하였습니다.");
+        setGlobalNotification({
+          message: "북마크리스트 수정.",
+          type: "success",
+        });
         setIsBookmarkListChange(true)
         onClose();
       })      

@@ -7,6 +7,7 @@ import { authStore } from "../../../stores/authStore";
 import { useNavigate } from "react-router-dom";
 import mainStore from "../../../stores/mainStore";
 import { useEffect } from "react";
+import toastStore from "../../../stores/toastStore";
 interface DeleteConfirmModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -28,7 +29,7 @@ const DeleteContentModal: React.FC<DeleteConfirmModalProps> = ({
   const { setIsBookmarkListChange } = mainStore();
   const { setIsRoadmapChange } = mainStore();
   const { userId, token } = authStore();
-
+const {setGlobalNotification} = toastStore()
   function deleteApi(): void {
     if (whatContent === "리스트") {
       axios
@@ -39,6 +40,10 @@ const DeleteContentModal: React.FC<DeleteConfirmModalProps> = ({
         })
         .then(() => {
           setIsBookmarkListChange(true);
+          setGlobalNotification({
+            message: "북마크리스트 삭제완료",
+            type: "error",
+          });
           navigate(`/user/${userId}`);
         });
     } else if (whatContent === "북마크") {
@@ -53,6 +58,10 @@ const DeleteContentModal: React.FC<DeleteConfirmModalProps> = ({
         })
         .then(() => {
           setIsBookmarkListChange(true);
+          setGlobalNotification({
+            message: "북마크 삭제완료",
+            type: "error",
+          });
         });
     } else if (whatContent === "즐겨찾기") {
       axios
@@ -63,6 +72,10 @@ const DeleteContentModal: React.FC<DeleteConfirmModalProps> = ({
         })
         .then(() => {
           setIsBookmarkListChange(true);
+          setGlobalNotification({
+            message: "즐겨찾기 삭제완료",
+            type: "error",
+          });
         });
     } else if (whatContent === "로드맵") {
       axios
@@ -73,6 +86,10 @@ const DeleteContentModal: React.FC<DeleteConfirmModalProps> = ({
         })
         .then(() => {
           setIsRoadmapChange(true);
+          setGlobalNotification({
+            message: "로드맵 삭제완료",
+            type: "error",
+          });
           navigate(`/user/${userId}/roadmap`);
         });
     }

@@ -20,7 +20,7 @@ const MyGroupBookmarkList = () => {
   const filterdLists = lists.filter((list) => list.title.includes(filterText)); // ||list.tags.includes({title: filterText}))
   const params = useParams();
 
-const [canView, setCanView] = useState(false)
+  const [canView, setCanView] = useState(false);
 
   function tabList(): void {
     setTab(true);
@@ -28,6 +28,7 @@ const [canView, setCanView] = useState(false)
   function tabAlbum(): void {
     setTab(false);
   }
+  const [noContent, setNoContent] = useState(<p>asdf</p>);
   // 마운트할때 유저의 즐겨찾기들 요약
   useEffect(() => {
     async function fetchData() {
@@ -43,8 +44,13 @@ const [canView, setCanView] = useState(false)
       })
         .then((res) => {
           setLists(res.data);
+          if (res.data.user) {
+            res.data.users.map(
+              (user: any) => user.Id === userId && setCanView(true)
+            );
+          }
+          setNoContent(<NoContent content={"즐겨찾기"} />);
 
-          res.data.users.map((user:any)=>user.Id===userId&&setCanView(true))
         })
         .catch((err) => {
           console.error(err);
@@ -101,7 +107,7 @@ const [canView, setCanView] = useState(false)
       <div className="">
         {/* 북마크 리스트들*/}
         {filterdLists.length === 0 ? (
-          <NoContent content={"그룹"} />
+          noContent
         ) : (
           <>
             {!isList ? (
@@ -121,9 +127,7 @@ const [canView, setCanView] = useState(false)
                 {filterdLists.map((list) => (
                   <div
                     className={
-                      (canView|| list.isPublic
-                        ? ""
-                        : "hidden ") + " my-1"
+                      (canView || list.isPublic ? "" : "hidden ") + " my-1"
                     }
                   >
                     <MyBookmarkList list={list} whatMenu="즐겨찾기" />

@@ -7,7 +7,7 @@ import ReportModal from "../aside/modals/ReportModal";
 import DeleteBookmarkListModal from "../aside/modals/DeleteContentModal";
 import UrlCopyModal from "./UrlCopyModal";
 import ScrapConfirmationModal from "../aside/modals/ScrapComfirmModal";
-
+import toastStore from "../../stores/toastStore";
 // 무슨 탭에서 눌렀는지 받는 인자
 // 리스트, 즐겨찾기, 로드맵, 북마크 4가지로 받을예정. 그룹 리스트랑 그냥 리스트는 차이 없음
 interface Props {
@@ -35,18 +35,18 @@ const KebabDropdown: FC<Props> = ({
   const [isOpen, onClose] = useState<boolean>(false);
   const [editModal, tabEditModal] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
-  const [isUrlCopyModalOpen, setIsUrlCopyModalOpen] = useState<boolean>(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState<boolean>(false);
-  const [isFavoriteModalOpen, setIsFavoriteModalOpen] =
-    useState<boolean>(false);
+
+const {globalNotification, setGlobalNotification} = toastStore()
+const[isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
     <>
       <div className="dropdown dropdown-bottom dropdown-end ">
-        <div tabIndex={0} role="button" className="btn m-1 btn-ghost ">
+        <div tabIndex={0} role="button" className="btn m-1 btn-ghost " onClick={()=>setIsMenuOpen(true)}>
           <VscKebabVertical />
         </div>
-        <ul
+        {isMenuOpen&& <ul
           tabIndex={0}
           className="dropdown-content menu bg-base-100 rounded-box w-52 p-2 shadow z-30"
         >
@@ -59,7 +59,10 @@ const KebabDropdown: FC<Props> = ({
           </li>
           {/*  */}
 
-          <li onClick={() => setIsUrlCopyModalOpen(true)}>
+          <li onClick={() => setGlobalNotification({
+                  message: "url 복사 완료",
+                  type: "success",
+                })}>
             <a onClick={() => navigator.clipboard.writeText(bookmark.url)}>
               url 복사
             </a>
@@ -78,7 +81,8 @@ const KebabDropdown: FC<Props> = ({
           <li onClick={() => setIsReportModalOpen(true)}>
             <a>신고하기</a>
           </li>
-        </ul>
+        </ul>}
+        
       </div>
 
       {/* 내 리스트에 추가 */}
@@ -98,13 +102,6 @@ const KebabDropdown: FC<Props> = ({
           onClose={() => setIsDeleteModalOpen(false)}
           whatContent={"북마크"}
           id={bookmark.id}
-        />
-      )}
-      {/* url 복사 */}
-      {isUrlCopyModalOpen && (
-        <UrlCopyModal
-          isOpen={isUrlCopyModalOpen}
-          onClose={() => setIsUrlCopyModalOpen(false)}
         />
       )}
       {/* 신고 */}

@@ -53,9 +53,6 @@ const AsideProfile = () => {
     type: "success" | "error";
   } | null>(null);
 
-  // 팔로우 상태인지?
-  const [isFollow, setIsFollow] = useState<boolean>(false);
-
   // 토스트 알람 메뉴
   useEffect(() => {
     if (globalNotification) {
@@ -66,6 +63,9 @@ const AsideProfile = () => {
       return () => clearTimeout(timer);
     }
   }, [globalNotification]);
+
+ // 팔로우 상태인지?
+ const [isFollow, setIsFollow] = useState<boolean>(false);
 
   const updateAsideInfo = (updatedInfo: UserInfo) => {
     setUrlUserInfo(updatedInfo);

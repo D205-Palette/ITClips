@@ -12,7 +12,7 @@ import { IoCloseOutline } from "react-icons/io5";
 import noImg from "../../../assets/images/noImg.gif";
 
 import FileResizer from "react-image-file-resizer";
-
+import toastStore from "../../../stores/toastStore";
 interface EditModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -38,6 +38,8 @@ const BookmarkListCreateModal: React.FC<EditModalProps> = ({
 
   const {isBookmarkListChange, setIsBookmarkListChange} = mainStore()
   const [tagsLengthWarning, setTagsLengthWarning] = useState(false)
+
+  const {setGlobalNotification} = toastStore()
 
   const handleAddTag = () => {
  
@@ -105,8 +107,10 @@ useEffect(()=>{
           setTempDescription("")
           // setTemp
 
-
-        window.alert("북마크리스트를 생성하였습니다.");
+          setGlobalNotification({
+            message: "북마크 리스트 생성 완료",
+            type: "success",
+          });
         onClose();
       })
       .catch((err) => {

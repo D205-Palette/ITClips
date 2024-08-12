@@ -13,6 +13,7 @@ import { authStore } from "../../stores/authStore";
 import { useNavigate } from "react-router-dom";
 import mainStore from "../../stores/mainStore";
 import { useParams } from "react-router-dom";
+import toastStore from "../../stores/toastStore";
 // 무슨 탭에서 눌렀는지 받는 인자
 
 // 리스트, 즐겨찾기, 로드맵  3가지로 받을예정. 그룹 리스트랑 그냥 리스트는 차이 없음
@@ -32,7 +33,9 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
   const [isDeleteFavoriteModalOpen, setIsDeleteFavoriteModalOpen] =
     useState<boolean>(false);
   const [isScrapModalOpen, setIsScrapModalOpen] = useState<boolean>(false);
+  const { setGlobalNotification } = toastStore();
 
+  const[isMenuOpen, setIsMenuOpen] = useState(false)
   const params = useParams();
   const nowUserId = params.userId;
   const navigate = useNavigate();
@@ -49,16 +52,22 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
       },
     })
       .then(() => {
-        setIsFavoriteModalOpen(true);
+        setIsMenuOpen(false)
+        setGlobalNotification({
+          message: "즐겨찾기 추가 완료",
+          type: "success",
+        });
       })
       .catch((err) => {
         if (err.response.status === 400) {
-          setIsDeleteFavoriteModalOpen(true);
+          setIsMenuOpen(false)
+          setGlobalNotification({
+            message: "즐겨찾기 삭제 완료",
+            type: "success",
+          });
         } else {
         }
       });
-    //  아님 마운트 되는 순간 즐겨찾기 여부 따져서 즐찾/즐찾삭제 부터 다르게 해줘야되나...?
-    // 아님 그냥 즐찾삭제하겠냐는 모달 띄워서
   }
   // 로드맵 스크랩
   function addScrap(): void {
@@ -70,22 +79,32 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
       })
       .then(() => {
         setIsRoadmapChange(true);
+        setIsMenuOpen(false)
+        setGlobalNotification({
+          message: "로드맵 스크랩 완료",
+          type: "success",
+        });
       });
   }
 
-  function copyUrl(): void {
+  function copyUrl(): any {
     // 뭐가 들어오는지에 따라 url값이 바뀜
     // navigator.clipboard.writeText(bookmark.url)
     // 이건좀 생각해봐야할듯
+    setIsMenuOpen(false)
+    setGlobalNotification({
+      message: "url 복사 완료",
+      type: "success",
+    });
   }
 
   return (
     <>
       <div className="dropdown dropdown-bottom dropdown-end ">
-        <div tabIndex={0} role="button" className="btn m-1 btn-ghost ">
+        <div tabIndex={0} role="button" className="btn m-1 btn-ghost " onClick={()=>setIsMenuOpen(true)}>
           <VscKebabVertical />
         </div>
-        <ul
+        {isMenuOpen&& <ul
           tabIndex={0}
           className="dropdown-content menu bg-base-100 rounded-box w-52 p-2 shadow z-30"
         >
@@ -104,6 +123,7 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
               >
                 <a>수정하기</a>
               </li>
+
               <li onClick={() => setIsDeleteModalOpen(true)}>
                 <a>삭제하기</a>
               </li>
@@ -111,28 +131,26 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
           )}
           {/*  */}
 
-          <li
-            onClick={() => {
-              setIsUrlCopyModalOpen(true);
-            }}
-          >
+          <li onClick={()=>copyUrl()}>
             <a>url 복사</a>
           </li>
           <li
             className={
-              whatMenu === "로드맵" || whatMenu === "북마크" || whatMenu==="즐겨찾기" ? "hidden " : ""
+              whatMenu === "로드맵" ||
+              whatMenu === "북마크" ||
+              whatMenu === "즐겨찾기"
+                ? "hidden "
+                : ""
             }
             onClick={() => {
               addFavorite();
             }}
           >
-            {/* 내 즐겨찾기에 있는지 유무 따져서 즐겨찾기 삭제로 출력해주기 */}
             <a>즐겨찾기</a>
           </li>
           <li
             className={whatMenu === "로드맵" ? "" : "hidden "}
             onClick={() => {
-              setIsScrapModalOpen(true);
               addScrap();
             }}
           >
@@ -144,7 +162,8 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
           >
             <a>신고하기</a>
           </li>
-        </ul>
+        </ul>}
+        
       </div>
 
       {isEditModalOpen && (
@@ -163,37 +182,13 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
           id={id}
         />
       )}
-      {isUrlCopyModalOpen && (
-        <UrlCopyModal
-          isOpen={isUrlCopyModalOpen}
-          onClose={() => setIsUrlCopyModalOpen(false)}
-        />
-      )}
+
       {isReportModalOpen && (
         <ReportModal
           isOpen={isReportModalOpen}
           onClose={() => setIsReportModalOpen(false)}
           whatContent={whatMenu}
           id={id}
-        />
-      )}
-      {isFavoriteModalOpen && (
-        <FavoriteConfirmationModal
-          isOpen={isFavoriteModalOpen}
-          onClose={() => setIsFavoriteModalOpen(false)}
-        />
-      )}
-      {isDeleteFavoriteModalOpen && (
-        <FavoriteDeleteModal
-          isOpen={isDeleteFavoriteModalOpen}
-          onClose={() => setIsDeleteFavoriteModalOpen(false)}
-          id={id}
-        />
-      )}
-      {isScrapModalOpen && (
-        <ScrapConfirmationModal
-          isOpen={isScrapModalOpen}
-          onClose={() => setIsScrapModalOpen(false)}
         />
       )}
     </>

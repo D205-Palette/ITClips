@@ -26,6 +26,7 @@ const MyGroupBookmarkList = () => {
   function tabAlbum(): void {
     setTab(false);
   }
+  const [noContent, setNoContent] = useState(<div className="w-full flex flex-row justify-center mt-6"><span className="loading loading-spinner loading-lg text-sky-500"></span></div>)
   // 그룹 북마크들 api
   useEffect(() => {
     async function fetchData() {
@@ -41,8 +42,10 @@ const MyGroupBookmarkList = () => {
       })
         .then((res) => {
           setLists(res.data);
-          
+          if(res.data.users){
           res.data.users.map((user:any)=>user.Id===userId&&setCanView(true))
+        }
+          setNoContent(<NoContent content={"그룹"} />)
         })
         .catch((err) => {
           console.error(err);
@@ -99,7 +102,7 @@ const MyGroupBookmarkList = () => {
       <div className="">
         {/* 북마크 리스트들*/}
         {filterdLists.length === 0 ? (
-          <NoContent content={"즐겨찾기"} />
+        noContent
         ) : (
           <>
             {!isList ? (

@@ -26,7 +26,9 @@ const NoContent: React.FC<Props> = ({ content }) => {
     }
     else if(content === "비공개로드맵"){
       setWarningText("비공개된 로드맵입니다!")
-    }     else{
+    }   else if(content==='북마크'){
+      setWarningText("북마크가 없습니다! 편집 버튼을 눌러 추가해주세요")
+    }else{
       setWarningText("컨텐츠가 없습니다! + 버튼을 눌러 추가해주세요")
     }
   }, [])

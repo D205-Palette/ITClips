@@ -57,7 +57,12 @@ const MyBookmark = () => {
   const [filterdBookmarks, setFilterdBookmarks] = useState<BookmarkType[]>([]);
 
   const [canView, setCanView] = useState(true);
+
+  const [noContent, setNoContent] = useState(<div className="w-full flex flex-row justify-center"><span className="loading loading-spinner loading-lg text-sky-500"></span></div>)
+ 
   // 북마크 리스트 변경될때마다 리스트 불러오기
+
+  
   useEffect(() => {
     async function fetchData() {
       axios({
@@ -80,12 +85,13 @@ const MyBookmark = () => {
             user.id === userId ? setCanEdit(true) : <></>
           );
           setIsBookmarkListChange(false);
+          setNoContent(  <NoContent content={"북마크"} />)
         })
         .catch((err) => {
           console.error(err);
           // 비공개인 리스트에 접근했을때
           console.log(err)
-          if (err.response.status === 401) {
+          if (err.response?.status === 401) {
             setCanView(false);
           }
         });

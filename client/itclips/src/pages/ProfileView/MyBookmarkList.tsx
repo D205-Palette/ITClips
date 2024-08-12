@@ -15,6 +15,7 @@ import BookmarkListCreateModal from "../../components/aside/modals/BookmarkListC
 import { API_BASE_URL } from "../../config";
 import { useParams } from "react-router-dom";
 import mainStore from "../../stores/mainStore";
+import toastStore from "../../stores/toastStore";
 
 export default function MyView() {
   const [isList, setTab] = useState(true);
@@ -23,7 +24,7 @@ export default function MyView() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState<boolean>(false);
   const { token, userId } = authStore();
 
-  const {isBookmarkListChange, setIsBookmarkListChange} = mainStore()
+  const { isBookmarkListChange, setIsBookmarkListChange } = mainStore();
   // 리스트형으로 볼지 앨범형으로 볼지
   function tabList(): void {
     setTab(true);
@@ -31,13 +32,29 @@ export default function MyView() {
   function tabAlbum(): void {
     setTab(false);
   }
+  const {globalNotification, setGlobalNotification} = toastStore()
+
+  // 토스트 알람 메뉴
+  useEffect(() => {
+    if (globalNotification) {
+      const timer = setTimeout(() => {
+        setGlobalNotification(null);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [globalNotification]);
 
   // const filterdLists = lists.filter((list) => list.title.includes(filterText));
-  const [filterdLists, setFilterdLists] = useState<BookmarkListSumType[]>([])
-  const params = useParams()
-  const nowUserId = Number(params.userId)
+  const [filterdLists, setFilterdLists] = useState<BookmarkListSumType[]>([]);
+  const params = useParams();
+  const nowUserId = Number(params.userId);
 
-  const [noContent, setNoContent] = useState(<div className="w-full flex flex-row justify-center"><span className="loading loading-spinner loading-lg text-sky-500"></span></div>)
+  const [noContent, setNoContent] = useState(
+    <div className="w-full flex flex-row justify-center mt-6">
+      <span className="loading loading-spinner loading-lg text-sky-500"></span>
+    </div>
+  );
   // 북마크 리스트 변화할때 유저의 북마크 리스트들 요약
   useEffect(() => {
     async function fetchData() {
@@ -53,23 +70,23 @@ export default function MyView() {
       })
         .then((res) => {
           setLists(res.data);
-          setFilterdLists(res.data.filter((list:any) =>list.title.includes(filterText)))
-          setIsBookmarkListChange(false)
+          setFilterdLists(
+            res.data.filter((list: any) => list.title.includes(filterText))
+          );
+          setIsBookmarkListChange(false);
 
-          setNoContent(  <NoContent content={"리스트"} />)
-       
+          setNoContent(<NoContent content={"리스트"} />);
         })
         .catch((err) => {
           console.error(err);
         });
     }
     fetchData();
-  }, [isBookmarkListChange,params.userId]);
-
+  }, [isBookmarkListChange, params.userId]);
 
   // 검색어 변경시 리스트 변경
   useEffect(() => {
-    setFilterdLists(lists.filter((list) =>list.title.includes(filterText)))
+    setFilterdLists(lists.filter((list) => list.title.includes(filterText)));
   }, [filterText]);
 
   return (
@@ -129,14 +146,24 @@ export default function MyView() {
               <div className="flex justify-around ">
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 w-full gap-2 gap-y-6">
                   {filterdLists.map((list) => (
-                    <MyBookmarkListAlbum whatMenu="리스트" list={list} canEdit={params.userId===String(userId)} />
+                    <MyBookmarkListAlbum
+                      whatMenu="리스트"
+                      list={list}
+                      canEdit={params.userId === String(userId)}
+                    />
                   ))}
                 </div>
               </div>
             ) : (
               <>
                 {filterdLists.map((list) => (
-                  <div className={(params.userId===String(userId) || list.isPublic? "" : "hidden ") + " my-1"}>
+                  <div
+                    className={
+                      (params.userId === String(userId) || list.isPublic
+                        ? ""
+                        : "hidden ") + " my-1"
+                    }
+                  >
                     <MyBookmarkList whatMenu="리스트" list={list} />
                   </div>
                 ))}
@@ -161,7 +188,19 @@ export default function MyView() {
       <BookmarkListCreateModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
+
       />
+      {globalNotification && (
+        <div
+          className={`fixed bottom-6 left-1/2 transform -translate-x-1/2 p-4 rounded-md ${
+            globalNotification.type === "success"
+              ? "bg-green-500"
+              : "bg-red-500"
+          } text-white shadow-lg z-50 transition-opacity duration-300`}
+        >
+          {globalNotification.message}
+        </div>
+      )}
     </>
   );
 }

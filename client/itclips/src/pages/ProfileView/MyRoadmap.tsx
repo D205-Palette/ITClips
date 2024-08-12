@@ -20,8 +20,8 @@ const MyRoadmap = () => {
   const {isRoadmapChange, setIsRoadmapChange} = mainStore()
   const [filterdRoadmaps, setFilterdRoadmaps] = useState<RoadmapSumType[]>([])
   const [filterText, changeFilterText] = useState("");
-  const [canEdit, setCanEdit] = useState(false)
-  const [noContent, setNoContent] = useState(<div className="w-full flex flex-row justify-center"><span className="loading loading-spinner loading-lg text-sky-500"></span></div>)
+  const [canEdit, setCanEdit] = useState(false) 
+  const [noContent, setNoContent] = useState(<div className="w-full flex flex-row justify-center mt-6"><span className="loading loading-spinner loading-lg text-sky-500"></span></div>)
   // 변경사항 있을때마다 로드맵 요약 불러오기
   useEffect(() => {
     async function fetchData() {
@@ -68,14 +68,14 @@ const MyRoadmap = () => {
 
       {/* 로드맵들 */}
       <div className="">
-      {filterdRoadmaps.length === 0 ?noContent : <>
+      {filterdRoadmaps.length === 0 ? noContent : <>
         {filterdRoadmaps.map((roadmap) => (
           <Roadmap roadmap={roadmap} canEdit={canEdit}/>
         ))}</>}
       </div>
 
       {/* 로드맵 추가 버튼 */}
-      {canEdit? <button className="fixed bottom-24 right-16 z-20 flex justify-end w-full"
+      {canEdit? <button className="fixed bottom-24 right-16 z-20  justify-end w-full hidden md:flex"
       onClick={() => navigate('/roadmap/create')}>
         
         <FaPlus color="skyblue" size={56}/>

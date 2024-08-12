@@ -24,7 +24,7 @@ export const webSocketStore = create<WebSocketStore>((set, get) => ({
 
   subscribeToAllRooms: () => {
     const { stompClient } = get();
-    const { rooms, addMessage } = chatStore.getState();
+    const { rooms, addMessage, currentRoomId } = chatStore.getState();
 
     if (stompClient && stompClient.connected) {
       rooms.forEach(room => {
@@ -41,19 +41,24 @@ export const webSocketStore = create<WebSocketStore>((set, get) => ({
       const socket = new SockJS(`${API_BASE_URL}/api/ws`);
       const client = new Client({
         webSocketFactory: () => socket,
-        debug: (str) => {          
+        debug: (str) => {
+          console.log(str);
         },
         reconnectDelay: 5000,
         heartbeatIncoming: 4000,
         heartbeatOutgoing: 4000,
         onConnect: () => {
-          
+          console.log('Connected to WebSocket');
           set({ isConnected: true });
           get().subscribeToAllRooms();
         },
         onDisconnect: () => {
-          
+          console.log('Disconnected from WebSocket');
           set({ isConnected: false });
+        },
+        onStompError: (frame) => {
+          console.error('Broker reported error: ' + frame.headers['message']);
+          console.error('Additional details: ' + frame.body);
         },
       });
 

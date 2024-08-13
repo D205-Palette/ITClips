@@ -59,12 +59,14 @@ const AsideBookmarkList : React.FC<ItemProps> = ({ bookmarkList }) => {
       <LikesFavoritesCount {...bookmarkList} />
       
       {/* 댓글 창 */}
-      <button 
-        onClick={() => setIsCommentsOpen(true)} 
-        className="btn btn-info text-base-100 w-full mt-4"
-      >
-        전체 댓글 보기 ({commentCount})
-      </button>
+      <div className="hidden md:block">
+        <button 
+          onClick={() => setIsCommentsOpen(true)} 
+          className="btn btn-info text-base-100 w-full mt-4"
+        >
+          전체 댓글 보기 ({commentCount})
+        </button>
+      </div>
       <BookmarkListCommentsModal 
         id={bookmarkList.id} 
         isOpen={isCommentsOpen} 

@@ -63,12 +63,14 @@ const AsideRoadmap :  React.FC<Props> = ({ roadmap }) => {
       {/* 태그 창 */}
       {/* <Tags {...roadmapInfo} /> */}
       {/* 댓글 창 */}
-      <button 
-        onClick={() => setIsCommentsOpen(true)} 
-        className="btn btn-info w-full mt-4 text-base-100"
-      >
-        전체 댓글 보기 ({commentCount})
-      </button>
+      <div className="hidden md:block">
+        <button 
+          onClick={() => setIsCommentsOpen(true)} 
+          className="btn btn-info w-full mt-4 text-base-100"
+        >
+          전체 댓글 보기 ({commentCount})
+        </button>
+      </div>
       {/* 댓글 모달 */}
       <RoadmapCommentsModal
         id={roadmap.id}

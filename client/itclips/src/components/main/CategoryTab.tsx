@@ -144,23 +144,14 @@ const CategoryTab: FC<Props> = ({
     );
   };
 
-  // 상하 스크롤로 좌우 스크롤 가능하게
-  function handleScroll(event: any) {
-    const container = event.target;
-    const scrollAmount = event.deltaY;
-    container.scrollTo({
-      top: 0,
-      left: container.scrollLeft + scrollAmount,
-      behavior: "smooth",
-    });
-  }
+
   const ref =
     useRef<HTMLDivElement>() as React.MutableRefObject<HTMLInputElement>;
   const { events } = useDraggable(ref); // Now we pass the reference to the useDraggable hook:
 
   return (
     <>
-      <div className="flex flex-row m-3 items-center py-5 static z-20 w-10/12">
+      <div className="flex flex-row m-3 items-center py-5 static z-20 w-2/3">
         <div className={editMode ? "hidden" : "h-9 "}>
           <BackButton />
         </div>

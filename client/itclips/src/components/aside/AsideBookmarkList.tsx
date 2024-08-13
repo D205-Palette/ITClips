@@ -43,10 +43,11 @@ const AsideBookmarkList : React.FC<ItemProps> = ({ bookmarkList }) => {
     fetchCommentCount();
   }, [bookmarkList.id]);
 
+  
   return (
     <div className={`${ isDark ? "bg-base-300" : "bg-sky-50" } rounded-3xl  p-8 flex flex-col items-center ` }>
       {/* 더보기 버튼 */}
-      <div className="w-full flex flex-row justify-end">
+      <div className="w-full md:flex flex-row justify-end hidden ">
       {<KebabDropdown whatMenu="리스트상세" id={bookmarkList.id} users={bookmarkList.users}/> }
       </div>
       {/* 북마크리스트 썸네일 */}

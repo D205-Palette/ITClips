@@ -19,6 +19,7 @@ import { API_BASE_URL } from "../config";
 import { authStore } from "../stores/authStore";
 import FileResizer from "react-image-file-resizer";
 import NoContent from "./ProfileView/NoContent";
+import AsideMobileContent from "../components/aside/AsideRoadmap(Mobile)";
 
 const RoadmapView = () => {
   const params = useParams()
@@ -99,8 +100,11 @@ const RoadmapView = () => {
 
 {/* aside 자리 */}
 <div id="aside" className="md:col-start-2 md:col-span-3 md:pe-20 col-start-2 col-span-10 ">
-  <div className="sticky top-16 z-20">
-    {roadmap?<AsideRoadmap roadmap={roadmap} />:<></>}
+  <div className="md:block sticky hidden top-16 z-20">
+    {roadmap&& <AsideRoadmap roadmap={roadmap} />}
+  </div>
+  <div className="md:hidden static top-16 z-20">
+    {roadmap&& <AsideMobileContent data={roadmap} />}
   </div>
 </div>                                        
 

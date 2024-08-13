@@ -416,8 +416,8 @@ const RoadmapEditView: React.FC = () => {
                               <div className="w-16 h-16 border bg-base-100 mr-4"></div>
                             )}
                             <div className="flex w-full items-center justify-between me-3">
-                              <div>
-                                <h4 className="text-lg font-bold">
+                              <div className="w-full">
+                                <h4 className="text-lg font-bold line-clamp-1">
                                   {item.title}
                                 </h4>
                                 <p className="line-clamp-1">
@@ -578,7 +578,7 @@ const RoadmapEditView: React.FC = () => {
                                   )}
                                   <div className="flex w-full items-center justify-between me-3">
                                     <div>
-                                      <h4 className="text-lg font-bold">
+                                      <h4 className="text-lg font-bold line-clamp-1">
                                         {item.title}
                                       </h4>
                                       <p className="line-clamp-1">

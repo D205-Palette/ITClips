@@ -149,15 +149,15 @@ const Bookmark: FC<Props> = ({
           whatCategory.categoryName === ""
             ? " "
             : " hidden") +
-          " card card-side bg-base-100 shadow-sm hover:cursor-pointer h-28 my-1 w-full"
+          " card card-side bg-base-100 shadow-sm hover:cursor-pointer min-h-28 my-1 w-full"
         }
       >
         <>
-          <div className="card-body flex flex-row items-center justify-between">
+          <div className="card-body flex flex-row items-center w-full justify-between">
             {/* 주소에 https 포함 여부 확인해야할듯 */}
 
             {/* 왼쪽 이미지 제목 url부분 */}
-            <div className="w-1/2 flex flex-row justify-start">
+            <div className="w-1/2 flex flex-row justify-start items-center">
               <img
                 src={ogImage || "default-image.jpg"}
                 alt={bookmark.url}
@@ -181,14 +181,15 @@ const Bookmark: FC<Props> = ({
                       value={tempTitle}
                       onChange={(e) => editTempTitle(e.target.value)}
                       className="text-xl font-bold border-slate-400 border rounded-md w-5/6"
+                      maxLength={50}
                     />
                   ) : (
-                    <h2 className="text-lg lg:text-xl font-bold">
+                    <h2 className="text-lg lg:text-xl font-bold line-clamp-3">
                       {tempBookmark.title}
                     </h2>
                   )}
                 </div>
-                <div className="underline underline-offset-1 text-sm text-slate-500  text-ellipsis truncate w-5/6">
+                <div className="underline underline-offset-1 text-sm text-slate-500  text-ellipsis truncate w-full">
                   {bookmark.url}
                 </div>
               </div>

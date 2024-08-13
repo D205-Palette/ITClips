@@ -13,7 +13,7 @@ const ImageContainer : React.FC<ImageSrc> = ({src, whatContent}) => {
   
   const containerClass = whatContent === '프로필' 
     ? 'w-24 h-24 md:w-32 md:h-32 rounded-full' 
-    : 'w-24 h-24 md:w-36 md:h-36 rounded-xl';
+    : 'w-24 h-24 md:w-32 md:h-32 rounded-xl';
 
   return (
     <div className={`${containerClass} border overflow-hidden bg-gray-200 mb-4`}>

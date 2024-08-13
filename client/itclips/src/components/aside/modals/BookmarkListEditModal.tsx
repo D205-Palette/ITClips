@@ -265,9 +265,8 @@ useEffect(()=>{
             유저
           </label>
           <input
-            type="text"
-            value="고양양"
-            readOnly
+            type=""
+            value={tempUser}
             className={(isDark?  "bg-slate-600":"bg-gray-100" ) + " w-full px-3 py-2 border rounded-md "}
           />
         </div>

@@ -160,7 +160,7 @@ const AsideProfile = () => {
       } rounded-3xl p-8 flex flex-col `}
     >
       {/* 상단 영역: 채팅/설정 버튼 */}
-      <div className="self-end md:mb-4">
+      <div className="self-end md:mb-4 hidden md:block">
         {myInfo.id !== urlUserId && urlUserId !== undefined ? (
           <button
             className="btn btn-ghost btn-circle"
@@ -186,7 +186,7 @@ const AsideProfile = () => {
         </div>
 
         {/* 상세 정보 */}
-        <div className="md:w-full pl-4 md:pl-0">
+        <div className="md:w-full pl-4 md:pl-0 w-2/3">
           {myInfo && <UserDetailInfo {...urlUserInfo} />}
         </div>
       </div>

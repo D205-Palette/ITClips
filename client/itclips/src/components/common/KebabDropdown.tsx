@@ -14,18 +14,18 @@ import { useNavigate } from "react-router-dom";
 import mainStore from "../../stores/mainStore";
 import { useParams } from "react-router-dom";
 import toastStore from "../../stores/toastStore";
-// 무슨 탭에서 눌렀는지 받는 인자
 
-// 리스트, 즐겨찾기, 로드맵, 리스트상세  4가지로 받을예정. 그룹 리스트랑 그냥 리스트는 차이 없음
 interface Props {
+  // 무슨 탭에서 눌렀는지 받는 인자
+  // 리스트, 즐겨찾기, 로드맵, 리스트상세  4가지로 받을 예정
   whatMenu: string;
   // id 가 그떄그때마다 listID, roadmapId 달라짐
   id: number;
-  contentUserId?:number;
-  users?:{id:number,nickName:string}[]
+  contentUserId?: number;
+  users?: { id: number; nickName: string }[];
 }
 
-const KebabDropdown: FC<Props> = ({ whatMenu, id,contentUserId,users }) => {
+const KebabDropdown: FC<Props> = ({ whatMenu, id, contentUserId, users }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [isUrlCopyModalOpen, setIsUrlCopyModalOpen] = useState<boolean>(false);
@@ -41,8 +41,7 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id,contentUserId,users }) => {
   const params = useParams();
   const nowUserId = params.userId;
   const navigate = useNavigate();
-  const { setIsRoadmapChange,setIsFavoriteChange } = mainStore();
-
+  const { setIsRoadmapChange, setIsFavoriteChange } = mainStore();
 
   // 유저 아이디 임시값. 나중엔 스토리지서 받아오면됨
   const { userId, token } = authStore();
@@ -65,7 +64,7 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id,contentUserId,users }) => {
       .catch((err) => {
         if (err.response.status === 400) {
           setIsMenuOpen(false);
-          axios.delete(`${API_BASE_URL}/api/list/scrap/${userId}/${id}`,{
+          axios.delete(`${API_BASE_URL}/api/list/scrap/${userId}/${id}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -78,22 +77,26 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id,contentUserId,users }) => {
         }
       });
   }
-  const [canEdit, setCanEdit] = useState(false)
-  
-  useEffect(()=>{
-    if(users){
-      users.map((user) => user.id===userId? setCanEdit(true): "")
+  const [canEdit, setCanEdit] = useState(false);
+
+  useEffect(() => {
+    if (users) {
+      users.map((user) => (user.id === userId ? setCanEdit(true) : ""));
     }
-  },[])
+  }, []);
 
   // 로드맵 스크랩
   function addScrap(): void {
     axios
-      .post(`${API_BASE_URL}/api/roadmap/scrap/${id}/${userId}`, {}, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      .post(
+        `${API_BASE_URL}/api/roadmap/scrap/${id}/${userId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then(() => {
         setIsRoadmapChange(true);
         setIsMenuOpen(false);
@@ -105,8 +108,8 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id,contentUserId,users }) => {
   }
 
   function copyUrl(whatMenu: string, id: number): any {
-    // 기본적으로 로컬호스트 주소를 가져옴    
-  
+    // 기본적으로 로컬호스트 주소를 가져옴
+
     // whatMenu 값에 따라 URL을 생성
     let url = "";
     if (whatMenu === "리스트" || whatMenu === "즐겨찾기") {
@@ -117,33 +120,36 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id,contentUserId,users }) => {
       console.error("Invalid menu type");
       return;
     }
-  
+
     // URL을 클립보드에 복사
-    navigator.clipboard.writeText(url).then(() => {
-      // 복사가 성공적으로 완료되면 알림 설정
-      setGlobalNotification({
-        message: "URL 복사 완료",
-        type: "success",
+    navigator.clipboard
+      .writeText(url)
+      .then(() => {
+        // 복사가 성공적으로 완료되면 알림 설정
+        setGlobalNotification({
+          message: "URL 복사 완료",
+          type: "success",
+        });
+      })
+      .catch((err) => {
+        console.error("Failed to copy URL: ", err);
       });
-    }).catch(err => {
-      console.error("Failed to copy URL: ", err);
-    });
-  
+
     // 메뉴 닫기
     setIsMenuOpen(false);
   }
 
-  
-
   function deleteFavorite(): void {
     setIsMenuOpen(false);
-    axios.delete(`${API_BASE_URL}/api/list/scrap/${userId}/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }).then(()=>{
-      setIsFavoriteChange(true)
-    })
+    axios
+      .delete(`${API_BASE_URL}/api/list/scrap/${userId}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(() => {
+        setIsFavoriteChange(true);
+      });
     setGlobalNotification({
       message: "즐겨찾기 삭제 완료",
       type: "error",
@@ -197,11 +203,11 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id,contentUserId,users }) => {
               <a className="py-1.5 md:py-2">즐겨찾기 삭제</a>
             </li>
             <li
-              className={(userId ? "" : "hidden ") + 
-               (whatMenu === "로드맵" ||
-                whatMenu === "북마크" ||
+              className={
+                (userId ? "" : "hidden ") +
+                (whatMenu === "로드맵" ||
                 whatMenu === "즐겨찾기" ||
-                whatMenu === "리스트상세" 
+                whatMenu === "리스트상세"
                   ? " hidden "
                   : "")
               }
@@ -212,7 +218,10 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id,contentUserId,users }) => {
               <a className="py-1.5 md:py-2">즐겨찾기</a>
             </li>
             <li
-              className={(userId ? "" : "hidden ") + (whatMenu === "로드맵" ? "" : "hidden ")}
+              className={
+                (userId ? "" : "hidden ") +
+                (whatMenu === "로드맵" ? "" : "hidden ")
+              }
               onClick={() => {
                 addScrap();
               }}
@@ -220,7 +229,10 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id,contentUserId,users }) => {
               <a className="py-1.5 md:py-2">스크랩</a>
             </li>
             <li
-              className={(userId ? "" : "hidden ") + (whatMenu === "로드맵" ? "hidden " : "")}
+              className={
+                (userId ? "" : "hidden ") +
+                (whatMenu === "로드맵" ? "hidden " : "")
+              }
               onClick={() => setIsReportModalOpen(true)}
             >
               <a className="py-1.5 md:py-2">신고하기</a>

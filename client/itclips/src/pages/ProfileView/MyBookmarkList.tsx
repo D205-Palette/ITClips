@@ -62,7 +62,7 @@ export default function MyView() {
         .then((res) => {
           setLists(res.data);
           setFilterdLists(
-            res.data.filter((list: any) => list.title.includes(filterText))
+            res.data
           );
           setIsBookmarkListChange(false);
 
@@ -77,7 +77,7 @@ export default function MyView() {
 
   // 검색어 변경시 리스트 변경
   useEffect(() => {
-    setFilterdLists(lists.filter((list) => list.title.includes(filterText)));
+    setFilterdLists(lists.filter((list) => list.title.toLowerCase().includes(filterText.toLowerCase())));
   }, [filterText]);
 
   return (

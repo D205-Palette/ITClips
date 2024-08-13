@@ -54,7 +54,7 @@ const MyRoadmap = () => {
 	}, [isRoadmapChange]);
 
   useEffect(() => {
-    setFilterdRoadmaps(roadmaps.filter((roadmap) =>roadmap.title.includes(filterText)))
+    setFilterdRoadmaps(roadmaps.filter((roadmap) =>roadmap.title.toLowerCase().includes(filterText.toLowerCase())))
   }, [filterText]);
 
 

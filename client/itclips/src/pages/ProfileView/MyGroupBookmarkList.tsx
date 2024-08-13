@@ -17,7 +17,8 @@ const MyGroupBookmarkList = () => {
   const [filterText, changeFilterText] = useState("");
   const [isList, setTab] = useState(true);
   const [lists, setLists] = useState<BookmarkListSumType[]>([]);
-  const filterdLists = lists.filter((list) => list.title.includes(filterText)); //||list.tags.includes({title:filterText}))
+
+  const [filterdLists, setFilterdLists] = useState<BookmarkListSumType[]>([]);
   const { token, userId } = authStore();
   const params = useParams();
   const [canView, setCanView] = useState(false)
@@ -45,6 +46,7 @@ const MyGroupBookmarkList = () => {
       })
         .then((res) => {
           setLists(res.data);
+          setFilterdLists(res.data)
           if(res.data.users){
           res.data.users.map((user:any)=>user.Id===userId&&setCanView(true))
         }
@@ -56,6 +58,10 @@ const MyGroupBookmarkList = () => {
     }
     fetchData();
   }, []);
+
+  useEffect(() => {
+    setFilterdLists(lists.filter((list) => list.title.toLowerCase().includes(filterText.toLowerCase())));
+  }, [filterText]);
 
   return (
     <>

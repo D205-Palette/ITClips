@@ -19,17 +19,14 @@ import type { RoadmapDetailType } from "../../types/RoadmapType";
 // apis
 import { getRoadmapCommentsCount } from "../../api/roadmapApi";
 
-
 interface Props {
-  roadmap:RoadmapDetailType;
+  roadmap: RoadmapDetailType;
 }
 
-
-const AsideRoadmap :  React.FC<Props> = ({ roadmap }) => {
-
-  const isDark = darkModeStore(state => state.isDark);
-  const [ isCommentsOpen, setIsCommentsOpen ] = useState(false);
-  const [ commentCount, setCommentCount ] = useState(0);
+const AsideRoadmap: React.FC<Props> = ({ roadmap }) => {
+  const isDark = darkModeStore((state) => state.isDark);
+  const [isCommentsOpen, setIsCommentsOpen] = useState(false);
+  const [commentCount, setCommentCount] = useState(0);
 
   useEffect(() => {
     const fetchCommentCount = async () => {
@@ -49,11 +46,19 @@ const AsideRoadmap :  React.FC<Props> = ({ roadmap }) => {
   };
 
   return (
-    <div className={`${isDark ? "bg-base-300" : "bg-sky-50"} rounded-3xl p-4 md:p-8`}>
+    <div
+      className={`${
+        isDark ? "bg-base-300" : "bg-sky-50"
+      } rounded-3xl p-4 md:p-8`}
+    >
       <div className="flex flex-col md:items-center">
         {/* 더보기 버튼 - 모바일에서 오른쪽 상단에 위치 */}
-        <div className="self-end md:w-full md:flex md:justify-end md:mb-4">
-          <KebabDropdown whatMenu="로드맵" id={roadmap.id} contentUserId={roadmap.userId} />
+        <div className="self-end md:w-full md:flex md:justify-end md:mb-4 hidden">
+          <KebabDropdown
+            whatMenu="로드맵"
+            id={roadmap.id}
+            contentUserId={roadmap.userId}
+          />
         </div>
 
         <div className="flex flex-row md:flex-col md:items-center">
@@ -63,28 +68,28 @@ const AsideRoadmap :  React.FC<Props> = ({ roadmap }) => {
             <div className="mr-4 md:mr-0 md:mb-4">
               <ImageContainer src={roadmap.image} whatContent="로드맵" />
             </div>
-
-            {/* 좋아요, 즐겨찾기 칸 */}
-            <div className="md:w-full">
-              <LikesFavoritesCount {...roadmap} />
-            </div>
           </div>
 
           {/* 북마크리스트 정보 */}
           <div className="w-full mt-4 md:mt-0">
-            <ItemDetailInfo 
-              title={roadmap.title} 
-              description={roadmap.description} 
-              userName={roadmap.userName} 
+            <ItemDetailInfo
+              title={roadmap.title}
+              description={roadmap.description}
+              userName={roadmap.userName}
               userId={roadmap.userId}
             />
+             {/* 좋아요, 즐겨찾기 칸 */}
+            <div className="md:w-full">
+              <LikesFavoritesCount {...roadmap} />
+            </div>
           </div>
+         
         </div>
 
         {/* 댓글 버튼 */}
         <div className="hidden md:block mt-4">
-          <button 
-            onClick={() => setIsCommentsOpen(true)} 
+          <button
+            onClick={() => setIsCommentsOpen(true)}
             className="btn btn-info w-full text-base-100 text-sm"
           >
             전체 댓글 보기 ({commentCount})

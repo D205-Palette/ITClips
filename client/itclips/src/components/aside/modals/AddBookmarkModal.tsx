@@ -159,6 +159,7 @@ const AddBookmarkModal: FC<move> = ({ tabModal, toggleMode, listId }) => {
                 value={tempTitle}
                 onChange={(e) => setTempTitle(e.target.value)}
                 className="border border-slate-400  w-3/5 ms-3 p-1"
+                maxLength={50}
               />
             </label>
             <label className="w-full mb-3 flex flex-row">

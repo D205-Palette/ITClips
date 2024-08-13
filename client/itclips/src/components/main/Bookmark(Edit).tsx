@@ -39,7 +39,7 @@ const Bookmark: FC<Props> = ({
   }
 
   function toggleCheck(bookmark: BookmarkType): void {
-    setChangeCheck(true)
+    setChangeCheck(true);
     if (editBookmarksIndex.includes(bookmark.id)) {
       changeEditBookmarksIndex(
         editBookmarksIndex.filter(
@@ -55,14 +55,14 @@ const Bookmark: FC<Props> = ({
     }
   }
   const [isCheck, setIsCheck] = useState(false);
-  const [changeCheck, setChangeCheck] = useState(false)
+  const [changeCheck, setChangeCheck] = useState(false);
   useEffect(() => {
     if (editBookmarksIndex.includes(bookmark.id)) {
       setIsCheck(true);
-      setChangeCheck(false)
+      setChangeCheck(false);
     } else {
       setIsCheck(false);
-      setChangeCheck(false)
+      setChangeCheck(false);
     }
   }, [changeCheck]);
 
@@ -75,11 +75,11 @@ const Bookmark: FC<Props> = ({
             ? ""
             : "hidden ") +
           (isDark ? "hover:bg-slate-700" : "hover:bg-slate-100") +
-          " card card-side bg-base-100 hover:cursor-pointer h-28 my-1 shadow-sm"
+          " card card-side bg-base-100 hover:cursor-pointer h-28 my-1 shadow-sm w-full"
         }
       >
         <>
-          <div className="card-body flex flex-row items-center">
+          <div className="card-body flex flex-row items-center w-full">
             {/* 체크박스 */}
             <div className="form-control flex flex-row items-center">
               <input
@@ -89,22 +89,22 @@ const Bookmark: FC<Props> = ({
                 className="checkbox checkbox-info  [--chkfg:white] me-5"
               />
             </div>
+            <div className="flex justify-between w-5/6">
             {/* 본문 */}
-            <div
-              className="flex flex-col flex-auto justify-around"
-            >
-              <div>
-                {" "}
-                <h2 className="flex-auto card-title">{bookmark.title}</h2>{" "}
-              </div>
-              <div className="underline underline-offset-1">{bookmark.url}</div>
+            <div className="flex flex-col  justify-around w-2/3">
+     
+     
+                <p className="truncate text-ellipsis font-bold text-lg ">{bookmark.title}</p>{" "}
+         
+              <div className="underline underline-offset-1 truncate text-ellipsis">{bookmark.url}</div>
             </div>
 
             {/* 태그 */}
-            <div className="hidden items-center md:inline-flex ">
+            <div className="hidden items-end md:inline-flex flex-col">
               {bookmark.tags.map((tag) => (
                 <span className="ms-1">{" # " + tag.title}</span>
               ))}{" "}
+            </div>
             </div>
           </div>
         </>

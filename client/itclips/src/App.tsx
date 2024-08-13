@@ -114,7 +114,7 @@ const App = () => {
         <div
           className={`fixed bottom-12 left-1/2 transform -translate-x-1/2 p-4 rounded-md ${
             globalNotification.type === "success"
-              ? "bg-green-500"
+              ? "bg-sky-400"
               : "bg-red-500"
           } text-white shadow-lg z-50 transition-opacity duration-300`}
         >

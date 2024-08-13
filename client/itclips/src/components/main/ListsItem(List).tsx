@@ -69,7 +69,7 @@ const ListItem: FC<Props> = ({ list, whatMenu }) => {
             />
           </figure>
 
-          <div className="card-body flex flex-row  justify-between w-3/4">
+          <div className="card-body flex flex-row  justify-between w-3/4 md:p-8">
             <div className="flex flex-col  justify-around w-2/3  ">
               <div>
                 <p
@@ -96,7 +96,7 @@ const ListItem: FC<Props> = ({ list, whatMenu }) => {
             <div className="card-actions justify-between flex items-center w-1/3">
               <button
                 onClick={clickHeart}
-                className="btn btn-ghost hidden sm:inline-flex"
+                className="btn btn-ghost inline-flex"
               >
                 {isLike ? <FaHeart color="red" /> : <FaRegHeart />}
                 {likeCount}

@@ -23,6 +23,7 @@ import mainStore from "../stores/mainStore";
 import NoContent from "./ProfileView/NoContent";
 import toastStore from "../stores/toastStore";
 import DeleteContentModal from "../components/aside/modals/DeleteContentModal";
+import AsideMobileContent from "../components/aside/AsideBookmarkList(Mobile)";
 const MyBookmark = () => {
   const params = useParams();
   const { isDark } = darkModeStore();
@@ -114,9 +115,16 @@ const MyBookmark = () => {
             id="aside"
             className="md:col-start-2 md:col-span-3 md:pe-10 col-start-2 col-span-10"
           >
-            <div className="static">
+            <div className="hidden md:block sticky top-16 z-20">
               {bookmarkList ? (
                 <AsideBookmarkList bookmarkList={bookmarkList} />
+              ) : (
+                <></>
+              )}
+            </div>
+            <div className="static md:hidden">
+              {bookmarkList ? (
+                <AsideMobileContent data={bookmarkList} />
               ) : (
                 <></>
               )}
@@ -141,7 +149,7 @@ const MyBookmark = () => {
                   />
                   <button
                     className={
-                      "bg-red-500  text-slate-100 border border-red-500 rounded-2xl  px-4 font-bold hover:bg-red-600 hover:text-white h-9 w-24 "
+                      "bg-red-500  text-slate-100 border border-red-500 rounded-2xl  px-4 font-bold hover:bg-red-600 hover:text-white h-9 min-w-24 "
                     }
                     disabled={editBookmarks.length !== 0 ? false : true}
                     onClick={() =>
@@ -156,7 +164,7 @@ const MyBookmark = () => {
                       (editBookmarks.length === 0
                         ? "bg-white border text-sky-500"
                         : "bg-sky-500  text-slate-100 border") +
-                      "  border-sky-500 rounded-2xl  px-4 font-bold hover:bg-sky-600 hover:text-white h-9 w-24 ms-2"
+                      "  border-sky-500 rounded-2xl  px-4 font-bold hover:bg-sky-600 hover:text-white h-9 min-w-24 ms-2"
                     }
                     onClick={() =>
                       editBookmarks.length !== 0 ? tabEditModal(true) : ""

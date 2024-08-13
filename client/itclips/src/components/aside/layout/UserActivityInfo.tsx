@@ -17,7 +17,7 @@ const UserActivityInfo = () => {
         <div className="col-start-4 col-span-5 text-start text-gray-500 text-xs md:text-base">
           팔로워
         </div>
-        <div className="col-start-9">
+        <div className="col-start-9 flex">
           <NavLink
             to={
               params.userId === undefined
@@ -48,12 +48,14 @@ const UserActivityInfo = () => {
                 : `/user/${params.userId}/follow/following`
             }
           >
+            <div className="flex items-center">
             <button
               id="following"
               className="text-start text-xs md:text-base font-bold hover:bg-sky-200 hover:rounded"
             >
               {urlUserInfo?.followingCount ?? 0}
             </button>
+            </div>
           </NavLink>
         </div>
       </div>

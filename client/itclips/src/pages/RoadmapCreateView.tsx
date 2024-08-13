@@ -377,7 +377,7 @@ const {globalNotification, setGlobalNotification} = toastStore()
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
-                          className="mx-1 mb-2 p-2 bg-base-100 border border-gray-300 rounded-lg shadow-sm"
+                          className="mx-1 mb-2 p-2 bg-base-100 border border-gray-300 rounded-lg shadow-sm w-full"
                           style={{
                             ...provided.draggableProps.style,
                             ...(snapshot.isDragging
@@ -385,19 +385,19 @@ const {globalNotification, setGlobalNotification} = toastStore()
                               : {}),
                           }}
                         >
-                          <div className="flex items-center">
+                          <div className="flex items-center w-11/12">
                             {item.image?.trim() !== "" ? (
                               <img
-                                src={item.image}
+                                src={item.image==='default'? noImg : item.image}
                                 alt="img"
                                 className="w-16 h-16 border object-cover mr-4"
                               />
                             ) : (
                               <div className="w-16 h-16 border bg-base-100 mr-4"></div>
                             )}
-                            <div className="flex w-full items-center justify-between me-3">
-                              <div>
-                                <h4 className="text-lg font-bold">
+                            <div className="flex items-center justify-between me-3 w-2/3">
+                              <div className="w-full">
+                                <h4 className="text-lg font-bold truncate text-ellipsis ">
                                   {item.title}
                                 </h4>
                                 <p className="line-clamp-1">
@@ -521,7 +521,7 @@ const {globalNotification, setGlobalNotification} = toastStore()
                         <div
                           ref={provided.innerRef}
                           {...provided.droppableProps}
-                          className="flex-grow p-4 bg-base-100 border border-gray-300 rounded-lg overflow-y-auto"
+                          className="flex-grow p-4 bg-base-100 border border-gray-300 rounded-lg overflow-y-auto "
                           style={{
                             maxHeight: "450px",
                             scrollbarWidth: "thin",
@@ -538,7 +538,7 @@ const {globalNotification, setGlobalNotification} = toastStore()
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
-                                  className="mx-1 mb-2 p-2 bg-base-100 border border-gray-300 rounded-lg shadow-sm"
+                                  className="mx-1 mb-2 p-2 bg-base-100 border border-gray-300 rounded-lg shadow-sm w-full"
                                   style={{
                                     ...provided.draggableProps.style,
                                     ...(snapshot.isDragging
@@ -546,7 +546,7 @@ const {globalNotification, setGlobalNotification} = toastStore()
                                       : {}),
                                   }}
                                 >
-                                  <div className="flex items-center">
+                                  <div className="flex items-center w-full">
                                     <div className="me-3 font-bold">
                                       {index + 1}
                                     </div>
@@ -559,9 +559,9 @@ const {globalNotification, setGlobalNotification} = toastStore()
                                     ) : (
                                       <div className="w-16 h-16 border bg-base-100 mr-4"></div>
                                     )}
-                                    <div className="flex w-full items-center justify-between me-3">
+                                    <div className="flex w-2/3 items-center justify-between me-3">
                                       <div>
-                                        <h4 className="text-lg font-bold">
+                                        <h4 className="text-lg font-bold line-clamp-1 ">
                                           {item.title}
                                         </h4>
                                         <p className="line-clamp-1">

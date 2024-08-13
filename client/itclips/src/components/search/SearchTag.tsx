@@ -86,7 +86,7 @@ const SearchTag: React.FC<SearchBookmarkListProps> = ({ keyword }) => {
     <div className="mt-2 md:mt-4">
       {/* 리스트 & 액자형 탭 */}
       <div className='flex justify-end'> 
-        <div role="tablist" className="tabs" >
+        <div role="tablist" className="hidden md:block tabs" >
             { viewMode === "grid" ? <><div onClick={tabList} role="tab" className="tab mx-2 md:mx-3"><CiBoxList className="w-4 h-4 md:w-5 md:h-5" /></div><div onClick={tabAlbum} role="tab" className="tab tab-active"> <HiMiniSquares2X2 className="w-4 h-4 md:w-5 md:h-5" /> </div> </>:
             <> <div onClick={tabList} role="tab" className="tab tab-active mx-2 md:mx-3"><FaList className="w-4 h-4 md:w-5 md:h-5" /></div> <div onClick={tabAlbum} role="tab" className="tab"> <HiOutlineSquares2X2 className="w-4 h-4 md:w-5 md:h-5" /></div></> }
         </div>

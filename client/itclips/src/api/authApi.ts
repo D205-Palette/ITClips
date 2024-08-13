@@ -12,10 +12,9 @@ export const logoutApi = () => {
 };
 
 // 비밀번호 찾기 인증번호 발송
-export const sendVerificationPassword = (nickname: string, email: string) => {
+export const sendVerificationPassword = (email: string) => {
   return request("post", "/user/pw/sendVerification", undefined, {
-    email,
-    nickname,
+    email    
   });
 };
 

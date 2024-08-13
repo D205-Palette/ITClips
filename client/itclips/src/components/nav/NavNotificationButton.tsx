@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { format, parseISO, addHours } from "date-fns";
 
 // icons
-import { FaBell, FaTimes, FaCheck } from "react-icons/fa";
+import { FaBell, FaTimes, FaCheck, FaTrash } from "react-icons/fa";
 
 // stores
 import notificationStore from "../../stores/notificationStore";
@@ -25,7 +25,7 @@ const NotificationDropdown: React.FC = () => {
   const userId = authStore(state => state.userId);
   const isDark = darkModeStore(state => state.isDark);
 
-  const { notifications, fetchNotifications, markAllAsRead, deleteNotification } = notificationStore();
+  const { notifications, fetchNotifications, markAllAsRead, deleteNotification, deleteAllNotifications } = notificationStore();
   const [ isOpen, setIsOpen ] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -72,6 +72,13 @@ const NotificationDropdown: React.FC = () => {
     event.stopPropagation();
     event.preventDefault();
     deleteNotification(notificationId);
+  };
+
+  // 모든 알림 삭제
+  const handleDeleteAll = () => {
+    if (userId) {
+      deleteAllNotifications(userId);
+    }
   };
 
   // 읽지않은 알림 갯수 세서 뱃지 출력하기
@@ -124,11 +131,18 @@ const NotificationDropdown: React.FC = () => {
           <div className={`p-4 ${isDark ? "bg-base-200" : "bg-sky-200"} md:rounded-t-box border`}>
             <div className="flex justify-between items-center">
               <h3 className="font-bold text-lg">알림</h3>
-              {unreadCount > 0 && (
-                <button onClick={handleMarkAllAsRead} className="btn btn-xs btn-ghost">
-                  <FaCheck className="mr-1" /> 모두 읽음
-                </button>
-              )}
+              <div>
+                {notifications.length > 0 && (
+                  <button onClick={handleDeleteAll} className="btn btn-xs btn-ghost mr-2">
+                    <FaTrash className="mr-1" /> 모두 삭제
+                  </button>
+                )}
+                {unreadCount > 0 && (
+                  <button onClick={handleMarkAllAsRead} className="btn btn-xs btn-ghost">
+                    <FaCheck className="mr-1" /> 모두 읽음
+                  </button>
+                )}
+              </div>
             </div>
           </div>
           <div className="p-4 h-[calc(100vh-var(--navbar-height))] md:max-h-96 overflow-y-auto scrollbar-hide">

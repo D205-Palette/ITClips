@@ -5,7 +5,7 @@ import React from "react";
 import SearchItemKebabDropdown from "./SearchItemKebabDropdown";
 
 // images
-import noImage from "../../../assets/images/noImage.png"
+import noImage from "../../../assets/images/noImg.gif"
 
 // icons
 import { FaHeart, FaRegHeart } from "react-icons/fa";

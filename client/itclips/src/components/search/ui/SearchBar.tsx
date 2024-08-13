@@ -30,12 +30,12 @@ const SearchBar: React.FC<ChildProps> = ({ handleCategory }) => {
       <input 
         type="text" 
         placeholder="검색어를 입력하세요" 
-        className="input input-bordered w-full" 
+        className="input input-bordered w-full text-xs md:text-sm py-1.5 md:py-2.5 px-2 md:px-5" 
         value={searchKeyword}
         onChange={(e) => setSearchKeyword(e.target.value)}
       />
       {/* 검색 버튼 */}
-      <button type="submit" className="btn bg-sky-500 hover:bg-sky-700 text-slate-100">검색</button>
+      <button type="submit" className="btn bg-sky-500 hover:bg-sky-700 text-slate-100 text-xs md:text-sm py-1.5 md:py-2.5 px-2 md:px-5">검색</button>
     </form>
   );
 };

@@ -16,6 +16,7 @@ import { likeBookmarkList, unlikeBookmarkList } from "../../../api/bookmarkListA
 // stores
 import { authStore } from "../../../stores/authStore";
 import { searchStore } from "../../../stores/searchStore";
+import { isTemplateSpan } from "typescript";
 
 interface Tag {
   title: string;
@@ -71,18 +72,25 @@ const RecommendedItemList: React.FC<RecommandedItemProps> = ({ item }) => {
     }
   };
 
+  // 태그 목록을 "#tag1 #tag2 #tag3" 형식으로 변환하는 함수
+  const formatTags = (tags: Tag[], maxLength: number = 30) => {
+    const tagString = tags.map(tag => `#${tag.title}`).join(' ');
+    if (tagString.length <= maxLength) return tagString;
+    return tagString.slice(0, maxLength) + '...';
+  };
+
   return (
     <div>
       <NavLink
         to={`/bookmarklist/${item.id}`}
-        className="flex items-center space-x-4 flex-grow"
+        className="flex items-center space-x-2 md:space-x-4 flex-grow"
       >
-        <img src={item.image === "default" ? noImage : item.image} alt={item.title} className="w-20 h-20 object-cover rounded" />
+        <img src={item.image === "default" ? noImage : item.image} alt={item.title} className="w-14 h-14 md:w-20 md:h-20 object-cover rounded" />
         <div className="flex-grow">
-          <h3 className="text-lg font-semibold">{item.title}</h3>
-          <div className="flex space-x-4 mt-2">
-            <span className="text-bold text-sky-500">{item.bookmarkCount}개</span>
-            <p className="truncate text-gray-400">
+          <h3 className="text-sm md:text-lg font-semibold">{item.title}</h3>
+          <div className="flex space-x-2 md:space-x-4 mt-1 md:mt-2">
+            <span className="text-xs md:text-base font-bold text-sky-500">{item.bookmarkCount}개</span>
+            <p className="truncate text-xs md:text-sm text-gray-400">
               {item.users.map((user, index) => (
                 <React.Fragment key={user.id}>
                   {user.nickName}
@@ -94,13 +102,13 @@ const RecommendedItemList: React.FC<RecommandedItemProps> = ({ item }) => {
           </div>
         </div>
 
-        <p className="text-gray-500">리스트에 관한 설명</p>
+        <p className="text-xs md:text-sm text-gray-500 hidden sm:block">{item.description}</p>
 
         <button 
-          className="btn btn-ghost btn-xs text-sm flex items-center" 
+          className="btn btn-ghost btn-xs text-xs md:text-sm flex items-center" 
           onClick={handleLike}
         >
-          {item.isLiked ? <FaHeart color="red" /> : <FaRegHeart />}
+          {item.isLiked ? <FaHeart color="red" size={12} className="md:w-4 md:h-4" /> : <FaRegHeart size={12} className="md:w-4 md:h-4" />}
           <span className="ml-1">{item.likeCount}</span>
         </button>
 

@@ -51,26 +51,26 @@ const ListItem: FC<Props> = ({ list,changeCount,count,canEdit }) => {
       <div
         className={
           (isDark ? "hover:brightness-125" : "hover:brightness-95") +
-          " card card-side bg-base-100  h-24 col-span-4 odd:col-start-1  even:col-start-4 mb-10 z-10"
+          " card card-side bg-base-100  h-24 col-span-4 odd:col-start-1  even:col-start-4 mb-10 z-10 w-full"
         }
       >
         <>
           <figure
             onClick={() => navigate(`/bookmarklist/${list.bookmarkListRoadmapDTO.id}`)}
-            className="hover:cursor-pointer hidden lg:inline rounded-2xl w-24"
+            className="hover:cursor-pointer  rounded-2xl w-24"
           >
             <img              
               src={list.bookmarkListRoadmapDTO.image === "default" ? noImg : list.bookmarkListRoadmapDTO.image}
               alt="noImage"
-              className="size-24 hidden lg:inline "
+              className="size-24  "
             />
           </figure>
 
-          <div className="card-body flex flex-row justify-between">
-            <div className="flex flex-row items-center " onClick={() => navigate(`/bookmarklist/${list.bookmarkListRoadmapDTO.id}`)}>
-                <h4 className="card-title hover:cursor-pointer text-sm md:text-md lg:text-xl truncate text-ellipsis w-40">
+          <div className="card-body flex flex-row justify-between w-2/3">
+            <div className="flex flex-row items-center w-3/4" onClick={() => navigate(`/bookmarklist/${list.bookmarkListRoadmapDTO.id}`)}>
+                <p className="font-bold hover:cursor-pointer text-sm md:text-md lg:text-xl truncate text-ellipsis ">
                   {list.bookmarkListRoadmapDTO.title}
-                </h4>
+                </p>
             </div>
             {/* 체크박스 */}
             <div className={(canEdit?"":"hidden ") + "form-control flex flex-row items-center"}>

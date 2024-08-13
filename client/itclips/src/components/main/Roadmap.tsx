@@ -59,11 +59,11 @@ const RoadMap: FC<Props> = ({ roadmap, canEdit }) => {
         }
       >
         <>
-          <div className="w-28 z-10 hidden lg:inline rounded-s-2xl overflow-hidden">
+          <div className="w-28 z-10 rounded-s-2xl overflow-hidden">
             <img
               src={roadmap.image === "default" ? noImg : roadmap.image}
               alt="Movie"
-              className="h-full w-full hidden lg:inline  rounded-s-2xl object-cover"
+              className="h-full w-full  rounded-s-2xl object-cover"
             />
           </div>
 
@@ -151,12 +151,12 @@ const RoadMap: FC<Props> = ({ roadmap, canEdit }) => {
           </div>
         </>
       </div>
-      <div
+      {/* <div
         className={
           (isDark ? "border-b-slate-600" : "border-b-slate-200") +
           " h-1 border-b"
         }
-      ></div>
+      ></div> */}
     </>
   );
 };

@@ -81,31 +81,31 @@ const SearchRoadmap: React.FC<SearchRoadmapProps> = ({ keyword }) => {
   }, [userId, sortBy, keyword, setRoadmapItems]);
 
   return (
-    <div className="mt-4">
+    <div className="mt-2 md:mt-4">
       {/* 리스트 & 액자형 탭 */}
       <div className='flex justify-end'> 
-        <div role="tablist" className="tabs" >
+        <div role="tablist" className="tabs hidden md:block">
             { viewMode === "grid" ? <><div onClick={tabList} role="tab" className="tab mx-3"><CiBoxList /></div><div onClick={tabAlbum} role="tab" className="tab tab-active"> <HiMiniSquares2X2 /> </div> </>:
             <> <div onClick={tabList} role="tab" className="tab tab-active mx-3"><FaList /></div> <div onClick={tabAlbum} role="tab" className="tab"> <HiOutlineSquares2X2 /></div></> }
         </div>
       </div>
       {/* 로드맵 검색 옵션 */}
-      <div className="flex justify-between mb-4">
-        <div className="space-x-2">
+      <div className="flex justify-between mb-2 md:mb-4">
+        <div className="space-x-1 md:space-x-2">
           <button 
-            className={`px-4 py-2 rounded-full ${sortBy === "hit" ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+            className={`px-2 md:px-4 py-1 md:py-2 rounded-full text-xs md:text-sm ${sortBy === "hit" ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
             onClick={() => setSortBy("hit")}
           >
             조회수
           </button>
           <button 
-            className={`px-4 py-2 rounded-full ${sortBy === "scrap" ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+            className={`px-2 md:px-4 py-1 md:py-2 rounded-full text-xs md:text-sm ${sortBy === "scrap" ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
             onClick={() => setSortBy("scrap")}
           >
             스크랩수
           </button>
           <button 
-            className={`px-4 py-2 rounded-full ${sortBy === "like" ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+            className={`px-2 md:px-4 py-1 md:py-2 rounded-full text-xs md:text-sm ${sortBy === "like" ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
             onClick={() => setSortBy("like")}
           >
             좋아요수
@@ -119,9 +119,9 @@ const SearchRoadmap: React.FC<SearchRoadmapProps> = ({ keyword }) => {
           viewMode={viewMode}
         />
       ) : (
-        <div className="flex flex-row items-center justify-center mt-10">
-          <IoIosWarning color="skyblue" size={28} />
-          <div className="ms-3 text-sm lg:text-xl font-bold py-8 text-center">
+        <div className="flex flex-row items-center justify-center mt-5 md:mt-10">
+          <IoIosWarning color="skyblue" className="w-5 h-5 md:w-7 md:h-7" />
+          <div className="ms-2 md:ms-3 text-xs md:text-sm lg:text-xl font-bold py-4 md:py-8 text-center">
             검색 결과가 없습니다.
           </div>
         </div>

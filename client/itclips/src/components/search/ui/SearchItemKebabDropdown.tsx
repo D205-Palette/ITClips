@@ -58,18 +58,18 @@ const SearchItemKebabDropdown: FC<Props> = ({id, whatContent}) => {
       <button
         id="dropdownDefaultButton"
         onClick={toggleDropdown}
-        className="btn btn-ghost btn-circle text-center"
+        className="btn btn-ghost btn-circle text-center p-1 md:p-2"
         type="button"
       >
-        <VscKebabVertical />
+        <VscKebabVertical className="w-4 h-4 md:w-5 md:h-5" />
       </button>
 
       {isDropdownOpen && (
-        <div className="absolute right-0 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 z-50">
-          <ul className="py-2 text-sm text-gray-700">
+        <div className="absolute right-0 mt-1 md:mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-36 md:w-44 z-50">
+          <ul className="py-1 md:py-2 text-xs md:text-sm text-gray-700">
             {categories.map((category) => (
               <li key={category} onClick={() => handleMenu(category)}>
-                <div className="text-center block px-4 py-2 hover:bg-gray-100">
+                <div className="text-center block px-2 md:px-4 py-1 md:py-2 hover:bg-gray-100">
                   {category}
                 </div>
               </li>

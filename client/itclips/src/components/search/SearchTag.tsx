@@ -83,12 +83,12 @@ const SearchTag: React.FC<SearchBookmarkListProps> = ({ keyword }) => {
   }, [userId, keyword, setBookmarkListItems]);
 
   return (
-    <div className="mt-4">
+    <div className="mt-2 md:mt-4">
       {/* 리스트 & 액자형 탭 */}
       <div className='flex justify-end'> 
         <div role="tablist" className="tabs" >
-            { viewMode === "grid" ? <><div onClick={tabList} role="tab" className="tab mx-3"><CiBoxList /></div><div onClick={tabAlbum} role="tab" className="tab tab-active"> <HiMiniSquares2X2 /> </div> </>:
-            <> <div onClick={tabList} role="tab" className="tab tab-active mx-3"><FaList /></div> <div onClick={tabAlbum} role="tab" className="tab"> <HiOutlineSquares2X2 /></div></> }
+            { viewMode === "grid" ? <><div onClick={tabList} role="tab" className="tab mx-2 md:mx-3"><CiBoxList className="w-4 h-4 md:w-5 md:h-5" /></div><div onClick={tabAlbum} role="tab" className="tab tab-active"> <HiMiniSquares2X2 className="w-4 h-4 md:w-5 md:h-5" /> </div> </>:
+            <> <div onClick={tabList} role="tab" className="tab tab-active mx-2 md:mx-3"><FaList className="w-4 h-4 md:w-5 md:h-5" /></div> <div onClick={tabAlbum} role="tab" className="tab"> <HiOutlineSquares2X2 className="w-4 h-4 md:w-5 md:h-5" /></div></> }
         </div>
       </div>
       {/* 검색 결과 (검색 결과가 없으면 다른 창 출력) */}
@@ -98,9 +98,9 @@ const SearchTag: React.FC<SearchBookmarkListProps> = ({ keyword }) => {
           viewMode={viewMode}
         />
       ) : (
-        <div className="flex flex-row items-center justify-center mt-10">
-          <IoIosWarning color="skyblue" size={28} />
-          <div className="ms-3 text-sm lg:text-xl font-bold py-8 text-center">
+        <div className="flex flex-row items-center justify-center mt-5 md:mt-10">
+          <IoIosWarning color="skyblue" className="w-5 h-5 md:w-7 md:h-7" />
+          <div className="ms-2 md:ms-3 text-xs md:text-sm lg:text-xl font-bold py-4 md:py-8 text-center">
             검색 결과가 없습니다.
           </div>
         </div>

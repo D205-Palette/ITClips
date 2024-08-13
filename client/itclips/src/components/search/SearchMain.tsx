@@ -69,7 +69,7 @@ const SearchMain = () => {
           <p className="text-lg font-semibold mr-4">사용자 맞춤 추천</p>
           <div className="flex-grow h-px bg-gray-300"></div>
         </div>
-        <div role="tablist" className="tabs">
+        <div role="tablist" className="tabs hidden md:block">
           {viewMode === "grid" ? (
             <>
               <div onClick={tabList} role="tab" className="tab mx-3"><CiBoxList /></div>

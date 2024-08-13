@@ -462,6 +462,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         User user = userGroup.getUser();
         UserTitleDTO userTitleDTO = UserTitleDTO.builder()
                 .id(user.getId())
+                .email(user.getEmail())
                 .nickName(user.getNickname())
                 .build();
         userTitleDTO.addUserImage(getImageUrl(user.getProfileImage()));

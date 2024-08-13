@@ -9,19 +9,47 @@ import GlobalStyle from "./globalStyles";
 function App() {
   const [bookmarks, setBookmarks] = useState([]);
   const [userId, setUserId] = useState(null);
+  const [accessToken, setAccessToken] = useState(null);
   const [bookmarkLists, setBookmarkLists] = useState([]);
   const [selectedListId, setSelectedListId] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const API_BASE_URL = process.env.REACT_APP_SERVER_URL;
 
+  const fetchBookmarkLists = async (userId, accessToken) => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/api/list/personal/${userId}?viewerId=${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`, // accessToken을 헤더에 추가
+          },
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setBookmarkLists(data);
+      } else {
+        console.error("Failed to fetch bookmark lists");
+      }
+    } catch (error) {
+      console.error("Error fetching bookmark lists:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    // Chrome storage에서 사용자 ID와 액세스 토큰을 가져옴
     const fetchUserIdFromStorage = () => {
       if (chrome?.storage) {
         chrome.storage.sync.get(["userId", "accessToken"], (result) => {
           if (result.userId && result.accessToken) {
             setUserId(result.userId);
+            setAccessToken(result.accessToken);
+            // userId와 accessToken이 있으면 바로 북마크 리스트를 가져옴
+            fetchBookmarkLists(result.userId, result.accessToken);
           }
         });
       }
@@ -30,33 +58,8 @@ function App() {
     fetchUserIdFromStorage();
   }, []);
 
-  useEffect(() => {
-    const fetchBookmarkLists = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch(
-          `${API_BASE_URL}/api/list/personal/${userId}?viewerId=${userId}`
-        );
-        if (response.ok) {
-          const data = await response.json();
-          setBookmarkLists(data);
-        } else {
-          console.error("Failed to fetch bookmark lists");
-        }
-      } catch (error) {
-        console.error("Error fetching bookmark lists:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (userId) {
-      fetchBookmarkLists();
-    }
-  }, [userId]);
-
   const addBookmark = async (url) => {
-    if (selectedListId && userId) {
+    if (selectedListId && userId && accessToken) {
       setLoading(true);
       try {
         const response = await fetch(
@@ -65,6 +68,7 @@ function App() {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`, // accessToken을 헤더에 추가
             },
             body: JSON.stringify({
               url: url,
@@ -90,7 +94,17 @@ function App() {
 
   const handleLoginSuccess = (loggedInUserId) => {
     setUserId(loggedInUserId);
+
+    // 로그인 성공 후 accessToken을 chrome storage에서 가져옴
+    chrome.storage.sync.get(["accessToken"], (result) => {
+      if (result.accessToken) {
+        setAccessToken(result.accessToken);
+        // userId와 accessToken이 설정된 후에 북마크 리스트를 가져옴
+        fetchBookmarkLists(loggedInUserId, result.accessToken);
+      }
+    });
   };
+
   const handleSelectList = (listId) => {
     setSelectedListId(listId);
     console.log("Selected list ID:", listId);
@@ -116,7 +130,6 @@ function App() {
             ) : (
               <p>등록된 북마크가 없습니다.</p>
             )}
-
 
             {selectedListId && (
               <>

@@ -76,26 +76,26 @@ const FollowingItem: React.FC<Props> = ({ items }) => {
   }, [notification]);
 
   return (
-    <div className="space-y-4 relative">
+    <div className="space-y-2 md:space-y-4 relative">
       {followings.map((item) => (
         <div key={item.id}>
           <NavLink
             to={`/user/${item.toUserId}`}
-            className="flex items-center space-x-4 p-4 rounded-lg shadow"
+            className="flex items-center space-x-2 md:space-x-4 p-2 md:p-4 rounded-lg shadow"
           >
             <img
               src={item.profileImage === "default" ? noImg : item.profileImage}
               alt={item.nickname}
-              className="w-20 h-20 object-cover rounded"
+              className="w-14 h-14 md:w-20 md:h-20 object-cover rounded"
             />
             <div className="flex-grow">
-              <h3 className="text-lg font-semibold">{item.nickname}</h3>
-              <div className="flex space-x-4 mt-2">
-                <p className="text-sm text-gray-400">{item.email}</p>
+              <h3 className="text-sm md:text-lg font-semibold">{item.nickname}</h3>
+              <div className="flex space-x-2 md:space-x-4 mt-1 md:mt-2">
+                <p className="text-xs md:text-sm text-gray-400">{item.email}</p>
               </div>
             </div>
 
-            <p className="text-gray-500">#관심사1 #관심사2 #관심사3</p>
+            <p className="text-xs md:text-sm text-gray-500 hidden sm:block">#관심사1 #관심사2 #관심사3</p>
 
             {userId === urlUserId ? (
               <div onClick={handleNavLink}>
@@ -107,7 +107,7 @@ const FollowingItem: React.FC<Props> = ({ items }) => {
                 />
               </div>
             ) : (
-              <div className="w-8" />
+              <div className="w-4 md:w-8" />
             )}
           </NavLink>
         </div>
@@ -115,9 +115,9 @@ const FollowingItem: React.FC<Props> = ({ items }) => {
 
       {notification && (
         <div
-          className={`fixed bottom-4 left-1/2 transform -translate-x-1/2 p-4 rounded-md ${
+          className={`fixed bottom-4 left-1/2 transform -translate-x-1/2 p-3 md:p-4 rounded-md ${
             notification.type === "success" ? "bg-green-500" : "bg-red-500"
-          } text-white shadow-lg z-50 transition-opacity duration-300`}
+          } text-white shadow-lg z-50 transition-opacity duration-300 text-xs md:text-base`}
           style={{
             opacity: notification ? 1 : 0,
             visibility: notification ? "visible" : "hidden",

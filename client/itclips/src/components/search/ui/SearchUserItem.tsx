@@ -107,12 +107,12 @@ const SearchUserItem: React.FC<SearchUserItemProps> = ({ item: initialItem }) =>
             </button>
           </div>
           <p className="text-xs md:text-sm mt-1 md:mt-2 flex justify-center">{item.bio}</p>
-          <div className="grid grid-cols-8 gap-1 md:gap-2 mt-1 md:mt-2 text-xs md:text-sm">
-            <div className="col-start-2 col-span-4">
+          <div className="grid grid-cols-12 gap-1 md:gap-2 mt-1 md:mt-2 text-xs md:text-sm">
+            <div className="col-start-4 col-span-4">
               <p className="text-gray-500 mb-1 md:mb-2">팔로워 <span className="font-bold text-black">{item.followerCount}</span></p>
               <p className="text-gray-500">리스트 <span className="font-bold text-black">{item.bookmarkListCount}</span></p>
             </div>
-            <div className="col-start-6 col-span-8">
+            <div className="col-start-8 col-span-8">
               <p className="text-gray-500 mb-1 md:mb-2">팔로잉 <span className="font-bold text-black">{item.followingCount}</span></p>
               <p className="text-gray-500">로드맵 <span className="font-bold text-black">{item.roadmapCount}</span></p>
             </div>

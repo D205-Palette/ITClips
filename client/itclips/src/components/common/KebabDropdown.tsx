@@ -185,8 +185,7 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id,contentUserId,users }) => {
                   <a className="py-1.5 md:py-2">삭제하기</a>
                 </li>
               </>
-            )}
-            {/*  */}
+            ) : null}
 
             <li onClick={() => copyUrl(whatMenu, id)}>
               <a>url 복사</a>

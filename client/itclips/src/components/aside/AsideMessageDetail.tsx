@@ -46,7 +46,8 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack,
     resetMessageCount,
     addMessage,
     leaveRoom,
-    clearMessages
+    clearMessages,
+    setCurrentRoomId
   } = chatStore();
 
   const [ inputMessage, setInputMessage ] = useState('');
@@ -108,6 +109,7 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack,
   useEffect(() => {
     setIsLoading(true);
     clearMessages();
+    setCurrentRoomId(roomId);
     
     const fetchData = async () => {
       if (userInfo && userInfo.id !== undefined) {
@@ -124,15 +126,16 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack,
       fetchData().then(() => {
         setIsLoading(false);
       });
-    }, 300); // 300ms 지연
+    }, 300);
 
     return () => {
       clearTimeout(timer);
       if (userInfo && userInfo.id !== undefined) {
         updateMessageStatus(roomId, userInfo.id);
       }
+      setCurrentRoomId(null);
     };
-  }, [roomId, userInfo, fetchMessages, fetchRoomInfo, updateMessageStatus, resetMessageCount, clearMessages]);
+  }, [roomId, userInfo, fetchMessages, fetchRoomInfo, updateMessageStatus, resetMessageCount, clearMessages, setCurrentRoomId]);
 
   // 뒤로가기 버튼 클릭 핸들러 (읽음 상태 업데이트 후 onBackWithRead 호출)
   const handleBackClick = useCallback(() => {
@@ -191,7 +194,13 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack,
 
   // 메세지 전송 버튼을 눌렀을 때 동작
   const handleSendMessage = () => {
-    if (isConnected && stompClient && roomId && userInfo.id && userInfo.nickname && inputMessage.trim()) {
+    // 메시지가 비어있으면 함수 종료
+    if (!inputMessage.trim()) {
+      return;
+    }
+
+    // 나머지 조건 확인 및 메시지 전송 로직
+    if (isConnected && stompClient && roomId && userInfo.id && userInfo.nickname) {
       const now = new Date();
       const lastMessageId = currentRoomMessages.length > 0 
         ? Math.max(...currentRoomMessages.map(m => m.id))

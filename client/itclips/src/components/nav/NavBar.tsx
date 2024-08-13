@@ -123,7 +123,7 @@ const NavBar = () => {
       {/* 모바일창 nav */}
       {isLoggedIn && (
         <ul
-          className={`px-10 py-4 gap-4 list-none flex justify-between md:hidden fixed bottom-0 left-0 w-full z-50 bg-base-100 h-20 border ${borderColor}`}
+          className={`px-10 list-none flex items-center justify-between md:hidden fixed bottom-0 left-0 w-full z-50 bg-base-100 h-16 border ${borderColor}`}
         >
           <NavLink
             to={userId ? `/user/${userId}` : "/login"}
@@ -132,7 +132,7 @@ const NavBar = () => {
             }
           >
             <FaHome size={24} />
-            MY
+            <p className="mt-1 text-xs text-center">MY</p>
           </NavLink>
           <NavLink
             to="feed/bookmarklists"
@@ -141,7 +141,7 @@ const NavBar = () => {
             }
           >
             <MdOutlineFeed size={24} />
-            피드
+            <p className="mt-1 text-xs text-center">피드</p>
           </NavLink>
           <NavLink
             to="search"
@@ -150,7 +150,7 @@ const NavBar = () => {
             }
           >
             <FaSearch size={24} />
-            검색
+            <p className="mt-1 text-xs text-center">검색</p>
           </NavLink>
         </ul>
       )}

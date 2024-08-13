@@ -42,6 +42,8 @@ interface ChatStore {
   isLoading: boolean;
   error: string | null;
   totalUnreadCount: number;
+  currentRoomId: number | null;
+  setCurrentRoomId: (roomId: number | null) => void;
   updateTotalUnreadCount: () => void;
   fetchRooms: (userId: number) => Promise<void>;
   fetchMessages: (roomId: number) => Promise<void>;
@@ -62,7 +64,10 @@ export const chatStore = create<ChatStore>((set, get) => ({
   isLoading: false,
   error: null,
   totalUnreadCount: 0,
-  
+  currentRoomId: null,
+
+  setCurrentRoomId: (roomId) => set({ currentRoomId: roomId }),
+
   clearMessages: () => set({ currentRoomMessages: [] }),
 
   // 채팅방 조회
@@ -178,38 +183,39 @@ export const chatStore = create<ChatStore>((set, get) => ({
   // 새 메세지 프론트 단 추가
   addMessage: (message: Message) =>
     set(state => {
-      const existingMessage = state.currentRoomMessages.find(m => m.id === message.id);
-      if (existingMessage) {
-        return state;
+      const { currentRoomId } = state;
+      if (message.roomId !== currentRoomId) {
+        // 현재 보고 있는 방이 아니면 unread count만 증가
+        return {
+          rooms: state.rooms.map(room =>
+            room.id === message.roomId
+              ? { ...room, messageCnt: room.messageCnt + 1, lastMessage: message.message, lastModified: message.createdAt }
+              : room
+          ),
+          totalUnreadCount: state.totalUnreadCount + 1
+        };
       }
 
+      const existingMessageIndex = state.currentRoomMessages.findIndex(m => m.id === message.id);
+      if (existingMessageIndex !== -1) {
+        // 이미 존재하는 메시지면 업데이트
+        const updatedMessages = [...state.currentRoomMessages];
+        updatedMessages[existingMessageIndex] = message;
+        return { currentRoomMessages: updatedMessages };
+      }
+
+      // 새 메시지 추가 및 정렬
       const updatedMessages = [...state.currentRoomMessages, message].sort((a, b) => 
         new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
       );
-      
-      const updatedRooms = state.rooms.map(room =>
-        room.id === message.roomId
-          ? {
-              ...room,
-              lastMessage: message.message,
-              lastModified: message.createdAt,
-              messageCnt: room.id === get().currentRoomInfo?.roomId ? 0 : room.messageCnt + 1
-            }
-          : room
-      );
-
-      // 최신 메시지 순으로 정렬
-      const sortedRooms = updatedRooms.sort((a, b) => {
-        if (!a.lastModified || !b.lastModified) return 0;
-        return new Date(b.lastModified).getTime() - new Date(a.lastModified).getTime();
-      });
-
-      const newTotalUnreadCount = sortedRooms.reduce((sum, room) => sum + room.messageCnt, 0);
 
       return {
         currentRoomMessages: updatedMessages,
-        rooms: sortedRooms,
-        totalUnreadCount: newTotalUnreadCount
+        rooms: state.rooms.map(room =>
+          room.id === message.roomId
+            ? { ...room, lastMessage: message.message, lastModified: message.createdAt }
+            : room
+        )
       };
     }),
 

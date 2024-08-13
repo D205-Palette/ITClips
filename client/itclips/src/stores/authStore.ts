@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import type { UserInfo } from "./type";
+import type { UserInfo } from "../types/type";
 
 interface AuthStore {
   login: () => void;

@@ -193,7 +193,7 @@ const SocialSignupView = () => {
               />
               <button
                 type="button"
-                className="btn btn-outline btn-info"
+                className="btn bg-sky-500 hover:bg-sky-700 text-slate-100"
                 onClick={handleNicknameCheck}
                 disabled={!nickname.trim()} // 닉네임이 빈 값일 때 버튼 비활성화
               >
@@ -272,7 +272,7 @@ const SocialSignupView = () => {
               <div className="pl-1"></div>
               <button
                 className={`btn ${
-                  isMale === true ? "btn-info" : "btn-outline"
+                  isMale === true ? "bg-sky-500 hover:bg-sky-700 text-slate-100" : "btn-outline"
                 } flex-1`}
                 onClick={(event) => handleGenderSelect(true, event)}
               >
@@ -281,7 +281,7 @@ const SocialSignupView = () => {
               </button>
               <button
                 className={`btn ${
-                  isMale === false ? "btn-info" : "btn-outline"
+                  isMale === false ? "bg-sky-500 hover:bg-sky-700 text-slate-100" : "btn-outline"
                 } flex-1`}
                 onClick={(event) => handleGenderSelect(false, event)}
               >
@@ -295,7 +295,7 @@ const SocialSignupView = () => {
           <div className="flex items-center justify-center mt-8">
             <button
               type="submit"
-              className="btn btn-i w-full max-w-xs"
+              className="btn bg-sky-500 hover:bg-sky-700 text-slate-100 w-full max-w-xs"
               disabled={!isFormValid()}
             >
               가입하기

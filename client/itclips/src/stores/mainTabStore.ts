@@ -10,8 +10,7 @@ interface TabState {
   }) => void;
 }
 
-const Tab = create<TabState>()(
-
+const mainTabStore = create<TabState>()(
       (set) => ({
         whatCategory: { categoryId: 0, categoryName: "" },
         changeCategory: (category) =>
@@ -26,6 +25,4 @@ const Tab = create<TabState>()(
 
     )
 
-
-
-export default Tab;
+export default mainTabStore;

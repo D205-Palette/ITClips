@@ -16,7 +16,7 @@ import { useParams } from "react-router-dom";
 import toastStore from "../../stores/toastStore";
 // 무슨 탭에서 눌렀는지 받는 인자
 
-// 리스트, 즐겨찾기, 로드맵  3가지로 받을예정. 그룹 리스트랑 그냥 리스트는 차이 없음
+// 리스트, 즐겨찾기, 로드맵, 리스트상세  4가지로 받을예정. 그룹 리스트랑 그냥 리스트는 차이 없음
 interface Props {
   whatMenu: string;
   // id 가 그떄그때마다 listID, roadmapId 달라짐
@@ -200,7 +200,8 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id,contentUserId,users }) => {
               className={(userId ? "" : "hidden ") + 
                (whatMenu === "로드맵" ||
                 whatMenu === "북마크" ||
-                whatMenu === "즐겨찾기"
+                whatMenu === "즐겨찾기" ||
+                whatMenu === "리스트상세" 
                   ? " hidden "
                   : "")
               }

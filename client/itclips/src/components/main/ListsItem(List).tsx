@@ -9,15 +9,15 @@ import axios from "axios";
 import type { BookmarkListSumType } from "../../types/BookmarkListType";
 import { API_BASE_URL } from "../../config";
 import { authStore } from "../../stores/authStore";
-import noImg from "../../assets/images/noImg.gif"
+import noImg from "../../assets/images/noImg.gif";
 import BookmarkListEditModal from "../aside/modals/BookmarkListEditModal";
 
 interface Props {
   list: BookmarkListSumType;
-  whatMenu:string;
+  whatMenu: string;
 }
 
-const ListItem: FC<Props> = ({ list,whatMenu }) => {
+const ListItem: FC<Props> = ({ list, whatMenu }) => {
   const { token, userId } = authStore();
   const navigate = useNavigate();
   const [isLike, setIsLike] = useState(list.isLiked);
@@ -33,13 +33,15 @@ const ListItem: FC<Props> = ({ list,whatMenu }) => {
       });
       changeLikeCount(likeCount - 1);
     } else {
-      axios.post(`${API_BASE_URL}/api/list/like/${userId}/${list.id}`,
+      axios.post(
+        `${API_BASE_URL}/api/list/like/${userId}/${list.id}`,
         {},
         {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       changeLikeCount(likeCount + 1);
     }
     setIsLike(!isLike);
@@ -61,19 +63,21 @@ const ListItem: FC<Props> = ({ list,whatMenu }) => {
             className="hover:cursor-pointer w-28 overflow-hidden rounded-e-lg"
           >
             <img
-              src={list.image==="default"?  noImg : list.image }
+              src={list.image === "default" ? noImg : list.image}
               alt="Movie"
-              className=" object-fill"
+              className=" object-cover w-28 h-full"
             />
           </figure>
 
-          <div className="card-body flex flex-row w-5/6">
-            <div className="flex flex-col flex-auto justify-around w-8/12">
-              <div onClick={() => navigate(`/bookmarklist/${list.id}`)}>
-                {" "}
-                <h4 className="flex-auto card-title hover:cursor-pointer">
+          <div className="card-body flex flex-row  justify-between w-3/4">
+            <div className="flex flex-col  justify-around w-2/3  ">
+              <div>
+                <p
+                  className=" hover:cursor-pointer truncate text-ellipsis w-5/6 font-bold text-lg "
+                  onClick={() => navigate(`/bookmarklist/${list.id}`)}
+                >
                   {list.title}
-                </h4>{" "}
+                </p>
               </div>
               <div>
                 {" "}
@@ -89,7 +93,7 @@ const ListItem: FC<Props> = ({ list,whatMenu }) => {
                 <p>{list.description}</p>
               </div> */}
 
-            <div className="card-actions justify-between flex items-center w-3/12">
+            <div className="card-actions justify-between flex items-center w-1/3">
               <button
                 onClick={clickHeart}
                 className="btn btn-ghost hidden sm:inline-flex"
@@ -97,14 +101,23 @@ const ListItem: FC<Props> = ({ list,whatMenu }) => {
                 {isLike ? <FaHeart color="red" /> : <FaRegHeart />}
                 {likeCount}
               </button>
-              <div className="xl:block hidden"> 
-                <KebabDropdown whatMenu={whatMenu} id={list.id} users={list.users}/>
+              <div className="lg:block hidden">
+                <KebabDropdown
+                  whatMenu={whatMenu}
+                  id={list.id}
+                  users={list.users}
+                />
               </div>
             </div>
           </div>
         </>
       </div>
-      <div className={(isDark? "border-b-slate-600":"border-b-slate-200") +" h-1 border-b"}></div>
+      <div
+        className={
+          (isDark ? "border-b-slate-600" : "border-b-slate-200") +
+          " h-1 border-b"
+        }
+      ></div>
     </>
   );
 };

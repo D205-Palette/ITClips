@@ -234,7 +234,7 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack,
     <div className="flex flex-col h-full">
       {isLoading ? (
         <div className="flex flex-col justify-center items-center h-full bg-base-100">
-          <div className="loading loading-spinner loading-lg text-primary"></div>
+          <div className="loading loading-spinner loading-lg text-info"></div>
           <p className="text-lg font-semibold mt-4 text-base-content">채팅방 로딩 중...</p>
           <p className="text-sm mt-2 text-base-content/70">잠시만 기다려 주세요</p>
         </div>

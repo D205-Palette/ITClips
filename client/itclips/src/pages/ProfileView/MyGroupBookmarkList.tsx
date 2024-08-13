@@ -71,7 +71,7 @@ const MyGroupBookmarkList = () => {
 
         {/* 리스트 & 액자형 탭 */}
         <div className="flex justify-end">
-          <div role="tablist" className="tabs ">
+          <div role="tablist" className="tabs hidden md:block ">
             {!isList ? (
               <>
                 <div onClick={tabList} role="tab" className="tab mx-3">

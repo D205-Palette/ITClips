@@ -114,11 +114,11 @@ const RoadmapEditModal: React.FC<EditModalProps> = ({ isOpen, onClose }) => {
               className="flex-grow px-3 py-2 border rounded-l-md"
               placeholder="새 카테고리 입력"
             />
-            <button onClick={handleAddCategory} className="btn btn-primary rounded-l-none">+</button>
+            <button onClick={handleAddCategory} className="btn btn-info rounded-l-none">+</button>
           </div>
         </div>
 
-        <button className="btn btn-primary w-full">수정</button>
+        <button className="btn btn-info w-full">수정</button>
       </div>
     </div>
   );

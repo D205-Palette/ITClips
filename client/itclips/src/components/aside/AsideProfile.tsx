@@ -157,7 +157,7 @@ const AsideProfile = () => {
     <div
       className={`${
         isDark ? "bg-base-300" : "bg-sky-50"
-      } rounded-3xl p-2 md:p-8 flex flex-col`}
+      } rounded-3xl p-8 flex flex-col `}
     >
       {/* 상단 영역: 채팅/설정 버튼 */}
       <div className="self-end md:mb-4">

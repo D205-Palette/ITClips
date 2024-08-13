@@ -96,7 +96,7 @@ export default function MyView() {
 
         {/* 리스트 & 액자형 전환탭 */}
         <div className="flex justify-end">
-          <div role="tablist" className="tabs ">
+          <div role="tablist" className="tabs hidden md:block ">
             {!isList ? (
               <>
                 <div onClick={tabList} role="tab" className="tab mx-3">
@@ -166,7 +166,7 @@ export default function MyView() {
 
       {/* 리스트 생성 버튼 */}
 
-      <div className="fixed bottom-24 right-16 z-20 hidden md:flex justify-end w-full ">
+      <div className="fixed bottom-24 right-16 z-20 hidden md:flex  ">
         <button
           className={(nowUserId !== userId ? "hidden" : "") + " "}
           onClick={() => setIsCreateModalOpen(true)}

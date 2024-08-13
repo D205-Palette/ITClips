@@ -55,15 +55,15 @@ const RoadMap: FC<Props> = ({ roadmap, canEdit }) => {
     <>
       <div
         className={
-          " card card-side bg-base-100 hover:cursor-pointer h-32 my-1 static "
+          " card card-side bg-base-100 hover:cursor-pointer h-28 my-1 static "
         }
       >
         <>
-          <div className="w-1/6 z-10 hidden lg:inline rounded-s-2xl">
+          <div className="w-28 z-10 rounded-s-2xl overflow-hidden">
             <img
               src={roadmap.image === "default" ? noImg : roadmap.image}
               alt="Movie"
-              className="h-full w-full hidden lg:inline  rounded-s-2xl "
+              className="h-full w-full  rounded-s-2xl object-cover"
             />
           </div>
 
@@ -83,7 +83,7 @@ const RoadMap: FC<Props> = ({ roadmap, canEdit }) => {
                   : percentage == "100.0%"
                   ? "bg-green-900"
                   : "bg-sky-900") +
-                " h-full absolute top-0 left-0 rounded-e-2xl lg:rounded-s-none rounded-s-2xl"
+                " h-full absolute top-0 left-0 rounded-e-md lg:rounded-s-none rounded-s-2xl"
               }
               style={{ width: `${percentage}` }}
               onClick={() => navigate(`/roadmap/${roadmap.id}`)}
@@ -151,12 +151,12 @@ const RoadMap: FC<Props> = ({ roadmap, canEdit }) => {
           </div>
         </>
       </div>
-      <div
+      {/* <div
         className={
           (isDark ? "border-b-slate-600" : "border-b-slate-200") +
           " h-1 border-b"
         }
-      ></div>
+      ></div> */}
     </>
   );
 };

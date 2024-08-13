@@ -25,12 +25,14 @@ const UserActivityInfo = () => {
                 : `/user/${params.userId}/follow/follower`
             }
           >
+            <div className="flex items-center">
             <button
               id="followers"
               className="text-start text-xs md:text-base font-bold hover:bg-sky-200 hover:rounded"
             >
               {urlUserInfo?.followerCount ?? 0}
             </button>
+            </div>
           </NavLink>
         </div>
       </div>

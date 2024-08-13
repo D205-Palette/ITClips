@@ -25,6 +25,14 @@ interface Item {
 const ItemDetailInfo = (data: Item) => {
   
   return (
+    // <div className="text-center w-full">
+    //   <h2 className="text-xl font-bold mb-1  ">{data.title}</h2>
+    //   {data.userName? <> <Link to={`/user/${data.userId}`} className="text-gray-500 mb-2 ">@{data.userName}</Link></>: <></>}
+    //   {data.users?.map((user: any) => (
+    //     <Link to={`/user/${user.id}`} className="text-gray-500 mb-2 me-1 ">@{user.nickName}</Link>
+    //   ))}
+    //   <div className="">
+    //   <p className="text-center text-sm mt-4 mb-1">{data.description}</p>
     <div className="text-center">
       <h2 className="text-base md:text-xl font-bold mb-0.5 md:mb-1">{data.title}</h2>
       {data.userName ? (

@@ -446,7 +446,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
                   />
                   <button
                     onClick={handleAddInterest}
-                    className="btn btn-primary btn-xs min-h-[2rem] h-auto px-2 ml-2 flex-shrink-0"
+                    className="btn btn-info btn-xs min-h-[2rem] h-auto px-2 ml-2 flex-shrink-0"
                     disabled={!selectedInterest}
                   >
                     +

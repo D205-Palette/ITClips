@@ -100,7 +100,7 @@ const SearchUserItem: React.FC<SearchUserItemProps> = ({ item: initialItem }) =>
               </div>
             </div>
             <button
-              className={`btn btn-xs md:btn-sm ${item.following ? 'text-base-100 btn-error' : 'btn-primary'}`} 
+              className={`btn btn-xs md:btn-sm ${item.following ? 'text-base-100 btn-error' : 'btn-info'}`} 
               onClick={toggleFollow}
             >
               {item.following ? '언팔로우' : '팔로우'}

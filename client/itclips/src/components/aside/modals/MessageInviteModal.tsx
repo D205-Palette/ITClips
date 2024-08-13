@@ -214,7 +214,7 @@ const MessageInviteModal: React.FC<MessageInviteModalProps> = ({ roomId, setNoti
             )}
             <button
               onClick={handleInvite}
-              className="btn btn-primary w-full mt-2"
+              className="btn btn-info w-full mt-2"
               disabled={!selectedUser}
             >
               초대

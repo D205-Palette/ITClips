@@ -47,7 +47,7 @@ const AsideBookmarkList : React.FC<ItemProps> = ({ bookmarkList }) => {
     <div className={`${ isDark ? "bg-base-300" : "bg-sky-50" } rounded-3xl  p-8 flex flex-col items-center ` }>
       {/* 더보기 버튼 */}
       <div className="w-full flex flex-row justify-end">
-      {<KebabDropdown whatMenu="북마크 리스트" id={bookmarkList.id} users={bookmarkList.users}/> }
+      {<KebabDropdown whatMenu="리스트상세" id={bookmarkList.id} users={bookmarkList.users}/> }
       </div>
       {/* 북마크리스트 썸네일 */}
       <ImageContainer src={bookmarkList.image} whatContent="북마크리스트"/>

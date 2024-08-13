@@ -13,6 +13,7 @@ import noImg from "../../../assets/images/noImg.gif";
 
 import FileResizer from "react-image-file-resizer";
 import toastStore from "../../../stores/toastStore";
+import darkModeStore from "../../../stores/darkModeStore";
 interface EditModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -36,18 +37,20 @@ const BookmarkListCreateModal: React.FC<EditModalProps> = ({
   const [bookmarklistImage, setBookmarklistImage] = useState<File | null>(null);
   const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
 
-  const {isBookmarkListChange, setIsBookmarkListChange} = mainStore()
-  const [tagsLengthWarning, setTagsLengthWarning] = useState(false)
+  const { isBookmarkListChange, setIsBookmarkListChange } = mainStore();
+  const [tagsLengthWarning, setTagsLengthWarning] = useState(false);
 
-  const {setGlobalNotification} = toastStore()
-
+  const { setGlobalNotification } = toastStore();
+  const { isDark } = darkModeStore();
+  const darkButton =
+    " bg-sky-600 hover:bg-sky-800 text-slate-200 hover:text-slate-300  border-sky-600 hover:border-sky-800 ";
+  const lightButton =
+    " bg-sky-500 hover:bg-sky-700 text-slate-100  border-sky-500 hover:border-sky-700 ";
   const handleAddTag = () => {
- 
     if (tempTag.trim() !== "") {
       setTempTags([...tempTags, { title: tempTag.trim() }]);
       setTempTag("");
     }
-  
   };
 
   const handleRemoveTag = (inputText: string) => {
@@ -55,19 +58,19 @@ const BookmarkListCreateModal: React.FC<EditModalProps> = ({
   };
 
   const handleCloseModal = () => {
-    onClose()
+    onClose();
     setBookmarklistImage(null);
     setPreviewImageUrl(null);
   };
 
-// 태그 3개 이상되면 경고
-useEffect(()=>{
-  if(tempTags.length >= 3){
-    setTagsLengthWarning(true)
-  } else{
-    setTagsLengthWarning(false)
-  }
-},[tempTags.length] )
+  // 태그 3개 이상되면 경고
+  useEffect(() => {
+    if (tempTags.length >= 3) {
+      setTagsLengthWarning(true);
+    } else {
+      setTagsLengthWarning(false);
+    }
+  }, [tempTags.length]);
 
   const endCreate = () => {
     // if(isPublic){
@@ -99,18 +102,18 @@ useEffect(()=>{
             }, // 파일의 MIME 타입 설정
           });
         }
-        setIsBookmarkListChange(true)
-          // 입력값들 초기화
-          setTempTitle("")
-          setTempTags([])
-          setTempTag("")
-          setTempDescription("")
-          // setTemp
-
-          setGlobalNotification({
-            message: "북마크 리스트 생성 완료",
-            type: "success",
-          });
+        setIsBookmarkListChange(true);
+        // 입력값들 초기화
+        setTempTitle("");
+        setTempTags([]);
+        setTempTag("");
+        setTempDescription("");
+        // setTemp
+        handleImageRemove()
+        setGlobalNotification({
+          message: "북마크 리스트 생성 완료",
+          type: "success",
+        });
         onClose();
       })
       .catch((err) => {
@@ -123,22 +126,24 @@ useEffect(()=>{
         file,
         200, // 이미지 너비
         200, // 이미지 높이
-        'SVG', // 파일 형식 - SVG 대신 JPEG로 변경
+        "SVG", // 파일 형식 - SVG 대신 JPEG로 변경
         100, // 이미지 퀄리티
         0,
         (uri) => {
           if (uri) {
             resolve(uri as File); // Promise를 사용하여 비동기 처리
           } else {
-            reject(new Error('Resizing failed'));
+            reject(new Error("Resizing failed"));
           }
         },
-        'file' // 출력 타입
+        "file" // 출력 타입
       );
     });
 
   // 북마크리스트 이미지 변경 핸들러
-  const handleImageChange =async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0]; // 파일이 선택되지 않았을 때 null 처리
     if (file) {
       const compressedFile = await resizeFile(file);
@@ -178,7 +183,7 @@ useEffect(()=>{
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className={(isDark? "text-geay-400":" text-gray-700") + " block text-sm font-medium mb-2"}>
             이미지
           </label>
           {/* 북마크리스트 이미지 설정 */}
@@ -202,7 +207,11 @@ useEffect(()=>{
               </div>
               {/* 이미지 컨트롤러 */}
               <div className="flex flex-col gap-y-2">
-                <label className="btn bg-sky-500 hover:bg-sky-700 text-slate-100 btn-outline">
+                <label
+                  className={
+                    (isDark ? darkButton + " " : lightButton + " ") + " btn "
+                  }
+                >
                   이미지 업로드
                   <input
                     type="file"
@@ -226,7 +235,7 @@ useEffect(()=>{
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className={" block text-sm font-medium mb-2"}>
             리스트명
           </label>
           <input
@@ -239,7 +248,7 @@ useEffect(()=>{
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className={(isDark? "text-geay-400":" text-gray-700") + " block text-sm font-medium  mb-2"}>
             내용
           </label>
           <textarea
@@ -252,14 +261,17 @@ useEffect(()=>{
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className={(isDark? "text-geay-400":" text-gray-700") + " block text-sm font-medium mb-2"}>
             태그
           </label>
           <div className="flex flex-wrap gap-2 mb-2">
             {tempTags.map((tag, index) => (
               <span
                 key={index}
-                className="bg-gray-200 px-2 py-1 rounded-full text-sm flex items-center"
+                className={
+                  (isDark ? "bg-black" : "bg-gray-200") +
+                  " px-2 py-1 rounded-full text-sm flex items-center"
+                }
               >
                 {tag.title}
                 <button
@@ -276,31 +288,41 @@ useEffect(()=>{
               type="text"
               value={tempTag}
               onChange={(e) => setTempTag(e.target.value)}
-              className={" flex-grow px-3 py-2 border-2 rounded-l-md  "}
-              placeholder={tagsLengthWarning? "태그는 3개까지 가능합니다" :"새 태그 입력"}
+              className={" flex-grow px-3 py-2 border rounded-l-md  "}
+              placeholder={
+                tagsLengthWarning ? "태그는 3개까지 가능합니다" : "새 태그 입력"
+              }
               disabled={tagsLengthWarning}
+              maxLength={20}
             />
             <button
               onClick={handleAddTag}
-              className="btn bg-sky-500 hover:bg-sky-700 text-slate-100 rounded-l-none"
+              className={
+                (isDark
+                  ? darkButton + " border-sky-600 hover:border-sky-800 "
+                  : lightButton + " border-sky-500 hover:border-sky-700 ") +
+                "btn rounded-l-none border-2 "
+              }
               disabled={tagsLengthWarning}
             >
               +
             </button>
-
           </div>
           <div className="form-control flex flex-row items-center justify-end my-3">
-              <label htmlFor="">공개 여부</label>
-              <input
-                type="checkbox"
-                checked={isPublic}
-                onClick={() => setIsPublic(!isPublic)}
-                className="checkbox checkbox-info  [--chkfg:white] mx-2 "
-              />
-            </div>
+            <label htmlFor="">공개 여부</label>
+            <input
+              type="checkbox"
+              checked={isPublic}
+              onClick={() => setIsPublic(!isPublic)}
+              className="checkbox checkbox-info  [--chkfg:white] mx-2 "
+            />
+          </div>
         </div>
 
-        <button className="btn bg-sky-500 hover:bg-sky-700 text-slate-100 w-full" onClick={() => endCreate()}>
+        <button
+          className={(isDark ? darkButton : lightButton) + " btn w-full"}
+          onClick={() => endCreate()}
+        >
           생성
         </button>
       </div>

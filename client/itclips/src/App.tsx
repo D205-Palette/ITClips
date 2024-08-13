@@ -97,13 +97,13 @@ const App = () => {
         <NavBar />
       </header>
 
-      <main className="mt-16 w-full">
+      <main className="mt-16 w-full min-h-96">
         <Outlet />
       </main>
 
       <footer
-        className={`${isIntroPage ? "" : "mt-20"} ${
-          isLoggedIn ? (window.innerWidth >= 768 ? "" : "mb-16") : ""
+        className={`${isIntroPage ? "" : "mt-32"} ${
+          isLoggedIn ? (window.innerWidth >= 768 ? "" : "mb-20") : ""
         }`}
       >
         <Footer />

@@ -93,6 +93,7 @@ const CategoryTab: FC<Props> = ({
 
     const createCategory = (): void => {
       // 카테고리 추가 api
+      console.log("ASdf");
       axios({
         method: "post",
         url: `${API_BASE_URL}/api/category/add/${listId}`,
@@ -117,20 +118,29 @@ const CategoryTab: FC<Props> = ({
     };
 
     return (
-      <form onSubmit={() => createCategory()}>
-        <input
-          ref={inputRef}
-          type="text"
-          id=""
-          name=""
-          onChange={(e) => changeInputValue(e.target.value)}
-          value={inputValue}
-          className={
-            (isDark ? "border-slate-100" : "border-slate-900 ") +
-            " border-2 border-solid  rounded-2xl h-9 px-4 w-min"
-          }
-        />
-      </form>
+      <div className="relative flex items-center">
+        <form
+          onSubmit={() => createCategory()}
+          className=""
+        >
+          <input
+            ref={inputRef}
+            type="text"
+            id=""
+            name=""
+            onChange={(e) => changeInputValue(e.target.value)}
+            value={inputValue}
+            className={
+              (isDark ? "border-slate-100" : "border-slate-300 ") +
+              " border border-solid  rounded-2xl h-9 px-4 w-2/3 ms-3"
+            }
+            maxLength={20}
+          />
+        </form>
+        <button className="absolute right-1/3" onClick={() => modeChange(false)}>
+          X
+        </button>
+      </div>
     );
   };
 
@@ -168,11 +178,14 @@ const CategoryTab: FC<Props> = ({
                   setEditMode={setEditMode}
                 />
               ) : (
-                <CategorySingleTab tempCategory={category}/>
+                <CategorySingleTab 
+                tempCategory={category}
+                canEdit={canEdit} />
               )
             )}
           </div>
-          {canEdit && editMode ? (
+
+          {canEdit && !editMode ? (
             createMode ? (
               <CreateCategorySection />
             ) : (

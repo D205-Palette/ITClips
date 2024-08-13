@@ -92,7 +92,6 @@ const Bookmark: FC<Props> = ({
             {/* 본문 */}
             <div
               className="flex flex-col flex-auto justify-around"
-              onClick={() => toggleCheck(bookmark)}
             >
               <div>
                 {" "}
@@ -106,17 +105,6 @@ const Bookmark: FC<Props> = ({
               {bookmark.tags.map((tag) => (
                 <span className="ms-1">{" # " + tag.title}</span>
               ))}{" "}
-            </div>
-
-            {/* 좋아요 버튼 */}
-            <div className="card-actions justify-end flex items-center">
-              {/* <button onClick={clickHeart} className="btn btn-ghost">
-                {isLike ? <FaHeart color="red" /> : <FaRegHeart />}
-                {bookmark.likeCount}{" "}
-              </button> */}
-              <button className="">
-                <LuChevronsUpDown />
-              </button>
             </div>
           </div>
         </>

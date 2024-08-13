@@ -61,16 +61,15 @@ const SearchUser: React.FC<SearchUserProps> = ({ keyword }) => {
   }, [userId, keyword]);
 
   return (
-    <div className="container mx-auto p-4">
-      {/* 검색 결과 (검색 결과가 없으면 다른 창 출력) */}
+    <div className="container mx-auto p-2 md:p-4">
       {hasResults ? (
         <SearchUserItemsContainer
           items={userItems}
         />
       ) : (
-        <div className="flex flex-row items-center justify-center mt-10">
-          <IoIosWarning color="skyblue" size={28} />
-          <div className="ms-3 text-sm lg:text-xl font-bold py-8 text-center">
+        <div className="flex flex-row items-center justify-center mt-5 md:mt-10">
+          <IoIosWarning color="skyblue" className="w-5 h-5 md:w-7 md:h-7" />
+          <div className="ms-2 md:ms-3 text-xs md:text-sm lg:text-xl font-bold py-4 md:py-8 text-center">
             검색 결과가 없습니다.
           </div>
         </div>

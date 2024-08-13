@@ -44,7 +44,7 @@ const SearchView = () => {
         {/* main 자리 */}
         <div
           id="Main"
-          className="md:col-start-2 md:col-span-7 col-start-2 col-span-10"
+          className="md:col-start-2 md:col-span-7 col-start-1 col-span-12 px-4 md:px-0"
         >
           <div className="container mx-auto p-4">
             <div className="md:flex-row justify-between gap-4 mb-4">
@@ -53,7 +53,6 @@ const SearchView = () => {
                 <SearchBar handleCategory={selectCategory} />
               </div>
               {/* 카테고리 조건에 따라 검색 컴포넌트 변경 */}
-              {/* 검색 버튼을 눌렀을 때 적용되게 */}
               {whatCategory === "카테고리" && <SearchMain />}
               {whatCategory === "유저" && <SearchUser keyword={keyword} />}
               {whatCategory === "북마크리스트" && <SearchBookmarkList keyword={keyword} />}
@@ -64,7 +63,7 @@ const SearchView = () => {
         </div>
 
         {/* RealtimeSidebar 및 RealtimeList - md 이하에서 숨김 */}
-        <div className="hidden md:block col-start-8 col-span-3 md:col-start-9 md:col-span-3">
+        <div className="hidden md:block col-start-9 col-span-3">
           <div className="my-6">
             <RealtimeSidebar />
           </div>

@@ -84,49 +84,47 @@ const SearchUserItem: React.FC<SearchUserItemProps> = ({ item: initialItem }) =>
     <div>
       <NavLink
           to={`/user/${item.id}`}
-          className="w-80 bg-base-100 shadow rounded"
+          className="w-full md:w-80 bg-base-100 shadow rounded"
         >
-        <div className="card-body p-4">
+        <div className="card-body p-2 md:p-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2 md:space-x-3">
               <div className="placeholder">
-                <div className="bg-neutral-focus text-neutral-content rounded-full w-10">
+                <div className="bg-neutral-focus text-neutral-content rounded-full w-8 md:w-10">
                   <img src={item.image === "default" ? noImage : item.image} alt={item.nickname} className="w-full object-cover" />
                 </div>
               </div>
               <div>
-                <h2 className="font-bold text-lg">{item.nickname}</h2>
-                <p className="text-xs text-gray-500">{item.email}</p>
+                <h2 className="font-bold text-sm md:text-lg">{item.nickname}</h2>
+                <p className="text-xs md:text-sm text-gray-500">{item.email}</p>
               </div>
             </div>
-            {/* 팔로우 버튼 */}
             <button
-              className={`btn btn-sm ${item.following ? 'text-base-100 btn-error' : 'btn-primary'}`} 
+              className={`btn btn-xs md:btn-sm ${item.following ? 'text-base-100 btn-error' : 'btn-primary'}`} 
               onClick={toggleFollow}
             >
               {item.following ? '언팔로우' : '팔로우'}
             </button>
           </div>
-          <p className="text-sm mt-2 flex justify-center">{item.bio}</p>
-          <div className="grid grid-cols-8 gap-2 mt-2 text-sm">
+          <p className="text-xs md:text-sm mt-1 md:mt-2 flex justify-center">{item.bio}</p>
+          <div className="grid grid-cols-8 gap-1 md:gap-2 mt-1 md:mt-2 text-xs md:text-sm">
             <div className="col-start-2 col-span-4">
-              <p className="text-gray-500 mb-2">팔로워 <span className="font-bold text-black">{item.followerCount}</span></p>
+              <p className="text-gray-500 mb-1 md:mb-2">팔로워 <span className="font-bold text-black">{item.followerCount}</span></p>
               <p className="text-gray-500">리스트 <span className="font-bold text-black">{item.bookmarkListCount}</span></p>
             </div>
             <div className="col-start-6 col-span-8">
-              <p className="text-gray-500 mb-2">팔로잉 <span className="font-bold text-black">{item.followingCount}</span></p>
+              <p className="text-gray-500 mb-1 md:mb-2">팔로잉 <span className="font-bold text-black">{item.followingCount}</span></p>
               <p className="text-gray-500">로드맵 <span className="font-bold text-black">{item.roadmapCount}</span></p>
             </div>
           </div>
         </div>
       </NavLink>
 
-      {/* 토스트 알람 */}
       {toast && (
         <div 
-          className={`fixed bottom-4 left-1/2 transform -translate-x-1/2 p-4 rounded-md ${
+          className={`fixed bottom-4 left-1/2 transform -translate-x-1/2 p-2 md:p-4 rounded-md ${
             toast.type === 'success' ? 'bg-green-500' : 'bg-red-500'
-          } text-white shadow-lg z-50 transition-opacity duration-300`}
+          } text-white shadow-lg z-50 transition-opacity duration-300 text-xs md:text-sm`}
         >
           {toast.message}
         </div>

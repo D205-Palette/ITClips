@@ -34,6 +34,11 @@ const NotificationDropdown: React.FC = () => {
     setIsOpen(!isOpen);
   };
 
+  // NavLink 클릭 시 드롭다운 닫기
+  const handleNavLinkClick = () => {
+    setIsOpen(false);
+  };
+
   // 알림창 외에 다른 곳을 클릭하면 알림창이 닫히도록
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -137,6 +142,7 @@ const NotificationDropdown: React.FC = () => {
                       <NavLink 
                         to={getNotificationLink(notification)}
                         className="flex-grow hover:bg-gray-50 p-2 rounded transition-colors duration-200"
+                        onClick={handleNavLinkClick}
                       >
                         <div className="flex flex-col">
                           <span className={`text-sm ${notification.read ? 'text-base-content' : 'text-black font-semibold'}`}>

@@ -109,7 +109,7 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id,contentUserId,users }) => {
   
     // whatMenu 값에 따라 URL을 생성
     let url = "";
-    if (whatMenu === "리스트" || whatMenu === "즐겨찾기") {
+    if (whatMenu === "리스트" || whatMenu === "즐겨찾기" || whatMenu === "리스트상세") {
       url = `${API_BASE_URL}/bookmarklist/${id}`;
     } else if (whatMenu === "로드맵") {
       url = `${API_BASE_URL}/roadmap/${id}`;

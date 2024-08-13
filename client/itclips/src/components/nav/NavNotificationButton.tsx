@@ -116,8 +116,8 @@ const NotificationDropdown: React.FC = () => {
         </div>
       </label>
       {isOpen && (
-        <div tabIndex={0} className="fixed inset-0 top-[var(--navbar-height)] z-40 bg-base-100 md:absolute md:inset-auto md:right-0 md:top-full md:mt-3 md:w-96 md:rounded-box md:shadow">
-          <div className={`p-4 ${isDark ? "bg-base-200" : "bg-sky-200"} md:rounded-t-box`}>
+        <div tabIndex={0} className="fixed border inset-0 top-[var(--navbar-height)] z-40 bg-base-100 md:absolute md:inset-auto md:right-0 md:top-full md:mt-3 md:w-96 md:rounded-box md:shadow">
+          <div className={`p-4 ${isDark ? "bg-base-200" : "bg-sky-200"} md:rounded-t-box border`}>
             <div className="flex justify-between items-center">
               <h3 className="font-bold text-lg">알림</h3>
               {unreadCount > 0 && (

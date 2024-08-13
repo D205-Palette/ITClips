@@ -83,18 +83,18 @@ const AsideRoadmap: React.FC<Props> = ({ roadmap }) => {
               <LikesFavoritesCount {...roadmap} />
             </div>
           </div>
-         
-        </div>
-
-        {/* 댓글 버튼 */}
-        <div className="hidden md:block mt-4">
           <button
             onClick={() => setIsCommentsOpen(true)}
-            className="btn btn-info w-full text-base-100 text-sm"
+            className="btn btn-info w-full text-base-100 text-sm "
           >
             전체 댓글 보기 ({commentCount})
           </button>
         </div>
+
+        {/* 댓글 버튼 */}
+
+        
+
       </div>
 
       {/* 댓글 모달 */}

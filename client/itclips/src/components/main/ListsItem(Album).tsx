@@ -9,6 +9,7 @@ import type { BookmarkListSumType } from "../../types/BookmarkListType";
 import { API_BASE_URL } from "../../config";
 import { authStore } from "../../stores/authStore";
 import axios from "axios";
+import noImg from "../../assets/images/noImg.gif"
 // 이미지 , 리스트명, 북마크 개수, 태그,(설명), 좋아요 버튼&좋아요 수, 리스트 세부 조작 버튼
 // 아님 호버링 기능을 여기에다 포함이 나을듯?
 
@@ -77,7 +78,7 @@ const ListItem: FC<Props> = ({ list, whatMenu, canEdit }) => {
             }
           >
             <img
-              src={`${list.image}`}
+              src={list.image==='default' ? noImg : `${list.image}`}
               alt="Movie"
               className=" w-full h-full object-cover"
             />

@@ -4,6 +4,7 @@ import KebabDropdown from "../common/KebabDropdown";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import type { BookmarkListSumType } from "../../types/BookmarkListType";
+import noImg from "../../assets/images/noImg.gif"
 // 이미지 , 리스트명, 북마크 개수, 태그,(설명), 좋아요 버튼&좋아요 수, 리스트 세부 조작 버튼
 // 아님 호버링 기능을 여기에다 포함이 나을듯?
 
@@ -23,7 +24,7 @@ const ListItem: FC<Props> = ({ list }) => {
         onClick={() => navigate(`/bookmarklist/${list.id}`)}
       >
         <figure>
-          <img src={list.image} alt="Shoes" className="w-full object-fill" />
+          <img src={list.image==='default'? noImg : list.image} alt="" className="w-full object-fill" />
         </figure>
 
         <div className="card-body flex flex-row justify-center items-center">

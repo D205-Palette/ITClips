@@ -9,7 +9,7 @@ import MyRoadmap from './ProfileView/MyRoadmap';
 // component
 import AsideBookmarkList from "../components/aside/AsideBookmarkList"
 import AsideProfile from '../components/aside/AsideProfile'
-
+import AsideMoblieProfile from '../components/aside/AsideProfile(Mobile)'
 import MyBookmark from "./BookmarkView";
 import MainTab from "../components/main/MainTab";
 
@@ -22,8 +22,11 @@ export default function MyView() {
         {/* aside 자리 */}
         <div id="aside" className="md:col-start-2 md:col-span-3 md:pe-10 col-start-2 col-span-10">
           {/* 메세지 뜨는 위치 */}
-          <div className="sticky top-16 z-30">
+          <div className="sticky md:block hidden top-16 z-30">
             <AsideProfile />
+          </div>
+          <div className="md:hidden top-16 z-30">
+            <AsideMoblieProfile />
           </div>
         </div>
        

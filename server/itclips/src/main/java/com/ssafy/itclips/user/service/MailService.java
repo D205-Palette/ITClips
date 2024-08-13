@@ -32,8 +32,7 @@ public class MailService {
                 "<p>ITClips에 가입해 주셔서 감사합니다.</p>" +
                 "<p>이메일 인증을 위해 아래의 인증 코드를 입력해 주세요:</p>" +
                 "<h3 style='color: #4CAF50;'>" + verificationCode + "</h3>" +
-                "<p>이 코드는 10분 동안 유효합니다.</p>" +
-                "<p>감사합니다.</p>" +
+                "<p>감사합니다.</p><br/>" +
                 "<p>ITClips 팀 드림</p>" +
                 "</body>" +
                 "</html>";
@@ -59,9 +58,8 @@ public class MailService {
                 "<p>ITClips에서 요청하신 임시 비밀번호를 발급해 드립니다.</p>" +
                 "<p>아래의 임시 비밀번호를 사용하여 로그인해 주세요:</p>" +
                 "<h3 style='color: #FF5722;'>" + temporaryPassword + "</h3>" +
-                "<p>임시 비밀번호는 보안상 10분 후에 만료됩니다. </p>" +
                 "<p>로그인 후 반드시 새로운 비밀번호로 변경해 주세요.</p>" +
-                "<p>감사합니다.</p>" +
+                "<p>감사합니다.</p><br/>" +
                 "<p>ITClips 팀 드림</p>" +
                 "</body>" +
                 "</html>";

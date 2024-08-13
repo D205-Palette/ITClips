@@ -19,7 +19,7 @@ export const deleteNotification = (alarmId: number) => {
 
 // 전체 알림 삭제
 export const deleteAllNotification = (userId: number) => {
-  return authenticatedRequest("delete", `/notify/${userId}`, undefined, { userId });
+  return authenticatedRequest("delete", `/notify/deleteAll/${userId}`, undefined, { userId });
 };
 
 // 알림 읽음 처리

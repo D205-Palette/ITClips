@@ -89,7 +89,7 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id,contentUserId,users }) => {
   // 로드맵 스크랩
   function addScrap(): void {
     axios
-      .post(`${API_BASE_URL}/api/roadmap/scrap/${id}/${userId}`, {
+      .post(`${API_BASE_URL}/api/roadmap/scrap/${id}/${userId}`, {}, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -104,16 +104,36 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id,contentUserId,users }) => {
       });
   }
 
-  function copyUrl(): any {
-    // 뭐가 들어오는지에 따라 url값이 바뀜
-    // navigator.clipboard.writeText(bookmark.url)
-    // 이건좀 생각해봐야할듯
-    setIsMenuOpen(false);
-    setGlobalNotification({
-      message: "url 복사 완료",
-      type: "success",
+  function copyUrl(whatMenu: string, id: number): any {
+    // 기본적으로 로컬호스트 주소를 가져옴    
+  
+    // whatMenu 값에 따라 URL을 생성
+    let url = "";
+    if (whatMenu === "리스트" || whatMenu === "즐겨찾기") {
+      url = `${API_BASE_URL}/bookmarklist/${id}`;
+    } else if (whatMenu === "로드맵") {
+      url = `${API_BASE_URL}/roadmap/${id}`;
+    } else {
+      console.error("Invalid menu type");
+      return;
+    }
+  
+    // URL을 클립보드에 복사
+    navigator.clipboard.writeText(url).then(() => {
+      // 복사가 성공적으로 완료되면 알림 설정
+      setGlobalNotification({
+        message: "URL 복사 완료",
+        type: "success",
+      });
+    }).catch(err => {
+      console.error("Failed to copy URL: ", err);
     });
+  
+    // 메뉴 닫기
+    setIsMenuOpen(false);
   }
+
+  
 
   function deleteFavorite(): void {
     setIsMenuOpen(false);
@@ -165,9 +185,11 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id,contentUserId,users }) => {
                   <a className="py-1.5 md:py-2">삭제하기</a>
                 </li>
               </>
-            ) : null}
-            <li onClick={() => copyUrl()}>
-              <a className="py-1.5 md:py-2">url 복사</a>
+            )}
+            {/*  */}
+
+            <li onClick={() => copyUrl(whatMenu, id)}>
+              <a>url 복사</a>
             </li>
             <li
               className={whatMenu === "즐겨찾기" ? "" : "hidden"}

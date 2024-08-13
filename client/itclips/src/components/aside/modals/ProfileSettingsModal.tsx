@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import FileResizer from "react-image-file-resizer";
+
 // icons
 import { IoCloseOutline } from "react-icons/io5";
 import { FaMale, FaFemale } from "react-icons/fa";
@@ -365,31 +366,33 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
-      <div className="bg-base-100 rounded-lg w-[800px] max-w-full max-h-[90vh] flex flex-col">
-        <div className={`${ isDark ? "bg-base-200" : "bg-sky-200" } rounded-t-lg p-6 border-b`}>
-          <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-bold">내 정보 변경</h2>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+      <div className="bg-base-100 md:rounded-lg w-full md:w-[800px] max-w-full md:max-h-[90vh] flex flex-col">
+        {/* 모바일 디자인 (md 미만) */}
+        <div className="md:hidden h-[calc(100vh-var(--navbar-height)-5rem)] flex flex-col">
+          <div
+            className={`${
+              isDark ? "bg-base-200" : "bg-sky-200"
+            } p-4 border-b flex justify-between items-center`}
+          >
+            <h2 className="text-xl font-bold">내 정보 변경</h2>
             <button
               onClick={handleCloseModal}
               className="text-gray-500 hover:text-gray-700"
             >
-              <IoCloseOutline size={28} />
+              <IoCloseOutline size={24} />
             </button>
           </div>
-        </div>
-  
-        <div className="overflow-y-auto flex-grow p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* 왼쪽 열 */}
-            <div>
+
+          <div className="overflow-y-auto flex-grow p-4">
+            <div className="grid grid-cols-1 gap-4">
               {/* 프로필 이미지 */}
-              <div className="mb-6">
+              <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">
                   프로필 이미지
                 </label>
-                <div className="flex items-start space-x-4">
-                  <div className="w-24 h-24 border bg-gray-200 rounded-full overflow-hidden">
+                <div className="flex items-center space-x-4">
+                  <div className="w-20 h-20 border bg-gray-200 rounded-full overflow-hidden">
                     {profileImage === "default" || profileImage === null ? (
                       <img
                         src={noImg}
@@ -405,7 +408,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
                     )}
                   </div>
                   <div className="flex flex-col space-y-2">
-                    <label className="btn btn-sm btn-outline w-full">
+                    <label className="btn btn-xs btn-outline w-full">
                       선택
                       <input
                         type="file"
@@ -416,14 +419,14 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
                     </label>
                     <button
                       onClick={handleImageChange}
-                      className="btn btn-sm bg-sky-500 text-slate-100 hover:bg-sky-700 w-full"
+                      className="btn btn-xs bg-sky-500 text-slate-100 hover:bg-sky-700 w-full"
                       disabled={!selectedFile}
                     >
                       변경
                     </button>
                     <button
                       onClick={handleImageDelete}
-                      className="btn btn-sm btn-outline btn-error w-full"
+                      className="btn btn-xs btn-outline btn-error w-full"
                       disabled={!profileImage}
                     >
                       지우기
@@ -431,72 +434,52 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
                   </div>
                 </div>
               </div>
-  
+
               {/* 관심사 설정 */}
-              <div className="mb-6">
+              <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">
                   관심사 설정
                 </label>
                 <div className="flex w-full mb-2">
-                  <div className="flex flex-grow">
-                    <InterestCategoryDropdown
-                      selectCategory={setSelectedInterest}
-                    />
-                    <button
-                      onClick={handleAddInterest}
-                      className="btn btn-primary min-h-[2.5rem] h-auto px-4 ml-2 flex-shrink-0"
-                      disabled={!selectedInterest}
-                    >
-                      +
-                    </button>
-                  </div>
+                  <InterestCategoryDropdown
+                    selectCategory={setSelectedInterest}
+                  />
+                  <button
+                    onClick={handleAddInterest}
+                    className="btn btn-primary btn-xs min-h-[2rem] h-auto px-2 ml-2 flex-shrink-0"
+                    disabled={!selectedInterest}
+                  >
+                    +
+                  </button>
                 </div>
-                <div className="border rounded-md p-2 h-[120px] overflow-y-auto">
+                <div className="border rounded-md p-2 h-[100px] overflow-y-auto">
                   <div className="flex flex-wrap gap-2">
                     {interests.length > 0 ? (
                       interests.map((interest) => (
                         <span
                           key={interest.id}
-                          className="bg-base-300 px-3 py-1 rounded-full text-sm flex items-center"
+                          className="bg-base-300 px-2 py-1 rounded-full text-xs flex items-center"
                         >
                           {interest.title}
                           <button
                             onClick={() => handleRemoveInterest(interest.id)}
-                            className="ml-2 hover:text-gray-700"
+                            className="ml-1 hover:text-gray-700"
                           >
-                            <IoCloseOutline size={18} />
+                            <IoCloseOutline size={16} />
                           </button>
                         </span>
                       ))
                     ) : (
-                      <span className="text-gray-500 text-sm">
+                      <span className="text-gray-500 text-xs">
                         관심사를 추가해주세요.
                       </span>
                     )}
                   </div>
                 </div>
               </div>
-  
-              <div>
-                <button
-                  className="btn btn-outline btn-sm mr-2"
-                  onClick={() => setIsPasswordChangeModalOpen(true)}
-                >
-                  비밀번호 변경
-                </button>
-                <button
-                  className="btn btn-outline btn-sm text-red-500"
-                  onClick={() => setIsDeleteAccountModalOpen(true)}
-                >
-                  회원탈퇴
-                </button>
-              </div>
-            </div>
-  
-            {/* 오른쪽 열 */}
-            <div>
+
               {/* 닉네임 */}
-              <div className="mb-6">
+              <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">닉네임</label>
                 <div className="flex items-center space-x-2">
                   <input
@@ -506,146 +489,407 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
                       setNickname(e.target.value);
                       setIsDuplicateNickname(null);
                     }}
-                    className="flex-grow px-3 py-2 border rounded-md bg-base-100"
+                    className="flex-grow px-2 py-1 border rounded-md bg-base-100 text-sm"
                     placeholder="닉네임을 입력하세요"
                   />
                   <button
                     onClick={handleCheckNickname}
-                    className="btn btn-outline"
+                    className="btn btn-outline btn-xs"
                   >
                     중복확인
                   </button>
                 </div>
                 {isDuplicateNickname === true && (
-                  <p className="text-error text-sm mt-1">중복된 닉네임입니다.</p>
+                  <p className="text-error text-xs mt-1">
+                    중복된 닉네임입니다.
+                  </p>
                 )}
                 {isDuplicateNickname === false && (
-                  <p className="text-success text-sm mt-1">
+                  <p className="text-success text-xs mt-1">
                     사용 가능한 닉네임입니다.
                   </p>
                 )}
               </div>
-  
+
               {/* 소개글 */}
-              <div className="mb-6">
+              <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">소개글</label>
                 <textarea
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
-                  className="w-full px-3 py-2 border rounded-md resize-none bg-base-100 h-20"
+                  className="w-full px-2 py-1 border rounded-md resize-none bg-base-100 h-16 text-sm"
                   placeholder="자기소개를 입력하세요"
                 />
               </div>
-  
-              <div className="mb-6 flex items-stretch gap-4">
-                {/* 생년월일 */}
-                <div className="flex-shrink-0 flex flex-col">
+
+              {/* 생년월일 및 직업 */}
+              <div className="mb-4 flex flex-col gap-4">
+                <div className="flex-grow flex flex-col">
                   <label className="block text-sm font-medium mb-2">
                     생년월일
                   </label>
-                  <div className="flex-grow flex items-stretch">
-                    <input
-                      type="date"
-                      value={birthDate}
-                      onChange={(e) => setBirthDate(e.target.value)}
-                      className="w-full px-3 border rounded-md bg-base-100 text-sm"
-                      placeholder="생년월일을 입력하세요"
-                    />
-                  </div>
+                  <input
+                    type="date"
+                    value={birthDate}
+                    onChange={(e) => setBirthDate(e.target.value)}
+                    className="w-full px-2 border rounded-md bg-base-100 text-xs"
+                    placeholder="생년월일을 입력하세요"
+                  />
                 </div>
-  
-                {/* 직업 */}
                 <div className="flex-grow flex flex-col">
                   <label className="block text-sm font-medium mb-2">직업</label>
-                  <div className="flex-grow">
-                    <JobCategoryDropdown
-                      selectCategory={setJob}
-                      initialValue={job}
-                    />
-                  </div>
+                  <JobCategoryDropdown
+                    selectCategory={setJob}
+                    initialValue={job}
+                  />
                 </div>
               </div>
-  
+
               {/* 성별 */}
-              <div className="mb-6">
+              <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">성별</label>
                 <div className="flex items-center gap-4">
                   <button
-                    className={`btn ${
+                    className={`btn btn-xs ${
                       genderBoolean
-                        ? "btn bg-sky-500 hover:bg-sky-700 text-slate-100"
-                        : "btn"
+                        ? "bg-sky-500 hover:bg-sky-700 text-slate-100"
+                        : ""
                     } flex-1`}
                     onClick={() => setGenderBoolean(true)}
                   >
-                    <FaMale className="w-6 h-6 mr-2" />
+                    <FaMale className="w-4 h-4 mr-1" />
                     남성
                   </button>
                   <button
-                    className={`btn ${
+                    className={`btn btn-xs ${
                       !genderBoolean
-                        ? "btn bg-sky-500 hover:bg-sky-700 text-slate-100"
-                        : "btn"
+                        ? "bg-sky-500 hover:bg-sky-700 text-slate-100"
+                        : ""
                     } flex-1`}
                     onClick={() => setGenderBoolean(false)}
                   >
-                    <FaFemale className="w-6 h-6 mr-2" />
+                    <FaFemale className="w-4 h-4 mr-1" />
                     여성
                   </button>
                 </div>
               </div>
+
+              {/* 비밀번호 변경 및 회원탈퇴 버튼 */}
+              <div className="mb-4">
+                <button
+                  className="btn btn-outline btn-xs mr-2"
+                  onClick={() => setIsPasswordChangeModalOpen(true)}
+                >
+                  비밀번호 변경
+                </button>
+                <button
+                  className="btn btn-outline btn-xs text-red-500"
+                  onClick={() => setIsDeleteAccountModalOpen(true)}
+                >
+                  회원탈퇴
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-  
-        {/* 변경완료 버튼 */}
-        <div className="p-6 border-t">
-          <div className="flex justify-end">
+
+          <div className="p-4 border-t">
             <button
-              className="btn bg-sky-500 text-slate-100 hover:bg-sky-700"
+              className="btn bg-sky-500 text-slate-100 hover:bg-sky-700 w-full"
               onClick={handleUpdateProfile}
             >
               변경 완료
             </button>
           </div>
         </div>
-  
-        {/* 비밀번호 변경 모달 */}
+
+        {/* 데스크톱 디자인 (md 이상) */}
+        <div className="hidden md:flex md:flex-col rounded-lg">
+          <div
+            className={`${
+              isDark ? "bg-base-200" : "bg-sky-200"
+            } rounded-t-lg p-6 border-b`}
+          >
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl font-bold">내 정보 변경</h2>
+              <button
+                onClick={handleCloseModal}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <IoCloseOutline size={28} />
+              </button>
+            </div>
+          </div>
+
+          <div className="overflow-y-auto flex-grow p-6">
+            <div className="grid grid-cols-2 gap-6">
+              {/* 왼쪽 열 */}
+              <div>
+                {/* 프로필 이미지 */}
+                <div className="mb-6">
+                  <label className="block text-sm font-medium mb-2">
+                    프로필 이미지
+                  </label>
+                  <div className="flex items-start space-x-4">
+                    <div className="w-24 h-24 border bg-gray-200 rounded-full overflow-hidden">
+                      {profileImage === "default" || profileImage === null ? (
+                        <img
+                          src={noImg}
+                          alt="noImg"
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <img
+                          src={profileImage}
+                          alt="profileImg"
+                          className="w-full h-full object-cover"
+                        />
+                      )}
+                    </div>
+                    <div className="flex flex-col space-y-2">
+                      <label className="btn btn-sm btn-outline w-full">
+                        선택
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageSelect}
+                          className="hidden"
+                        />
+                      </label>
+                      <button
+                        onClick={handleImageChange}
+                        className="btn btn-sm bg-sky-500 text-slate-100 hover:bg-sky-700 w-full"
+                        disabled={!selectedFile}
+                      >
+                        변경
+                      </button>
+                      <button
+                        onClick={handleImageDelete}
+                        className="btn btn-sm btn-outline btn-error w-full"
+                        disabled={!profileImage}
+                      >
+                        지우기
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 관심사 설정 */}
+                <div className="mb-6">
+                  <label className="block text-sm font-medium mb-2">
+                    관심사 설정
+                  </label>
+                  <div className="flex w-full mb-2">
+                    <div className="flex flex-grow">
+                      <InterestCategoryDropdown
+                        selectCategory={setSelectedInterest}
+                      />
+                      <button
+                        onClick={handleAddInterest}
+                        className="btn btn-primary min-h-[2.5rem] h-auto px-4 ml-2 flex-shrink-0"
+                        disabled={!selectedInterest}
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                  <div className="border rounded-md p-2 h-[120px] overflow-y-auto">
+                    <div className="flex flex-wrap gap-2">
+                      {interests.length > 0 ? (
+                        interests.map((interest) => (
+                          <span
+                            key={interest.id}
+                            className="bg-base-300 px-3 py-1 rounded-full text-sm flex items-center"
+                          >
+                            {interest.title}
+                            <button
+                              onClick={() => handleRemoveInterest(interest.id)}
+                              className="ml-2 hover:text-gray-700"
+                            >
+                              <IoCloseOutline size={18} />
+                            </button>
+                          </span>
+                        ))
+                      ) : (
+                        <span className="text-gray-500 text-sm">
+                          관심사를 추가해주세요.
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <button
+                    className="btn btn-outline btn-sm mr-2"
+                    onClick={() => setIsPasswordChangeModalOpen(true)}
+                  >
+                    비밀번호 변경
+                  </button>
+                  <button
+                    className="btn btn-outline btn-sm text-red-500"
+                    onClick={() => setIsDeleteAccountModalOpen(true)}
+                  >
+                    회원탈퇴
+                  </button>
+                </div>
+              </div>
+
+              {/* 오른쪽 열 */}
+              <div>
+                {/* 닉네임 */}
+                <div className="mb-6">
+                  <label className="block text-sm font-medium mb-2">
+                    닉네임
+                  </label>
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="text"
+                      value={nickname}
+                      onChange={(e) => {
+                        setNickname(e.target.value);
+                        setIsDuplicateNickname(null);
+                      }}
+                      className="flex-grow px-3 py-2 border rounded-md bg-base-100"
+                      placeholder="닉네임을 입력하세요"
+                    />
+                    <button
+                      onClick={handleCheckNickname}
+                      className="btn btn-outline"
+                    >
+                      중복확인
+                    </button>
+                  </div>
+                  {isDuplicateNickname === true && (
+                    <p className="text-error text-sm mt-1">
+                      중복된 닉네임입니다.
+                    </p>
+                  )}
+                  {isDuplicateNickname === false && (
+                    <p className="text-success text-sm mt-1">
+                      사용 가능한 닉네임입니다.
+                    </p>
+                  )}
+                </div>
+
+                {/* 소개글 */}
+                <div className="mb-6">
+                  <label className="block text-sm font-medium mb-2">
+                    소개글
+                  </label>
+                  <textarea
+                    value={bio}
+                    onChange={(e) => setBio(e.target.value)}
+                    className="w-full px-3 py-2 border rounded-md resize-none bg-base-100 h-20"
+                    placeholder="자기소개를 입력하세요"
+                  />
+                </div>
+
+                <div className="mb-6 flex items-stretch gap-4">
+                  {/* 생년월일 */}
+                  <div className="flex-shrink-0 flex flex-col">
+                    <label className="block text-sm font-medium mb-2">
+                      생년월일
+                    </label>
+                    <div className="flex-grow flex items-stretch">
+                      <input
+                        type="date"
+                        value={birthDate}
+                        onChange={(e) => setBirthDate(e.target.value)}
+                        className="w-full px-3 border rounded-md bg-base-100 text-sm"
+                        placeholder="생년월일을 입력하세요"
+                      />
+                    </div>
+                  </div>
+
+                  {/* 직업 */}
+                  <div className="flex-grow flex flex-col">
+                    <label className="block text-sm font-medium mb-2">
+                      직업
+                    </label>
+                    <div className="flex-grow">
+                      <JobCategoryDropdown
+                        selectCategory={setJob}
+                        initialValue={job}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* 성별 */}
+                <div className="mb-6">
+                  <label className="block text-sm font-medium mb-2">성별</label>
+                  <div className="flex items-center gap-4">
+                    <button
+                      className={`btn ${
+                        genderBoolean
+                          ? "btn bg-sky-500 hover:bg-sky-700 text-slate-100"
+                          : "btn"
+                      } flex-1`}
+                      onClick={() => setGenderBoolean(true)}
+                    >
+                      <FaMale className="w-6 h-6 mr-2" />
+                      남성
+                    </button>
+                    <button
+                      className={`btn ${
+                        !genderBoolean
+                          ? "btn bg-sky-500 hover:bg-sky-700 text-slate-100"
+                          : "btn"
+                      } flex-1`}
+                      onClick={() => setGenderBoolean(false)}
+                    >
+                      <FaFemale className="w-6 h-6 mr-2" />
+                      여성
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 변경완료 버튼 */}
+          <div className="p-6 border-t">
+            <div className="flex justify-end">
+              <button
+                className="btn bg-sky-500 text-slate-100 hover:bg-sky-700"
+                onClick={handleUpdateProfile}
+              >
+                변경 완료
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* 모달 컴포넌트들 */}
         <PasswordChangeModal
           isOpen={isPasswordChangeModalOpen}
           onClose={() => setIsPasswordChangeModalOpen(false)}
           setNotification={setNotification}
         />
-  
-        {/* 회원 탈퇴 모달 */}
+
         <DeleteAccountModal
           isOpen={isDeleteAccountModalOpen}
           onClose={() => setIsDeleteAccountModalOpen(false)}
           onConfirm={handleDeleteAccount}
         />
-  
-        {/* 회원 탈퇴 완료 모달 */}
+
         <DeletedAccountModal
           isOpen={isDeletedAccountModalOpen}
           onDeleteModalClose={() => setIsDeletedAccountModalOpen(false)}
           onDeletedModalClose={handleDeletedAccountModalClose}
         />
-  
-        {/* 토스트 알람 */}
-        {notification && (
-          <div
-            className={`fixed bottom-4 left-1/2 transform -translate-x-1/2 p-4 rounded-md ${
-              notification.type === "success" ? "bg-green-500" : "bg-red-500"
-            } text-white shadow-lg z-50 transition-opacity duration-300`}
-            style={{
-              opacity: notification ? 1 : 0,
-              visibility: notification ? "visible" : "hidden",
-            }}
-          >
-            {notification.message}
-          </div>
-        )}
       </div>
+
+      {/* 토스트 알람 */}
+      {notification && (
+        <div
+          className={`fixed bottom-20 md:bottom-4 left-1/2 transform -translate-x-1/2 p-3 md:p-4 rounded-md ${
+            notification.type === "success" ? "bg-green-500" : "bg-red-500"
+          } text-white shadow-lg z-50 transition-opacity duration-300 text-sm md:text-base`}
+        >
+          {notification.message}
+        </div>
+      )}
     </div>
   );
 };

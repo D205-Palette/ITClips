@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { getNotificationList, deleteNotification, updateNotificationStatusToRead } from "../api/notificationApi";
+import { getNotificationList, deleteNotification, updateNotificationStatusToRead, deleteAllNotification } from "../api/notificationApi";
 
 interface Notification {
   id: number;
@@ -17,6 +17,7 @@ interface NotificationStore {
   fetchNotifications: (userId: number) => Promise<void>;
   markAllAsRead: (userId: number) => Promise<void>;
   deleteNotification: (notificationId: number) => Promise<void>;
+  deleteAllNotifications: (userId: number) => Promise<void>;
   addNotification: (notification: Notification) => void;
 }
 
@@ -55,6 +56,16 @@ const notificationStore = create<NotificationStore>((set) => ({
       }));
     } catch (error) {
       console.error("Failed to delete notification:", error);
+    }
+  },
+
+  // 모든 알림 삭제
+  deleteAllNotifications: async (userId: number) => {
+    try {
+      await deleteAllNotification(userId);
+      set({ notifications: [] });
+    } catch (error) {
+      console.error("Failed to delete all notifications:", error);
     }
   },
 

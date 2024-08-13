@@ -72,13 +72,6 @@ const RecommendedItemList: React.FC<RecommandedItemProps> = ({ item }) => {
     }
   };
 
-  // 태그 목록을 "#tag1 #tag2 #tag3" 형식으로 변환하는 함수
-  const formatTags = (tags: Tag[], maxLength: number = 30) => {
-    const tagString = tags.map(tag => `#${tag.title}`).join(' ');
-    if (tagString.length <= maxLength) return tagString;
-    return tagString.slice(0, maxLength) + '...';
-  };
-
   return (
     <div>
       <NavLink
@@ -112,7 +105,7 @@ const RecommendedItemList: React.FC<RecommandedItemProps> = ({ item }) => {
           <span className="ml-1">{item.likeCount}</span>
         </button>
 
-        <div onClick={handleNavLink}>
+        <div className="hidden md:block" onClick={handleNavLink}>
           <SearchItemKebabDropdown whatContent="리스트" id={item.id}/>
         </div>
       </NavLink>

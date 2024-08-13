@@ -1,22 +1,54 @@
 // BookmarkListEditModal.tsx 는 AsideBookmarkList.tsx 에서 더보기 메뉴의 '수정하기' 버튼을 눌렀을 때 출력되는 컴포넌트
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../../../config";
-import { authStore } from "../../../stores/authStore";
-import { useEffect } from "react";
+import FileResizer from "react-image-file-resizer";
+
 // icons
 import { IoCloseOutline } from "react-icons/io5";
 
 // 기본 이미지
 import noImg from "../../../assets/images/noImg.gif";
 
+// stores
 import darkModeStore from "../../../stores/darkModeStore";
-import type { CategoryType } from "../../../types/BookmarkListType";
 import mainStore from "../../../stores/mainStore";
-import FileResizer from "react-image-file-resizer";
-
+import { authStore } from "../../../stores/authStore";
 import toastStore from "../../../stores/toastStore";
+
+// types
+import type { CategoryType } from "../../../types/BookmarkListType";
+
+// apis
+import { userSearch } from "../../../api/searchApi";
+
+interface SearchUser {
+  id: number;
+  email: string;
+  nickname: string;
+  birth: string;
+  job: string;
+  gender: boolean;
+  bio: string;
+  image: string;
+  bookmarkListCount: number;
+  roadmapCount: number;
+  followerCount: number;
+  followingCount: number;
+  following: boolean;
+  followers: boolean;
+}
+
+interface SelectedUser {
+  nickname: string;
+  email: string;
+}
+
+interface tempUserInfo {
+  id: number;
+  nickName: string;
+  email: string;
+}
 
 interface EditModalProps {
   isOpen: boolean;
@@ -38,17 +70,56 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
   const {setIsBookmarkListChange} = mainStore()
   const [imageState, setImageState] = useState<string>("edit"); // 이미지 변경 상태 체크
   
-
   const [tempTitle, setTempTitle] = useState<string>("");
   const [tempDescription, setTempDescription] = useState<string>("");
   const [tempTag, setTempTag] = useState("");
   const [tempTags, setTempTags] = useState<{ title: string }[]>([]);
-   
+  
   const [isPublic, setIsPublic] = useState(true);
   const [tagsLengthWarning, setTagsLengthWarning] = useState(false)
-const darkButton = " bg-sky-600 hover:bg-sky-800 text-slate-200 hover:text-slate-300  border-sky-600 hover:border-sky-800 "
-const lightButton =  " bg-sky-500 hover:bg-sky-700 text-slate-100  border-sky-500 hover:border-sky-700 "
+  const darkButton = " bg-sky-600 hover:bg-sky-800 text-slate-200 hover:text-slate-300  border-sky-600 hover:border-sky-800 "
+  const lightButton =  " bg-sky-500 hover:bg-sky-700 text-slate-100  border-sky-500 hover:border-sky-700 "
   const {setGlobalNotification} = toastStore()
+
+  const [tempUser, setTempUser] = useState<SelectedUser[]>([]);
+  const [searchInput, setSearchInput] = useState("");
+  const [searchResults, setSearchResults] = useState<SearchUser[]>([]);
+  
+  // 유저검색
+  useEffect(() => {
+    const searchUsers = async () => {
+      if (searchInput.trim() && userId) {
+        try {
+          const results = await userSearch(userId, 1, searchInput);
+          setSearchResults(results.data);
+        } catch (error) {
+          console.error("검색 중 오류 발생:", error);
+          setSearchResults([]);
+        }
+      } else {
+        setSearchResults([]);
+      }
+    };
+
+    const debounceTimer = setTimeout(searchUsers, 300);
+    return () => clearTimeout(debounceTimer);
+  }, [searchInput, userId]);
+
+  // 관리자 추가
+  const handleAddUser = (user: SearchUser) => {
+    if (!tempUser.some(selectedUser => selectedUser.email === user.email)) {
+      setTempUser([...tempUser, { nickname: user.nickname, email: user.email }]);
+      setSearchInput("");
+      setSearchResults([]);
+    }
+  };
+
+  // 관리자 제거
+  const handleRemoveUser = (email: string) => {
+    setTempUser(tempUser.filter(user => user.email !== email));
+  };
+
+  // 기본 데이터 조회
   useEffect(() => {
     async function fetchData() {
       axios({
@@ -74,17 +145,21 @@ const lightButton =  " bg-sky-500 hover:bg-sky-700 text-slate-100  border-sky-50
           }
           setTempCategories(catArr);
 
-          const userArr = [];
-          for (var ele of res.data.users) {
-            userArr.push(ele.nickName);
-          }
-          setTempUser(userArr);
+          const userArr = res.data.users
+          .filter((ele: tempUserInfo) => ele.id !== userId)
+          .map((ele: tempUserInfo) => ({
+            nickname: ele.nickName,
+            email: ele.email
+          }));
+        setTempUser(userArr);
+
         })
         .catch((err) => {
           console.error(err);
         });
     }
   fetchData();
+  console.log()
   }, []);
 // 태그 3개 이상되면 경고
 useEffect(()=>{
@@ -95,9 +170,7 @@ useEffect(()=>{
   }
 },[tempTags.length] )
 
-
-  const [tempUser, setTempUser] = useState<string[]>([]);
-
+  // 태그 추가
   const handleAddTag = () => {
     if (tempTag.trim() !== "") {
       setTempTags([...tempTags, { title: tempTag.trim() }]);
@@ -109,6 +182,7 @@ useEffect(()=>{
     setTempTags(tempTags.filter((tag) => tag.title !== inputText));
   };
 
+  // 수정 완료 로직
   const endEdit = () => {
 
     const formData = {
@@ -122,7 +196,7 @@ useEffect(()=>{
           : "default", // 없다면 DB에서 이미지 삭제 요청
       isPublic: isPublic,
       categories: tempCategories,
-      users: tempUser,
+      users: tempUser.map(user => user.email),
       tags: tempTags,
     };
 
@@ -169,6 +243,7 @@ useEffect(()=>{
         'file' // 출력 타입
       );
     });
+
   // 북마크리스트 이미지 변경 핸들러
   const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]; // 파일이 선택되지 않았을 때 null 처리
@@ -261,14 +336,53 @@ useEffect(()=>{
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium  mb-2">
-            유저
+          <label className={(isDark? "text-gray-400":"text-gray-700") + " block text-sm font-medium mb-2"}>
+            관리자
           </label>
+          <div className="flex flex-wrap gap-2 mb-2">
+            {tempUser.map((user, index) => (
+              <span
+                key={index}
+                className={(isDark? "bg-black" : "bg-gray-200") + " px-2 py-1 rounded-full text-sm flex items-center"}
+              >
+                {user.nickname}
+                <button
+                  onClick={() => handleRemoveUser(user.email)}
+                  className="ml-1 text-gray-500 hover:text-gray-700"
+                >
+                  <IoCloseOutline size={16} />
+                </button>
+              </span>
+            ))}
+          </div>
           <input
-            type=""
-            value={tempUser}
-            className={(isDark?  "bg-slate-600":"bg-gray-100" ) + " w-full px-3 py-2 border rounded-md "}
+            type="text"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            className="w-full px-3 py-2 border rounded-md"
+            placeholder="관리자 검색"
           />
+          {searchResults.length > 0 && (
+            <div className="mt-2 border rounded-md max-h-40 overflow-y-auto">
+              {searchResults.map((user) => (
+                <div
+                  key={user.id}
+                  className="p-2 hover:bg-gray-100 cursor-pointer flex items-center"
+                  onClick={() => handleAddUser(user)}
+                >
+                  <img 
+                    src={user.image || noImg} 
+                    alt={user.nickname} 
+                    className="w-8 h-8 rounded-full mr-2 object-cover"
+                  />
+                  <div>
+                    <div className="font-semibold">{user.nickname}</div>
+                    <div className="text-xs text-gray-500">{user.email}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="mb-4">

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { NavLink } from "react-router-dom";
 import { format, parseISO, addHours } from "date-fns";
-import { toZonedTime } from "date-fns-tz";
 
 // icons
 import { FaBell, FaTimes, FaCheck } from "react-icons/fa";

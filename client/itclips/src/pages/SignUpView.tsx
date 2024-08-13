@@ -338,7 +338,7 @@ const SignUpView = () => {
               <button
                 onClick={handleEmailSubmit}
                 type="button"
-                className="btn btn-outline btn-primary"
+                className="btn bg-sky-500 hover:bg-sky-700 text-slate-100"
                 disabled={!email || isEmailValid === false}
               >
                 본인 인증
@@ -360,7 +360,7 @@ const SignUpView = () => {
                 <button
                   onClick={handleVerificationSubmit}
                   type="button"
-                  className="btn btn-outline btn-primary"
+                  className="btn bg-sky-500 hover:bg-sky-700 text-slate-100"
                   disabled={!verificationCode}
                 >
                   인증번호 확인
@@ -460,7 +460,7 @@ const SignUpView = () => {
               />
               <button
                 type="button"
-                className="btn btn-outline btn-primary"
+                className="btn bg-sky-500 hover:bg-sky-700 text-slate-100"
                 onClick={handleNicknameCheck}
                 disabled={!nickname.trim() || isNicknameLengthValid === false} // 닉네임이 빈 값이거나 길이 제한을 통과하지 못했을 때 버튼 비활성화
               >
@@ -551,7 +551,7 @@ const SignUpView = () => {
               <div className="pl-1"></div>
               <button
                 className={`btn ${
-                  isMale === true ? "btn-primary" : "btn-outline"
+                  isMale === true ? "bg-sky-500 hover:bg-sky-700 text-slate-100" : "btn-outline"
                 } flex-1`}
                 onClick={(event) => handleGenderSelect(true, event)}
               >
@@ -560,7 +560,7 @@ const SignUpView = () => {
               </button>
               <button
                 className={`btn ${
-                  isMale === false ? "btn-primary" : "btn-outline"
+                  isMale === false ? "bg-sky-500 hover:bg-sky-700 text-slate-100" : "btn-outline"
                 } flex-1`}
                 onClick={(event) => handleGenderSelect(false, event)}
               >
@@ -574,7 +574,7 @@ const SignUpView = () => {
           <div className="flex items-center justify-center mt-8">
             <button
               type="submit"
-              className="btn btn-primary w-full max-w-xs"
+              className="btn bg-sky-500 hover:bg-sky-700 text-slate-100 w-full max-w-xs"
               disabled={!isFormValid()}
             >
               회원가입

@@ -128,29 +128,33 @@ const NotificationDropdown: React.FC = () => {
             </div>
           </div>
           <div className="p-4 h-[calc(100vh-var(--navbar-height))] md:max-h-96 overflow-y-auto scrollbar-hide">
-            {sortedNotifications.length === 0 ? (
+          {sortedNotifications.length === 0 ? (
               <p className="text-center py-2">알림이 없습니다.</p>
             ) : (
               <ul>
                 {sortedNotifications.map((notification) => (
                   <li key={notification.id} className={`py-2 border-b ${notification.read ? 'bg-base-200' : 'bg-white'} rounded`}>
-                    <NavLink 
-                      to={getNotificationLink(notification)}
-                      className="flex flex-col hover:bg-gray-50 p-2 rounded transition-colors duration-200"
-                    >
-                      <span className={`text-sm ${notification.read ? 'text-base-content' : 'text-black font-semibold'}`}>
-                        {notification.contents}
-                      </span>
-                      <span className="text-xs text-gray-400 mt-1">
-                        {formatDate(notification.createdAt)}
-                      </span>
-                    </NavLink>
-                    <button 
-                      onClick={(event) => handleDelete(event, notification.id)} 
-                      className="btn btn-ghost btn-xs float-right -mt-8 mr-2"
-                    >
-                      <FaTimes />
-                    </button>
+                    <div className="flex items-center">
+                      <NavLink 
+                        to={getNotificationLink(notification)}
+                        className="flex-grow hover:bg-gray-50 p-2 rounded transition-colors duration-200"
+                      >
+                        <div className="flex flex-col">
+                          <span className={`text-sm ${notification.read ? 'text-base-content' : 'text-black font-semibold'}`}>
+                            {notification.contents}
+                          </span>
+                          <span className="text-xs text-gray-400 mt-1">
+                            {formatDate(notification.createdAt)}
+                          </span>
+                        </div>
+                      </NavLink>
+                      <button 
+                        onClick={(event) => handleDelete(event, notification.id)} 
+                        className="btn btn-ghost btn-sm p-1 me-2"
+                      >
+                        <FaTimes />
+                      </button>
+                    </div>
                   </li>
                 ))}
               </ul>

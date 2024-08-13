@@ -10,9 +10,6 @@ import SearchRoadmap from "../components/search/SearchRoadmap.tsx";
 import SearchTag from "../components/search/SearchTag";
 import RealtimeSidebar from "../components/search/layout/RealtimeSidebar";
 
-// stores
-import { asideStore } from "../stores/asideStore";
-
 const SearchView = () => {
   const [whatCategory, setWhatCategory] = useState("카테고리");
   const [keyword, setKeyword] = useState("");
@@ -38,20 +35,30 @@ const SearchView = () => {
     }
   }, [notification]);
 
+  const isSpecificSearch = ["유저", "북마크리스트", "로드맵", "태그"].includes(whatCategory);
+
   return (
     <>
       <div id="Body" className="grid grid-cols-12 gap-4">
         {/* main 자리 */}
         <div
           id="Main"
-          className="md:col-start-2 md:col-span-7 col-start-1 col-span-12 px-4 md:px-0"
+          className={`col-span-12 px-4 ${isSpecificSearch ? 'md:col-start-3 md:col-span-8' : 'md:col-start-2 md:col-span-7'}`}
         >
           <div className="container mx-auto p-4">
             <div className="md:flex-row justify-between gap-4 mb-4">
+              {/* 새로 추가된 RealtimeSidebar */}
+              {isSpecificSearch && keyword && (
+                <div className="mb-2">
+                  <RealtimeSidebar />
+                </div>
+              )}
+
               {/* 검색 바 */}
               <div className="w-full">
                 <SearchBar handleCategory={selectCategory} />
               </div>
+              
               {/* 카테고리 조건에 따라 검색 컴포넌트 변경 */}
               {whatCategory === "카테고리" && <SearchMain />}
               {whatCategory === "유저" && <SearchUser keyword={keyword} />}
@@ -62,17 +69,17 @@ const SearchView = () => {
           </div>
         </div>
 
-        {/* RealtimeSidebar 및 RealtimeList - md 이하에서 숨김 */}
-        <div className="hidden md:block col-start-9 col-span-3">
-          <div className="my-6">
-            <RealtimeSidebar />
-          </div>
-          {whatCategory === "카테고리" && (
+        {/* 기존 RealtimeSidebar 및 RealtimeList - 카테고리 페이지에서만 표시 */}
+        {!isSpecificSearch && (
+          <div className="hidden md:block col-start-9 col-span-3">
+            <div className="my-6">
+              <RealtimeSidebar />
+            </div>
             <div className="w-60">
               <RealtimeList />
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* 토스트 알림 */}

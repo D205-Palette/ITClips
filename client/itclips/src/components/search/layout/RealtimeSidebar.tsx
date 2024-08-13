@@ -57,7 +57,7 @@ const RealtimeSidebar = () => {
   };
 
   return (
-    <div className="bg-base-100 text-base-content p-2 mx-auto w-[300px] ml-0">
+    <div className="bg-base-100 text-base-content p-1 md:p-2 mx-auto w-full md:w-[300px] ml-0">
       <div className={styles.searchTerms}>
         {rankItems.map((item, index) => (
           <div 
@@ -69,11 +69,11 @@ const RealtimeSidebar = () => {
           >
             <NavLink
               to={item.type === 'bookmark' ? `/bookmarklist/${item.id}` : `/roadmap/${item.id}`}
-              className="flex items-center justify-between px-4"
+              className="flex items-center justify-between px-2 md:px-4"
             >
-              <span className="font-semibold mr-2 w-6 text-center">{index + 1}.</span>
-              <span className="truncate flex-grow max-w-[350px]">{item.title}</span>
-              <span className="text-sm text-gray-500 ml-2 w-20 text-right">{item.count} hits</span>
+              <span className="font-semibold mr-1 md:mr-2 w-4 md:w-6 text-center text-xs md:text-base">{index + 1}.</span>
+              <span className="truncate flex-grow max-w-[200px] md:max-w-[350px] text-xs md:text-base">{item.title}</span>
+              <span className="text-xs md:text-sm text-gray-500 ml-1 md:ml-2 w-16 md:w-20 text-right">{item.count} hits</span>
             </NavLink>
           </div>
         ))}

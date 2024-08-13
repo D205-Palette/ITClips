@@ -12,11 +12,13 @@ import type { CategoryType } from "../../../types/BookmarkListType";
 import { authStore } from "../../../stores/authStore";
 import type { BookmarkListSumType } from "../../../types/BookmarkListType";
 import toastStore from "../../../stores/toastStore";
+import noImg from "../../../assets/images/noImg.gif"
 interface Move {
   editBookmarks: BookmarkType[];
   changeEditBookmarksIndex: React.Dispatch<React.SetStateAction<number[]>>;
   tabModal: React.Dispatch<React.SetStateAction<boolean>>;
   toggleMode: React.Dispatch<React.SetStateAction<boolean>>;
+  changeEditBookmarks?:React.Dispatch<React.SetStateAction<BookmarkType[]>>;
   // 이동 or 추가로 북마크 삭제까지 할지말지 결정
   whatMenu: string;
 }
@@ -27,6 +29,7 @@ const MoveBookmarkModal: FC<Move> = ({
   tabModal,
   toggleMode,
   whatMenu,
+  changeEditBookmarks,
 }) => {
   // 편의상 하나만 했지만, 나중에 내 북리, 그룹 북리 다 가져와서 선택해서 넣게
 
@@ -57,19 +60,28 @@ const MoveBookmarkModal: FC<Move> = ({
             tags:editBookmark.tags,
             content:editBookmark.content,
           },
-          
-       ).then(()=>{
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }).then(()=>{
           setIsBookmarkListChange(true)
         })
       );
 
       if (whatMenu === "이동") {
         editBookmarks.map((editBookmark) =>
-          axios.delete(`${API_BASE_URL}/api/bookmark/delete/${editBookmark.id}?userId=${userId}`).then(()=>{
+          axios.delete(`${API_BASE_URL}/api/bookmark/delete/${editBookmark.id}?userId=${userId}`,{
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }).then(()=>{
             setIsBookmarkListChange(true)
           })
         );
-        changeEditBookmarksIndex([]);
+        changeEditBookmarksIndex([])
+        if(changeEditBookmarks){
+        changeEditBookmarks([])}
       }
       const toastText = whatMenu==='이동'? '이동': '추가'
         setGlobalNotification({
@@ -98,11 +110,17 @@ const MoveBookmarkModal: FC<Move> = ({
 
       if (whatMenu === "이동") {
         editBookmarks.map((editBookmark) =>
-          axios.delete(`${API_BASE_URL}/api/bookmark/delete/${editBookmark.id}?userId=${userId}`).then(()=>{
+          axios.delete(`${API_BASE_URL}/api/bookmark/delete/${editBookmark.id}?userId=${userId}`,{
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }).then(()=>{
             setIsBookmarkListChange(true)
           })
         );
-        changeEditBookmarksIndex([]);
+        changeEditBookmarksIndex([])
+        if(changeEditBookmarks){
+        changeEditBookmarks([])}
       }
       const toastText = whatMenu==='이동'? '이동': '추가'
         setGlobalNotification({
@@ -193,16 +211,16 @@ const MoveBookmarkModal: FC<Move> = ({
     };
 
     return (
-      <div className="flex flex-col w-11/12">
+      <div className="flex flex-col w-11/12 ">
         <div
           className={
             (isOpen ? "bg-sky-200" : "") +
-            " flex flex-row justify-start h-20  border-b border-slate-300 hover:bg-sky-200 hover:cursor-pointer"
+            " flex flex-row justify-start h-20  border-b border-slate-300 hover:bg-sky-100 hover:cursor-pointer rounded-s-xl"
           }
           onClick={() => clickEvent(list.id)}
         >
-          <div className="h-20 w-1/5 overflow-hidden ">
-            <img src={list.image} alt="#" className="object-contain" />
+          <div className="h-20 w-20 overflow-hidden rounded-xl ">
+            <img src={list.image==="default" ? noImg : list.image }  className="object-cover h-full w-full rounded-xl " />
           </div>
           <h4 className="flex flex-row items-center w-4/5 ps-5">
             {list.title}

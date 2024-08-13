@@ -112,7 +112,7 @@ const MyBookmark = () => {
           {/* aside 자리 */}
           <div
             id="aside"
-            className="md:col-start-2 md:col-span-3 md:pe-4 col-start-2 col-span-10"
+            className="md:col-start-2 md:col-span-3 md:pe-10 col-start-2 col-span-10"
           >
             <div className="static">
               {bookmarkList ? (
@@ -166,7 +166,7 @@ const MyBookmark = () => {
                   </button>
                 </div>
               ) : bookmarkList ? (
-                <div className="static z-50 max-">
+                <div className="static z-50 ">
                   <CategoryTab
                     categories={bookmarkList.categories}
                     listId={bookmarkList.id}
@@ -181,7 +181,7 @@ const MyBookmark = () => {
             </div>
             {/* 북마크들 */}
 
-            <div className="">
+            <div className="mb-12">
               {filterdBookmarks.map((bookmark) =>
                 editMode ? (
                   <BookmarkEdit
@@ -245,6 +245,7 @@ const MyBookmark = () => {
       {isEditModal && (
         <MoveBookmarkModal
           editBookmarks={editBookmarks}
+          changeEditBookmarks={changeEditBookmarks}
           tabModal={tabEditModal}
           toggleMode={setEditMode}
           changeEditBookmarksIndex={changeEditBookmarksIndex}
@@ -266,6 +267,7 @@ const MyBookmark = () => {
           onClose={() => setIsDeleteModalOpen(false)}
           bookmarks={editBookmarks}
           whatContent="북마크"
+          changeEditBookmarks={changeEditBookmarks}
           changeEditBookmarksIndex={changeEditBookmarksIndex}
           toggleMode={setEditMode}
         />

@@ -45,7 +45,8 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack,
     updateMessageStatus, 
     resetMessageCount,
     addMessage,
-    leaveRoom
+    leaveRoom,
+    clearMessages
   } = chatStore();
 
   const [ inputMessage, setInputMessage ] = useState('');
@@ -54,6 +55,7 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack,
   const [ isInputFocused, setIsInputFocused ] = useState(false);
   const updateStatusRef = useRef<(() => void) | null>(null); // 최신 updateReadStatus 함수를 참조하는 ref
   const inputRef = useRef<HTMLInputElement>(null);
+  const [ isLoading, setIsLoading ] = useState(true);
 
   // 컴포넌트 마운트 시 입력 필드에 포커스
   useEffect(() => {
@@ -104,27 +106,33 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack,
 
   // 마운트 됐을 때 처음에 채팅방 정보 가져오기
   useEffect(() => {
-    fetchMessages(roomId);
-    fetchRoomInfo(roomId);
+    setIsLoading(true);
+    clearMessages();
     
-    const updateStatus = () => {
+    const fetchData = async () => {
       if (userInfo && userInfo.id !== undefined) {
-        updateMessageStatus(roomId, userInfo.id);
+        await fetchMessages(roomId);
+        await fetchRoomInfo(roomId);
+        await updateMessageStatus(roomId, userInfo.id);
         resetMessageCount(roomId);
       } else {
-        console.warn("User ID is undefined. Skipping message status update.");
+        console.warn("User ID is undefined. Skipping data fetch and status update.");
       }
     };
-  
-    updateStatus();
-  
+
+    const timer = setTimeout(() => {
+      fetchData().then(() => {
+        setIsLoading(false);
+      });
+    }, 300); // 300ms 지연
+
     return () => {
-      // 컴포넌트 언마운트 시에는 현재 채팅방의 읽음 처리만 수행
+      clearTimeout(timer);
       if (userInfo && userInfo.id !== undefined) {
         updateMessageStatus(roomId, userInfo.id);
       }
     };
-  }, [roomId, userInfo, fetchMessages, fetchRoomInfo, updateMessageStatus, resetMessageCount]);
+  }, [roomId, userInfo, fetchMessages, fetchRoomInfo, updateMessageStatus, resetMessageCount, clearMessages]);
 
   // 뒤로가기 버튼 클릭 핸들러 (읽음 상태 업데이트 후 onBackWithRead 호출)
   const handleBackClick = useCallback(() => {
@@ -215,35 +223,45 @@ const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack,
 
   return (
     <div className="flex flex-col h-full">
-      <div className={`${ isDark ? "bg-base-200" : "bg-sky-200" } flex justify-between items-center p-4 border-b`}>
-        <div className="flex items-center">
-          <MessageBackButton onBack={handleBackClick} />
-          <h2 className="text-xl font-bold ml-2 truncate flex-shrink min-w-0 max-w-[180px]">{currentRoomInfo?.roomName}</h2>
+      {isLoading ? (
+        <div className="flex flex-col justify-center items-center h-full bg-base-100">
+          <div className="loading loading-spinner loading-lg text-info"></div>
+          <p className="text-lg font-semibold mt-4 text-base-content">채팅방 로딩 중...</p>
+          <p className="text-sm mt-2 text-base-content/70">잠시만 기다려 주세요</p>
         </div>
-        <AsideMessageKebabDropdown
-          roomId={roomId}
-          onMenuItemClick={handleKebabMenuAction}
-        />
-      </div>
-      <div className="flex-1 overflow-hidden">
-        <MessageContainer messages={currentRoomMessages} />
-      </div>
-      <div className="p-4 bg-base-100 border-t border-gray-200">
-        <div className="flex items-center w-full">
-          <input
-            ref={inputRef}
-            type="text"
-            value={inputMessage}
-            onChange={(e) => setInputMessage(e.target.value)}
-            onKeyDown={handleKeyDown}
-            onFocus={handleInputFocus}
-            onBlur={handleInputBlur}
-            placeholder="메세지를 입력해주세요"
-            className="input input-bordered flex-grow mr-2 min-w-0"
-          />
-          <button onClick={handleSendMessage} className="btn bg-sky-500 text-slate-100 hover:bg-sky-700 whitespace-nowrap">전송</button>
-        </div>
-      </div>
+      ) : (
+        <>
+          <div className={`${ isDark ? "bg-base-200" : "bg-sky-200" } flex justify-between items-center p-4 border-b`}>
+            <div className="flex items-center">
+              <MessageBackButton onBack={handleBackClick} />
+              <h2 className="text-xl font-bold ml-2 truncate flex-shrink min-w-0 max-w-[180px]">{currentRoomInfo?.roomName}</h2>
+            </div>
+            <AsideMessageKebabDropdown
+              roomId={roomId}
+              onMenuItemClick={handleKebabMenuAction}
+            />
+          </div>
+          <div className="flex-1 overflow-hidden">
+            <MessageContainer messages={currentRoomMessages} />
+          </div>
+          <div className="p-4 bg-base-100 border-t border-gray-200">
+            <div className="flex items-center w-full">
+              <input
+                ref={inputRef}
+                type="text"
+                value={inputMessage}
+                onChange={(e) => setInputMessage(e.target.value)}
+                onKeyDown={handleKeyDown}
+                onFocus={handleInputFocus}
+                onBlur={handleInputBlur}
+                placeholder="메세지를 입력해주세요"
+                className="input input-bordered flex-grow mr-2 min-w-0"
+              />
+              <button onClick={handleSendMessage} className="btn bg-sky-500 text-slate-100 hover:bg-sky-700 whitespace-nowrap">전송</button>
+            </div>
+          </div>
+        </>
+      )}
       {isInviteModalOpen && (
         <MessageInviteModal
           roomId={roomId}

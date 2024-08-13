@@ -54,6 +54,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
             message: "신고가 접수되었습니다",
             type: "success",
           });
+          
         })
         .catch((err) => {
           if (err.response.status === 400) {
@@ -65,6 +66,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
           } 
           
         });
+        onClose()
     } else {
       axios({
         method: "post",
@@ -94,6 +96,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
           } 
          
         });
+        onClose()
     }} else{
       setFormCertified(true)
     }

@@ -129,7 +129,7 @@ const EmailLoginModal: React.FC = () => {
           )}
 
           <button
-            className="btn btn-primary w-full mb-2 text-white"
+            className="btn btn-info w-full mb-2 text-white"
             type="submit"
             disabled={loading}
           >

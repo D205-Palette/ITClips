@@ -115,7 +115,7 @@ const AddBookmarkModal: FC<move> = ({ tabModal, toggleMode, listId }) => {
           ref={inputRef}
           onChange={(e) => changeInputValue(e.target.value)}
           type="text"
-          name=""
+          maxLength={20}
           id=""
           value={inputValue}
           className="m-2 border border-slate-300 rounded-lg w-11/12 ps-2 h-8"

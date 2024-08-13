@@ -26,7 +26,9 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
 
   // 즐겨찾기 추가
   function addFavorite(): void {
-    axios.post(`${API_BASE_URL}/api/list/scrap/${userId}/${id}`, {
+    axios.post(`${API_BASE_URL}/api/list/scrap/${userId}/${id}`,
+      {},
+      {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -34,7 +36,9 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
   }
   // 로드맵 스크랩
   function addScrap(): void {
-    axios.post(`${API_BASE_URL}/api/roadmap/scrap/${id}/${userId}`, {
+    axios.post(`${API_BASE_URL}/api/roadmap/scrap/${id}/${userId}`,
+      {},
+      {
       headers: {
         Authorization: `Bearer ${token}`,
       },

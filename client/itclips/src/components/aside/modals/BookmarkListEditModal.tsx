@@ -274,7 +274,7 @@ useEffect(()=>{
 
         <div className="mb-4">
           {/* <label className="block text-sm font-medium  mb-2"> */}
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className={(isDark? "text-geay-400":" text-gray-700") + " block text-sm font-medium mb-2"}>
             리스트명
           </label>
           <input
@@ -287,7 +287,7 @@ useEffect(()=>{
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-2">
+          <label className={(isDark? "text-geay-400":" text-gray-700") +  " block text-sm font-medium mb-2"}>
             내용
           </label>
           <textarea
@@ -300,7 +300,7 @@ useEffect(()=>{
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium  mb-2">
+          <label className={(isDark? "text-geay-400":" text-gray-700") + " block text-sm font-medium  mb-2"}>
             태그
           </label>
           <div className="flex flex-wrap gap-2 mb-2">
@@ -327,7 +327,9 @@ useEffect(()=>{
               className="flex-grow px-3 py-2 border rounded-l-md"
               placeholder={tagsLengthWarning? "태그는 3개까지 가능합니다" :"새 태그 입력"}
               disabled={tagsLengthWarning}
+              maxLength={20}
             />
+            
             <button
               onClick={handleAddTag}
               className={(isDark? darkButton: lightButton ) +" btn rounded-l-none"}

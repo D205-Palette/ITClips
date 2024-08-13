@@ -34,7 +34,9 @@ const MyGroupBookmarkList = () => {
   function tabAlbum(): void {
     setTab(false);
   }
-  const [noContent, setNoContent] = useState(<p>asdf</p>);
+  const [noContent, setNoContent] = useState(<div className="w-full flex flex-row justify-center mt-6">
+    <span className="loading loading-spinner loading-lg text-sky-500"></span>
+  </div>);
   // 마운트할때 유저의 즐겨찾기들 요약
   useEffect(() => {
     async function fetchData() {
@@ -80,7 +82,7 @@ const MyGroupBookmarkList = () => {
 
         {/* 리스트 & 액자형 탭 */}
         <div className="flex justify-end">
-          <div role="tablist" className="tabs ">
+          <div role="tablist" className="tabs hidden md:block ">
             {!isList ? (
               <>
                 <div onClick={tabList} role="tab" className="tab mx-3">

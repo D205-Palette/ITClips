@@ -129,7 +129,7 @@ const PasswordResetModal: React.FC = () => {
               </div>
               <button
                 type="submit"
-                className="btn btn-primary mt-4"
+                className="btn btn-info mt-4"
                 disabled={loading}
               >
                 {loading ? "발송중..." : "인증번호 발송"}
@@ -166,7 +166,7 @@ const PasswordResetModal: React.FC = () => {
 
             <button
               type="submit"
-              className="btn btn-primary w-full"
+              className="btn btn-info w-full"
               disabled={loading}
             >
               임시 비밀번호 발급 받기

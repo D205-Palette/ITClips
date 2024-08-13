@@ -31,13 +31,12 @@ const EditTag: React.FC<Props> = ({ tag, isEdit, editTempTags, tempTags }) => {
   }
   return (
     <>
-      {/* main자리 */}
       <div
         className="relative"
         onMouseOver={() => setIsHoverTag(true)}
         onMouseLeave={() => setIsHoverTag(false)}
       >
-        <div className="ms-1 flex " onClick={()=>deleteTag()}>
+        <div className="ms-1 flex flex-row justify-center" >
           <div
             className={
               isHoverTag && isEdit
@@ -50,11 +49,11 @@ const EditTag: React.FC<Props> = ({ tag, isEdit, editTempTags, tempTags }) => {
           <div
             className={
               (isHoverTag && isEdit ? "" : "hidden") +
-              " absolute text-white flex flex-row justify-center left-1/2 top-0.5"
+              " absolute text-white flex flex-row justify-center items-center  "
             }
-            
+            onClick={()=>deleteTag()}
           >
-            <IoClose size={20} />
+            X
           </div>
         </div>
       </div>

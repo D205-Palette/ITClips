@@ -20,7 +20,7 @@ const NoContent: React.FC<Props> = ({ content }) => {
 
   useEffect(()=>{
     if(content ==="즐겨찾기" || content === "그룹" ){
-      setWarningText("컨텐츠가 없습니다! \n  + 버튼을 눌러 추가해주세요 ")
+      setWarningText("컨텐츠가 없습니다! ")
     } else if(content === "비공개리스트"){
       setWarningText("비공개된 리스트입니다!")
     }

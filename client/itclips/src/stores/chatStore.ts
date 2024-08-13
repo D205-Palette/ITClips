@@ -51,6 +51,7 @@ interface ChatStore {
   updateRoom: (roomId: number, updates: Partial<ChatRoom>) => void;
   resetMessageCount: (roomId: number) => void;
   addMessage: (message: Message) => void;
+  clearMessages: () => void;
 }
 
 export const chatStore = create<ChatStore>((set, get) => ({
@@ -61,6 +62,8 @@ export const chatStore = create<ChatStore>((set, get) => ({
   isLoading: false,
   error: null,
   totalUnreadCount: 0,
+  
+  clearMessages: () => set({ currentRoomMessages: [] }),
 
   // 채팅방 조회
   fetchRooms: async (userId: number) => {

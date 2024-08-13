@@ -19,6 +19,7 @@ interface DeleteConfirmModalProps {
   bookmarks?:BookmarkType[]
   changeEditBookmarksIndex?: React.Dispatch<React.SetStateAction<number[]>>
   toggleMode?: React.Dispatch<React.SetStateAction<boolean>>
+  changeEditBookmarks?: React.Dispatch<React.SetStateAction<BookmarkType[]>>
 }
 
 const DeleteContentModal: React.FC<DeleteConfirmModalProps> = ({
@@ -28,7 +29,8 @@ const DeleteContentModal: React.FC<DeleteConfirmModalProps> = ({
   id,
   bookmarks,
   changeEditBookmarksIndex,
-  toggleMode
+  toggleMode,
+  changeEditBookmarks,
 }) => {
 
 
@@ -72,6 +74,8 @@ const {setGlobalNotification} = toastStore()
           });
           changeEditBookmarksIndex&&changeEditBookmarksIndex([])
           toggleMode&&toggleMode(false)
+          if (          changeEditBookmarks){
+          changeEditBookmarks([])}
         });})
      
     }else if (whatContent === "북마크") {

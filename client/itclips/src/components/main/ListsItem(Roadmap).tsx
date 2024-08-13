@@ -32,13 +32,13 @@ const ListItem: FC<Props> = ({ list,changeCount,count,canEdit }) => {
     if(isCheck){
       changeCount(count - 1)
       list.check = false
-      axios.put(`${API_BASE_URL}/api/roadmap/step/${list.id}/${userId}`,{headers: {
+      axios.put(`${API_BASE_URL}/api/roadmap/step/${list.id}/${userId}`,{},{headers: {
         Authorization: `Bearer ${token}`,
       },})
     } else {
       changeCount(count + 1)
       list.check = true
-      axios.put(`${API_BASE_URL}/api/roadmap/step/${list.id}/${userId}`,{headers: {
+      axios.put(`${API_BASE_URL}/api/roadmap/step/${list.id}/${userId}`,{},{headers: {
         Authorization: `Bearer ${token}`,
       },})
     }
@@ -51,24 +51,24 @@ const ListItem: FC<Props> = ({ list,changeCount,count,canEdit }) => {
       <div
         className={
           (isDark ? "hover:brightness-125" : "hover:brightness-95") +
-          " card card-side bg-slate-50  h-28 col-span-4 odd:col-start-1  even:col-start-4 mb-10 z-10"
+          " card card-side bg-base-100  h-24 col-span-4 odd:col-start-1  even:col-start-4 mb-10 z-10"
         }
       >
         <>
           <figure
             onClick={() => navigate(`/bookmarklist/${list.bookmarkListRoadmapDTO.id}`)}
-            className="hover:cursor-pointer hidden lg:inline "
+            className="hover:cursor-pointer hidden lg:inline rounded-2xl w-24"
           >
             <img              
               src={list.bookmarkListRoadmapDTO.image === "default" ? noImg : list.bookmarkListRoadmapDTO.image}
               alt="noImage"
-              className="size-28 hidden lg:inline "
+              className="size-24 hidden lg:inline "
             />
           </figure>
 
           <div className="card-body flex flex-row justify-between">
             <div className="flex flex-row items-center " onClick={() => navigate(`/bookmarklist/${list.bookmarkListRoadmapDTO.id}`)}>
-                <h4 className="card-title hover:cursor-pointer text-sm md:text-md lg:text-xl">
+                <h4 className="card-title hover:cursor-pointer text-sm md:text-md lg:text-xl truncate text-ellipsis w-40">
                   {list.bookmarkListRoadmapDTO.title}
                 </h4>
             </div>

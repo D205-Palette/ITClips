@@ -17,9 +17,10 @@ import { API_BASE_URL } from "../../config";
 import { useEffect } from "react";
 import type { CategoryType } from "../../types/BookmarkListType";
 import { useParams } from "react-router-dom";
-import Tab from "../../stores/mainTabStore";
 import mainStore from "../../stores/mainStore";
 import { keyboardKey } from "@testing-library/user-event";
+import { FaCheck } from "react-icons/fa";
+
 interface Props {
   tempCategory: CategoryType;
   canEdit: boolean;
@@ -39,8 +40,9 @@ const CategorySingleTab: FC<Props> = ({
   const color = isDark
     ? "bg-slate-900 text-slate-300 border-solid border-slate-100 border-2 p-1"
     : "bg-slate-0 text-slate-900 border-solid border-slate-900 border-2 p-1";
-  const whatCategory = mainTabStore((state) => state.whatCategory);
-
+  // const whatCategory = mainTabStore((state) => state.whatCategory);
+  // const changeCategory = mainTabStore((state) => state.changeCategory);
+  const {whatCategory,changeCategory} = mainTabStore()
   const [isDelete, setIsDelete] = useState(false);
   const [tempTag, setTempTag] = useState(tempCategory.categoryName);
   const [isMaxLength, setIsMaxLenth] = useState(false);
@@ -56,112 +58,59 @@ const CategorySingleTab: FC<Props> = ({
             params: {
               userId: userId,
             },
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
         )
-        .then(() => {          
+        .then(() => {
           setIsBookmarkListChange(true);
-          setEditMode(false);
+          // setEditMode(false);
         });
     }
   };
 
-  useEffect(()=>{
-    if(tempTag.length===20){
-      setIsMaxLenth(true)
-    } else{
-      setIsMaxLenth(false)
+  useEffect(() => {
+    if (tempTag.length === 20) {
+      setIsMaxLenth(true);
+    } else {
+      setIsMaxLenth(false);
     }
-  },[tempTag.length])
-
-  const DeleteButton = (): any => {
-    const [isOpen, setIsOpen] = useState(false);
-
-    interface Props {
-      setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    }
-    const DeleteCheckModal: React.FC<Props> = ({ setIsOpen }): any => {
-      return (
-        <div className="modal modal-open fixed z-50">
-          <div className="modal-box pt-16 ">
-            <h3 className="font-bold text-lg">카테고리를 삭제하시겠습니까?</h3>
-            <div className="modal-action">
-              <button
-                className="btn bg-sky-500 text-slate-100 hover:bg-sky-700"
-                onClick={() => {
-                  deleteCategory();
-                  setIsOpen(false);
-                  setIsDelete(true);
-                }}
-              >
-                확인
-              </button>
-              <button
-                className="btn"
-                onClick={() => {
-                  setIsOpen(false);
-                }}
-              >
-                취소
-              </button>
-            </div>
-          </div>
-        </div>
-      );
-    };
-
-    function deleteCategory(): void {
-      axios({
-        method: "delete",
-        url: `${API_BASE_URL}/api/category/delete/${tempCategory.categoryId}`,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        params: {
-          userId: userId,
-        },
-      })
-        .then((res) => {
-          setIsBookmarkListChange(true);
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    }
-
-    return (
-      <>
-        <button
-          onClick={() => setIsOpen(true)}
-          className={isDark ? "text-slate-100" : "text-slate-900 "}
-        >
-          <IoIosClose size="24px" />
-        </button>
-        {isOpen && <DeleteCheckModal setIsOpen={setIsOpen} />}
-      </>
-    );
-  };
+  }, [tempTag.length]);
 
   return (
     <>
       <button
-        className={(isMaxLength? "border-red-500 ":" border-sky-500 " ) + 
+        className={
+          (isMaxLength ? "border-red-500 " : " border-sky-500 ") +
           (tempCategory.categoryName === whatCategory.categoryName
             ? "bg-sky-500 text-slate-100 border-solid  border-2 p-1"
-            : color) + " rounded-2xl mx-2 ps-3 w-36"
+            : color) +
+          " rounded-2xl mx-2 ps-3 w-36 flex flex-row items-center"
         }
+  
       >
-        <div className="flex flex-row items-center w-24">
-          <div className="me-2 ">
-            <input
-              type="text"
-              value={tempTag}
-              className="w-24"
-              onChange={(e) => setTempTag(e.target.value)}
-              onKeyDown={(e) => editCategory(e)}
-              maxLength={20}
-            />
-          </div>{" "}
-          {canEdit ? <DeleteButton /> : <></>}
+        <div className="me-2 ">
+          <input
+            type="text"
+            value={tempTag}
+            className={
+              (whatCategory.categoryName === tempCategory.categoryName
+                ? "bg-sky-500 text-slate-100"
+                : "") + " w-24"
+            }
+            onChange={(e) => setTempTag(e.target.value)}
+            onKeyDown={(e) => editCategory(e)}
+            maxLength={20}
+          />
+        </div>{" "}
+        
+        <div onClick={() => {changeCategory(tempCategory); console.log(tempCategory.categoryName);}}>
+          {whatCategory.categoryName === tempCategory.categoryName ? (
+            <FaCheck color="white" size={18} />
+          ) : (
+            <FaCheck style={{color: "#d3dedc",}} size={18} />
+          )}
         </div>
       </button>
     </>

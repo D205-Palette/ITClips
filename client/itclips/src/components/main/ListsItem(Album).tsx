@@ -40,11 +40,15 @@ const ListItem: FC<Props> = ({ list, whatMenu, canEdit }) => {
       changeLikeCount(likeCount - 1);
     } else {
       {
-        axios.post(`${API_BASE_URL}/api/list/like/${userId}/${list.id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        axios.post(
+          `${API_BASE_URL}/api/list/like/${userId}/${list.id}`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
       }
       changeLikeCount(likeCount + 1);
     }
@@ -60,27 +64,34 @@ const ListItem: FC<Props> = ({ list, whatMenu, canEdit }) => {
           (isDark ? "hover:bg-slate-700" : "hover:bg-slate-100")
         }
         onMouseOver={() => setIsHovering(true)}
-        onMouseOut={() => setIsHovering(false)} 
+        onMouseOut={() => setIsHovering(false)}
       >
-        <figure
-          className={
-            "size-64 rounded-b-lg " + (isDark ? "hover:brightness-150" : "hover:brightness-95")
-          }
-        >
-          {isHover ? (
-            <ListItemHover list={list} />
-          ) : (
-            <>
-              <img src={`${list.image}`} alt="Movie" className=" w-full object-fill" />
-            </>
-          )}
-        </figure>
-
+        {" "}
+        {isHover ? (
+          <ListItemHover list={list} />
+        ) : (
+          <figure
+            className={
+              "size-64 rounded-b-lg overflow-hidden " +
+              (isDark ? "hover:brightness-150" : "hover:brightness-95")
+            }
+          >
+            <img
+              src={`${list.image}`}
+              alt="Movie"
+              className=" w-full h-full object-cover"
+            />
+          </figure>
+        )}
         <div className="card-body flex flex-col py-2 px-6  relative ">
           <div className="absolute top-0 right-0 z-40">
-            <KebabDropdown whatMenu={whatMenu} id={list.id} users={list.users}/>
+            <KebabDropdown
+              whatMenu={whatMenu}
+              id={list.id}
+              users={list.users}
+            />
           </div>
-          <div className="flex flex-col justify-around hover:cursor-pointer ">
+          <div className="flex flex-col justify-around hover:cursor-pointer">
             <div>
               <h5
                 onClick={() => navigate(`/bookmarklist/${list.id}`)}
@@ -99,7 +110,6 @@ const ListItem: FC<Props> = ({ list, whatMenu, canEdit }) => {
               <button onClick={clickHeart} className="btn btn-ghost p-1">
                 {isLike ? <FaHeart color="red" /> : <FaRegHeart color="gray" />}
                 <span className={isLike ? "" : "text-slate-500"}>
-                  
                   {likeCount}
                 </span>
               </button>

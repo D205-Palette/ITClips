@@ -26,5 +26,5 @@ export const tagSearch = (userId: number, page: number, tags: Tag[]) => {
 
 // 북마크 리스트 추천 목록
 export const getRecommendedBookmarks = (userId: number) => {
-  return authenticatedRequest("post", `/recommendations/user/${userId}`, undefined, { userId });
+  return authenticatedRequest("get", `/recommendations/user/${userId}`, undefined, { userId });
 };

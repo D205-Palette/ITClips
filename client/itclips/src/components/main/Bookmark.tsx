@@ -12,14 +12,14 @@ import EditTag from "./Bookmark(Tag)";
 import { LINKPREVIEW_API_KEY } from "../../config";
 import AIContent from "./Bookmark(AI)";
 import mainTabStore from "../../stores/mainTabStore";
-
+import toastStore from "../../stores/toastStore";
 interface Props {
   bookmark: BookmarkType;
   editBookmarks: BookmarkType[];
   changeEditBookmarks: React.Dispatch<React.SetStateAction<BookmarkType[]>>;
   editBookmarksIndex: number[];
   changeEditBookmarksIndex: React.Dispatch<React.SetStateAction<number[]>>;
-  canEdit:boolean
+  canEdit: boolean;
 }
 
 const Bookmark: FC<Props> = ({
@@ -34,18 +34,15 @@ const Bookmark: FC<Props> = ({
   const [tempTitle, editTempTitle] = useState<string>(bookmark.title);
   const [tempTags, editTempTags] = useState(bookmark.tags);
   const [tempTag, editTempTag] = useState("");
-
+  const { setGlobalNotification } = toastStore();
   // 북마크 썸네일 불러오기
   const [ogImage, setOgImage] = useState("");
-
-
 
   useEffect(() => {
     setOgImage(
       `https://www.google.com/s2/favicons?sz=64&domain_url=${bookmark.url}`
     );
   });
-
 
   const [isLike, toggleLike] = useState(bookmark.isLiked);
   const [likeCount, setLikeCount] = useState(bookmark.likeCount);
@@ -62,7 +59,7 @@ const Bookmark: FC<Props> = ({
   useEffect(() => {
     setIsAIOpen(false);
   }, [whatCategory.categoryName]);
-  
+
   //좋아요
   const clickHeart = (): void => {
     if (isLike) {
@@ -76,11 +73,15 @@ const Bookmark: FC<Props> = ({
       );
       setLikeCount(likeCount - 1);
     } else {
-      axios.post(`${API_BASE_URL}/api/bookmark/like/${userId}/${bookmark.id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      axios.post(
+        `${API_BASE_URL}/api/bookmark/like/${userId}/${bookmark.id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setLikeCount(likeCount + 1);
     }
     toggleLike(!isLike);
@@ -89,17 +90,34 @@ const Bookmark: FC<Props> = ({
   const isDark = darkModeStore((state) => state.isDark);
 
   // 태그 수정
-  function submitTag(): void {
+  const submitTag = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     // tempBookmark를 formData로 해서 put 요청
-    editTempTags([...tempTags, { title: tempTag }]);
 
+    const checkErr = () => {
+      let err = false;
+      tempTags.map((tag) => (tag.title === tempTag ? (err = true) : ""));
+      return err;
+    };
+
+    const errr = await checkErr();
+
+    if (errr) {
+      setGlobalNotification({
+        message: "중복된 태그가 존재합니다",
+        type: "error",
+      });
+    } else if (tempTag.trim()) {
+      editTempTags([...tempTags, { title: tempTag }]);
+    }
     editTempTag("");
     toggleTagEdit(false);
-  }
+  };
 
   // 최종 수정
   function completeEdit(): void {
     toggleEdit(false);
+    toggleTagEdit(false);
     // editTempBookmark({ ...tempBookmark, title: tempTitle, tags: tempTags });
     editTempBookmark({ ...tempBookmark, title: tempTitle });
     //  /bookmark /update/{bookmarkId} 로 put요청
@@ -135,99 +153,118 @@ const Bookmark: FC<Props> = ({
         }
       >
         <>
-          <div className="card-body flex flex-row items-center">
+          <div className="card-body flex flex-row items-center justify-between">
             {/* 주소에 https 포함 여부 확인해야할듯 */}
 
-            <img
-              src={ogImage || "default-image.jpg"}
-              alt={bookmark.url}
-              className="h-full"
-            />
-
-            <div
-              className="flex flex-col flex-auto justify-around"
-              onClick={() => {
-                !isEdit &&
-                  window.open(
-                    bookmark.url.includes("https")
-                      ? `${bookmark.url}`
-                      : `https://${bookmark.url}`
-                  );
-              }}
-            >
-              <div>
-                {isEdit ? (
-                  <input
-                    type="text"
-                    value={tempTitle}
-                    onChange={(e) => editTempTitle(e.target.value)}
-                    className="text-xl font-bold border-slate-400 border rounded-md w-52"
-                  />
-                ) : (
-                  <h2 className="flex-auto card-title">{tempBookmark.title}</h2>
-                )}
-              </div>
-              <div className="underline underline-offset-1">{bookmark.url}</div>
-            </div>
-
-            {/* 태그들 */}
-            <div className="hidden items-center md:inline-flex ">
-              {tempTags.map((tag) => (
-                <EditTag
-                  tag={tag.title}
-                  isEdit={isEdit}
-                  tempTags={tempTags}
-                  editTempTags={editTempTags}
-                />
-                // <span className="ms-1">{" # " + tag.title}</span>
-              ))}{" "}
-            </div>
-
-            {/* 태그 추가 위치 */}
-            <div className="card-actions justify-end flex items-center">
-              {isEdit ? (
-                isTagEdit ? (
-                  <form onSubmit={() => submitTag()} className="w-1/3">
+            {/* 왼쪽 이미지 제목 url부분 */}
+            <div className="w-1/2 flex flex-row justify-start">
+              <img
+                src={ogImage || "default-image.jpg"}
+                alt={bookmark.url}
+                className="h-12 me-4 w-12 "
+              />
+              <div
+                className="flex flex-col justify-around w-2/3"
+                onClick={() => {
+                  !isEdit &&
+                    window.open(
+                      bookmark.url.includes("https")
+                        ? `${bookmark.url}`
+                        : `https://${bookmark.url}`
+                    );
+                }}
+              >
+                <div>
+                  {isEdit ? (
                     <input
                       type="text"
-                      value={tempTag}
-                      onChange={(e) => editTempTag(e.target.value)}
-                      className="w-full border border-slate-400 rounded-md ps-2"
+                      value={tempTitle}
+                      onChange={(e) => editTempTitle(e.target.value)}
+                      className="text-xl font-bold border-slate-400 border rounded-md w-5/6"
                     />
-                  </form>
-                ) : (
-                  <FaPlus onClick={() => toggleTagEdit(true)} />
-                )
-              ) : (
-                <button onClick={clickHeart} className="btn btn-ghost">
-                  {isLike ? <FaHeart color="red" /> : <FaRegHeart />}
-                  {likeCount}{" "}
-                </button>
-              )}
+                  ) : (
+                    <h2 className="text-lg lg:text-xl font-bold">
+                      {tempBookmark.title}
+                    </h2>
+                  )}
+                </div>
+                <div className="underline underline-offset-1 text-sm text-slate-500  text-ellipsis truncate w-5/6">
+                  {bookmark.url}
+                </div>
+              </div>
+            </div>
 
-              {isEdit ? (
-                <button
-                  className="bg-sky-500 rounded-xl text-white py-2 px-3 hover:bg-sky-600 ms-2"
-                  onClick={completeEdit}
+            {/* 태그 드롭다운 오른쪽 부분 */}
+            <div className="flex flex-row justify-end items-center">
+              <div className="flex flex-col">
+                <div className="hidden items-center  text-slate-500  lg:flex flex-wrap justify-end">
+                  {tempTags.map((tag) => (
+                    <EditTag
+                      tag={tag.title}
+                      isEdit={isEdit}
+                      tempTags={tempTags}
+                      editTempTags={editTempTags}
+                    />
+                    // <span className="ms-1">{" # " + tag.title}</span>
+                  ))}{" "}
+                </div>
+                <div className="flex flex-row justify-end">
+                <form
+                  onSubmit={(e) => submitTag(e)}
+                  className={(isTagEdit ? "" : "hidden") + " w-1/2"}
                 >
-                  수정
-                </button>
-              ) : (
-                // 북마크 전용 드롭다운
-                <KebabDropdown
-                  bookmark={bookmark}
-                  isEdit={isEdit}
-                  toggleEdit={toggleEdit}
-                  editBookmarks={editBookmarks}
-                  changeEditBookmarks={changeEditBookmarks}
-                  tabModal={tabEditModal}
-                  toggleMode={tabNothing}
-                  editBookmarksIndex={editBookmarksIndex}
-                  changeEditBookmarksIndex={changeEditBookmarksIndex}
-                  setIsAIOpen={setIsAIOpen}
-                  canEdit={canEdit}
-                />
-              )}
+                  <input
+                    type="text"
+                    value={tempTag}
+                    onChange={(e) => editTempTag(e.target.value)}
+                    className="w-full border border-slate-400 rounded-md ps-2"
+                  />
+                </form>
+                </div>
+              </div>
+
+              {/* 태그 추가 위치 */}
+              <div className="card-actions justify-end flex items-center">
+                {isEdit ? (
+                  <div
+                    className={
+                      (tempTags.length >= 3 ? "hidden" : "ms-2") +
+                      (isTagEdit ? " hidden" : "")
+                    }
+                  >
+                    <FaPlus onClick={() => toggleTagEdit(true)} />
+                  </div>
+                ) : (
+                  <button onClick={clickHeart} className="btn btn-ghost">
+                    {isLike ? <FaHeart color="red" /> : <FaRegHeart />}
+                    {likeCount}{" "}
+                  </button>
+                )}
+
+                {isEdit ? (
+                  <button
+                    className="bg-sky-500 rounded-xl text-white py-2 px-3 hover:bg-sky-600 ms-2"
+                    onClick={completeEdit}
+                  >
+                    수정
+                  </button>
+                ) : (
+                  // 북마크 전용 드롭다운
+                  <KebabDropdown
+                    bookmark={bookmark}
+                    isEdit={isEdit}
+                    toggleEdit={toggleEdit}
+                    editBookmarks={editBookmarks}
+                    changeEditBookmarks={changeEditBookmarks}
+                    tabModal={tabEditModal}
+                    toggleMode={tabNothing}
+                    editBookmarksIndex={editBookmarksIndex}
+                    changeEditBookmarksIndex={changeEditBookmarksIndex}
+                    setIsAIOpen={setIsAIOpen}
+                    canEdit={canEdit}
+                  />
+                )}
+              </div>
             </div>
           </div>
         </>

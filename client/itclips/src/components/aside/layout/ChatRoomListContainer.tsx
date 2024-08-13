@@ -32,8 +32,11 @@ const ChatRoomListContainer: React.FC<ChildComponentProps> = ({ onClickMessage }
   const handleScroll = () => {
     if (listRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = listRef.current;
-      setShowTopArrow(scrollTop > 0);
-      setShowBottomArrow(scrollTop + clientHeight < scrollHeight - 1);
+      const isNearTop = scrollTop < 10; // 상단에서 10px 이내일 때
+      const isNearBottom = scrollHeight - clientHeight - scrollTop < 10; // 하단에서 10px 이내일 때
+  
+      setShowTopArrow(!isNearTop);
+      setShowBottomArrow(!isNearBottom);
     }
   };
 

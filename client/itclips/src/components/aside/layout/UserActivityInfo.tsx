@@ -13,7 +13,7 @@ const UserActivityInfo = () => {
 
   return (
     <div className="w-full grid grid-cols-1 gap-y-1 md:gap-y-4 mt-0 md:mt-2 md:mb-8">
-      <div className="grid grid-cols-12">
+      <div className="grid grid-cols-12 items-center">
         <div className="col-start-4 col-span-5 text-start text-gray-500 text-xs md:text-base">
           팔로워
         </div>
@@ -34,7 +34,7 @@ const UserActivityInfo = () => {
           </NavLink>
         </div>
       </div>
-      <div className="grid grid-cols-12">
+      <div className="items-center grid grid-cols-12">
         <div className="col-start-4 col-span-5 text-start text-gray-500 text-xs md:text-base">
           팔로잉
         </div>
@@ -45,6 +45,7 @@ const UserActivityInfo = () => {
                 ? `/user/${userId}/follow/following`
                 : `/user/${params.userId}/follow/following`
             }
+            className="col-start-9"
           >
             <button
               id="following"

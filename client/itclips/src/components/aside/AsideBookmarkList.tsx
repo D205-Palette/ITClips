@@ -72,6 +72,8 @@ const AsideBookmarkList : React.FC<ItemProps> = ({ bookmarkList }) => {
         id={bookmarkList.id} 
         isOpen={isCommentsOpen} 
         onClose={() => setIsCommentsOpen(false)} 
+        setCommentCount={setCommentCount}
+        commentCount={commentCount}
       />
     </div>
   );

@@ -27,9 +27,12 @@ interface Props {
   id: number;
   isOpen: boolean;
   onClose: () => void;
+  setCommentCount: React.Dispatch<React.SetStateAction<number>>
+  commentCount:number
 }
 
-const BookmarkListCommentsModal: FC<Props> = ({ id, isOpen, onClose }) => {
+
+const BookmarkListCommentsModal: FC<Props> = ({ id, isOpen, onClose,setCommentCount,commentCount }) => {
 
   const userInfo = authStore(state => state.userInfo);
   const [comments, setComments] = useState<Comment[]>([]);
@@ -39,13 +42,24 @@ const BookmarkListCommentsModal: FC<Props> = ({ id, isOpen, onClose }) => {
 
   const containerRef = useRef<HTMLDivElement>(null);
 
+const [commentChange, setCommentChange] = useState(false)
+
+useEffect(() => {
+  if (notification) {
+    const timer = setTimeout(() => {
+      setNotification(null);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }
+}, [notification]);
 
   // 북마크리스트 댓글 조회
   useEffect(() => {
     if (isOpen) {
       fetchComments();
     }
-  }, [id, isOpen]);
+    setCommentChange(false)
+  }, [commentChange, isOpen]);
 
   const fetchComments = async () => {
     try {
@@ -81,6 +95,8 @@ const BookmarkListCommentsModal: FC<Props> = ({ id, isOpen, onClose }) => {
         commentTime: new Date().toISOString()
       };
       setComments(prevComments => [newComment, ...prevComments]);
+      setCommentCount(commentCount + 1)
+      setCommentChange(true)
     } catch (error) {
       console.error("댓글 작성 중 오류가 발생했습니다:", error);
     }
@@ -119,6 +135,8 @@ const BookmarkListCommentsModal: FC<Props> = ({ id, isOpen, onClose }) => {
       await deleteBookmarkListComment(userInfo.id, commentId);
       setComments(prevComments => prevComments.filter(comment => comment.commentId !== commentId));
       setNotification({ message: "댓글이 삭제되었습니다.", type: 'success' });
+      setCommentCount(commentCount - 1)
+      setCommentChange(true)
     } catch (error) {
       console.error("댓글 삭제 중 오류가 발생했습니다:", error);
       setNotification({ message: "댓글 삭제에 실패했습니다.", type: 'error' });

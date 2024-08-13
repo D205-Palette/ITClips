@@ -44,7 +44,9 @@ const AIContent: React.FC<Props> = ({ bookmarkId, setIsAIOpen }) => {
     <>
       {/* main자리 */}
       <div className="flex flex-row justify-between mb-2">
-        <RiRobot3Line size={24} />
+        <div className="flex flex-row gap-2">
+        <RiRobot3Line size={24} /> <span className="text-sm text-slate-400">* Url의 상태에 따라 부정확 할 수 있습니다.</span>
+        </div>
         <div
           onClick={() => setIsAIOpen(false)}
           className="hover:cursor-pointer"

@@ -41,6 +41,7 @@ const RoadmapCommentsModal: FC<Props> = ({ id, isOpen, onClose, onCommentCountCh
 
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const [commentChange, setCommentChange] = useState(false)
   useEffect(() => {
     if (notification) {
       const timer = setTimeout(() => {
@@ -54,7 +55,7 @@ const RoadmapCommentsModal: FC<Props> = ({ id, isOpen, onClose, onCommentCountCh
     if (isOpen && userInfo.id) {
       fetchComments();
     }
-  }, [id, isOpen, userInfo.id]);
+  }, [id, isOpen, userInfo.id, commentChange]);
 
   const fetchComments = async () => {
     if (!userInfo?.id) return;
@@ -94,7 +95,7 @@ const RoadmapCommentsModal: FC<Props> = ({ id, isOpen, onClose, onCommentCountCh
       setComments(prevComments => [tempComment, ...prevComments]);
       onCommentCountChange(comments.length + 1);
       setNotification({ message: "댓글이 작성되었습니다.", type: 'success' });
-      
+      setCommentChange(true)
       fetchComments();
     } catch (error) {
       console.error("댓글 작성 중 오류가 발생했습니다:", error);
@@ -134,6 +135,7 @@ const RoadmapCommentsModal: FC<Props> = ({ id, isOpen, onClose, onCommentCountCh
       setComments(prevComments => prevComments.filter(comment => comment.id !== commentId));
       onCommentCountChange(comments.length - 1);
       setNotification({ message: "댓글이 삭제되었습니다.", type: 'success' });
+      setCommentChange(true)
     } catch (error) {
       console.error("댓글 삭제 중 오류가 발생했습니다:", error);
       setNotification({ message: "댓글 삭제에 실패했습니다.", type: 'error' });

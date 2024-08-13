@@ -16,6 +16,7 @@ import { likeBookmarkList, unlikeBookmarkList } from "../../../api/bookmarkListA
 // stores
 import { authStore } from "../../../stores/authStore";
 import { searchStore } from "../../../stores/searchStore";
+import { isTemplateSpan } from "typescript";
 
 interface Tag {
   title: string;
@@ -71,6 +72,13 @@ const RecommendedItemList: React.FC<RecommandedItemProps> = ({ item }) => {
     }
   };
 
+  // 태그 목록을 "#tag1 #tag2 #tag3" 형식으로 변환하는 함수
+  const formatTags = (tags: Tag[], maxLength: number = 30) => {
+    const tagString = tags.map(tag => `#${tag.title}`).join(' ');
+    if (tagString.length <= maxLength) return tagString;
+    return tagString.slice(0, maxLength) + '...';
+  };
+
   return (
     <div>
       <NavLink
@@ -94,7 +102,7 @@ const RecommendedItemList: React.FC<RecommandedItemProps> = ({ item }) => {
           </div>
         </div>
 
-        <p className="text-xs md:text-sm text-gray-500 hidden sm:block">리스트에 관한 설명</p>
+        <p className="text-xs md:text-sm text-gray-500 hidden sm:block">{item.description}</p>
 
         <button 
           className="btn btn-ghost btn-xs text-xs md:text-sm flex items-center" 

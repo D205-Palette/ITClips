@@ -18,23 +18,22 @@ const PasswordResetModal: React.FC = () => {
   // navStore를 사용하여 이메일 로그인 모달과 비밀번호 재설정 모달의 상태 관리
   const { setEmailLoginOpen, setPasswordResetOpen } = navStore();
 
-  // Formik을 사용하여 이메일 및 닉네임 폼 관리 및 유효성 검사 설정
+  // Formik을 사용하여 이메일 폼 관리 및 유효성 검사 설정
   const emailFormik = useFormik({
-    initialValues: { email: "", nickname: "" }, // 폼의 초기값 설정
+    initialValues: { email: "" }, // 폼의 초기값 설정
     validationSchema: Yup.object({
-      // Yup을 사용하여 이메일 및 닉네임 필드에 대한 유효성 검사 설정
+      // Yup을 사용하여 이메일 필드에 대한 유효성 검사 설정
       email: Yup.string()
         .email("유효한 이메일 주소를 입력하세요.") // 이메일 형식 확인
         .required("이메일을 입력하세요."), // 필수 입력 항목
-      nickname: Yup.string().required("닉네임을 입력하세요."), // 닉네임 필수 입력 항목
     }),
     onSubmit: async (values) => {
       // 폼 제출 시 처리할 로직
       setLoading(true); // 로딩 상태 설정
-      setErrorMessage(""); // 에러 메시지 초기화      
-      
+      setErrorMessage(""); // 에러 메시지 초기화
+
       try {
-        await sendVerificationPassword(values.nickname, values.email); // 이메일과 닉네임 함께 전송
+        await sendVerificationPassword(values.email); // 이메일 전송
         setIsEmailSent(true); // 이메일 발송 상태 업데이트
       } catch (error) {
         setErrorMessage("이메일 발송에 실패했습니다. 다시 시도해 주세요."); // 에러 발생 시 메시지 설정
@@ -91,7 +90,7 @@ const PasswordResetModal: React.FC = () => {
           비밀번호 찾기
         </h1>
 
-        {/* 이메일 및 닉네임 입력 폼 */}
+        {/* 이메일 입력 폼 */}
         {!isEmailSent && (
           <form className="space-y-4 mb-4" onSubmit={emailFormik.handleSubmit}>
             <div className="space-y-4">
@@ -110,26 +109,10 @@ const PasswordResetModal: React.FC = () => {
                   <div className="text-red-500">{emailFormik.errors.email}</div>
                 ) : null}{" "}
                 {/* 이메일 입력 오류 메시지 표시 */}
-                <input
-                  type="text"
-                  required
-                  className="input input-bordered"
-                  placeholder="닉네임을 입력해주세요."
-                  value={emailFormik.values.nickname}
-                  onChange={handleInputChange(emailFormik.handleChange)} // 입력 값 변경 시 처리
-                  onBlur={emailFormik.handleBlur} // 입력 필드에서 포커스 잃을 때 처리
-                  name="nickname" // Formik이 인식할 수 있도록 name 속성 추가
-                />
-                {emailFormik.touched.nickname && emailFormik.errors.nickname ? (
-                  <div className="text-red-500">
-                    {emailFormik.errors.nickname}
-                  </div>
-                ) : null}{" "}
-                {/* 닉네임 입력 오류 메시지 표시 */}
               </div>
               <button
                 type="submit"
-                className="btn btn-primary mt-4"
+                className="btn bg-sky-500 hover:bg-sky-700 text-slate-100 mt-4"
                 disabled={loading}
               >
                 {loading ? "발송중..." : "인증번호 발송"}
@@ -166,7 +149,7 @@ const PasswordResetModal: React.FC = () => {
 
             <button
               type="submit"
-              className="btn btn-primary w-full"
+              className="btn bg-sky-500 hover:bg-sky-700 text-slate-100 w-full"
               disabled={loading}
             >
               임시 비밀번호 발급 받기

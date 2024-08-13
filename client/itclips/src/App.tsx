@@ -103,7 +103,7 @@ const App = () => {
 
       <footer
         className={`${isIntroPage ? "" : "mt-20"} ${
-          isLoggedIn ? (window.innerWidth >= 768 ? "" : "mb-20") : ""
+          isLoggedIn ? (window.innerWidth >= 768 ? "" : "mb-16") : ""
         }`}
       >
         <Footer />

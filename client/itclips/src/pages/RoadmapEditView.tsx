@@ -49,7 +49,7 @@ const RoadmapEditView: React.FC = () => {
   const [roadmapItem, setRoadmapItem] = useState<RoadmapItem | null>(null);
   const { roadmapId } = useParams<{ roadmapId: string }>();
   const [imageState, setImageState] = useState<string>("edit"); // 이미지 변경 상태 체크
-const {globalNotification, setGlobalNotification} = toastStore()
+  const { globalNotification, setGlobalNotification } = toastStore();
   // API로부터 데이터 불러오기
   const fetchData = async () => {
     try {
@@ -81,7 +81,8 @@ const {globalNotification, setGlobalNotification} = toastStore()
 
       // 기존 로드맵 정보 조회
       const roadmapResponse = await axios.get(
-        `${API_BASE_URL}/api/roadmap/${roadmapId}?viewId=${userId}`
+        `${API_BASE_URL}/api/roadmap/${roadmapId}?viewId=${userId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       setRoadmapItem(roadmapResponse.data);
@@ -96,7 +97,7 @@ const {globalNotification, setGlobalNotification} = toastStore()
           bookmarkCount: item.bookmarkCount,
           likeCount: item.likeCount,
           image: item.image,
-          isPublic:item.isPublic,
+          isPublic: item.isPublic,
           isLiked: item.isLiked,
           tags: item.tags.map((tag: any) => ({
             id: tag.id,
@@ -140,7 +141,7 @@ const {globalNotification, setGlobalNotification} = toastStore()
         description: item.bookmarkListRoadmapDTO.description,
         bookmarkCount: item.bookmarkListRoadmapDTO.bookmarkCount,
         likeCount: item.bookmarkListRoadmapDTO.likeCount,
-        isPublic:item.bookmarkListRoadmapDTO.isPublic,
+        isPublic: item.bookmarkListRoadmapDTO.isPublic,
         image: item.bookmarkListRoadmapDTO.image,
         isLiked: item.bookmarkListRoadmapDTO.isLiked,
         tags: item.bookmarkListRoadmapDTO.tags,
@@ -171,7 +172,7 @@ const {globalNotification, setGlobalNotification} = toastStore()
           setGlobalNotification({
             message: "이미 추가되어 있습니다.", // 알림 메시지 출력
             type: "error",
-          });          
+          });
           return;
         }
 
@@ -201,7 +202,6 @@ const {globalNotification, setGlobalNotification} = toastStore()
     setItems(initialItems[tab]);
   };
 
-  
   // 로드맵 이미지 변경 핸들러
   const resizeFile = (file: File): Promise<File> =>
     new Promise((resolve, reject) => {
@@ -223,13 +223,14 @@ const {globalNotification, setGlobalNotification} = toastStore()
       );
     });
 
-
   // 로드맵 이미지 변경 핸들러
-  const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0]; // 파일이 선택되지 않았을 때 null 처리
-    
+
     if (file) {
-      const compressedFile = await resizeFile(file); 
+      const compressedFile = await resizeFile(file);
       setRoadmapImage(compressedFile); // 파일 자체를 상태에 저장
       setImageState("new"); // 새로운 이미지로 변경하려고 할 때 상태 변경
       // 미리보기 URL 생성
@@ -244,7 +245,7 @@ const {globalNotification, setGlobalNotification} = toastStore()
       } else {
         setRoadmapImage(null); // 파일이 없을 경우 상태를 null로 설정
         setPreviewImageUrl(null); // 미리보기 URL을 null로 설정
-      }      
+      }
       // 수정이라 입력값 없으면 그대로 가면 될듯?
     }
   };
@@ -300,7 +301,7 @@ const {globalNotification, setGlobalNotification} = toastStore()
         }
       );
 
-      if (roadmapImage) {        
+      if (roadmapImage) {
         await axios.put(`${roadmapCreateResponse.data.url}`, roadmapImage, {
           // 리스폰스 받은 URL로 이미지 등록
           // headers: {
@@ -309,7 +310,6 @@ const {globalNotification, setGlobalNotification} = toastStore()
         });
       }
 
-      
       setGlobalNotification({
         message: "로드맵 수정 완료",
         type: "success",

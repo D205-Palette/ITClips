@@ -72,5 +72,13 @@ public class NotificationController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    //알림 모두 삭제
+    @DeleteMapping("deleteAll/{userId}")
+    @Operation(summary = "알림 모두 삭제 ", description = "알림 모두 삭제 ")
+    public ResponseEntity<?> deleteAll(@PathVariable("userId") Long userId) {
+        notificationService.deleteAllNotify(userId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 
 }

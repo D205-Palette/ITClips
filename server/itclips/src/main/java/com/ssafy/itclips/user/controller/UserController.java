@@ -342,13 +342,13 @@ public class UserController {
     }
 
     @PostMapping("/pw/sendVerification")
-    @Operation(summary = "비밀번호 찾기 요청", description = "닉네임과 이메일을 통해 비밀번호 찾기 요청을 처리하고, 인증 코드를 이메일로 보냅니다.")
+    @Operation(summary = "비밀번호 찾기 요청", description = "이메일을 통해 비밀번호 찾기 요청을 처리하고, 인증 코드를 이메일로 보냅니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "인증 코드 발송 성공"),
             @ApiResponse(responseCode = "404", description = "사용자 정보를 찾을 수 없음")
     })
-    public ResponseEntity<?> sendPasswordResetCode(@RequestParam("nickname") String nickname, @RequestParam("email") String email) {
-        User user = userRepository.findByNicknameAndEmail(nickname, email).get();
+    public ResponseEntity<?> sendPasswordResetCode(@RequestParam("email") String email) {
+        User user = userRepository.findByEmail(email).get();
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보를 찾을 수 없습니다.");
         }

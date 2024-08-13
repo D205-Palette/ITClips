@@ -91,6 +91,12 @@ public class NotificationServiceImpl implements NotificationService{
         }
     }
 
+    @Override
+    public void deleteAllNotify(Long userId) {
+        emitterRepository.deleteAllEmitterStartWithId(userId.toString());
+        notificationRepository.deleteByUserId(userId);
+    }
+
     // 좋아요, 스크랩, 댓글 팔로우시 알림
     //보내는 사람 id, 받는 사람 id , 타입, 보내는 사람 닉네임
     @Override

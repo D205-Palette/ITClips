@@ -33,4 +33,6 @@ public interface NotificationService {
     void deleteNotification(Long senderId, Long receiverId, Long roadmapId, NotificationType type);
 
 
+    // 알림 모두 삭제
+    void deleteAllNotify(Long userId);
 }

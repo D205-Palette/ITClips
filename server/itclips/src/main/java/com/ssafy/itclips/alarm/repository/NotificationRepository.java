@@ -12,6 +12,6 @@ import java.util.List;
 public interface NotificationRepository extends JpaRepository<Notification,Long> {
     void deleteBySenderIdAndUserIdAndTypeIdAndType(Long senderId, Long userId, Long typeId, NotificationType type);
     boolean existsBySenderIdAndUserIdAndTypeIdAndType(Long senderId, Long userId, Long typeId, NotificationType type);
-
+    void deleteByUserId(Long userId);
     List<Notification> findByUserId(Long userId);
 }

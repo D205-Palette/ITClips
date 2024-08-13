@@ -129,61 +129,55 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id,contentUserId,users }) => {
       type: "error",
     });
   }
+
   return (
     <>
-      <div className="dropdown dropdown-bottom dropdown-end ">
+      <div className="dropdown dropdown-bottom dropdown-end">
         <div
           tabIndex={0}
           role="button"
-          className="btn m-1 btn-ghost "
+          className="btn btn-sm md:btn-md m-0.5 md:m-1 btn-ghost btn-circle"
           onClick={() => setIsMenuOpen(true)}
         >
-          <VscKebabVertical />
+          <VscKebabVertical className="w-4 h-4 md:w-5 md:h-5" />
         </div>
         {isMenuOpen && (
           <ul
             tabIndex={0}
-            className="dropdown-content menu bg-base-100 rounded-box w-52 p-2 shadow z-30"
+            className="dropdown-content menu bg-base-100 rounded-box w-44 md:w-52 p-1.5 md:p-2 shadow z-30 text-sm md:text-base"
           >
-            {/* 수정 삭제는 남꺼일때 안 보이게 */}
-            {userId === contentUserId || canEdit  ? (
-              <><li
-              className={whatMenu === "즐겨찾기" ? "hidden " : ""}
-              onClick={() => {
-                whatMenu === "로드맵"
-                  ? navigate(`/roadmap/${id}/edit`)
-                  : setIsEditModalOpen(true);
-              }}
-            >
-              <a>수정하기</a>
-            </li>
-
-            <li
-              className={whatMenu === "즐겨찾기" ? "hidden" : ""}
-              onClick={() => setIsDeleteModalOpen(true)}
-            >
-              <a>삭제하기</a>
-            </li></>
-            ) : (
+            {userId === contentUserId || canEdit ? (
               <>
-                
+                <li
+                  className={whatMenu === "즐겨찾기" ? "hidden" : ""}
+                  onClick={() => {
+                    whatMenu === "로드맵"
+                      ? navigate(`/roadmap/${id}/edit`)
+                      : setIsEditModalOpen(true);
+                  }}
+                >
+                  <a className="py-1.5 md:py-2">수정하기</a>
+                </li>
+                <li
+                  className={whatMenu === "즐겨찾기" ? "hidden" : ""}
+                  onClick={() => setIsDeleteModalOpen(true)}
+                >
+                  <a className="py-1.5 md:py-2">삭제하기</a>
+                </li>
               </>
-            )}
-            {/*  */}
-
+            ) : null}
             <li onClick={() => copyUrl()}>
-              <a>url 복사</a>
+              <a className="py-1.5 md:py-2">url 복사</a>
             </li>
-
             <li
               className={whatMenu === "즐겨찾기" ? "" : "hidden"}
               onClick={() => deleteFavorite()}
             >
-              <a>즐겨찾기 삭제</a>
+              <a className="py-1.5 md:py-2">즐겨찾기 삭제</a>
             </li>
             <li
-              className={(userId? "":"hidden ") + 
-               ( whatMenu === "로드맵" ||
+              className={(userId ? "" : "hidden ") + 
+               (whatMenu === "로드맵" ||
                 whatMenu === "북마크" ||
                 whatMenu === "즐겨찾기"
                   ? " hidden "
@@ -193,21 +187,21 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id,contentUserId,users }) => {
                 addFavorite();
               }}
             >
-              <a>즐겨찾기</a>
+              <a className="py-1.5 md:py-2">즐겨찾기</a>
             </li>
             <li
-              className={(userId? "":"hidden ")+(whatMenu === "로드맵" ? "" : "hidden ")}
+              className={(userId ? "" : "hidden ") + (whatMenu === "로드맵" ? "" : "hidden ")}
               onClick={() => {
                 addScrap();
               }}
             >
-              <a>스크랩</a>
+              <a className="py-1.5 md:py-2">스크랩</a>
             </li>
             <li
-              className={(userId? "":"hidden ") + (whatMenu === "로드맵" ? "hidden " : "")}
+              className={(userId ? "" : "hidden ") + (whatMenu === "로드맵" ? "hidden " : "")}
               onClick={() => setIsReportModalOpen(true)}
             >
-              <a>신고하기</a>
+              <a className="py-1.5 md:py-2">신고하기</a>
             </li>
           </ul>
         )}

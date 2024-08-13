@@ -93,6 +93,7 @@ public class NotificationServiceImpl implements NotificationService{
 
     @Override
     public void deleteAllNotify(Long userId) {
+        emitterRepository.deleteAllEmitterStartWithId(userId.toString());
         notificationRepository.deleteByUserId(userId);
     }
 

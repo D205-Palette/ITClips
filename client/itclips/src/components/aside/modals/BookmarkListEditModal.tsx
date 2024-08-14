@@ -39,12 +39,7 @@ interface SearchUser {
   followers: boolean;
 }
 
-interface SelectedUser {
-  nickname: string;
-  email: string;
-}
-
-interface tempUserInfo {
+interface tempUser {
   id: number;
   nickName: string;
   email: string;
@@ -83,9 +78,11 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
     " bg-sky-500 hover:bg-sky-700 text-slate-100  border-sky-500 hover:border-sky-700 ";
   const { setGlobalNotification } = toastStore();
 
-  const [tempUser, setTempUser] = useState<SelectedUser[]>([]);
+  const [tempUser, setTempUser] = useState<tempUser[]>([]);
   const [searchInput, setSearchInput] = useState("");
   const [searchResults, setSearchResults] = useState<SearchUser[]>([]);
+
+  const [bookmarkListOwnerId, setBookmarkListOwnerId] = useState<number | null>(null);
 
   // 유저검색
   useEffect(() => {
@@ -112,7 +109,7 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
     if (!tempUser.some((selectedUser) => selectedUser.email === user.email)) {
       setTempUser([
         ...tempUser,
-        { nickname: user.nickname, email: user.email },
+        { id: user.id, nickName: user.nickname, email: user.email },
       ]);
       setSearchInput("");
       setSearchResults([]);
@@ -138,6 +135,7 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
         },
       })
         .then((res) => {
+          setBookmarkListOwnerId(res.data.userId);
           setTempTitle(res.data.title);
           setTempDescription(res.data.description);
           setTempTags(res.data.tags);
@@ -151,9 +149,9 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
           setTempCategories(catArr);
 
           const userArr = res.data.users
-            .filter((ele: tempUserInfo) => ele.id !== userId)
-            .map((ele: tempUserInfo) => ({
-              nickname: ele.nickName,
+            .map((ele: tempUser) => ({
+              id: ele.id,
+              nickName: ele.nickName,
               email: ele.email,
             }));
           setTempUser(userArr);
@@ -163,8 +161,8 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
         });
     }
     fetchData();
-    console.log();
-  }, []);
+  }, [id, userId, token]);
+
   // 태그 3개 이상되면 경고
   useEffect(() => {
     if (tempTags.length >= 3) {
@@ -195,11 +193,13 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
         imageState === "edit" // 이미지가 변경되지 않았다면 백서버에 edit 메세지 전송 (DB 이미지 변경사항 없음)
           ? "edit"
           : bookmarklistImage
-          ? `${tempTitle}-${userId}` // 변경할 로드맵 이미지가 등록 되어있다면 '제목-유저아이디'로 이미지 생성 URL 요청
-          : "default", // 없다면 DB에서 이미지 삭제 요청
+            ? `${tempTitle}-${userId}` // 변경할 로드맵 이미지가 등록 되어있다면 '제목-유저아이디'로 이미지 생성 URL 요청
+            : "default", // 없다면 DB에서 이미지 삭제 요청
       isPublic: isPublic,
       categories: tempCategories,
-      users: tempUser.map((user) => user.email),
+      users: tempUser
+              .filter(user => user.id !== userId)  // 현재 사용자를 제외
+              .map((user) => user.email),
       tags: tempTags,
     };
 
@@ -277,6 +277,8 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
     setImageState("delete"); // 등록할 이미지 상태 변경
   };
 
+  console.log(tempUser);
+
   if (!isOpen) return null;
 
   return (
@@ -305,7 +307,7 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
                   {/* 이미지 */}
                   <div className="border w-32 h-32 bg-gray-200 rounded-lg overflow-hidden">
                     {previewImageUrl === "default" ||
-                    previewImageUrl === null ? (
+                      previewImageUrl === null ? (
                       <img
                         src={noImg}
                         alt="noImg"
@@ -407,65 +409,69 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
           {/* 오른칸 */}
           <div className="flex flex-col w-1/2 justify-start">
             {/* 유저 */}
-            <div className="mb-4 w-full">
-              <label
-                className={
-                  (isDark ? "text-gray-400" : "text-gray-700") +
-                  " block text-sm font-medium mb-2"
-                }
-              >
-                관리자
-              </label>
-              <div className="flex flex-wrap gap-2 mb-2">
-                {tempUser.map((user, index) => (
-                  <span
-                    key={index}
-                    className={
-                      (isDark ? "bg-black" : "bg-gray-200") +
-                      " px-2 py-1 rounded-full text-sm flex items-center"
-                    }
-                  >
-                    {user.nickname}
-                    <button
-                      onClick={() => handleRemoveUser(user.email)}
-                      className="ml-1 text-gray-500 hover:text-gray-700"
+            {bookmarkListOwnerId === userId && (
+              <div className="mb-4 w-full">
+                <label
+                  className={
+                    (isDark ? "text-gray-400" : "text-gray-700") +
+                    " block text-sm font-medium mb-2"
+                  }
+                >
+                  관리자
+                </label>
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {tempUser.map((user, index) => (
+                    <span
+                      key={index}
+                      className={
+                        (isDark ? "bg-black" : "bg-gray-200") +
+                        " px-2 py-1 rounded-full text-sm flex items-center"
+                      }
                     >
-                      <IoCloseOutline size={16} />
-                    </button>
-                  </span>
-                ))}
-              </div>
-              <input
-                type="text"
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                className="w-full px-3 py-2 border rounded-md relative"
-                placeholder="관리자 검색"
-              />
-              {searchResults.length > 0 && (
-                <div className="mt-2 border rounded-md max-h-40 overflow-y-auto absolute z-10 w-1/5 ">
-                  {searchResults.map((user) => (
-                    <div
-                      key={user.id}
-                      className="p-2 hover:bg-gray-100 cursor-pointer flex items-center bg-base-100 w-full"
-                      onClick={() => handleAddUser(user)}
-                    >
-                      <img
-                        src={user.image === "default" ? noImg : user.image}
-                        alt={user.nickname}
-                        className="w-8 h-8 rounded-full mr-2 object-cover"
-                      />
-                      <div>
-                        <div className="font-semibold">{user.nickname}</div>
-                        <div className="text-xs text-gray-500">
-                          {user.email}
-                        </div>
-                      </div>
-                    </div>
+                      {user.nickName}
+                      {user.id !== userId && (
+                        <button
+                          onClick={() => handleRemoveUser(user.email)}
+                          className="ml-1 text-gray-500 hover:text-gray-700"
+                        >
+                          <IoCloseOutline size={16} />
+                        </button>
+                      )}
+                    </span>
                   ))}
                 </div>
-              )}
-            </div>
+                <input
+                  type="text"
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  className="w-full px-3 py-2 border rounded-md relative"
+                  placeholder="관리자 검색"
+                />
+                {searchResults.length > 0 && (
+                  <div className="mt-2 border rounded-md max-h-40 overflow-y-auto absolute z-10 w-1/5 ">
+                    {searchResults.map((user) => (
+                      <div
+                        key={user.id}
+                        className="p-2 hover:bg-gray-100 cursor-pointer flex items-center bg-base-100 w-full"
+                        onClick={() => handleAddUser(user)}
+                      >
+                        <img
+                          src={user.image === "default" ? noImg : user.image}
+                          alt={user.nickname}
+                          className="w-8 h-8 rounded-full mr-2 object-cover"
+                        />
+                        <div>
+                          <div className="font-semibold">{user.nickname}</div>
+                          <div className="text-xs text-gray-500">
+                            {user.email}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
 
             <div className="mb-4 h-1/3">
               {/* <label className="block text-sm font-medium  mb-2"> */}

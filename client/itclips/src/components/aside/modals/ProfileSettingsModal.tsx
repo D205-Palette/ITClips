@@ -442,6 +442,9 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">
                   관심사 설정
+                  <span className="text-xs text-red-500 ml-1">
+                      (사용자 맞춤 추천 리스트에 활용됩니다.)
+                  </span>
                 </label>
                 <div className="flex w-full mb-2">
                   <InterestCategoryDropdown
@@ -680,6 +683,9 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
                 <div className="mb-6">
                   <label className="block text-sm font-medium mb-2">
                     관심사 설정
+                    <span className="text-xs text-red-500 ml-1">
+                      (사용자 맞춤 추천 리스트에 활용됩니다.)
+                    </span>
                   </label>
                   <div className="flex w-full mb-2">
                     <div className="flex flex-grow">

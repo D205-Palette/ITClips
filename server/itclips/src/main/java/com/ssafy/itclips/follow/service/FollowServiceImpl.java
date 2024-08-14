@@ -73,9 +73,9 @@ public class FollowServiceImpl implements FollowService {
 
             List<Tag> tags = followedUser != null
                     ? userTagRepository.findByUserId(followedUser.getId()).stream()
-                        .map(UserTag::getTag)
-                        .collect(Collectors.toList())
-                    :List.of();
+                    .map(UserTag::getTag)
+                    .collect(Collectors.toList())
+                    : List.of();
 
             return new FollowDetailDTO(
                     follow.getId(),

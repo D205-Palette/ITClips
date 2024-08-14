@@ -119,12 +119,7 @@ const App = () => {
         <Outlet />
       </main>
 
-
-      <footer
-        className={`${isIntroPage ? "" : "mt-40"} ${
-          isLoggedIn ? (window.innerWidth >= 768 ? "" : "mb-20") : ""
-        }`}
-      >
+      <footer>
         <Footer />
       </footer>
 

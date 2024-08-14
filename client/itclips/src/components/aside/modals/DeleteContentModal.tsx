@@ -40,7 +40,7 @@ const DeleteContentModal: React.FC<DeleteConfirmModalProps> = ({
   const { userId, token } = authStore();
 const {setGlobalNotification} = toastStore()
   function deleteApi(): void {
-    if (whatContent === "리스트") {
+    if (whatContent === "리스트"||whatContent === "리스트상세") {
       axios
         .delete(`${API_BASE_URL}/api/list/delete/${userId}/${id}`, {
           headers: {

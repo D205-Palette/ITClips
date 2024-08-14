@@ -115,20 +115,15 @@ const App = () => {
         <NavBar />
       </header>
 
-      <main className="mt-16 w-full min-h-96">
+      <main className="mt-16 w-full min-h-screen">
         <Outlet />
       </main>
 
-
-      <footer
-        className={`${isIntroPage ? "" : "mt-40"} ${
-          isLoggedIn ? (window.innerWidth >= 768 ? "" : "mb-20") : ""
-        }`}
-      >
+      <footer>
         <Footer />
       </footer>
 
-      
+
       <ProfileSettingsModal
         isOpen={isProfileModalOpen}
         onClose={() => setIsProfileModalOpen(false)}

@@ -176,7 +176,7 @@ const RoadmapView = () => {
                   animationData={CongratulationAnimation}
                   height={300}
                   width={300}
-                  initialSegment={[0,100]}
+                  initialSegment={[8,100]}
                 />}
                 
               </div>

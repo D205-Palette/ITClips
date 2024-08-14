@@ -1,8 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Intro1 from "../assets/images/Intro1.svg";
-import Intro2 from "../assets/images/Intro2.svg";
-import Intro3 from "../assets/images/Intro3.svg";
+
+import intro1 from "../assets/images/intro1.gif"
+import intro2 from "../assets/images/intro2.gif"
+import intro3 from "../assets/images/intro3.gif"
+
+
 
 const Intro: React.FC = () => {
   const navigate = useNavigate();
@@ -56,7 +59,7 @@ const Intro: React.FC = () => {
       {/* 첫 번째 섹션 */}
       <div
         id="intro1"
-        className={`w-full min-h-screen bg-base-100 flex flex-col md:flex-row items-center justify-between px-6 md:px-16 lg:px-28 py-16 transition-transform ${
+        className={`w-full md:min-h-screen bg-base-100 flex flex-col md:flex-row items-center px-6 md:px-16 lg:px-28 py-16 transition-transform ${
           inView.intro1 ? "animate-fadeInRight" : "opacity-0"
         }`}
         ref={refIntro1}
@@ -68,13 +71,13 @@ const Intro: React.FC = () => {
           <div className="flex flex-col gap-y-2 md:gap-y-3 text-left text-base-content text-xl sm:text-2xl lg:text-3xl font-normal">
             <p>나의 북마크를</p>
             <p>분류하고</p>
-            <p>관리해보세요</p>
+            <p>관리해보세요.</p>
           </div>
         </div>
-        <div className="w-full md:w-2/3 mt-8 md:mt-0 h-[400px] lg:h-[500px] rounded-tl-[24px] md:rounded-tl-[48px] rounded-bl-[24px] md:rounded-bl-[48px] overflow-hidden">
+        <div className="border w-full md:w-2/3 mt-8 rounded-xl overflow-hidden">
           <img
-            className="w-full h-full object-cover"
-            src={Intro1}
+            className="w-full border object-cover"
+            src={intro1}
             alt="Intro"
           />
         </div>
@@ -83,7 +86,7 @@ const Intro: React.FC = () => {
       {/* 두 번째 섹션 */}
       <div
         id="intro2"
-        className={`w-full min-h-screen bg-base-100 flex flex-col md:flex-row items-center justify-between px-6 md:px-16 lg:px-28 py-16 transition-transform md:gap-x-8 ${
+        className={`w-full md:min-h-screen bg-base-100 flex flex-col md:flex-row items-center px-6 md:px-16 lg:px-28 py-16 transition-transform md:gap-x-8 ${
           inView.intro2 ? "animate-fadeInLeft" : "opacity-0"
         }`}
         ref={refIntro2}
@@ -99,10 +102,10 @@ const Intro: React.FC = () => {
             <p>나눠볼까요?</p>
           </div>
         </div>
-        <div className="w-full md:w-2/3 mt-8 md:mt-0 h-[400px] lg:h-[500px] rounded-tr-[24px] md:rounded-tr-[48px] rounded-br-[24px] md:rounded-br-[48px] overflow-hidden">
+        <div className="border w-full md:w-2/3 mt-8 rounded-xl overflow-hidden">
           <img
             className="w-full h-full object-cover"
-            src={Intro2}
+            src={intro2}
             alt="Intro"
           />
         </div>
@@ -111,26 +114,25 @@ const Intro: React.FC = () => {
       {/* 세 번째 섹션 */}
       <div
         id="intro3"
-        className={`w-full min-h-screen bg-base-100 flex flex-col md:flex-row items-center justify-between px-6 md:px-16 lg:px-28 py-16 transition-transform ${
+        className={`w-full md:min-h-screen bg-base-100 flex flex-col md:flex-row items-center  px-6 md:px-16 lg:px-28 py-16 transition-transform ${
           inView.intro3 ? "animate-fadeInRight" : "opacity-0"
         }`}
         ref={refIntro3}
       >
         <div className="flex flex-col justify-center gap-4 md:gap-8 w-full md:w-1/3">
           <div className="text-left text-base-content text-xl sm:text-2xl lg:text-4xl font-bold">
-            관심 북마크, 로드맵 큐레이션
+            북마크리스트 큐레이션
           </div>
           <div className="flex flex-col gap-y-2 md:gap-y-3 text-left text-base-content text-xl sm:text-2xl lg:text-3xl font-normal">
-            <p>관심사에 맞는 북마크와</p>
-            <p>저장한 북마크 기반의</p>
-            <p>학습 로드맵을</p>
+            <p>관심사에 맞는</p>
+            <p>북마크리스트를</p>            
             <p>추천 받을 수 있습니다.</p>
           </div>
         </div>
-        <div className="w-full md:w-2/3 mt-8 md:mt-0 h-[400px] lg:h-[500px] rounded-tl-[24px] md:rounded-tl-[48px] rounded-bl-[24px] md:rounded-bl-[48px] overflow-hidden">
+        <div className="border w-full md:w-2/3 mt-8 rounded-xl overflow-hidden">
           <img
             className="w-full h-full object-cover"
-            src={Intro3}
+            src={intro3}
             alt="Intro"
           />
         </div>

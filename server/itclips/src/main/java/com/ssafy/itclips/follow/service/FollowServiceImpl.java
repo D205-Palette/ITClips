@@ -8,7 +8,10 @@ import com.ssafy.itclips.follow.dto.FollowDetailDTO;
 import com.ssafy.itclips.follow.entity.Follow;
 import com.ssafy.itclips.follow.repository.FollowRepository;
 import com.ssafy.itclips.global.file.FileService;
+import com.ssafy.itclips.tag.entity.Tag;
+import com.ssafy.itclips.tag.repository.UserTagRepository;
 import com.ssafy.itclips.user.entity.User;
+import com.ssafy.itclips.user.entity.UserTag;
 import com.ssafy.itclips.user.repository.UserRepository;
 import com.ssafy.itclips.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +33,7 @@ public class FollowServiceImpl implements FollowService {
     private final UserRepository userRepository;
     private final NotificationService notificationService;
     private final FileService fileService;
+    private final UserTagRepository userTagRepository;
 
     @Transactional
     @Override
@@ -66,13 +70,21 @@ public class FollowServiceImpl implements FollowService {
 
         return followingList.stream().map(follow -> {
             User followedUser = userRepository.findById(follow.getTo().getId()).orElse(null);
+
+            List<String> tagNames = followedUser != null
+                    ? userTagRepository.findByUserId(followedUser.getId()).stream()
+                    .map(userTag -> userTag.getTag().getTitle())
+                    .collect(Collectors.toList())
+                    : List.of();
+
             return new FollowDetailDTO(
                     follow.getId(),
                     follow.getFrom().getId(),
                     follow.getTo().getId(),
                     followedUser != null ? followedUser.getNickname() : null,
                     followedUser != null ? getImageUrl(followedUser.getProfileImage()) : null,
-                    followedUser != null ? followedUser.getEmail() : null
+                    followedUser != null ? followedUser.getEmail() : null,
+                    tagNames
             );
         }).collect(Collectors.toList());
     }
@@ -98,13 +110,21 @@ public class FollowServiceImpl implements FollowService {
 
         return followersList.stream().map(follow -> {
             User followerUser = userRepository.findById(follow.getFrom().getId()).orElse(null);
+
+            List<String> tagNames = followerUser != null
+                    ? userTagRepository.findByUserId(followerUser.getId()).stream()
+                    .map(userTag -> userTag.getTag().getTitle())
+                    .collect(Collectors.toList())
+                    : List.of();
+
             return new FollowDetailDTO(
                     follow.getId(),
                     follow.getFrom().getId(),
                     follow.getTo().getId(),
                     followerUser != null ? followerUser.getNickname() : null,
                     followerUser != null ? getImageUrl(followerUser.getProfileImage()) : null,
-                    followerUser != null ? followerUser.getEmail() : null
+                    followerUser != null ? followerUser.getEmail() : null,
+                    tagNames
             );
         }).collect(Collectors.toList());
     }

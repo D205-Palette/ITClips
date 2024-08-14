@@ -149,6 +149,7 @@ public class BookmarkList {
                                                            List<CategoryParamDTO> categories, Set<TagDTO> tags, List<UserTitleDTO> users, List<BookmarkDetailDTO> bookmarks) {
         return BookmarkListDetailDTO.builder()
                 .id(this.id)
+                .userId(this.user.getId())
                 .title(this.title)
                 .description(this.description)
                 .likeCount(likeCount)

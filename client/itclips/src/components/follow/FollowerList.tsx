@@ -3,9 +3,10 @@ import { useEffect, useState } from "react";
 
 // components
 import FollowerItem from "./FollowerItem";
-
+import { FaPersonCircleExclamation } from "react-icons/fa6";
 // apis
 import { getFollowerList } from "../../api/followApi";
+
 
 interface Follower {
   id: number;
@@ -39,7 +40,7 @@ const FollowerList = () => {
   
   return (
     <div className="mt-4">
-      <FollowerItem items={followerList} />
+      {followerList.length!==0? <FollowerItem items={followerList} /> : <div className="mt-16 flex flex-row items-center gap-3 text-lg font-bold justify-center"><FaPersonCircleExclamation color="skyblue" size={32}/> 팔로워가 없습니다</div>}
     </div>
   );
 };

@@ -371,7 +371,7 @@ useEffect(()=>{
                   onClick={() => handleAddUser(user)}
                 >
                   <img 
-                    src={user.image || noImg} 
+                    src={user.image==='default'? noImg : user.image} 
                     alt={user.nickname} 
                     className="w-8 h-8 rounded-full mr-2 object-cover"
                   />

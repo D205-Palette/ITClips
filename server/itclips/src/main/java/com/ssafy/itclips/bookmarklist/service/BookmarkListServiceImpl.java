@@ -120,7 +120,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         // 기존 북마크 리스트 목록을 조회
         BookmarkList existingBookmarkList = bookmarkListRepository.findById(listId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND));
-        if(existingBookmarkList.getUser().getId() != userId) {
+        if(!checkAuthority(userId,listId)) {
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
         // 업데이트할 내용 설정
@@ -439,6 +439,11 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         String imageUrl = getImageUrl(bookmarkList.getImage());
 
         return bookmarkList.makeBookmarkListResponseDTO(bookmarkList.getBookmarks().size(), likeCount, isLiked, imageUrl, tags, users);
+    }
+
+    private Boolean checkAuthority(Long userId, Long listId) {
+        Set<Long> groupUser = bookmarkListRepository.findGroupUserByListId(listId);
+        return groupUser.contains(userId);
     }
 
     private List<UserTitleDTO> getUserTitleDTOs(BookmarkList bookmarkList) {

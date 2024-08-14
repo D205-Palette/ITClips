@@ -6,8 +6,10 @@ import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
 import com.ssafy.itclips.global.rank.RankDTO;
 import com.ssafy.itclips.recommend.dto.SimilarBookmarkResponse;
 import com.ssafy.itclips.tag.dto.TagSearchDTO;
+import com.ssafy.itclips.user.entity.User;
 
 import java.util.List;
+import java.util.Set;
 
 public interface BookmarkListRepositoryCustom {
     List<BookmarkList> findBookmarkListByUserId(Long userId);
@@ -21,4 +23,5 @@ public interface BookmarkListRepositoryCustom {
     List<BookmarkList> findBookmarkListByIds(List<SimilarBookmarkResponse> similarLists);
     List<BookmarkListAndTagsDTO> findBookmarkListTitleAndTags(Long userId);
     List<BookmarkListAndTagsDTO> findScrapedBookmarkListTitleAndTags(Long userId);
+    Set<Long> findGroupUserByListId(Long listId);
 }

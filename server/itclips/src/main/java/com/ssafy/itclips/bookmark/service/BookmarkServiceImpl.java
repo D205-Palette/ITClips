@@ -32,6 +32,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -58,9 +59,11 @@ public class BookmarkServiceImpl implements BookmarkService {
     @Transactional
     public void createBookmark(Long userId, Long listId, Long categoryId, BookmarkRequestDTO bookmarkRequestDTO) {
         BookmarkList existingBookmarkList = getExistingBookmarkList(listId);
-        if(existingBookmarkList.getUser().getId() != userId) {
+
+        if(!checkAuthority(userId,listId)) {
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
+
         Integer count = getBookmarkCount(categoryId);
 
         Bookmark bookmark = buildBookmark(bookmarkRequestDTO, count);
@@ -73,6 +76,11 @@ public class BookmarkServiceImpl implements BookmarkService {
         }
 
         saveBookmarkTags(bookmarkRequestDTO, bookmark);
+    }
+
+    private Boolean checkAuthority(Long userId, Long listId) {
+        Set<Long> groupUser = bookmarkListRepository.findGroupUserByListId(listId);
+        return groupUser.contains(userId);
     }
 
     private BookmarkList getExistingBookmarkList(Long listId) {
@@ -103,7 +111,8 @@ public class BookmarkServiceImpl implements BookmarkService {
     public void updateBookmark(Long userId, Long bookmarkId, BookmarkRequestDTO bookmarkRequestDTO) throws RuntimeException {
         Bookmark bookmark = bookmarkRepository.findById(bookmarkId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_NOT_FOUND));
-        if(bookmark.getBookmarklist().getUser().getId() != userId) {
+
+        if(!checkAuthority(userId,bookmark.getBookmarklist().getId())) {
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
         bookmark.updateBookmark(bookmarkRequestDTO);
@@ -127,7 +136,7 @@ public class BookmarkServiceImpl implements BookmarkService {
     public void deleteBookmark(Long userId, Long bookmarkId) throws RuntimeException {
         Bookmark bookmark = bookmarkRepository.findById(bookmarkId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_NOT_FOUND));
-        if(bookmark.getBookmarklist().getUser().getId() != userId) {
+        if(!checkAuthority(userId,bookmark.getBookmarklist().getId())) {
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
         bookmarkRepository.deleteById(bookmarkId);

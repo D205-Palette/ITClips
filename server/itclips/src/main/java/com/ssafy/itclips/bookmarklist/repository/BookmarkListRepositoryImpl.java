@@ -23,13 +23,12 @@ import com.ssafy.itclips.tag.dto.TagDTO;
 import com.ssafy.itclips.tag.dto.TagSearchDTO;
 import com.ssafy.itclips.tag.entity.QBookmarkListTag;
 import com.ssafy.itclips.tag.entity.QTag;
+import com.ssafy.itclips.user.entity.QUser;
+import com.ssafy.itclips.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
@@ -272,5 +271,19 @@ public class BookmarkListRepositoryImpl implements BookmarkListRepositoryCustom 
             }
         }
         return bookmarkMap;
+    }
+
+    @Override
+    public Set<Long> findGroupUserByListId(Long listId) {
+        QBookmarkList qBookmarkList = QBookmarkList.bookmarkList;
+        QUserGroup qUserGroup = QUserGroup.userGroup;
+
+        List<Long> groupUser = queryFactory.select(qUserGroup.user.id)
+                .from(qBookmarkList)
+                .join(qUserGroup).on(qUserGroup.bookmarkList.id.eq(qBookmarkList.id))
+                .where(qBookmarkList.id.eq(listId))
+                .fetch();
+
+        return new HashSet<>(groupUser);
     }
 }

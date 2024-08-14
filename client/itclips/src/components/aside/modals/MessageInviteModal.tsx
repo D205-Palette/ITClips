@@ -9,6 +9,8 @@ import { inviteToChatRoom, getChatRoomInfo } from "../../../api/messageApi";
 // stores
 import { authStore } from "../../../stores/authStore";
 
+import noImg from '../../../assets/images/noImg.gif'
+
 interface SearchUser {
   id: number;
   email: string;
@@ -193,7 +195,7 @@ const MessageInviteModal: React.FC<MessageInviteModalProps> = ({ roomId, setNoti
                     className="cursor-pointer hover:bg-gray-100 p-2"
                   >
                     <div className="flex items-center">
-                      <img src={user.image} alt={user.nickname} className="w-8 h-8 rounded-full mr-2 border-2" />
+                      <img src={user.image==='default'? noImg : user.image} alt={user.nickname} className="w-8 h-8 rounded-full mr-2 border-2" />
                       <div>
                         <span className="font-bold">{user.nickname}</span>
                         <span className="text-sm text-gray-600 ml-2">{user.email}</span>

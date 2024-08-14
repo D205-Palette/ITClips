@@ -126,7 +126,11 @@ SSAFY 11기 공통 PJT / 구미 2반 5조 웹디자인<br/>
 **FrontEnd**
 
 - 김동준
-  - [임시]
+  - UI/UX 설계
+  - 소셜 로그인(Google, Github, Kakao), 일반 로그인 구현
+  - NavBar, Footer, DarkMode 구현
+  - AWS S3 기반 이미지 업로드 구현
+  - 페이지 구현 (회원가입, 로드맵 생성/수정 DND, 피드, 서비스 소개, 피드)
 - 김세진
   - UI/UX, 모바일 레이아웃 설계
   - 웹소켓 실시간 채팅 구현

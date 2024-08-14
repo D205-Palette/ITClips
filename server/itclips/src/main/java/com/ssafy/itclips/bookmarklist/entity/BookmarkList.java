@@ -131,6 +131,7 @@ public class BookmarkList {
                                                                Set<TagDTO> tags, List<UserTitleDTO> users) {
         return BookmarkListResponseDTO.builder()
                 .id(this.id)
+                .userId(this.user.getId())
                 .title(this.title)
                 .image(imageUrl)
                 .description(this.description)

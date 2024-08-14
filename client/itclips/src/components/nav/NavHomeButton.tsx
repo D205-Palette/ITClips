@@ -1,15 +1,25 @@
 import React from "react";
 import { authStore } from "../../stores/authStore";
 import { Link } from "react-router-dom";
+import logoDark from "../../assets/images/logoDark.png";
+import logoWhite from "../../assets/images/logoWhite.png";
+import darkModeStore from "../../stores/darkModeStore";
+
+import HomeLogo from "../../assets/images/HomeLogo.png";
 
 export default function HomeButton() {
+  const { isDark } = darkModeStore();
   const { isLoggedIn, userInfo, userId } = authStore();
 
   return (
     <>
       <Link to={isLoggedIn ? `user/${userId}` : "intro"}>
         <h1 className="font-extrabold text-2xl me-8">
-          <span className="text-sky-500">IT</span> Clips
+          <div className="flex items-center">
+            <img src={HomeLogo} alt="" className="h-11"/>
+            <span className="alfa-slab-one-regular text-xl">ITClips</span>
+          
+          </div>
         </h1>
       </Link>
     </>

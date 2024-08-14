@@ -19,6 +19,7 @@ interface Following {
   nickname: string;
   profileImage: string;
   email: string;
+  tagNames: string[];
 }
 
 interface Props {
@@ -75,6 +76,13 @@ const FollowingItem: React.FC<Props> = ({ items }) => {
     }
   }, [notification]);
 
+  // 태그 목록을 "#tag1 #tag2 #tag3" 형식으로 변환하는 함수
+  const formatTags = (tags: string[], maxLength: number = 30) => {
+    const tagString = tags.map(tag => `#${tag}`).join(' ');
+    if (tagString.length <= maxLength) return tagString;
+    return tagString.slice(0, maxLength) + '...';
+  };
+
   return (
     <div className="space-y-2 md:space-y-4 relative">
       {followings.map((item) => (
@@ -95,7 +103,7 @@ const FollowingItem: React.FC<Props> = ({ items }) => {
               </div>
             </div>
 
-            <p className="text-xs md:text-sm text-gray-500 hidden sm:block">#관심사1 #관심사2 #관심사3</p>
+            <p className="text-xs md:text-sm text-gray-500 hidden sm:block">{formatTags(item.tagNames)}</p>
 
             {userId === urlUserId ? (
               <div onClick={handleNavLink}>

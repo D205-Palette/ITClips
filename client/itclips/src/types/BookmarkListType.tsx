@@ -34,6 +34,7 @@ type BookmarkListDetailType = {
 // 나의&그룹&즐겨찾기 페이지에 보이는 리스트들 요약
 type BookmarkListSumType = {
   id: number;
+  userId?: number;
   title: string;
   description: string;
   bookmarkCount: number;

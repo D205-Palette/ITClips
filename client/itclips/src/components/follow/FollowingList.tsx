@@ -14,6 +14,7 @@ interface Following {
   nickname: string;
   profileImage: string;
   email: string;
+  tagNames: string[];
 }
 
 const FollowingList = () => {

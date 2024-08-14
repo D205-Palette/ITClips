@@ -79,10 +79,9 @@ const MessageLayout = () => {
   }
 
   // 새 채팅 시작 함수
-  const handleChatStart = (chatId: any) => {
-    // 현재 api 완료 안되서 채팅id로만 이동하는 흐름 정도만 구현
+  const handleChatStart = (roomId: any) => {
     handleBackToList();
-    setSelectedChat(chatId);
+    setSelectedChat(roomId);
   };
 
   if (!isMessageOpen) {

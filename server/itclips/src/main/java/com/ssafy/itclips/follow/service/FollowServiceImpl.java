@@ -71,9 +71,9 @@ public class FollowServiceImpl implements FollowService {
         return followingList.stream().map(follow -> {
             User followedUser = userRepository.findById(follow.getTo().getId()).orElse(null);
 
-            List<Tag> tags = followedUser != null
+            List<String> tagNames = followedUser != null
                     ? userTagRepository.findByUserId(followedUser.getId()).stream()
-                    .map(UserTag::getTag)
+                    .map(userTag -> userTag.getTag().getTitle())
                     .collect(Collectors.toList())
                     : List.of();
 
@@ -84,7 +84,7 @@ public class FollowServiceImpl implements FollowService {
                     followedUser != null ? followedUser.getNickname() : null,
                     followedUser != null ? getImageUrl(followedUser.getProfileImage()) : null,
                     followedUser != null ? followedUser.getEmail() : null,
-                    tags
+                    tagNames
             );
         }).collect(Collectors.toList());
     }
@@ -111,9 +111,9 @@ public class FollowServiceImpl implements FollowService {
         return followersList.stream().map(follow -> {
             User followerUser = userRepository.findById(follow.getFrom().getId()).orElse(null);
 
-            List<Tag> tags = followerUser != null
+            List<String> tagNames = followerUser != null
                     ? userTagRepository.findByUserId(followerUser.getId()).stream()
-                    .map(UserTag::getTag)
+                    .map(userTag -> userTag.getTag().getTitle())
                     .collect(Collectors.toList())
                     : List.of();
 
@@ -124,7 +124,7 @@ public class FollowServiceImpl implements FollowService {
                     followerUser != null ? followerUser.getNickname() : null,
                     followerUser != null ? getImageUrl(followerUser.getProfileImage()) : null,
                     followerUser != null ? followerUser.getEmail() : null,
-                    tags
+                    tagNames
             );
         }).collect(Collectors.toList());
     }

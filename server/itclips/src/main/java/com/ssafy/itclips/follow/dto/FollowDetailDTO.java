@@ -17,5 +17,5 @@ public class FollowDetailDTO {
     private String nickname;
     private String profileImage;
     private String email;
-    private List<Tag> tags;
+    private List<String> tagNames;
 }

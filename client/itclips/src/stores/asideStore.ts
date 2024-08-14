@@ -21,7 +21,7 @@ export const asideStore = create<AsideState>((set) => ({
   startNewChat: async (user1Id: number, user2Id: number) => {
     try {
       const response = await createPrivateChatRoom(user1Id, user2Id);
-      set({ selectedChat: response.data, isMessageOpen: true });
+      set({ selectedChat: response.data.roomId, isMessageOpen: true });
     } catch (error) {
       console.error("Failed to create new chat room:", error);
     }

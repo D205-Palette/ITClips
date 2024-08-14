@@ -136,7 +136,7 @@ export default function MyView() {
           <>
             {!isList ? (
               <div className="flex justify-around ">
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 w-full gap-2 gap-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 w-full gap-2 gap-y-6 ">
                   {filterdLists.map((list) => (
                     <MyBookmarkListAlbum
                       whatMenu="리스트"

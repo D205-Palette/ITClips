@@ -130,11 +130,11 @@ const CategoryTab: FC<Props> = ({
             name=""
             onChange={(e) => changeInputValue(e.target.value)}
             value={inputValue}
-            className={
+            className={(inputValue.length>=19? "text-red-500 ":"")+
               (isDark ? "border-slate-100" : "border-slate-300 ") +
               " border border-solid  rounded-2xl h-9 px-4 w-2/3 ms-3"
             }
-            maxLength={20}
+            maxLength={19}
           />
         </form>
         <button className="absolute right-1/3" onClick={() => modeChange(false)}>
@@ -151,7 +151,7 @@ const CategoryTab: FC<Props> = ({
 
   return (
     <>
-      <div className="flex flex-row m-3 items-center py-5 static z-20 w-full md:w-2/3">
+      <div className="flex flex-row m-3 items-center py-5 static z-20 w-full md:w-full">
         <div className={editMode ? "hidden" : "h-9 "}>
           <BackButton />
         </div>

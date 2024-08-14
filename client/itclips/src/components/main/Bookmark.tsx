@@ -180,7 +180,7 @@ const Bookmark: FC<Props> = ({
                       type="text"
                       value={tempTitle}
                       onChange={(e) => editTempTitle(e.target.value)}
-                      className="text-xl font-bold border-slate-400 border rounded-md w-5/6"
+                      className="text-xl font-bold border-slate-400 border rounded-md w-full"
                       maxLength={50}
                     />
                   ) : (

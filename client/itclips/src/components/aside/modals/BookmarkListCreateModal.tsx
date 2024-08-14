@@ -109,7 +109,7 @@ const BookmarkListCreateModal: React.FC<EditModalProps> = ({
         setTempTag("");
         setTempDescription("");
         // setTemp
-        handleImageRemove()
+        handleImageRemove();
         setGlobalNotification({
           message: "북마크 리스트 생성 완료",
           type: "success",
@@ -171,7 +171,7 @@ const BookmarkListCreateModal: React.FC<EditModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-base-100 rounded-lg p-6 w-96 ">
+      <div className="bg-base-100 rounded-lg p-8 w-1/2  flex flex-col">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">북마크 리스트 생성</h2>
           <button
@@ -181,133 +181,165 @@ const BookmarkListCreateModal: React.FC<EditModalProps> = ({
             <IoCloseOutline size={24} />
           </button>
         </div>
-
-        <div className="mb-4">
-          <label className={(isDark? "text-geay-400":" text-gray-700") + " block text-sm font-medium mb-2"}>
-            이미지
-          </label>
-          {/* 북마크리스트 이미지 설정 */}
-          <div className="flex flex-col justify-center">
-            <div className="flex gap-x-5">
-              {/* 이미지 */}
-              <div className="border w-32 h-32 bg-gray-200 rounded-lg overflow-hidden">
-                {previewImageUrl === "default" || previewImageUrl === null ? (
-                  <img
-                    src={noImg}
-                    alt="noImg"
-                    className=" w-full h-full object-cover"
-                  />
-                ) : (
-                  <img
-                    src={previewImageUrl || ""}
-                    alt="roadmapImg"
-                    className="border w-full h-full object-cover"
-                  />
-                )}
+        
+        <div className="flex flex-row justify-between gap-6">
+          {/* 왼쪽칸 */}
+          <div className="flex flex-col w-1/2">
+            {/* 이미지 */}
+            <div className="mb-4">
+              <label
+                className={
+                  (isDark ? "text-geay-400" : " text-gray-700") +
+                  " block text-sm font-medium mb-2"
+                }
+              >
+                이미지
+              </label>
+              {/* 북마크리스트 이미지 설정 */}
+              <div className="flex flex-col justify-center ">
+                <div className="flex gap-x-5 ">
+                  {/* 이미지 */}
+                  <div className="border w-32 h-32 bg-gray-200 rounded-lg overflow-hidden">
+                    {previewImageUrl === "default" ||
+                    previewImageUrl === null ? (
+                      <img
+                        src={noImg}
+                        alt="noImg"
+                        className=" w-full h-full object-cover"
+                      />
+                    ) : (
+                      <img
+                        src={previewImageUrl || ""}
+                        alt="roadmapImg"
+                        className="border w-full h-full object-cover"
+                      />
+                    )}
+                  </div>
+                  {/* 이미지 컨트롤러 */}
+                  <div className="flex flex-col justify-start py-2 gap-y-2">
+                    <label
+                      className={
+                        (isDark ? darkButton + " " : lightButton + " ") +
+                        " btn "
+                      }
+                    >
+                      이미지 업로드
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="hidden"
+                      />
+                    </label>
+                    {previewImageUrl && (
+                      <button
+                        type="button"
+                        onClick={handleImageRemove}
+                        className="btn btn-outline"
+                      >
+                        이미지 삭제
+                      </button>
+                    )}
+                  </div>
+                </div>
               </div>
-              {/* 이미지 컨트롤러 */}
-              <div className="flex flex-col gap-y-2">
-                <label
-                  className={
-                    (isDark ? darkButton + " " : lightButton + " ") + " btn "
-                  }
-                >
-                  이미지 업로드
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    className="hidden"
-                  />
-                </label>
-                {previewImageUrl && (
-                  <button
-                    type="button"
-                    onClick={handleImageRemove}
-                    className="btn btn-outline"
+            </div>
+            {/* 태그 */}
+            <div className="mb-4 w-full">
+              <label
+                className={
+                  (isDark ? "text-geay-400" : " text-gray-700") +
+                  " block text-sm font-medium mb-2"
+                }
+              >
+                태그
+              </label>
+              <div className="flex flex-wrap gap-2 mb-2">
+                {tempTags.map((tag, index) => (
+                  <span
+                    key={index}
+                    className={
+                      (isDark ? "bg-black" : "bg-gray-200") +
+                      " px-2 py-1 rounded-full text-sm flex items-center"
+                    }
                   >
-                    이미지 삭제
-                  </button>
-                )}
+                    {tag.title}
+                    <button
+                      onClick={() => handleRemoveTag(tag.title)}
+                      className="ml-1 text-gray-500 hover:text-gray-700"
+                    >
+                      <IoCloseOutline size={16} />
+                    </button>
+                  </span>
+                ))}
+              </div>
+              <div className="flex w-full">
+                <input
+                  type="text"
+                  value={tempTag}
+                  onChange={(e) => setTempTag(e.target.value)}
+                  className={" flex-grow px-3 py-2 border rounded-l-md  w-2/3"}
+                  placeholder={
+                    tagsLengthWarning
+                      ? "태그는 3개까지 가능합니다"
+                      : "새 태그 입력"
+                  }
+                  disabled={tagsLengthWarning}
+                  maxLength={20}
+                />
+                <button
+                  onClick={handleAddTag}
+                  className={
+                    (isDark
+                      ? darkButton + " border-sky-600 hover:border-sky-800 "
+                      : lightButton + " border-sky-500 hover:border-sky-700 ") +
+                    "btn rounded-l-none border-2 "
+                  }
+                  disabled={tagsLengthWarning}
+                >
+                  +
+                </button>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="mb-4">
-          <label className={" block text-sm font-medium mb-2"}>
-            리스트명
-          </label>
-          <input
-            type="text"
-            value={tempTitle}
-            onChange={(e) => setTempTitle(e.target.value)}
-            className="w-full px-3 py-2 border rounded-md"
-            placeholder="리스트명을 입력하세요"
-          />
-        </div>
+          {/* 오른칸 */}
+          <div className="flex flex-col w-1/2 justify-start">
 
-        <div className="mb-4">
-          <label className={(isDark? "text-geay-400":" text-gray-700") + " block text-sm font-medium  mb-2"}>
-            내용
-          </label>
-          <textarea
-            value={tempDescription}
-            onChange={(e) => setTempDescription(e.target.value)}
-            className="w-full px-3 py-2 border rounded-md resize-none"
-            placeholder="리스트 내용을 입력하세요"
-            rows={3}
-          />
-        </div>
+            <div className="mb-4 h-1/3">
+              <label className={" block text-sm font-medium mb-2"}>
+                리스트명
+              </label>
+              <input
+                type="text"
+                value={tempTitle}
+                onChange={(e) => setTempTitle(e.target.value)}
+                className="w-full px-3 py-2 border rounded-md"
+                placeholder="리스트명을 입력하세요"
+              />
+            </div>
 
-        <div className="mb-4">
-          <label className={(isDark? "text-geay-400":" text-gray-700") + " block text-sm font-medium mb-2"}>
-            태그
-          </label>
-          <div className="flex flex-wrap gap-2 mb-2">
-            {tempTags.map((tag, index) => (
-              <span
-                key={index}
+            <div className="mb-4 h-2/3">
+              <label
                 className={
-                  (isDark ? "bg-black" : "bg-gray-200") +
-                  " px-2 py-1 rounded-full text-sm flex items-center"
+                  (isDark ? "text-geay-400" : " text-gray-700") +
+                  " block text-sm font-medium  mb-2"
                 }
               >
-                {tag.title}
-                <button
-                  onClick={() => handleRemoveTag(tag.title)}
-                  className="ml-1 text-gray-500 hover:text-gray-700"
-                >
-                  <IoCloseOutline size={16} />
-                </button>
-              </span>
-            ))}
+                내용
+              </label>
+              <textarea
+                value={tempDescription}
+                onChange={(e) => setTempDescription(e.target.value)}
+                className="w-full px-3 py-2 border rounded-md resize-none h-2/3"
+                placeholder="리스트 내용을 입력하세요"
+                rows={3}
+              />
+            </div>
+            
           </div>
-          <div className="flex">
-            <input
-              type="text"
-              value={tempTag}
-              onChange={(e) => setTempTag(e.target.value)}
-              className={" flex-grow px-3 py-2 border rounded-l-md  "}
-              placeholder={
-                tagsLengthWarning ? "태그는 3개까지 가능합니다" : "새 태그 입력"
-              }
-              disabled={tagsLengthWarning}
-              maxLength={20}
-            />
-            <button
-              onClick={handleAddTag}
-              className={
-                (isDark
-                  ? darkButton + " border-sky-600 hover:border-sky-800 "
-                  : lightButton + " border-sky-500 hover:border-sky-700 ") +
-                "btn rounded-l-none border-2 "
-              }
-              disabled={tagsLengthWarning}
-            >
-              +
-            </button>
-          </div>
+        </div>
+        <div className="w-full flex flex-row justify-end gap-4">
           <div className="form-control flex flex-row items-center justify-end my-3">
             <label htmlFor="">공개 여부</label>
             <input
@@ -317,14 +349,14 @@ const BookmarkListCreateModal: React.FC<EditModalProps> = ({
               className="checkbox checkbox-info  [--chkfg:white] mx-2 "
             />
           </div>
-        </div>
 
-        <button
-          className={(isDark ? darkButton : lightButton) + " btn w-full"}
-          onClick={() => endCreate()}
-        >
-          생성
-        </button>
+          <button
+            className={(isDark ? darkButton : lightButton) + " btn w-20 "}
+            onClick={() => endCreate()}
+          >
+            생성
+          </button>
+        </div>
       </div>
     </div>
   );

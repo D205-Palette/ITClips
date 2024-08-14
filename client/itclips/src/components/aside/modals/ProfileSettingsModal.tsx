@@ -351,6 +351,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
       });
     }
     setIsProfileChange(true);
+    
   };
 
   const handleCloseModal = async () => {
@@ -360,6 +361,8 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
       setIsProfileChange(true);
       fetchUserInfo(userInfoResponse.data);
     }
+    setProfileImage(null);
+    setSelectedFile(null);
     onClose();
   };
 

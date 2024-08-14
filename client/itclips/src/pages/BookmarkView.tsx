@@ -207,6 +207,7 @@ const MyBookmark = () => {
                     editMode={editMode}
                     setEditMode={setEditMode}
                   />
+                  <div className="sticky right-10 flex flex-row z-30">
                   <button
                     className={
                       "bg-red-500  text-slate-100 border border-red-500 rounded-2xl  px-4 font-bold hover:bg-red-600 hover:text-white h-9 min-w-24 "
@@ -232,6 +233,7 @@ const MyBookmark = () => {
                   >
                     이동 | {editBookmarks.length}
                   </button>
+                  </div>
                 </div>
               ) : bookmarkList ? (
                 <div className="static z-50 ">

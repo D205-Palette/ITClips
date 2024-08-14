@@ -133,11 +133,11 @@ const RoadmapView = () => {
             >
               {/* <MainTab /> */}
               <div className="grid  grid-cols-7 ">
-                <div className="sticky top-16 z-10 col-start-1 col-span-7">
+                <div className="sticky top-16 z-10 col-start-1 col-span-7 bg-base-100 py-1">
                   <MainTab userId={roadmap?.userId!} />
                 </div>
-                <div className="col-span-7 flex flex-row justify-between my-12">
-                  <div>
+                <div className="col-span-7 flex flex-row justify-between my-12 ">
+                  <div className="static z-10 ">
                     <BackButton />
                   </div>
                   <div

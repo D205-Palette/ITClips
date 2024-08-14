@@ -22,7 +22,7 @@ const FollowerItemKebabDropdown: React.FC<Props> = ({ targetId, onDeleteFollower
 
   const params = useParams()
   const {userId} = authStore()
-  const categories: string[] =  params.userId === String(userId) ? ["메세지 보내기", "삭제", "삭제 후 차단"] :["메세지 보내기"]
+  const categories: string[] =  params.userId === String(userId) ? ["메세지 보내기", "삭제"] :["메세지 보내기"]
 
   // 채팅 시작하는 함수
   const startSendMessage = () => {
@@ -35,9 +35,7 @@ const FollowerItemKebabDropdown: React.FC<Props> = ({ targetId, onDeleteFollower
       startSendMessage();
     } else if (menu === "삭제") {
       onDeleteFollower();
-    } else if (menu === "삭제 후 차단") {
-      // 팔로워 삭제 후 차단 로직
-    }
+    } 
     setIsDropdownOpen(false);
   };
 

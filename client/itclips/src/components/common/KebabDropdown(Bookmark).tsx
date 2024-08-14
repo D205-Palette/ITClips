@@ -78,7 +78,7 @@ const KebabDropdown: FC<Props> = ({
               }}
             >
               <a onClick={() => navigator.clipboard.writeText(bookmark.url)}>
-                url 복사
+                url 복사하기
               </a>
             </li>
             <li

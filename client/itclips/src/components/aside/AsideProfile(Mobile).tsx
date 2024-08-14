@@ -246,12 +246,12 @@ const AsideProfile = () => {
       </div>
 
       {/* 프로필 설정 모달 */}
-      <ProfileSettingsModal
+      {/* <ProfileSettingsModal
         isOpen={isModalOpen}
         onClose={closeModal}
         updateAsideInfo={updateAsideInfo}
         setGlobalNotification={setGlobalNotification}
-      />
+      /> */}
       {/* 토스트 알람 */}
       {globalNotification && (
         <div

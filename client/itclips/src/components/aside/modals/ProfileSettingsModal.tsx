@@ -37,7 +37,7 @@ import noImg from "../../../assets/images/noImg.gif";
 interface ProfileSettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  updateAsideInfo: (updatedInfo: any) => void;
+  // updateAsideInfo: (updatedInfo: any) => void;
   setGlobalNotification: (
     notification: { message: string; type: "success" | "error" } | null
   ) => void;
@@ -51,7 +51,7 @@ interface Interest {
 const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
   isOpen,
   onClose,
-  updateAsideInfo,
+  // updateAsideInfo,
   setGlobalNotification,
 }) => {
   const userInfo = authStore((state) => state.userInfo);
@@ -606,7 +606,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
         <div className="hidden md:flex md:flex-col rounded-lg">
           <div
             className={`${
-              isDark ? "bg-base-200" : "bg-sky-200"
+              isDark ? "bg-base-200" : "bg-sky-50"
             } rounded-t-lg p-6 border-b`}
           >
             <div className="flex justify-between items-center">
@@ -685,7 +685,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
                       />
                       <button
                         onClick={handleAddInterest}
-                        className="btn btn-primary min-h-[2.5rem] h-auto px-4 ml-2 flex-shrink-0"
+                        className="btn btn-info text-slate-100 min-h-[2.5rem] h-auto px-4 ml-2 flex-shrink-0"
                         disabled={!selectedInterest}
                       >
                         +

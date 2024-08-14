@@ -45,6 +45,7 @@ const MyRoadmap = () => {
         if(String(userId)===params.userId){
           setCanEdit(true)}
           setNoContent( <NoContent content={"로드맵"}/> )
+          window.scrollTo(0, 0);
       })
       .catch((err) => {
         console.error(err);

@@ -50,7 +50,7 @@ const ItemDetailInfo = (data: Item) => {
         </Link>
       ))}
       <div className="px-1 ">
-        <p className="text-start text-xxs md:text-sm mt-1 md:mt-4 mb-0.5 md:mb-1 line-clamp-2 md:line-clamp-none">
+        <p className="text-center text-xxs md:text-sm mt-1 md:mt-4 mb-0.5 md:mb-1 line-clamp-2 md:line-clamp-none">
           {data.description}
         </p>
       </div>

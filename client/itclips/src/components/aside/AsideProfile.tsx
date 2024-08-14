@@ -21,7 +21,7 @@ import { authStore } from "../../stores/authStore";
 import { profileStore } from "../../stores/profileStore";
 import mainStore from "../../stores/mainStore";
 import { asideStore } from "../../stores/asideStore";
-
+import mainTabStore from "../../stores/mainTabStore";
 interface UserInfo {
   id?: number;
   email?: string;
@@ -54,6 +54,8 @@ const AsideProfile = () => {
     message: string;
     type: "success" | "error";
   } | null>(null);
+
+  const {setIsProfileModalOpen} = mainTabStore()
 
   // 팔로우 상태인지?
   const [isFollow, setIsFollow] = useState<boolean>(false);
@@ -145,13 +147,13 @@ const AsideProfile = () => {
   };
 
   // 프로필 설정 모달 상태 관련
-  const openModal = (): void => {
-    setIsModalOpen(true);
-  };
+  // const openModal = (): void => {
+  //   setIsModalOpen(true);
+  // };
 
-  const closeModal = (): void => {
-    setIsModalOpen(false);
-  };
+  // const closeModal = (): void => {
+  //   setIsModalOpen(false);
+  // };
 
   return (
     <div
@@ -169,7 +171,7 @@ const AsideProfile = () => {
             <IoChatboxEllipsesOutline className="h-6 w-6 md:h-8 md:w-8" />
           </button>
         ) : (
-          <button className="btn btn-ghost btn-circle" onClick={openModal}>
+          <button className="btn btn-ghost btn-circle" onClick={()=>setIsProfileModalOpen(true)}>
             <IoSettingsOutline className="h-5 w-5 md:h-6 md:w-6" />
           </button>
         )}
@@ -213,12 +215,12 @@ const AsideProfile = () => {
       </div>
 
       {/* 프로필 설정 모달 */}
-      <ProfileSettingsModal
+      {/* <ProfileSettingsModal
         isOpen={isModalOpen}
         onClose={closeModal}
         updateAsideInfo={updateAsideInfo}
         setGlobalNotification={setGlobalNotification}
-      />
+      /> */}
       {/* 토스트 알람 */}
       {globalNotification && (
         <div

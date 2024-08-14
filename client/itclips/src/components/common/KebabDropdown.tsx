@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 import mainStore from "../../stores/mainStore";
 import { useParams } from "react-router-dom";
 import toastStore from "../../stores/toastStore";
-
+import bookmarkListModalStore from "../../stores/bookmarkListEditModalStore";
 interface Props {
   // 무슨 탭에서 눌렀는지 받는 인자
   // 리스트, 즐겨찾기, 로드맵, 리스트상세  4가지로 받을 예정
@@ -42,6 +42,7 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id, contentUserId, users }) => {
   const nowUserId = params.userId;
   const navigate = useNavigate();
   const { setIsRoadmapChange, setIsFavoriteChange } = mainStore();
+  const{setBookmarkListId, setIsBookmarkListEditModalOpen} = bookmarkListModalStore()
 
   // 유저 아이디 임시값. 나중엔 스토리지서 받아오면됨
   const { userId, token } = authStore();
@@ -155,7 +156,10 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id, contentUserId, users }) => {
       type: "error",
     });
   }
-
+const openModalSetting = () => {
+  setIsBookmarkListEditModalOpen(true) 
+  setBookmarkListId(id)
+}
   return (
     <>
       <div className="dropdown dropdown-bottom dropdown-end">
@@ -179,7 +183,7 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id, contentUserId, users }) => {
                   onClick={() => {
                     whatMenu === "로드맵"
                       ? navigate(`/roadmap/${id}/edit`)
-                      : setIsEditModalOpen(true);
+                      : (whatMenu==='리스트' ? setIsEditModalOpen(true): openModalSetting())
                   }}
                 >
                   <a className="py-1.5 md:py-2">수정하기</a>
@@ -194,7 +198,7 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id, contentUserId, users }) => {
             ) : null}
 
             <li onClick={() => copyUrl(whatMenu, id)}>
-              <a>url 복사</a>
+              <a>url 복사하기</a>
             </li>
             <li
               className={whatMenu === "즐겨찾기" ? "" : "hidden"}

@@ -134,12 +134,10 @@ const {setGlobalNotification} = toastStore()
       <div className="modal-box">
         <h3 className="font-bold text-lg">삭제하시겠습니까?</h3>
         <div className="modal-action">
-          <button className="btn" onClick={onClose}>
-            아니오
-          </button>
+         
 
           <button
-            className="btn bg-sky-500 hover:bg-sky-700 text-slate-100"
+            className="btn bg-red-500 hover:bg-red-700 text-slate-100"
             onClick={() => {
               // 삭제 로직 구현
               deleteApi();
@@ -147,6 +145,9 @@ const {setGlobalNotification} = toastStore()
             }}
           >
             예
+          </button>
+          <button className="btn" onClick={onClose}>
+            아니오
           </button>
         </div>
       </div>

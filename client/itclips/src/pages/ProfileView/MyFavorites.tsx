@@ -61,7 +61,7 @@ const MyGroupBookmarkList = () => {
           }
           setNoContent(<NoContent content={"즐겨찾기"} />);
           setIsFavoriteChange(false)
-
+          window.scrollTo(0, 0);
         })
         .catch((err) => {
           console.error(err);

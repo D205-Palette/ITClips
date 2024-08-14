@@ -51,6 +51,7 @@ const MyGroupBookmarkList = () => {
           res.data.users.map((user:any)=>user.Id===userId&&setCanView(true))
         }
           setNoContent(<NoContent content={"그룹"} />)
+          window.scrollTo(0, 0);
         })
         .catch((err) => {
           console.error(err);

@@ -80,7 +80,7 @@ const CategoryTab: FC<Props> = ({
         onClick={() => {
           modeChange(true);
         }}
-        className={categoryLengthWarning ? "hidden" : ""}
+        className={categoryLengthWarning ? "hidden" : "hidden md:block"}
       >
         <FaPlus className="ms-2 " />
       </button>
@@ -151,7 +151,7 @@ const CategoryTab: FC<Props> = ({
 
   return (
     <>
-      <div className="flex flex-row m-3 items-center py-5 static z-20 w-2/3">
+      <div className="flex flex-row m-3 items-center py-5 static z-20 w-full md:w-2/3">
         <div className={editMode ? "hidden" : "h-9 "}>
           <BackButton />
         </div>

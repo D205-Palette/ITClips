@@ -78,21 +78,18 @@ const Footer = () => {
             <h3 className="font-bold mb-2 text-xl">팀 팔레트</h3>
             <div className="flex flex-col">
               <div className="flex gap-x-3">
+
                 <div className="flex flex-col">
-                  <p className="font-bold">Backend</p>
-                  <p className="font-bold">Frontend</p>
+                  <p>정진규 </p>
+                  <p>김동준 </p>
                 </div>
                 <div className="flex flex-col">
-                  <p>정진규 팀장</p>
-                  <p>김동준 팀원</p>
+                  <p>김민솔 </p>
+                  <p>김세진 </p>
                 </div>
                 <div className="flex flex-col">
-                  <p>김민솔 팀원</p>
-                  <p>김세진 팀원</p>
-                </div>
-                <div className="flex flex-col">
-                  <p>김수정 팀원</p>
-                  <p>최형우 팀원</p>
+                  <p>김수정 </p>
+                  <p>최형우 </p>
                 </div>
               </div>
             </div>

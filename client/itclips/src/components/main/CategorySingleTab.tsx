@@ -33,69 +33,72 @@ const CategorySingleTab: FC<Props> = ({ tempCategory,canEdit }) => {
     : "bg-slate-0 text-slate-600 border-solid border-slate-300 border p-1";
   const whatCategory = mainTabStore((state) => state.whatCategory);
   const changeCategory = mainTabStore((state) => state.changeCategory);
+  
+  const {isOpen,setIsOpen, deleteCategory, setDeleteCategory} = mainTabStore()
+  
   const DeleteButton = (): any => {
-    const [isOpen, setIsOpen] = useState(false);
+    // const [isOpen, setIsOpen] = useState(false);
 
-    interface Props {
-      setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    }
-    const DeleteCheckModal: React.FC<Props> = ({ setIsOpen }): any => {
-      return (
-        <div className="modal modal-open fixed z-50">
-          <div className="modal-box pt-16 ">
-            <h3 className="font-bold text-lg">카테고리를 삭제하시겠습니까?</h3>
-            <div className="modal-action">
-              <button
-                className="btn bg-sky-500 text-slate-100 hover:bg-sky-700"
-                onClick={() => {
-                  deleteCategory();
-                  setIsOpen(false);
-                }}
-              >
-                확인
-              </button>
-              <button
-                className="btn"
-                onClick={() => {
-                  setIsOpen(false);
-                }}
-              >
-                취소
-              </button>
-            </div>
-          </div>
-        </div>
-      );
-    };
+    // interface Props {
+    //   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    // }
+    // const DeleteCheckModal: React.FC<Props> = ({ setIsOpen }): any => {
+    //   return (
+    //     <div className="modal modal-open fixed z-50">
+    //       <div className="modal-box pt-16 ">
+    //         <h3 className="font-bold text-lg">카테고리를 삭제하시겠습니까?</h3>
+    //         <div className="modal-action">
+    //           <button
+    //             className="btn bg-sky-500 text-slate-100 hover:bg-sky-700"
+    //             onClick={() => {
+    //               deleteCategory();
+    //               setIsOpen(false);
+    //             }}
+    //           >
+    //             확인
+    //           </button>
+    //           <button
+    //             className="btn"
+    //             onClick={() => {
+    //               setIsOpen(false);
+    //             }}
+    //           >
+    //             취소
+    //           </button>
+    //         </div>
+    //       </div>
+    //     </div>
+    //   );
+    // };
 
-    function deleteCategory(): void {
-      axios({
-        method: "delete",
-        url: `${API_BASE_URL}/api/category/delete/${tempCategory.categoryId}`,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        params: {
-          userId: userId,
-        },
-      })
-        .then((res) => {
-          setIsBookmarkListChange(true);
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    }
+    // function deleteCategory(): void {
+    //   axios({
+    //     method: "delete",
+    //     url: `${API_BASE_URL}/api/category/delete/${tempCategory.categoryId}`,
+    //     headers: {
+    //       Authorization: `Bearer ${token}`,
+    //     },
+    //     params: {
+    //       userId: userId,
+    //     },
+    //   })
+    //     .then((res) => {
+    //       setIsBookmarkListChange(true);
+    //     })
+    //     .catch((err) => {
+    //       console.error(err);
+    //     });
+    // }
 
     return (
       <>
         <button
-          onClick={() => setIsOpen(true)}
-          className={isDark ? "text-slate-100" : "text-slate-900 "}
+          onClick={() => {setDeleteCategory(tempCategory.categoryId);setIsOpen(true)}}
+          className={(isDark ? "text-slate-100" : "text-slate-900 ")+ " hidden md:block"}
         >
           <IoIosClose size="24px" />
         </button>
-        {isOpen && <DeleteCheckModal setIsOpen={setIsOpen} />}
+        {/* {isOpen && <DeleteCheckModal setIsOpen={setIsOpen} />} */}
       </>
     );
   };

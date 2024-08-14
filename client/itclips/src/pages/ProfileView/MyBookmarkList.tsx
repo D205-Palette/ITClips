@@ -67,6 +67,7 @@ export default function MyView() {
           setIsBookmarkListChange(false);
 
           setNoContent(<NoContent content={"리스트"} />);
+          window.scrollTo(0, 0);
         })
         .catch((err) => {
           console.error(err);

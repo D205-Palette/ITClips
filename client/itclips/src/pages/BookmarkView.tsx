@@ -24,6 +24,9 @@ import NoContent from "./ProfileView/NoContent";
 import toastStore from "../stores/toastStore";
 import DeleteContentModal from "../components/aside/modals/DeleteContentModal";
 import AsideMobileContent from "../components/aside/AsideBookmarkList(Mobile)";
+import BookmarkListEditModal from "../components/aside/modals/BookmarkListEditModal";
+import bookmarkListModalStore from "../stores/bookmarkListEditModalStore";
+
 const MyBookmark = () => {
   const params = useParams();
   const { isDark } = darkModeStore();
@@ -66,11 +69,13 @@ const MyBookmark = () => {
     </div>
   );
 
-  // 북마크 리스트 변경될때마다 리스트 불러오기
-  const { globalNotification, setGlobalNotification } = toastStore();
   // 토스트 알람 메뉴
+  const { globalNotification, setGlobalNotification } = toastStore();
 
+  // 리스트 변경 모달 띄울 용도
+  const {isEditModalOpen,setIsBookmarkListEditModalOpen,bookmarkListId,setBookmarkListId} = bookmarkListModalStore()
 
+  // 북마크 리스트 변경될때마다 리스트 불러오기
   useEffect(() => {
     async function fetchData() {
       axios({
@@ -105,6 +110,61 @@ const MyBookmark = () => {
     }
     fetchData();
   }, [isBookmarkListChange]);
+
+  const {isOpen,setIsOpen, deleteCategory, setDeleteCategory} = mainTabStore()
+
+  // 카테고리 삭제용 모달
+  const DeleteCheckModal = (): any => {
+
+    function deleteCat(): void {
+      axios({
+        method: "delete",
+        url: `${API_BASE_URL}/api/category/delete/${deleteCategory}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          userId: userId,
+        },
+      })
+        .then((res) => {
+          setIsBookmarkListChange(true);
+          setDeleteCategory(0)
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+
+    return (
+      <div className="modal modal-open fixed z-50">
+        <div className="modal-box ">
+          <h3 className="font-bold text-lg">삭제하시겠습니까?</h3>
+          <div className="modal-action">
+            <button
+              className="btn bg-red-500 text-slate-100 hover:bg-red-700"
+              onClick={() => {
+                deleteCat();
+                setIsOpen(false);
+              }}
+            >
+              확인
+            </button>
+            <button
+              className="btn"
+              onClick={() => {
+                setIsOpen(false);
+              }}
+            >
+              취소
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+
 
   return (
     <>
@@ -280,6 +340,8 @@ const MyBookmark = () => {
           toggleMode={setEditMode}
         />
       )}
+      {isOpen&& <DeleteCheckModal />}
+      {isEditModalOpen && <BookmarkListEditModal isOpen={isEditModalOpen} onClose={()=>setIsBookmarkListEditModalOpen(false)} id={bookmarkListId}/>}
     </>
   );
 };

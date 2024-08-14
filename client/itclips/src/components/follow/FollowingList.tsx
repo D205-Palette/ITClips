@@ -17,9 +17,13 @@ interface Following {
 }
 
 const FollowingList = () => {
-
-  const [ followingList, setFollowingList ] = useState<Following[]>([]);
+  const [followingList, setFollowingList] = useState<Following[]>([]);
   const { userId } = useParams<{ userId: string }>();
+  const [noContent, setNoContent] = useState(
+    <div className="w-full flex flex-row justify-center mt-6">
+      <span className="loading loading-spinner loading-lg text-sky-500"></span>
+    </div>
+  );
 
   // 팔로잉 목록 조회
   useEffect(() => {
@@ -27,7 +31,13 @@ const FollowingList = () => {
       if (userId) {
         try {
           const response = await getFollowingList(parseInt(userId, 10));
-          setFollowingList(response.data);          
+          setFollowingList(response.data);
+          setNoContent(
+            <div className="mt-16 flex flex-row items-center gap-3 text-lg font-bold justify-center">
+              <FaPersonCircleExclamation color="skyblue" size={32} /> 팔로잉이
+              없습니다!
+            </div>
+          );
         } catch (error) {
           console.error("팔로잉 목록 조회 실패", error);
         }
@@ -39,7 +49,11 @@ const FollowingList = () => {
 
   return (
     <div className="mt-4">
-      {followingList.length!==0? <FollowingItem items={followingList} /> : <div className="mt-16 flex flex-row items-center gap-3 text-lg font-bold justify-center"><FaPersonCircleExclamation color="skyblue" size={32}/> 팔로잉이 없습니다!</div>}
+      {followingList.length !== 0 ? (
+        <FollowingItem items={followingList} />
+      ) : (
+        <>{noContent}</>
+      )}
     </div>
   );
 };

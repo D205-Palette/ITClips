@@ -26,79 +26,76 @@ const ReportModal: React.FC<ReportModalProps> = ({
   const [reportContent, setReportContent] = useState<string>("");
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] =
     useState<boolean>(false);
-    const [isErrorModalOpen, setIsErrorModalOpen] =
-    useState<boolean>(false);
-    const [formCertified, setFormCertified] = useState(false)
-    const { userId, token } = authStore();
-  const{setGlobalNotification} = toastStore()
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState<boolean>(false);
+  const [formCertified, setFormCertified] = useState(false);
+  const { userId, token } = authStore();
+  const { setGlobalNotification } = toastStore();
   if (!isOpen) return null;
 
   const handleReport = () => {
     // 신고 처리 API
-    if(reportType&&reportContent){
-    if (whatContent === "북마크") {
-      axios({
-        method: "post",
-        url: `${API_BASE_URL}/api/report/bookmark/${userId}/${id}`,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        data: {
-          category: reportType,
-          reason: reportContent,
-        },
-      })
-        .then(() => {
-          // setIsConfirmationModalOpen(true);
-          setGlobalNotification({
-            message: "신고가 접수되었습니다",
-            type: "success",
-          });
-          
+    if (reportType && reportContent) {
+      if (whatContent === "북마크") {
+        axios({
+          method: "post",
+          url: `${API_BASE_URL}/api/report/bookmark/${userId}/${id}`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          data: {
+            category: reportType,
+            reason: reportContent,
+          },
         })
-        .catch((err) => {
-          if (err.response.status === 400) {
-            // setIsErrorModalOpen(true)
+          .then(() => {
+            // setIsConfirmationModalOpen(true);
             setGlobalNotification({
-              message: "이미 접수된 신고입니다.",
-              type: "error",
+              message: "신고가 접수되었습니다",
+              type: "success",
             });
-          } 
-          
-        });
-        onClose()
+          })
+          .catch((err) => {
+            if (err.response.status === 400) {
+              // setIsErrorModalOpen(true)
+              setGlobalNotification({
+                message: "이미 접수된 신고입니다.",
+                type: "error",
+              });
+            }
+          });
+        onClose();
+      } else {
+        axios({
+          method: "post",
+          url: `${API_BASE_URL}/api/report/list/${userId}/${id}`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          data: {
+            category: reportType,
+            reason: reportContent,
+          },
+        })
+          .then(() => {
+            // setIsConfirmationModalOpen(true);
+            setGlobalNotification({
+              message: "신고가 접수되었습니다",
+              type: "success",
+            });
+          })
+          .catch((err) => {
+            if (err.response.status === 400) {
+              // setIsErrorModalOpen(true)
+              setGlobalNotification({
+                message: "이미 접수된 신고입니다.",
+                type: "error",
+              });
+            }
+          });
+        onClose();
+      }
     } else {
-      axios({
-        method: "post",
-        url: `${API_BASE_URL}/api/report/list/${userId}/${id}`,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        data: {
-          category: reportType,
-          reason: reportContent,
-        },
-      })
-        .then(() => {
-          // setIsConfirmationModalOpen(true);
-          setGlobalNotification({
-            message: "신고가 접수되었습니다",
-            type: "success",
-          });
-        })
-        .catch((err) => {          
-          if (err.response.status === 400) {
-            // setIsErrorModalOpen(true)
-            setGlobalNotification({
-              message: "이미 접수된 신고입니다.",
-              type: "error",
-            });
-          } 
-         
-        });
-        onClose()
-    }} else{
-      setFormCertified(true)
+      setFormCertified(true);
     }
 
     // 신고 처리 후 확인 모달
@@ -123,7 +120,11 @@ const ReportModal: React.FC<ReportModalProps> = ({
               <span className="label-text">신고내역</span>
             </label>
             <select
-              className={(formCertified&&!reportType?"border-2 border-red-600": "") + " select select-bordered "}
+              className={
+                (formCertified && !reportType
+                  ? "border-2 border-red-600"
+                  : "") + " select select-bordered "
+              }
               value={reportType}
               onChange={(e) => setReportType(e.target.value)}
             >
@@ -140,23 +141,27 @@ const ReportModal: React.FC<ReportModalProps> = ({
               <span className="label-text">신고내용</span>
             </label>
             <textarea
-              className={(formCertified&&!reportContent?"border-2 border-red-600": "") + " textarea textarea-bordered h-24 resize-none"}
+              className={
+                (formCertified && !reportContent
+                  ? "border-2 border-red-600"
+                  : "") + " textarea textarea-bordered h-24 resize-none"
+              }
               value={reportContent}
               onChange={(e) => setReportContent(e.target.value)}
             ></textarea>
           </div>
-        <div className={formCertified?"my-2 text-red-600" : "hidden"}>
-          <p>항목을 기입해주세요</p>
+          <div className={formCertified ? "my-2 text-red-600" : "hidden"}>
+            <p>항목을 기입해주세요</p>
           </div>
           <div className="modal-action">
-            <button className="btn" onClick={onClose}>
-              취소
-            </button>
             <button
               className="btn bg-sky-500 hover:bg-sky-700 text-slate-100"
               onClick={handleReport}
             >
               신고하기
+            </button>
+            <button className="btn" onClick={onClose}>
+              취소
             </button>
           </div>
         </div>

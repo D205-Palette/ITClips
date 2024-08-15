@@ -3,9 +3,9 @@
 SSAFY 11기 공통 PJT / 구미 2반 5조 웹디자인<br/>
 2024.07.08 ~ 2024.08.16 (6주)
 
-🔗 **서비스 페이지 : https://i11d205.p.ssafy.io/<br/>**
-🔗 **서비스 소개 영상 : [임시 URL]<br/>**
-🔗 **Chrome extension : [임시 URL]**
+🔗 **서비스 페이지 : [ITClips](https://i11d205.p.ssafy.io/)<br/>**
+🔗 **서비스 소개 영상 : [[SSAFY 11기]공통 PJT "ITClips" UCC](https://www.youtube.com/watch?v=Yu8Oso7qV_k)<br/>**
+🔗 **Chrome extension : 검수중...**
 
 
 # 💡 프로젝트 소개
@@ -48,9 +48,9 @@ SSAFY 11기 공통 PJT / 구미 2반 5조 웹디자인<br/>
 
 ✔ [E-R Diagram](https://www.erdcloud.com/d/N4w6FLmAhKAhsXC5e)
 
-✔ [시퀀스 다이어그램]()
+✔ [시퀀스 다이어그램](./docs/시퀀스다이어그램.md)
 
-✔ [E2E테스트 케이스](resources/ITClips_테스트케이스.xlsx)
+✔ [E2E테스트 케이스](./docs/ITClips_테스트케이스.xlsx)
 
 ✔ [시스템 아키텍처](resources/image/시스템 아키텍처.PNG)
 
@@ -58,7 +58,9 @@ SSAFY 11기 공통 PJT / 구미 2반 5조 웹디자인<br/>
 
 ✔ [최종 발표 자료](https://www.canva.com/design/DAGNneDhqjU/qv03xiaX13R22l2mMHaPOA/edit?utm_content=DAGNneDhqjU&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
-✔ [포팅 매뉴얼 - 시연 시나리오]()
+✔ [포팅 매뉴얼](./exec/porting_manual.md)
+
+✔ [시연 시나리오](./exec/scenario.md)
 
 ✔ [Swagger 문서](https://i11d205.p.ssafy.io/api/swagger-ui/index.html)
 

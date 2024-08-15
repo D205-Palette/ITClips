@@ -116,8 +116,6 @@ public class BookmarkServiceImpl implements BookmarkService {
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
         bookmark.updateBookmark(bookmarkRequestDTO);
-        log.info(bookmarkRequestDTO.getTitle());
-        log.info(bookmark.getTitle());
         bookmarkRepository.save(bookmark);
         bookmarkTagRepository.deleteAllByBookmark(bookmark);
 

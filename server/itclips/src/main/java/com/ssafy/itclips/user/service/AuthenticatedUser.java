@@ -35,7 +35,6 @@ public class AuthenticatedUser {
         // principal이 UserDetails 인스턴스일 때
         if (principal instanceof UserDetails) {
             String email = ((UserDetails) principal).getUsername();
-            System.out.println("email : " + email);
             return userService.getUserByEmail(email);
         }
 

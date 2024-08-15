@@ -1,11 +1,7 @@
 package com.ssafy.itclips.alarm.service;
 
-import com.ssafy.itclips.alarm.dto.NotifyReadDTO;
 import com.ssafy.itclips.alarm.entity.Notification;
 import com.ssafy.itclips.alarm.entity.NotificationType;
-import org.apache.coyote.BadRequestException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;

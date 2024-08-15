@@ -39,7 +39,6 @@ public class NotificationServiceImpl implements NotificationService{
 
         //최초 연결시 더미데이터가 없으면 503 오류가 발생하기 때문에 해당 더미 데이터 생성
         sendToClient(emitter,emitterId, "EventStream Created. [memberId=" + memberId + "]");
-        log.info("Sending data to client: id={}", emitterId);
         //lastEventId 있다는것은 연결이 종료됬다. 그래서 해당 데이터가 남아있는지 살펴보고 있다면 남은 데이터를 전송
         if(!lastEventId.isEmpty()){
             Map<String, Object> events = emitterRepository.findAllEventCacheStartWithByUserId(String.valueOf(memberId));

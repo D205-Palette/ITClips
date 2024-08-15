@@ -1,6 +1,5 @@
 package com.ssafy.itclips.roadmap.controller;
 
-import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
 import com.ssafy.itclips.alarm.service.NotificationService;
 import com.ssafy.itclips.global.file.DataResponseDto;
 import com.ssafy.itclips.global.gpt.GPTResponseDTO;
@@ -12,11 +11,8 @@ import com.ssafy.itclips.roadmap.dto.RoadmapRequestDTO;
 import com.ssafy.itclips.roadmap.service.RoadmapService;
 import com.ssafy.itclips.user.dto.UserListDTO;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

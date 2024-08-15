@@ -489,7 +489,6 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         tags.forEach(tag -> {
             BookmarkListTag listTag = new BookmarkListTag();
             listTag.setBookmarkListTag(bookmarkList,tag);
-            log.info(listTag.getTag().getTitle());
             bookmarkListTags.add(listTag);
         });
         categories.forEach(bookmarkList::addCategory);

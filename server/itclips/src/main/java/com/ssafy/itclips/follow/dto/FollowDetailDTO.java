@@ -1,6 +1,5 @@
 package com.ssafy.itclips.follow.dto;
 
-import com.ssafy.itclips.tag.entity.Tag;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

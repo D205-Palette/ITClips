@@ -1,6 +1,5 @@
 package com.ssafy.itclips.tag.dto;
 
-import com.ssafy.itclips.tag.entity.Tag;
 import lombok.*;
 
 @Getter

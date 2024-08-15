@@ -38,27 +38,27 @@ SSAFY 11기 공통 PJT / 구미 2반 5조 웹디자인<br/>
 <br/>
 
 # 🔖 프로젝트 산출물
-✔ [요구사항 명세서]()
+✔ [요구사항 명세서](https://docs.google.com/spreadsheets/d/1MxifEoveWd3QkiqTpQH4cVVLBofKv4JaFPL32TllpMg/edit?gid=704927790#gid=704927790)
 
-✔ [기능 정의서]()
+✔ [기능 정의서](https://www.notion.so/c413377a4b284b05a9ebf4b97f61e534?v=f5ef68d65e42461ca80757e30cf1442d&pvs=4)
 
-✔ [API 명세서]()
+✔ [API 명세서](https://www.notion.so/API-777ba761ca934cc8a2d8fabed37df127?pvs=4)
 
-✔ [와이어 프레임]()
+✔ [와이어 프레임](https://www.figma.com/design/WwBvVhZq92ZsOfiNsu42KN/ItClips?node-id=0-1&t=VLLGrth3l7kKRfJH-1)
 
-✔ [E-R Diagram]()
+✔ [E-R Diagram](https://www.erdcloud.com/d/N4w6FLmAhKAhsXC5e)
 
-✔ [시스템 아키텍처]()
+✔ [시스템 아키텍처](resources/image/시스템 아키텍처.PNG)
 
-✔ [프로젝트 일정]()
+✔ [프로젝트 일정](https://www.notion.so/d9124008d225496c8a5ea84790a87b8a?pvs=4)
 
-✔ [최종 발표 자료]()
+✔ [최종 발표 자료](https://www.canva.com/design/DAGNneDhqjU/qv03xiaX13R22l2mMHaPOA/edit?utm_content=DAGNneDhqjU&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
 ✔ [포팅 매뉴얼 - 시연 시나리오]()
 
-✔ [Swagger 문서]()
+✔ [Swagger 문서](https://i11d205.p.ssafy.io/api/swagger-ui/index.html)
 
-✔ [회의록]()
+✔ [회의록](https://roomy-wing-ac0.notion.site/c26765682d60418c97b15fa0d8c71262?pvs=4)
 
 
 <br/>

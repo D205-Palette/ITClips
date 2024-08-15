@@ -339,5 +339,5 @@ SSAFY 11기 공통 PJT / 구미 2반 5조 웹디자인<br/>
 [!BREAKING CHANGE] 커다란 API 변경의 경우
 [!HOTFIX] 급하게 치명적인 버그를 고쳐야 하는 경우
 ```
-[Convention 바로가기](https://www.notion.so/b2849f2050824dd6bcb86410f2f444a4?pvs=4)
+[Convention 바로가기](https://roomy-wing-ac0.notion.site/b2849f2050824dd6bcb86410f2f444a4?pvs=4)
 

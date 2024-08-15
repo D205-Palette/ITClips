@@ -1,11 +1,11 @@
-![Logo image](resources/Logo.png)
+![Logo image](resources/image/Logo.png)
 # 북마크 기반 큐레이션 SNS 서비스, < IT Clips > 
 SSAFY 11기 공통 PJT / 구미 2반 5조 웹디자인<br/>
 2024.07.08 ~ 2024.08.16 (6주)
 
-🔗 **서비스 페이지 : https://i11d205.p.ssafy.io/<br/>**
-🔗 **서비스 소개 영상 : [임시 URL]<br/>**
-🔗 **Chrome extension : [임시 URL]**
+🔗 **서비스 페이지 : [ITClips](https://i11d205.p.ssafy.io/)<br/>**
+🔗 **서비스 소개 영상 : [[SSAFY 11기]공통 PJT "ITClips" UCC](https://www.youtube.com/watch?v=Yu8Oso7qV_k)<br/>**
+🔗 **Chrome extension : 검수중...**
 
 
 # 💡 프로젝트 소개
@@ -35,34 +35,38 @@ SSAFY 11기 공통 PJT / 구미 2반 5조 웹디자인<br/>
 - 타인과의 북마크 공유와 소통
 - 북마크를 커스텀한 로드맵 생성 및 활용
 
-# 📚 주요 기능
-[기능 GIT 및 설명 넣기]
-
+<br/>
 
 # 🔖 프로젝트 산출물
-✔ [요구사항 명세서]()
+✔ [요구사항 명세서](https://docs.google.com/spreadsheets/d/1MxifEoveWd3QkiqTpQH4cVVLBofKv4JaFPL32TllpMg/edit?gid=704927790#gid=704927790)
 
-✔ [기능 정의서]()
+✔ [기능 정의서](https://roomy-wing-ac0.notion.site/c413377a4b284b05a9ebf4b97f61e534?v=f5ef68d65e42461ca80757e30cf1442d&pvs=4)
 
-✔ [API 명세서]()
+✔ [API 명세서](https://roomy-wing-ac0.notion.site/API-777ba761ca934cc8a2d8fabed37df127?pvs=4)
 
-✔ [와이어 프레임]()
+✔ [와이어 프레임](https://www.figma.com/design/WwBvVhZq92ZsOfiNsu42KN/ItClips?node-id=0-1&t=VLLGrth3l7kKRfJH-1)
 
-✔ [E-R Diagram]()
+✔ [E-R Diagram](https://www.erdcloud.com/d/N4w6FLmAhKAhsXC5e)
 
-✔ [시스템 아키텍처]()
+✔ [시퀀스 다이어그램](./docs/시퀀스다이어그램.md)
 
-✔ [시퀀스 다이어그램](https://app.diagrams.net/?src=about#G1g41a_rPm7Up28uEKNgInYufhT956nfHS#%7B%22pageId%22%3A%22h0dIDVxn9Fxx7efEZCBf%22%7D)
 
-✔ [프로젝트 일정]()
+✔ [E2E테스트 케이스](./docs/ITClips_테스트케이스.xlsx)
 
-✔ [최종 발표 자료]()
 
-✔ [포팅 매뉴얼 - 시연 시나리오]()
+✔ [시스템 아키텍처](resources/image/시스템 아키텍처.PNG)
 
-✔ [Swagger 문서]()
+✔ [프로젝트 일정](https://roomy-wing-ac0.notion.site/d9124008d225496c8a5ea84790a87b8a?pvs=4)
 
-✔ [회의록]()
+✔ [최종 발표 자료](https://www.canva.com/design/DAGNneDhqjU/qv03xiaX13R22l2mMHaPOA/edit?utm_content=DAGNneDhqjU&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+
+✔ [포팅 매뉴얼](./exec/porting_manual.md)
+
+✔ [시연 시나리오](./exec/scenario.md)
+
+✔ [Swagger 문서](https://i11d205.p.ssafy.io/api/swagger-ui/index.html)
+
+✔ [회의록](https://roomy-wing-ac0.notion.site/c26765682d60418c97b15fa0d8c71262?pvs=4)
 
 
 <br/>
@@ -120,7 +124,7 @@ SSAFY 11기 공통 PJT / 구미 2반 5조 웹디자인<br/>
 
 |[정진규(팀장)](https://github.com/kkyu99)|[김민솔](https://github.com/minsol1)|[김수정](https://github.com/iamsoojung)|[김동준](https://github.com/kdj4355)|[김세진](https://github.com/tpwls30)|[최형우](https://github.com/Ysandwich)|
 |:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------: |
-| <img src="resources/member/jingyu.jpg" width="100"> | <img src="resources/member/minsol.jpg" width="100"> | <img src="resources/member/soojung.jpeg" width="100"> | <img src="resources/member/dongjun.jpg" width="100"> | <img src="resources/member/sejin.jpg" width="100"> | <img src="resources/member/hyeongwoo.jpeg" width="100"> |
+| <img src="resources/image/member/jingyu.jpg" width="100"> | <img src="resources/image/member/minsol.jpg" width="100"> | <img src="resources/image/member/soojung.jpeg" width="100"> | <img src="resources/image/member/dongjun.jpg" width="100"> | <img src="resources/image/member/sejin.jpg" width="100"> | <img src="resources/image/member/hyeongwoo.jpeg" width="100"> |
 |**BE/Infra** | **Backend** | **Backend** | **Frontend**  | **Frontend** | **Frontend** |
 
 ### 팀원 역할
@@ -180,6 +184,146 @@ SSAFY 11기 공통 PJT / 구미 2반 5조 웹디자인<br/>
 
 <br/>
 
+# 📚 주요 기능
+### 서비스 소개 
+<img src="resources/image/gif/서비스 소개.gif" alt="서비스 소개" width="800"><br/>
+* ITClips를 소개하는 페이지입니다. 
+<br/>
+<br/>
+
+### 회원가입
+<img src="resources/image/gif/회원가입.gif" alt="회원가입" width="800"><br/>
+* 회원가입 페이지입니다. 
+* 회원가입 시 입력한 정보는 관심사 기반 게시글 추천에 활용됩니다. 
+<br/>
+<br/>
+
+### 소셜 로그인
+<img src="resources/image/gif/소셜 로그인(추가정보까지).gif" alt="소셜 로그인" width="800"><br/>
+* 구글, 깃허브, 카카오 로그인을 지원합니다. 
+<br/>
+<br/>
+
+
+### 비밀번호 찾기 
+<img src="resources/image/gif/비밀번호 찾기.gif" alt="비밀번호 찾기" width="800"><br/>
+* 비밀번호를 잊어버린 경우 이메일을 통해 임시 비밀번호를 발급받을 수 있습니다. 
+<br/>
+<br/>
+
+### My page
+<img src="resources/image/gif/MY.gif" alt="My page" width="800"><br/>
+* 자신의 프로필 정보와 북마크 리스트와 그룹 북마크 리스트 목록, 로드맵 목록, 즐겨찾기 목록을 확인할 수 있습니다. 
+<br/>
+<br/>
+
+### 관심사 추가 
+<img src="resources/image/gif/관심사 추가.gif" alt="관심사 추가" width="800"><br/>
+* 자신의 관심사를 등록할 수 있습니다. 
+* 등록한 관심사는 관심사 기반 추천에 활용됩니다. 
+<br/>
+<br/>
+
+### 북마크 리스트 생성
+<img src="resources/image/gif/북마크리스트 생성.gif" alt="북마크리스트 생성" width="800"><br/>
+* 제목과 설명 사진을 입력하여 북마크 리스트를 생성할 수 있습니다. 
+* 태그는 검색과 사용자 맞춤 추천에 활용됩니다. 
+<br/>
+<br/>
+
+### 북마크 리스트 관리자 추가 
+<img src="resources/image/gif/북마크리스트 그룹 인원 추가.gif" alt="북마크리스트 그룹 관리자 추가" width="800"><br/>
+* 북마크 리스트 관리자를 추가하면 그룹으로 북마크 리스트를 관리할 수 있습니다.
+<br/>
+<br/>
+
+### 크롬 확장 프로그램 
+<img src="resources/image/gif/익스텐션.gif" alt="크롬 확장 프로그램" width="800"><br/>
+![alt text](resources/image/gif/익스텐션.gif)
+* 크롬 확장 프로그램을 통해 간편하게 북마크를 추가할 수 있습니다. 
+<br/>
+<br/>
+
+### 북마크 이동
+<img src="resources/image/gif/북마크 이동.gif" alt="북마크 이동" width="800"><br/>
+* 북마크를 잘못 넣은 경우 간편하게 이동할 수 있습니다. 
+<br/>
+<br/>
+
+### 북마크 AI 요약 
+<img src="resources/image/gif/북마크 AI 요약.gif" alt="북마크 AI 요약" width="800"><br/>
+* 북마크 AI 요약을 통해 북마크에 접속하지 않아도 내용을 알 수 있습니다. 
+<br/>
+<br/>
+
+### 북마크 리스트 즐겨찾기 
+<img src="resources/image/gif/북마크리스트 즐겨찾기.gif" alt="북마크 리스트 즐겨찾기 " width="800"><br/>
+* 북마크 리스트 즐겨찾기를 등록할 수 있습니다. 
+<br/>
+<br/>
+
+### 북마크 리스트 신고하기 
+<img src="resources/image/gif/신고하기.gif" alt="북마크 리스트 신고하기" width="800"><br/>
+* 북마크 리스트를 신고할 수 있습니다. 
+<br/>
+<br/>
+
+### 로드맵 생성 
+<img src="resources/image/gif/로드맵 생성.gif" alt="로드맵 생성" width="800"><br/>
+* 북마크 리스트를 조합하여 로드맵을 생성할 수 있습니다. 
+<br/>
+<br/>
+
+### 로드맵 스크랩 
+<img src="resources/image/gif/로드맵 스크랩.gif" alt="로드맵 스크랩" width="800"><br/>
+* 다른 사용자의 로드맵을 스크랩하여 사용할 수 있습니다. 
+<br/>
+<br/>
+
+
+### 검색 페이지 
+<img src="resources/image/gif/검색 페이지.gif" alt="검색 페이지" width="800"><br/>
+* 북마크리스트 제목, 로드맵 제목, 유저, 태그 검색을 할 수 있습니다. 
+<br/>
+<br/>
+
+### 사용자 맞춤 추천
+<img src="resources/image/gif/사용자 맞춤 추천.gif" alt="사용자 맞춤 추천" width="800"><br/>
+* 사용자 관심사 태그와 북마크 리스트의 태그를 분석하여 사용자 맞춤 북마크 리스트를 추천합니다. 
+<br/>
+<br/>
+
+### 피드
+<img src="resources/image/gif/피드 게시글 목록.gif" alt="피드" width="800"><br/>
+* 팔로우한 사용자가 업로드한 게시글을 볼 수 있습니다. 
+<br/>
+<br/>
+
+### 채팅 
+<img src="resources/image/gif/채팅.gif" alt="채팅" width="800"><br/>
+* 다른 사용자와 실시간 채팅이 가능합니다. 
+<br/>
+<br/>
+
+### 실시간 알람 
+<img src="resources/image/gif/알람.gif" alt="실시간 알람" width="800"><br/>
+* 다른 사용자가 댓글, 좋아요, 스크랩, 팔로우한 경우 실시간으로 알람을 받을 수 있습니다. 
+<br/>
+<br/>
+
+### 반응형 
+<img src="resources/image/gif/반응형.gif" alt="반응형" width="800"><br/>
+* 반응형 웹으로 다양한 디바이스에서 ITClips를 이용할 수 있습니다. 
+<br/>
+<br/>
+
+### 다크모드 
+<img src="resources/image/gif/다크모드.gif" alt="다크모드" width="800"><br/>
+* 다크모드 설정이 가능합니다. 
+<br/>
+<br/>
+
+
 # 📌 Commit Convention
 ```
 [FEAT] 새로운 기능 구현
@@ -195,5 +339,5 @@ SSAFY 11기 공통 PJT / 구미 2반 5조 웹디자인<br/>
 [!BREAKING CHANGE] 커다란 API 변경의 경우
 [!HOTFIX] 급하게 치명적인 버그를 고쳐야 하는 경우
 ```
-[Convention 바로가기](https://www.notion.so/b2849f2050824dd6bcb86410f2f444a4?pvs=4)
+[Convention 바로가기](https://roomy-wing-ac0.notion.site/b2849f2050824dd6bcb86410f2f444a4?pvs=4)
 

@@ -1,0 +1,96 @@
+# application.yml
+server:
+  port: 8084
+  ssl:
+    key-store: "classpath:keystore.p12"
+    key-store-type: PKCS12
+    key-store-password: ${KEY_PASSWORD}
+
+springdoc:
+  swagger-ui:
+    path: /api/swagger-ui
+  api-docs:
+    version: openapi_3_1
+    path: /api/v3/api-docs
+
+spring:
+  application:
+    name: itclips
+
+  profiles:
+    include: secret
+  # Redis Config
+  #    active: local
+  data:
+    redis:
+      host: ${DB_HOST}
+      port: 6379
+      password: ${DB_PASSWORD}
+
+  cache:
+    type: redis
+
+  config:
+    import: optional:classpath:application-secret.yml
+
+  datasource:
+    hikari:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://${DB_HOST}/${DB_NAME}?serverTimezone=Asia/Seoul&useUnicode=yes&characterEncoding=UTF-8
+      username: ${DB_USER}
+      password: ${DB_PASSWORD}
+#      jdbc-url: jdbc:mysql://localhost:3306/itclips?serverTimezone=UTC&useUnicode=yes&characterEncoding=UTF-8
+#      username: root
+#      password: 1234
+#      pool-name: Hikari Connection Pool
+
+      maximum-pool-size: 50
+      minimum-idle: 50
+      connection-timeout: 5000
+      connection-init-sql: SELECT 1
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      auto-commit: true
+
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+
+# s3
+cloud:
+  aws:
+    stack:
+      auto: false
+    credentials:
+      accessKey: ${S3_ACCESS}
+      secretKey: ${S3_PRIVATE}
+    region:
+      static: ap-northeast-2
+  s3:
+    bucket: ${S3_BUCKET}
+
+openai:
+  model: gpt-4o
+  api:
+    key: ${GPT_KEY}
+    url: https://api.openai.com/v1/chat/completions
+
+#spring:
+#  profiles:
+#    active: alpha
+#  redis:
+#    host: redis가 설치된 서버 호스트
+#    port: redis가 설치된 서버 포트
+project:
+  profileUploadPath: images/profile
+  defaultProfileImage: images/profile.png
+
+logging:
+  level:
+    org.springframework.web.cors.DefaultCorsProcessor: TRACE

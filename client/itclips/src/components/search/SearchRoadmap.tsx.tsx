@@ -17,30 +17,6 @@ import { roadmapSearch } from "../../api/searchApi";
 import { authStore } from "../../stores/authStore";
 import { searchStore } from "../../stores/searchStore";
 
-interface Step {
-  id: number;
-  listId: number;
-  listTitle: string;
-  order: string;
-  check: boolean;
-}
-
-interface RoadmapItem {
-  id: number;
-  userId: number;
-  userName: string;
-  title: string;
-  description: string;
-  image: string;
-  isPublic: number;
-  createdAt: string;
-  stepCnt: number;
-  checkCnt: number;
-  likeCnt: number;
-  steps: Step[];
-  isLiked: boolean;
-}
-
 interface SearchRoadmapProps {
   keyword: string;
 }

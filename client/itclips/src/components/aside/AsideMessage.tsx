@@ -1,5 +1,5 @@
 // AsideMessage.tsx 는 메세지 컴포넌트 메인
-import React, { useEffect } from "react";
+import React from "react";
 
 // components
 import MessageHeader from "./layout/MessageHeader";

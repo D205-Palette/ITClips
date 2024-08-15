@@ -12,7 +12,7 @@ interface Props {
 }
 
 const AIContent: React.FC<Props> = ({ bookmarkId, setIsAIOpen }) => {
-    const {userId, token} = authStore()
+    const {token} = authStore()
 
     useEffect(() => {
         async function fetchData() {

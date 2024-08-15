@@ -4,7 +4,6 @@ import { FC, useState, useEffect, useRef } from "react";
 import { VscKebabVertical } from "react-icons/vsc";
 
 // components
-import RoadmapEditModal from "../modals/RoadmapEditModal";
 import DeleteContentModal from "../modals/DeleteContentModal";
 import UrlCopyModal from "../../common/UrlCopyModal";
 import ReportModal from "../modals/ReportModal";
@@ -110,10 +109,7 @@ const AsideRoadmapKebabDropdown: FC<Props> = ({ isRoadmap, id }) => {
           </ul>
         </div>
       )}
-      <RoadmapEditModal
-        isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
-      />
+     
       {isDeleteModalOpen && (
         <DeleteContentModal
           isOpen={isDeleteModalOpen}

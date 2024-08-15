@@ -1,8 +1,4 @@
-// 이미지 , 리스트명, 북마크 개수, 태그, 설명, 좋아요 버튼&좋아요 수, 리스트 세부 조작 버튼
-import { useState, FC } from "react";
-import useStore from "../../stores/mainStore";
-import KebabDropdown from "../common/KebabDropdown";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { FC } from "react";
 import darkModeStore from "../../stores/darkModeStore";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -10,16 +6,13 @@ import { authStore } from "../../stores/authStore";
 import { API_BASE_URL } from "../../config";
 import type { StepListType } from "../../types/RoadmapType";
 import noImg from "../../assets/images/noImg.gif"
-import { BsArrowDownRight } from "react-icons/bs";
-import { BsArrowDownLeft } from "react-icons/bs";
+
 interface Props {
   list:StepListType
   count:number;
   changeCount: React.Dispatch<React.SetStateAction<number>>;
   canEdit:boolean
 }
-
-
 
 const ListItem: FC<Props> = ({ list,changeCount,count,canEdit }) => {
 
@@ -42,12 +35,10 @@ const ListItem: FC<Props> = ({ list,changeCount,count,canEdit }) => {
         Authorization: `Bearer ${token}`,
       },})
     }
-
   }
   
   return (
     <>
-
       <div
         className={
           (isDark ? "hover:brightness-125" : "hover:brightness-95") +
@@ -84,12 +75,6 @@ const ListItem: FC<Props> = ({ list,changeCount,count,canEdit }) => {
           </div>
         </>
       </div>
-      {/* <div className="odd:col-start-5 col-span-1 even:hidden">
-      <BsArrowDownRight />
-    </div>
-    <div className="even:col-start-3 col-span-1 odd:hidden">
-      <BsArrowDownLeft />
-    </div> */}
     </>
   );
 };

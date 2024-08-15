@@ -2,7 +2,6 @@ import CategoryTab from "../components/main/CategoryTab";
 import Bookmark from "../components/main/Bookmark";
 import AsideBookmarkList from "../components/aside/AsideBookmarkList";
 import { asideStore } from "../stores/asideStore";
-import MessageLayout from "../components/aside/MessageLayout";
 import mainTabStore from "../stores/mainTabStore";
 import { FaEdit } from "react-icons/fa";
 import { useState, useEffect } from "react";
@@ -13,7 +12,6 @@ import MoveBookmarkModal from "../components/aside/modals/MoveBookmarkModal";
 import axios from "axios";
 import AddBookmarkModal from "../components/aside/modals/AddBookmarkModal";
 import type { BookmarkType } from "../types/BookmarkType";
-import type { CategoryType } from "../types/BookmarkListType";
 import type { BookmarkListDetailType } from "../types/BookmarkListType";
 import { useParams } from "react-router-dom";
 import { API_BASE_URL } from "../config";
@@ -29,9 +27,9 @@ import bookmarkListModalStore from "../stores/bookmarkListEditModalStore";
 
 const MyBookmark = () => {
   const params = useParams();
-  const { isDark } = darkModeStore();
   const tempListId = params.bookmarklistId;
   const { isBookmarkListChange, setIsBookmarkListChange } = mainStore();
+  const {isDeleteCategoryModalOpen,setIsDeleteCategoryModalOpen, deleteCategory, setDeleteCategory} = mainTabStore()
 
   let listId = 0;
   if (tempListId) {
@@ -39,9 +37,7 @@ const MyBookmark = () => {
   }
 
   const { userId, token } = authStore();
-  const isMessageOpen = asideStore((state) => state.isMessageOpen);
-
-  const whatCategory = mainTabStore((state) => state.whatCategory);
+  
   const changeCategory = mainTabStore((state) => state.changeCategory);
 
   // 수정&이동용 북마크 정보들
@@ -69,11 +65,8 @@ const MyBookmark = () => {
     </div>
   );
 
-  // 토스트 알람 메뉴
-  const { globalNotification, setGlobalNotification } = toastStore();
-
   // 리스트 변경 모달 띄울 용도
-  const {isEditModalOpen,setIsBookmarkListEditModalOpen,bookmarkListId,setBookmarkListId} = bookmarkListModalStore()
+  const {isEditModalOpen,setIsBookmarkListEditModalOpen,bookmarkListId} = bookmarkListModalStore()
 
   // 북마크 리스트 변경될때마다 리스트 불러오기
   useEffect(() => {
@@ -102,7 +95,6 @@ const MyBookmark = () => {
         .catch((err) => {
           console.error(err);
           // 비공개인 리스트에 접근했을때
-          console.log(err);
           if (err.response?.status === 401 || err.response?.status === 403) {
             setCanView(false);
           }
@@ -110,8 +102,6 @@ const MyBookmark = () => {
     }
     fetchData();
   }, [isBookmarkListChange]);
-
-  const {isOpen,setIsOpen, deleteCategory, setDeleteCategory} = mainTabStore()
 
   // 카테고리 삭제용 모달
   const DeleteCheckModal = (): any => {
@@ -145,7 +135,7 @@ const MyBookmark = () => {
               className="btn bg-red-500 text-slate-100 hover:bg-red-700"
               onClick={() => {
                 deleteCat();
-                setIsOpen(false);
+                setIsDeleteCategoryModalOpen(false);
               }}
             >
               확인
@@ -153,7 +143,7 @@ const MyBookmark = () => {
             <button
               className="btn"
               onClick={() => {
-                setIsOpen(false);
+                setIsDeleteCategoryModalOpen(false);
               }}
             >
               취소
@@ -163,7 +153,6 @@ const MyBookmark = () => {
       </div>
     );
   };
-
 
 
   return (
@@ -249,8 +238,8 @@ const MyBookmark = () => {
                 <></>
               )}
             </div>
-            {/* 북마크들 */}
 
+            {/* 북마크들 */}
             <div className="mb-12">
               {filterdBookmarks.map((bookmark) =>
                 editMode ? (
@@ -342,7 +331,8 @@ const MyBookmark = () => {
           toggleMode={setEditMode}
         />
       )}
-      {isOpen&& <DeleteCheckModal />}
+      {/* 카테고리 삭제 & 북마크 수정 모달 뜨는 위치 */}
+      {isDeleteCategoryModalOpen&& <DeleteCheckModal />}
       {isEditModalOpen && <BookmarkListEditModal isOpen={isEditModalOpen} onClose={()=>setIsBookmarkListEditModalOpen(false)} id={bookmarkListId}/>}
     </>
   );

@@ -2,14 +2,9 @@
 import React, { useState, useEffect } from "react";
 
 // components
-import AsideRoadmapKebabDropdown from "./ui/AsideRoadmapKebabDropdown";
-// import KebabDropdown from "../common/KebabDropdown";
 import ImageContainer from "./layout/ImageContainer";
-import ItemDetailInfo from "./layout/ItemDetailInfo";
 import LikesFavoritesCount from "./layout/LikesFavoritesCount(Roadmap)";
-import Tags from "./layout/Tags";
-import RoadmapCommentsModal from "./layout/RoadmapCommentsModal";
-import KebabDropdown from "../common/KebabDropdown";
+
 // stores
 import darkModeStore from "../../stores/darkModeStore";
 
@@ -26,7 +21,6 @@ interface Props {
 
 const AsideRoadmap: React.FC<Props> = ({ data }) => {
   const isDark = darkModeStore((state) => state.isDark);
-  const [isCommentsOpen, setIsCommentsOpen] = useState(false);
   const [commentCount, setCommentCount] = useState(0);
 
   useEffect(() => {
@@ -41,10 +35,6 @@ const AsideRoadmap: React.FC<Props> = ({ data }) => {
 
     fetchCommentCount();
   }, [data.id]);
-
-  const handleCommentCountChange = (newCount: number) => {
-    setCommentCount(newCount);
-  };
 
   return (
     <div

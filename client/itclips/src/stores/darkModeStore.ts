@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import { persist, createJSONStorage } from 'zustand/middleware'
 
+// 다크모드 여부 변수
 interface DarkMode {
   isDark:boolean
   changeMode: (setting:string) => void

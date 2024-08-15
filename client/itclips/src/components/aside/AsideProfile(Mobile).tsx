@@ -6,21 +6,15 @@ import { NavLink } from "react-router-dom";
 import { checkUserInfo } from "../../api/authApi";
 import { getFollowingList, unfollow, follow } from "../../api/followApi";
 
-// icons
-import { IoChatboxEllipsesOutline, IoSettingsOutline } from "react-icons/io5";
-
 // components
 import ImageContainer from "./layout/ImageContainer";
 import UserDetailInfo from "./layout/UserDetailInfo";
-import UserActivityInfo from "./layout/UserActivityInfo";
-import ProfileSettingsModal from "./modals/ProfileSettingsModal";
 
 // stores
 import darkModeStore from "../../stores/darkModeStore";
 import { authStore } from "../../stores/authStore";
 import { profileStore } from "../../stores/profileStore";
 import mainStore from "../../stores/mainStore";
-import { asideStore } from "../../stores/asideStore";
 
 interface UserInfo {
   id?: number;
@@ -42,14 +36,12 @@ const AsideProfile = () => {
   // 내 정보 가져오기
   const myInfo = authStore((state) => state.userInfo);
   const { userId } = authStore();
-  const startNewChat = asideStore((state) => state.startNewChat);
   const { isProfileChange, setIsProfileChange } = mainStore();
   // url에서 user_id 가져오기
   const params = useParams<{ userId?: string }>();
   const urlUserId = params.userId ? parseInt(params.userId, 10) : undefined;
   const { urlUserInfo, setUrlUserInfo, updateFollowCount } = profileStore();
   const isDark = darkModeStore((state) => state.isDark);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [globalNotification, setGlobalNotification] = useState<{
     message: string;
     type: "success" | "error";
@@ -69,9 +61,6 @@ const AsideProfile = () => {
     }
   }, [globalNotification]);
 
-  const updateAsideInfo = (updatedInfo: UserInfo) => {
-    setUrlUserInfo(updatedInfo);
-  };
 
   useEffect(() => {
     // url 유저 정보 조회
@@ -115,12 +104,6 @@ const AsideProfile = () => {
     }
   }, [urlUserId, myInfo.id, isProfileChange]); // urlUserId와 myInfo.id가 변경될 때마다 호출
 
-  const onClickStartChat = (): void => {
-    if (userId !== undefined && urlUserId !== undefined) {
-      startNewChat(userId, urlUserId);
-    }
-  };
-
   // 팔로우 or 언팔로우 버튼을 눌렀을 때 동작
   const onClickFollow = async (): Promise<void> => {
     if (myInfo.id && urlUserId) {
@@ -142,15 +125,6 @@ const AsideProfile = () => {
         }
       }
     }
-  };
-
-  // 프로필 설정 모달 상태 관련
-  const openModal = (): void => {
-    setIsModalOpen(true);
-  };
-
-  const closeModal = (): void => {
-    setIsModalOpen(false);
   };
 
   return (
@@ -240,18 +214,7 @@ const AsideProfile = () => {
         </div>
       </div>
 
-      {/* 하단 영역: 팔로우 버튼과 활동 정보 */}
-      <div className="flex flex-row md:flex-col justify-around">
-        {/* 팔로잉 팔로워 */}
-      </div>
 
-      {/* 프로필 설정 모달 */}
-      {/* <ProfileSettingsModal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        updateAsideInfo={updateAsideInfo}
-        setGlobalNotification={setGlobalNotification}
-      /> */}
       {/* 토스트 알람 */}
       {globalNotification && (
         <div

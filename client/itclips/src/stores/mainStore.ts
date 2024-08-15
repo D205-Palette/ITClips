@@ -1,6 +1,5 @@
-import { boolean } from "yup";
 import { create } from "zustand";
-
+// 각 항목들에 대해 변경이 있으면 true하고, api받아와서 갱신될때 false로 바꿔주는 변수들
 interface Article {
   isBookmarkListChange : boolean
   setIsBookmarkListChange : (bool:boolean) => void

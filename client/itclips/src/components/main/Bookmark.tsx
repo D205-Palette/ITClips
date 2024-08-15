@@ -9,10 +9,10 @@ import axios from "axios";
 import { authStore } from "../../stores/authStore";
 import { API_BASE_URL } from "../../config";
 import EditTag from "./Bookmark(Tag)";
-import { LINKPREVIEW_API_KEY } from "../../config";
 import AIContent from "./Bookmark(AI)";
 import mainTabStore from "../../stores/mainTabStore";
 import toastStore from "../../stores/toastStore";
+
 interface Props {
   bookmark: BookmarkType;
   editBookmarks: BookmarkType[];
@@ -92,8 +92,6 @@ const Bookmark: FC<Props> = ({
   // 태그 수정
   const submitTag = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // tempBookmark를 formData로 해서 put 요청
-
     const checkErr = () => {
       let err = false;
       tempTags.map((tag) => (tag.title === tempTag ? (err = true) : ""));
@@ -118,9 +116,8 @@ const Bookmark: FC<Props> = ({
   function completeEdit(): void {
     toggleEdit(false);
     toggleTagEdit(false);
-    // editTempBookmark({ ...tempBookmark, title: tempTitle, tags: tempTags });
     editTempBookmark({ ...tempBookmark, title: tempTitle });
-    //  /bookmark /update/{bookmarkId} 로 put요청
+
     axios.put(
       `${API_BASE_URL}/api/bookmark/update/${bookmark.id}`,
       {
@@ -154,7 +151,6 @@ const Bookmark: FC<Props> = ({
       >
         <>
           <div className="card-body flex flex-row items-center w-full justify-between">
-            {/* 주소에 https 포함 여부 확인해야할듯 */}
 
             {/* 왼쪽 이미지 제목 url부분 */}
             <div className="w-1/2 flex flex-row justify-start items-center">
@@ -206,7 +202,6 @@ const Bookmark: FC<Props> = ({
                       tempTags={tempTags}
                       editTempTags={editTempTags}
                     />
-                    // <span className="ms-1">{" # " + tag.title}</span>
                   ))}{" "}
                 </div>
                 <div className="flex flex-row justify-end">

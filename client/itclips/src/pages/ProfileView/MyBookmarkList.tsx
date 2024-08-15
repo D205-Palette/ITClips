@@ -15,16 +15,24 @@ import BookmarkListCreateModal from "../../components/aside/modals/BookmarkListC
 import { API_BASE_URL } from "../../config";
 import { useParams } from "react-router-dom";
 import mainStore from "../../stores/mainStore";
-import toastStore from "../../stores/toastStore";
 
 export default function MyView() {
+  const params = useParams();
+
+  const { token, userId } = authStore();
+  const { isBookmarkListChange, setIsBookmarkListChange } = mainStore();
+
   const [isList, setTab] = useState(true);
   const [filterText, changeFilterText] = useState("");
   const [lists, setLists] = useState<BookmarkListSumType[]>([]);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState<boolean>(false);
-  const { token, userId } = authStore();
+  const [filterdLists, setFilterdLists] = useState<BookmarkListSumType[]>([]);
+  const [noContent, setNoContent] = useState(
+    <div className="w-full flex flex-row justify-center mt-6">
+      <span className="loading loading-spinner loading-lg text-sky-500"></span>
+    </div>
+  );
 
-  const { isBookmarkListChange, setIsBookmarkListChange } = mainStore();
   // 리스트형으로 볼지 앨범형으로 볼지
   function tabList(): void {
     setTab(true);
@@ -32,20 +40,7 @@ export default function MyView() {
   function tabAlbum(): void {
     setTab(false);
   }
-  const {globalNotification, setGlobalNotification} = toastStore()
-
-
-
-  // const filterdLists = lists.filter((list) => list.title.includes(filterText));
-  const [filterdLists, setFilterdLists] = useState<BookmarkListSumType[]>([]);
-  const params = useParams();
-  const nowUserId = Number(params.userId);
-
-  const [noContent, setNoContent] = useState(
-    <div className="w-full flex flex-row justify-center mt-6">
-      <span className="loading loading-spinner loading-lg text-sky-500"></span>
-    </div>
-  );
+  
   // 북마크 리스트 변화할때 유저의 북마크 리스트들 요약
   useEffect(() => {
     async function fetchData() {
@@ -166,10 +161,9 @@ export default function MyView() {
       </div>
 
       {/* 리스트 생성 버튼 */}
-
       <div className="fixed bottom-24 right-16 z-20 hidden md:flex  ">
         <button
-          className={(nowUserId !== userId ? "hidden" : "") + " "}
+          className={(Number(params.userId) !== userId ? "hidden" : "") + " "}
           onClick={() => setIsCreateModalOpen(true)}
         >
           <FaPlus color="skyblue" size={56} />
@@ -180,9 +174,7 @@ export default function MyView() {
       <BookmarkListCreateModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
-
-      />
-      
+      />  
     </>
   );
 }

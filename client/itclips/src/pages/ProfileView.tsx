@@ -1,21 +1,11 @@
-import MyBookmarkList from "./ProfileView/MyBookmarkList";
 import React from "react";
-
 import { Outlet } from "react-router-dom";
-import MyGroupBookmarkList from "./ProfileView/MyGroupBookmarkList";
-import MyFavorites from "./ProfileView/MyFavorites";
-import MyRoadmap from "./ProfileView/MyRoadmap";
 
 // component
-import AsideBookmarkList from "../components/aside/AsideBookmarkList";
 import AsideProfile from "../components/aside/AsideProfile";
 import AsideMoblieProfile from "../components/aside/AsideProfile(Mobile)";
-import MyBookmark from "./BookmarkView";
-import MainTab from "../components/main/MainTab";
-
 
 export default function MyView() {
-
 
   return (
     <>
@@ -39,10 +29,7 @@ export default function MyView() {
           id="Main"
           className="md:col-start-5 md:col-span-7 col-start-2 col-span-10"
         >
-          {/* <MainTab /> */}
-
           <Outlet />
-          
         </div>
 
 

@@ -1,9 +1,7 @@
 // AsideBookmarkList.tsx 는 북마크리스트 정보를 출력하는 컴포넌트
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 
 // components
-import AsideBookmarkListKebabDropdown from "./ui/AsideBookmarkListKebabDropdown";
 import ImageContainer from "./layout/ImageContainer";
 import ItemDetailInfo from "./layout/ItemDetailInfo";
 import LikesFavoritesCount from "./layout/LikesFavoritesCount(List)";

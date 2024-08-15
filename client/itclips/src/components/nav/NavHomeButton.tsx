@@ -1,10 +1,7 @@
 import React from "react";
 import { authStore } from "../../stores/authStore";
 import { Link } from "react-router-dom";
-import logoDark from "../../assets/images/logoDark.png";
-import logoWhite from "../../assets/images/logoWhite.png";
 import darkModeStore from "../../stores/darkModeStore";
-
 import HomeLogo from "../../assets/images/HomeLogo.png";
 
 export default function HomeButton() {

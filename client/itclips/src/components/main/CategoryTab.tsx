@@ -1,29 +1,18 @@
-// 버전 1 : 리스트, 공유 리스트, 즐겨찾기, 로드맵
-// 버전 2 : 팔로워, 팔로잉
-import { NavLink } from "react-router-dom";
-import { FaRegStar, FaStar } from "react-icons/fa";
-import { FaRegBookmark } from "react-icons/fa";
-import { FaRegMap } from "react-icons/fa6";
-import { MdOutlineBookmarks } from "react-icons/md";
-// import mainTabStore from "../../stores/mainTabStore";
 import darkModeStore from "../../stores/darkModeStore";
 import CategorySingleTab from "./CategorySingleTab";
 import CategorySingleEditTab from "./CategorySingleTab(Edit)";
 import { useState, useRef, FC, useEffect } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import { FaPlus } from "react-icons/fa6";
-// import categoriesStore from "../../stores/categoriesStore";
-// 조건 맞는애들만 카테고리 필터 해주는 거 ㅇㅋㅇㅋ
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { authStore } from "../../stores/authStore";
 import { API_BASE_URL } from "../../config";
 import { CategoryType } from "../../types/BookmarkListType";
-import Tab from "../../stores/mainTabStore";
 import mainStore from "../../stores/mainStore";
 import { useDraggable } from "react-use-draggable-scroll";
+
 interface Props {
-  // categories: CategoryType[];
   listId: number;
   categories: CategoryType[];
   canEdit: boolean; // 본인 여부
@@ -113,7 +102,6 @@ const CategoryTab: FC<Props> = ({
         .catch((err) => {
           console.error(err);
         });
-
       modeChange(false); // 추가하면 추가 모드 off
     };
 
@@ -144,11 +132,10 @@ const CategoryTab: FC<Props> = ({
     );
   };
 
-
+  // 드래그로 좌우 스크롤 할 수 있게
   const ref =
     useRef<HTMLDivElement>() as React.MutableRefObject<HTMLInputElement>;
-  const { events } = useDraggable(ref); // Now we pass the reference to the useDraggable hook:
-
+  const { events } = useDraggable(ref); 
   return (
     <>
       <div className="flex flex-row m-3 items-center py-5 static z-20 w-full md:w-full">

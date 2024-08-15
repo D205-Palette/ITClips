@@ -1,22 +1,13 @@
-import AsideProfile from "../../components/aside/AsideProfile";
-import MessageLayout from "../../components/aside/MessageLayout";
-import { asideStore } from "../../stores/asideStore";
-import darkModeStore from "../../stores/darkModeStore";
-import { Outlet } from "react-router-dom";
-import MainTab from "../../components/main/MainTab";
 import { IoIosWarning } from "react-icons/io";
 import { useState,useEffect } from "react";
+
 interface Props {
   content: string;
 }
 
 const NoContent: React.FC<Props> = ({ content }) => {
-  const isMessageOpen = asideStore((state) => state.isMessageOpen);
-  const isDark = darkModeStore((state) => state.isDark);
-  const textColor = isDark ? "text-slate-300" : "text-slate-900";
 
   const [warningText, setWarningText] = useState("")
-
 
   useEffect(()=>{
     if(content ==="즐겨찾기" || content === "그룹" ){
@@ -33,17 +24,14 @@ const NoContent: React.FC<Props> = ({ content }) => {
     }
   }, [])
 
-
   return (
     <>
       {/* main자리 */}
       <div className="flex flex-row items-center justify-center mt-10">
         <IoIosWarning color="skyblue" size={28} />
-        
           <p className="ms-3 text-sm lg:text-xl font-bold text-wrap">
           {warningText}
           </p>
-        
       </div>
     </>
   );

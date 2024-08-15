@@ -1,6 +1,4 @@
-// 이미지 , 리스트명, 북마크 개수, 태그, 설명, 좋아요 버튼&좋아요 수, 리스트 세부 조작 버튼
 import { useState, FC } from "react";
-import useStore from "../../stores/mainStore";
 import KebabDropdown from "../common/KebabDropdown";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import darkModeStore from "../../stores/darkModeStore";
@@ -10,7 +8,6 @@ import type { BookmarkListSumType } from "../../types/BookmarkListType";
 import { API_BASE_URL } from "../../config";
 import { authStore } from "../../stores/authStore";
 import noImg from "../../assets/images/noImg.gif";
-import BookmarkListEditModal from "../aside/modals/BookmarkListEditModal";
 
 interface Props {
   list: BookmarkListSumType;
@@ -22,6 +19,7 @@ const ListItem: FC<Props> = ({ list, whatMenu }) => {
   const navigate = useNavigate();
   const [isLike, setIsLike] = useState(list.isLiked);
   const [likeCount, changeLikeCount] = useState(list.likeCount);
+  const isDark = darkModeStore((state) => state.isDark);
 
   // 좋아요
   const clickHeart = (): void => {
@@ -47,8 +45,6 @@ const ListItem: FC<Props> = ({ list, whatMenu }) => {
     setIsLike(!isLike);
   };
 
-  const isDark = darkModeStore((state) => state.isDark);
-
   return (
     <>
       <div
@@ -69,7 +65,7 @@ const ListItem: FC<Props> = ({ list, whatMenu }) => {
             />
           </figure>
 
-          <div className="card-body flex flex-row  justify-between w-3/4 md:p-8">
+          <div className="card-body flex flex-row  justify-between w-1/2 md:w-3/4 md:p-8">
             <div className="flex flex-col  justify-around w-2/3  ">
               <div>
                 <p
@@ -79,19 +75,13 @@ const ListItem: FC<Props> = ({ list, whatMenu }) => {
                   {list.title}
                 </p>
               </div>
-              <div>
+              <div className="line-clamp-1">
                 {" "}
                 {list.tags.map((tag: { title: string }) => (
                   <span>{" # " + tag.title}</span>
                 ))}{" "}
               </div>
             </div>
-
-            {/* 너무 많아져서 설명은 안에만 넣어도 될듯..? */}
-
-            {/* <div className=" items-center hidden xl:flex ">
-                <p>{list.description}</p>
-              </div> */}
 
             <div className="card-actions justify-between flex items-center w-1/3">
               <button
@@ -112,6 +102,7 @@ const ListItem: FC<Props> = ({ list, whatMenu }) => {
           </div>
         </>
       </div>
+      {/* 구분선 */}
       <div
         className={
           (isDark ? "border-b-slate-600" : "border-b-slate-200") +

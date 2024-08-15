@@ -1,12 +1,11 @@
 // DeleteBookmarkListModal.tsx 는 AsideBookmarkList.tsx 에서 더보기 메뉴의 '삭제하기' 버튼을 눌렀을 때 출력되는 컴포넌트
 
-import React, { useRef } from "react";
+import React from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../../../config";
 import { authStore } from "../../../stores/authStore";
 import { useNavigate } from "react-router-dom";
 import mainStore from "../../../stores/mainStore";
-import { useEffect } from "react";
 import toastStore from "../../../stores/toastStore";
 import type { BookmarkType } from "../../../types/BookmarkType";
 interface DeleteConfirmModalProps {

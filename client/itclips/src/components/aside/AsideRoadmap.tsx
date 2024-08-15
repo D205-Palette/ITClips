@@ -1,13 +1,10 @@
 // AsideBookmarkList.tsx 는 북마크리스트 정보를 출력하는 컴포넌트
 import React, { useState, useEffect } from "react";
 
-// components
-import AsideRoadmapKebabDropdown from "./ui/AsideRoadmapKebabDropdown";
 // import KebabDropdown from "../common/KebabDropdown";
 import ImageContainer from "./layout/ImageContainer";
 import ItemDetailInfo from "./layout/ItemDetailInfo";
 import LikesFavoritesCount from "./layout/LikesFavoritesCount(Roadmap)";
-import Tags from "./layout/Tags";
 import RoadmapCommentsModal from "./layout/RoadmapCommentsModal";
 import KebabDropdown from "../common/KebabDropdown";
 // stores
@@ -90,10 +87,6 @@ const AsideRoadmap: React.FC<Props> = ({ roadmap }) => {
             전체 댓글 보기 ({commentCount})
           </button>
         </div>
-
-        {/* 댓글 버튼 */}
-
-        
 
       </div>
 

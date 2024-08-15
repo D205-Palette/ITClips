@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { FaSun, FaMoon } from "react-icons/fa";
-import sun from "../assets/sun.svg";
-import moon from "../assets/moon.svg";
 import darkModeStore from '../../stores/darkModeStore'
 
 const DarkModeToggle = () => {
-  const isDark = darkModeStore((state) => state.isDark)
   const changeMode = darkModeStore((state) => state.changeMode);
 
   const [theme, setTheme] = useState(

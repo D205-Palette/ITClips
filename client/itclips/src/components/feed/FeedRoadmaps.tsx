@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { authStore } from "../../stores/authStore";
-import { feedStore } from "../../stores/feedStore";
 import Roadmap from "./Roadmap(Feed)";
 import axios from "axios";
 import { API_BASE_URL } from "../../config";

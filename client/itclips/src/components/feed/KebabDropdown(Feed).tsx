@@ -1,16 +1,13 @@
 import { VscKebabVertical } from "react-icons/vsc";
 import { FC, useState } from "react";
-import FavoriteConfirmationModal from "../aside/modals/FavoriteConfirmModal";
 import ReportModal from "../aside/modals/ReportModal";
-import UrlCopyModal from "../common/UrlCopyModal";
-import ScrapConfirmationModal from "../aside/modals/ScrapComfirmModal";
 import axios from "axios";
 import { API_BASE_URL } from "../../config";
 import { authStore } from "../../stores/authStore";
 import toastStore from "../../stores/toastStore";
 
 // 무슨 탭에서 눌렀는지 받는 인자
-// 리스트, 즐겨찾기, 로드맵, 북마크 4가지로 받을예정. 그룹 리스트랑 그냥 리스트는 차이 없음
+
 interface Props {
   whatMenu: string;
   // id 가 그떄그때마다 listID, roadmapId, bookmarkId 달라짐
@@ -19,10 +16,7 @@ interface Props {
 
 const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
   const { userId, token } = authStore();
-  const [isUrlCopyModalOpen, setIsUrlCopyModalOpen] = useState<boolean>(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState<boolean>(false);
-  const [isFavoriteModalOpen, setIsFavoriteModalOpen] =
-    useState<boolean>(false);
   const [isScrapModalOpen, setIsScrapModalOpen] = useState<boolean>(false);
   const { setGlobalNotification } = toastStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -134,7 +128,6 @@ const KebabDropdown: FC<Props> = ({ whatMenu, id }) => {
                 whatMenu === "로드맵" || whatMenu === "북마크" ? "hidden" : ""
               }
             >
-              {/* 내 즐겨찾기에 있는지 유무 따져서 즐겨찾기 삭제로 출력해주기 */}
               <a>즐겨찾기</a>
             </li>
             <li

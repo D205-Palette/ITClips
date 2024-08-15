@@ -1,7 +1,6 @@
 // HomeView.js
 import React, { useEffect } from "react";
-import { redirect, useNavigate } from "react-router-dom";
-import Intro from "./Intro";
+import { useNavigate } from "react-router-dom";
 import { authStore } from "../stores/authStore";
 
 export default function HomeView() {

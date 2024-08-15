@@ -30,7 +30,6 @@ const [canEdit, setCanEdit] = useState(false)
           tabIndex={0}
           className="dropdown-content menu bg-base-100 rounded-box  w-52 p-2 shadow z-30 "
         >
-          {/* 나중에 타인 정보 페이지면 수정 삭제도 안뜨게 하기 */}
           <li>
             <a>메세지 보내기</a>
           </li>

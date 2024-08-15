@@ -20,15 +20,6 @@ interface AsideMessageDetailProps {
   onBackWithRead: (roomId: number) => void;
 }
 
-interface Message {
-  id: number;
-  roomId: number;
-  senderId: number;
-  senderName: string;
-  message: string;
-  createdAt: string;
-}
-
 // AsideMessage에서 id값을가지고 데이터를 꺼내서 라우터로 AsideMessageDetail 컴포넌트로 넘겨줌
 
 const AsideMessageDetail: React.FC<AsideMessageDetailProps> = ({ roomId, onBack, onBackWithRead }) => {

@@ -16,7 +16,6 @@ import { likeBookmarkList, unlikeBookmarkList } from "../../../api/bookmarkListA
 // stores
 import { authStore } from "../../../stores/authStore";
 import { searchStore } from "../../../stores/searchStore";
-import { isTemplateSpan } from "typescript";
 
 interface Tag {
   title: string;

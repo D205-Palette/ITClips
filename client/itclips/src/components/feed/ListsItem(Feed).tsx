@@ -4,7 +4,6 @@ import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 import KebabDropdown from "./KebabDropdown(Feed)";
 import darkModeStore from "../../stores/darkModeStore";
-import profile_img from "../../assets/images/profile_image.png";
 import type { BookmarkListSumType } from "../../types/BookmarkListType";
 import noImg from "../../assets/images/noImg.gif";
 import axios from "axios";

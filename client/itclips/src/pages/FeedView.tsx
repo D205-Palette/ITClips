@@ -1,20 +1,19 @@
-import React, { useEffect } from "react";
-import { feedStore } from "../stores/feedStore";
+import React from "react";
 import { Outlet } from "react-router-dom";
-import axios from "axios";
-import { API_BASE_URL } from "../config";
 
 import AsideProfile from "../components/aside/AsideProfile";
-import AsideMobileProfile from '../components/aside/AsideProfile(Mobile)'
+import AsideMobileProfile from "../components/aside/AsideProfile(Mobile)";
 import FeedTab from "../components/feed/FeedTab";
 
 export default function FeedView() {
-
   return (
     <>
       <div className="grid grid-cols-12 gap-4">
         {/* aside 자리 */}
-        <div id="aside" className="md:col-start-2 md:col-span-3 md:pe-10 col-start-2 col-span-10 ">
+        <div
+          id="aside"
+          className="md:col-start-2 md:col-span-3 md:pe-10 col-start-2 col-span-10 "
+        >
           {/* 메세지 뜨는 위치 */}
           <div className="hidden md:block sticky top-16 z-30">
             <AsideProfile />

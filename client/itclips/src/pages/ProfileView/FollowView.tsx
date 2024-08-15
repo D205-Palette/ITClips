@@ -1,4 +1,3 @@
-import { asideStore } from "../../stores/asideStore";
 import { Outlet } from "react-router-dom";
 
 // stores
@@ -9,10 +8,8 @@ import FollowTab from "../../components/follow/FollowTab";
 
 
 const FollowView = () => {
-  
-  const isMessageOpen = asideStore((state) => state.isMessageOpen);
+
   const isDark = darkModeStore((state)=>state.isDark)
-  const textColor = (isDark? "text-slate-300" : "text-slate-900")
 
   return (
     <>

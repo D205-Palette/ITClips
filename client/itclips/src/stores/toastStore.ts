@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
 
 interface ToastStore {
   globalNotification: {
@@ -9,6 +8,7 @@ interface ToastStore {
   setGlobalNotification: (setting: any) => void;
 }
 
+// 토스트 알람창 내용
 const toastStore = create<ToastStore>((set) => ({
   globalNotification: null,
   setGlobalNotification: (setting) => {

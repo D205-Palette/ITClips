@@ -1,5 +1,4 @@
 import { useState, FC } from "react";
-import useStore from "../../stores/mainStore";
 import KebabDropdown from "../common/KebabDropdown";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import ListItemHover from "./ListsItem(AlbumHovering)";
@@ -10,12 +9,6 @@ import { API_BASE_URL } from "../../config";
 import { authStore } from "../../stores/authStore";
 import axios from "axios";
 import noImg from "../../assets/images/noImg.gif"
-// 이미지 , 리스트명, 북마크 개수, 태그,(설명), 좋아요 버튼&좋아요 수, 리스트 세부 조작 버튼
-// 아님 호버링 기능을 여기에다 포함이 나을듯?
-
-// function Hovering(isHover:boolean){
-
-// }
 
 interface Props {
   list: BookmarkListSumType;
@@ -23,14 +16,17 @@ interface Props {
   canEdit: boolean;
 }
 
-const ListItem: FC<Props> = ({ list, whatMenu, canEdit }) => {
+const ListItem: FC<Props> = ({ list, whatMenu }) => {
   const { token, userId } = authStore();
+  const {isDark} = darkModeStore();
+
   const navigate = useNavigate();
 
   const [isHover, setIsHovering] = useState(false);
   const [isLike, setIsLike] = useState(list.isLiked);
   const [likeCount, changeLikeCount] = useState(list.likeCount);
 
+  // 좋아요 버튼
   const clickHeart = (): void => {
     if (isLike) {
       axios.delete(`${API_BASE_URL}/api/list/like/${userId}/${list.id}`, {
@@ -55,7 +51,6 @@ const ListItem: FC<Props> = ({ list, whatMenu, canEdit }) => {
     }
     setIsLike(!isLike);
   };
-  const isDark = darkModeStore((state) => state.isDark);
 
   return (
     <>
@@ -116,7 +111,6 @@ const ListItem: FC<Props> = ({ list, whatMenu, canEdit }) => {
               </button>
             </div>
           </div>
-
           <div className="card-actions justify-end flex items-center"></div>
         </div>
       </div>

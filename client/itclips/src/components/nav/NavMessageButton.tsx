@@ -1,4 +1,4 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useCallback } from 'react';
 
 // icons
 import { FaEnvelope } from 'react-icons/fa';

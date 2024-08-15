@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 
 // components
 import RecommendedItemsContainer from "./layout/RecommendedItemsContainer";
@@ -16,19 +15,6 @@ import { getRecommendedBookmarks } from "../../api/searchApi";
 // stores
 import { authStore } from "../../stores/authStore";
 import { searchStore } from "../../stores/searchStore";
-
-interface RecommendedItem {
-  id: number;
-  title: string;
-  description: string;
-  bookmarkCount: number;
-  createdAt: string;
-  likeCount: number;
-  image: string;
-  isLiked: boolean;
-  tags: { title: string }[];
-  users: { id: number; nickName: string }[];
-}
 
 const SearchMain = () => {
 

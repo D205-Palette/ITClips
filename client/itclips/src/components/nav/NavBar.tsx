@@ -4,14 +4,11 @@ import { authStore } from "../../stores/authStore";
 import DarkModeToggle from "./DarkModeToggle";
 import NotificationButton from "./NavNotificationButton";
 import MessageLayout from "../aside/MessageLayout";
-
 import HomeButton from "../nav/NavHomeButton";
 import LogoutButton from "../nav/NavLogoutButton";
 import MessageButton from "../nav/NavMessageButton";
-// import tabStore from "../../stores/categoriesStore";
 import darkModeStore from "../../stores/darkModeStore";
 import { asideStore } from "../../stores/asideStore";
-
 import { FaHome } from "react-icons/fa";
 import { MdOutlineFeed } from "react-icons/md";
 import { FaSearch } from "react-icons/fa";
@@ -94,7 +91,7 @@ const NavBar = () => {
               <NavLink
                 to="login"
                 className={({ isActive }) =>
-                  isActive ? "text-sky-500 font-bold" : textColor + " font-bold"
+                  isActive ? "text-sky-500 font-bold " : textColor + " text-sm md:text-md font-bold"
                 }
               >
                 로그인
@@ -103,7 +100,7 @@ const NavBar = () => {
               <NavLink
                 to="signup"
                 className={({ isActive }) =>
-                  isActive ? "text-sky-500 font-bold" : textColor + " font-bold"
+                  isActive ? "text-sky-500 font-bold " : textColor + " text-sm md:text-md font-bold"
                 }
               >
                 회원가입

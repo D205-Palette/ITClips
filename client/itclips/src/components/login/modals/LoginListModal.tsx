@@ -5,11 +5,8 @@ import GithubLoginButton from "../GithubLoginButton";
 import NaverLoginButton from "../NaverLoginButton";
 import KakaoLoginButton from "../KakaoLoginButton";
 import EmailLoginButton from "../EmailLoginButton";
-import EmailLoginModal from "./EmailLoginModal";
-import PasswordResetModal from "./PasswordResetModal";
 
 const LoginListModal: React.FC = () => {
-  const { isEmailLoginOpen, isPasswordResetOpen } = navStore();
 
   return (
     <>

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { MdArrowDropDown } from "react-icons/md";
+
 interface CategoryProps {
   selectCategory: (category: string) => void;
 }

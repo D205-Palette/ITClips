@@ -12,26 +12,28 @@ import NoContent from "./NoContent";
 import { authStore } from "../../stores/authStore";
 import { API_BASE_URL } from "../../config";
 import { useParams } from "react-router-dom";
-import toastStore from "../../stores/toastStore";
+
 const MyGroupBookmarkList = () => {
+  const params = useParams();
+
+  const { token, userId } = authStore();
+
   const [filterText, changeFilterText] = useState("");
   const [isList, setTab] = useState(true);
   const [lists, setLists] = useState<BookmarkListSumType[]>([]);
-
   const [filterdLists, setFilterdLists] = useState<BookmarkListSumType[]>([]);
-  const { token, userId } = authStore();
-  const params = useParams();
   const [canView, setCanView] = useState(false)
+  const [noContent, setNoContent] = useState(<div className="w-full flex flex-row justify-center mt-6"><span className="loading loading-spinner loading-lg text-sky-500"></span></div>)
+
+  // 리스트형&앨범형 전환
   function tabList(): void {
     setTab(true);
   }
   function tabAlbum(): void {
     setTab(false);
   }
-  const {globalNotification, setGlobalNotification} = toastStore()
 
-  const [noContent, setNoContent] = useState(<div className="w-full flex flex-row justify-center mt-6"><span className="loading loading-spinner loading-lg text-sky-500"></span></div>)
-  // 그룹 북마크들 api
+  // 그룹 북마크들 api 받아오기
   useEffect(() => {
     async function fetchData() {
       axios({
@@ -60,6 +62,7 @@ const MyGroupBookmarkList = () => {
     fetchData();
   }, []);
 
+  // 검색어 변경시마다 필터링 된 로드맵 변경
   useEffect(() => {
     setFilterdLists(lists.filter((list) => list.title.toLowerCase().includes(filterText.toLowerCase())));
   }, [filterText]);

@@ -101,14 +101,6 @@ const ReportModal: React.FC<ReportModalProps> = ({
     // 신고 처리 후 확인 모달
   };
 
-  // const handleConfirmationClose = () => {
-  //   setIsConfirmationModalOpen(false);
-  //   onClose(); // 신고 모달 전부 닫기
-  // };
-  // const handleErrorClose = () => {
-  //   setIsErrorModalOpen(false);
-  //   onClose(); // 신고 모달 전부 닫기
-  // };
 
   return (
     <>
@@ -166,14 +158,6 @@ const ReportModal: React.FC<ReportModalProps> = ({
           </div>
         </div>
       </div>
-      {/* <ReportConfirmModal
-        isOpen={isConfirmationModalOpen}
-        onClose={handleConfirmationClose}
-      />
-      <ReportErrorModal
-        isOpen={isErrorModalOpen}
-        onClose={handleErrorClose}
-      /> */}
     </>
   );
 };

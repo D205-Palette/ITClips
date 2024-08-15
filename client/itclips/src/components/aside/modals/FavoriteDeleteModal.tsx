@@ -28,7 +28,6 @@ const deleteFavorite  = () => {
     })
 }
 
-
   return (
     <div className="modal modal-open">
       <div className="modal-box">

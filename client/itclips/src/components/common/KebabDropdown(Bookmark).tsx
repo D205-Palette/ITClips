@@ -2,15 +2,11 @@ import { VscKebabVertical } from "react-icons/vsc";
 import { FC, useState } from "react";
 import MoveBookmarkModal from "../aside/modals/MoveBookmarkModal";
 import type { BookmarkType } from "../../types/BookmarkType";
-import FavoriteConfirmationModal from "../aside/modals/FavoriteConfirmModal";
 import ReportModal from "../aside/modals/ReportModal";
 import DeleteBookmarkListModal from "../aside/modals/DeleteContentModal";
-import UrlCopyModal from "./UrlCopyModal";
-import ScrapConfirmationModal from "../aside/modals/ScrapComfirmModal";
 import toastStore from "../../stores/toastStore";
 import { authStore } from "../../stores/authStore";
-// 무슨 탭에서 눌렀는지 받는 인자
-// 리스트, 즐겨찾기, 로드맵, 북마크 4가지로 받을예정. 그룹 리스트랑 그냥 리스트는 차이 없음
+// 무슨 탭에서 눌렀는지 받는 인자. 북마크 만
 interface Props {
   // id 가 그떄그때마다 listID, roadmapId, bookmarkId 달라짐
   bookmark: BookmarkType;
@@ -30,17 +26,16 @@ const KebabDropdown: FC<Props> = ({
   bookmark,
   toggleEdit,
   changeEditBookmarksIndex,
-  changeEditBookmarks,
   toggleMode,
   setIsAIOpen,
   canEdit,
 }) => {
-  const [isOpen, onClose] = useState<boolean>(false);
+
   const [editModal, tabEditModal] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState<boolean>(false);
   const { userId } = authStore();
-  const { globalNotification, setGlobalNotification } = toastStore();
+  const { setGlobalNotification } = toastStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -134,7 +129,6 @@ const KebabDropdown: FC<Props> = ({
           id={bookmark.id}
         />
       )}
-      {/*  */}
     </>
   );
 };

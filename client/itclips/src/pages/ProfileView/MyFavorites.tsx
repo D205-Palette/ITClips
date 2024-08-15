@@ -12,32 +12,32 @@ import NoContent from "./NoContent";
 import { API_BASE_URL } from "../../config";
 import { authStore } from "../../stores/authStore";
 import { useParams } from "react-router-dom";
-import toastStore from "../../stores/toastStore";
 import mainStore from "../../stores/mainStore";
 
 const MyGroupBookmarkList = () => {
+  const params = useParams();
+
+  const {isFavoriteChange,setIsFavoriteChange} = mainStore()
+  const { token, userId } = authStore();
+
   const [filterText, changeFilterText] = useState("");
   const [isList, setTab] = useState(true);
   const [lists, setLists] = useState<BookmarkListSumType[]>([]);
-  const { token, userId } = authStore();
-
   const [filterdLists, setFilterdLists] = useState<BookmarkListSumType[]>([]);
-  const params = useParams();
-
   const [canView, setCanView] = useState(false);
-  const {globalNotification, setGlobalNotification} = toastStore()
+  const [noContent, setNoContent] = useState(<div className="w-full flex flex-row justify-center mt-6">
+    <span className="loading loading-spinner loading-lg text-sky-500"></span>
+  </div>);
 
-  const {isFavoriteChange,setIsFavoriteChange} = mainStore()
 
+  // 리스트형&앨범형 보기 변경
   function tabList(): void {
     setTab(true);
   }
   function tabAlbum(): void {
     setTab(false);
   }
-  const [noContent, setNoContent] = useState(<div className="w-full flex flex-row justify-center mt-6">
-    <span className="loading loading-spinner loading-lg text-sky-500"></span>
-  </div>);
+
   // 마운트할때 유저의 즐겨찾기들 요약
   useEffect(() => {
     async function fetchData() {
@@ -70,6 +70,7 @@ const MyGroupBookmarkList = () => {
     fetchData();
   }, [isFavoriteChange]);
   
+  // 검색어 변경시마다 필터링 된 로드맵 변경
   useEffect(() => {
     setFilterdLists(lists.filter((list) => list.title.toLowerCase().includes(filterText.toLowerCase())));
   }, [filterText]);

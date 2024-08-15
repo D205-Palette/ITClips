@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, useParams } from "react-router-dom";
 
-import noImg from "../../assets/images/noImg.gif"
+import noImg from "../../assets/images/noImg.gif";
 // apis
 import { unfollow } from "../../api/followApi";
 
@@ -27,8 +27,7 @@ interface Props {
 }
 
 const FollowingItem: React.FC<Props> = ({ items }) => {
-
-  const userId = authStore(state => state.userId);
+  const userId = authStore((state) => state.userId);
   const params = useParams<{ userId?: string }>();
   const urlUserId = params.userId ? parseInt(params.userId, 10) : undefined;
   const [followings, setFollowings] = useState<Following[]>(items);
@@ -78,9 +77,9 @@ const FollowingItem: React.FC<Props> = ({ items }) => {
 
   // 태그 목록을 "#tag1 #tag2 #tag3" 형식으로 변환하는 함수
   const formatTags = (tags: string[], maxLength: number = 30) => {
-    const tagString = tags.map(tag => `#${tag}`).join(' ');
+    const tagString = tags.map((tag) => `#${tag}`).join(" ");
     if (tagString.length <= maxLength) return tagString;
-    return tagString.slice(0, maxLength) + '...';
+    return tagString.slice(0, maxLength) + "...";
   };
 
   return (
@@ -97,13 +96,17 @@ const FollowingItem: React.FC<Props> = ({ items }) => {
               className="w-14 h-14 md:w-20 md:h-20 object-cover rounded"
             />
             <div className="flex-grow">
-              <h3 className="text-sm md:text-lg font-semibold">{item.nickname}</h3>
+              <h3 className="text-sm md:text-lg font-semibold">
+                {item.nickname}
+              </h3>
               <div className="flex space-x-2 md:space-x-4 mt-1 md:mt-2">
                 <p className="text-xs md:text-sm text-gray-400">{item.email}</p>
               </div>
             </div>
 
-            <p className="text-xs md:text-sm text-gray-500 hidden sm:block">{formatTags(item.tagNames)}</p>
+            <p className="text-xs md:text-sm text-gray-500 hidden sm:block">
+              {formatTags(item.tagNames)}
+            </p>
 
             {userId === urlUserId ? (
               <div onClick={handleNavLink}>

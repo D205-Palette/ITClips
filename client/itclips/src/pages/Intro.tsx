@@ -5,8 +5,6 @@ import intro1 from "../assets/images/intro1.gif"
 import intro2 from "../assets/images/intro2.gif"
 import intro3 from "../assets/images/intro3.gif"
 
-
-
 const Intro: React.FC = () => {
   const navigate = useNavigate();
   const [inView, setInView] = useState({

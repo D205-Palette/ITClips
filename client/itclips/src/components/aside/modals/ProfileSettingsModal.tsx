@@ -37,7 +37,6 @@ import noImg from "../../../assets/images/noImg.gif";
 interface ProfileSettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  // updateAsideInfo: (updatedInfo: any) => void;
   setGlobalNotification: (
     notification: { message: string; type: "success" | "error" } | null
   ) => void;
@@ -101,7 +100,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
       setGenderBoolean(userInfo.gender || false);
       setProfileImage(userInfo.image!);
     }
-  }, []);
+  }, [isOpen]);
 
   // 프로필 이미지 상태
   const [profileImage, setProfileImage] = useState<string | null>(null);
@@ -351,7 +350,6 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
       });
     }
     setIsProfileChange(true);
-    
   };
 
   const handleCloseModal = async () => {
@@ -360,9 +358,9 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
       const userInfoResponse = await checkUserInfo(userInfo.id, userInfo.id);
       setIsProfileChange(true);
       fetchUserInfo(userInfoResponse.data);
+      // setProfileImage(null)
+      setSelectedFile(null);
     }
-    setProfileImage(null);
-    setSelectedFile(null);
     onClose();
   };
 

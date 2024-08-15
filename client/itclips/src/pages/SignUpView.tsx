@@ -501,7 +501,7 @@ const {isDark} = darkModeStore()
               <div className="pl-1"></div>
               <input
                 name="birthday"
-                type="text"
+                type="date"
                 value={birthday}
                 className="input input-bordered w-full text-xs md:text-sm"
                 placeholder="생년월일을 입력해주세요. ex)YYYY-MM-DD"

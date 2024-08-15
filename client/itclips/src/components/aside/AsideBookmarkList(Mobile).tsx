@@ -1,16 +1,10 @@
 // AsideBookmarkList.tsx 는 북마크리스트 정보를 출력하는 컴포넌트
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 
 // components
-import AsideBookmarkListKebabDropdown from "./ui/AsideBookmarkListKebabDropdown";
 import ImageContainer from "./layout/ImageContainer";
-import ItemDetailInfo from "./layout/ItemDetailInfo";
 import LikesFavoritesCount from "./layout/LikesFavoritesCount(List)";
 import Tags from "./layout/Tags";
-import BookmarkListCommentsModal from "./layout/BookmarkListCommentsModal";
-import type { RoadmapDetailType } from "../../types/RoadmapType";
-import KebabDropdown from "../common/KebabDropdown";
 // stores
 import darkModeStore from "../../stores/darkModeStore";
 
@@ -28,7 +22,6 @@ interface ItemProps {
 
 const AsideMobileContent: React.FC<ItemProps> = ({ data }) => {
   const isDark = darkModeStore((state) => state.isDark);
-  const [isCommentsOpen, setIsCommentsOpen] = useState(false);
   const [commentCount, setCommentCount] = useState(0);
 
   useEffect(() => {

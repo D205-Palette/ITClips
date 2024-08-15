@@ -1,10 +1,4 @@
-import SearchBar from "../components/main/MainSearchBar";
-import CategoryTab from "../components/main/CategoryTab";
-import mainStore from "../stores/mainStore";
-import Bookmark from "../components/main/Bookmark";
-import AsideBookmarkList from "../components/aside/AsideBookmarkList";
 import { asideStore } from "../stores/asideStore";
-import MessageLayout from "../components/aside/MessageLayout";
 import MainTab from "../components/main/MainTab";
 import { useNavigate } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
@@ -17,18 +11,12 @@ import type { RoadmapDetailType } from "../types/RoadmapType";
 import axios from "axios";
 import { API_BASE_URL } from "../config";
 import { authStore } from "../stores/authStore";
-import FileResizer from "react-image-file-resizer";
 import NoContent from "./ProfileView/NoContent";
 import AsideMobileContent from "../components/aside/AsideRoadmap(Mobile)";
 import Lottie from "lottie-react";
-import CompleteAnimation from "../assets/lottie/Complete.json";
 import CongratulationAnimation from "../assets/lottie/Congratulation.json";
-const RoadmapView = () => {
-  const params = useParams();
-  const { userId, token } = authStore();
-  const [roadmap, setRoadmap] = useState<RoadmapDetailType>();
 
-  const [canEdit, setCanEdit] = useState(false);
+const RoadmapView = () => {
   useEffect(() => {
     async function fetchData() {
       axios({
@@ -61,14 +49,14 @@ const RoadmapView = () => {
     fetchData();
   }, []);
 
-  const bookmarkLists = roadmap?.stepList;
-
-  const checkedList = bookmarkLists?.filter((list: any) => list.check === true);
-
-  const isMessageOpen = asideStore((state) => state.isMessageOpen);
+  const params = useParams();
   const navigate = useNavigate();
-  const isDark = darkModeStore((state) => state.isDark);
 
+  const { userId, token } = authStore();
+  const { isDark } = darkModeStore();
+
+  const [roadmap, setRoadmap] = useState<RoadmapDetailType>();
+  const [canEdit, setCanEdit] = useState(false);
   const [checkCount, setCheckCount] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
   const [percentage, setPercentage] = useState("0");
@@ -85,6 +73,7 @@ const RoadmapView = () => {
     }
   }, [checkCount, totalCount]);
 
+  // 100% 되면 축하 이벤트하고 3초뒤 끝
   useEffect(() => {
     if (percentage === "100.0%") {
       setCongratulation(true);
@@ -92,10 +81,8 @@ const RoadmapView = () => {
       const timer = setTimeout(() => {
         setCongratulation(false);
       }, 3000);
-
     }
-    }
-  , [percentage]);
+  }, [percentage]);
 
   const BackButton = (): any => {
     return (
@@ -155,7 +142,6 @@ const RoadmapView = () => {
                   >
                     {percentage}
                   </div>
-                  {/* 퍼센트 계산 방법이.... 전체 필터걸어서 isCompleted된거 구하는거긴한데... */}
                 </div>
 
                 {roadmap?.stepList.map((list: any) => (
@@ -167,26 +153,25 @@ const RoadmapView = () => {
                   />
                 ))}
               </div>
-
-              <div
-                className={ " fixed top-0 right-0 "}
-              >
-                {congratulation&&<Lottie
-                loop={true}
-                  animationData={CongratulationAnimation}
-                  height={300}
-                  width={300}
-                  initialSegment={[8,100]}
-                />}
-                
+              {/* 축하 이벤트 */}
+              <div className={" fixed top-0 right-0 "}>
+                {congratulation && (
+                  <Lottie
+                    loop={true}
+                    animationData={CongratulationAnimation}
+                    height={300}
+                    width={300}
+                    initialSegment={[8, 100]}
+                  />
+                )}
               </div>
             </div>
           </div>
         </>
       ) : (
         <>
-          {" "}
-          <NoContent content="비공개로드맵" />{" "}
+         
+          <NoContent content="비공개로드맵" />
         </>
       )}
     </>

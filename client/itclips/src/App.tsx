@@ -14,11 +14,13 @@ import notificationStore from "./stores/notificationStore";
 import { authStore } from "./stores/authStore";
 import { chatStore } from "./stores/chatStore";
 import toastStore from "./stores/toastStore";
+import mainTabStore from "./stores/mainTabStore";
+
 // apis
 import { connectNotificationStream } from "./api/notificationApi";
+
+// modal
 import ProfileSettingsModal from "./components/aside/modals/ProfileSettingsModal";
-import mainTabStore from "./stores/mainTabStore";
-import { useState } from "react";
 
 const App = () => {
   const navigate = useNavigate();
@@ -29,9 +31,10 @@ const App = () => {
   const updateTotalUnreadCount = chatStore(
     (state) => state.updateTotalUnreadCount
   );
-  const { userId, isLoggedIn } = authStore();
+  const { userId } = authStore();
   const location = useLocation();
   const { globalNotification, setGlobalNotification } = toastStore();
+  const { isProfileModalOpen, setIsProfileModalOpen } = mainTabStore();
 
   // 로그인하지 않아도 접근 가능한 경로들
   const publicRoutes = [
@@ -45,7 +48,6 @@ const App = () => {
 
   // 특정 경로에 따라 클래스 적용
   const isIntroPage = location.pathname === "/intro";
-  const { isProfileModalOpen, setIsProfileModalOpen } = mainTabStore();
 
   // webSocket 연결하면서 채팅방 목록 조회 및 알림 가져오기
   useEffect(() => {
@@ -57,9 +59,7 @@ const App = () => {
         fetchNotifications(userId); // 로그인 시 알림 가져오기
       }
     };
-
     initializeChat();
-
     return () => disconnect();
   }, [
     connect,
@@ -88,7 +88,6 @@ const App = () => {
       const timer = setTimeout(() => {
         setGlobalNotification(null);
       }, 3000);
-
       return () => clearTimeout(timer);
     }
   }, [globalNotification]);
@@ -97,12 +96,10 @@ const App = () => {
   useEffect(() => {
     if (userId) {
       const eventSource = connectNotificationStream(userId);
-
       eventSource.onmessage = (event) => {
         const newNotification = JSON.parse(event.data);
         addNotification({ ...newNotification, read: false }); // 새 알림을 읽지 않은 상태로 추가
       };
-
       return () => {
         eventSource.close();
       };
@@ -123,11 +120,10 @@ const App = () => {
         <Footer />
       </footer>
 
-
+      {/* 프로필 수정 모달 */}
       <ProfileSettingsModal
         isOpen={isProfileModalOpen}
         onClose={() => setIsProfileModalOpen(false)}
-        // updateAsideInfo={userInfo}
         setGlobalNotification={setGlobalNotification}
       />
 

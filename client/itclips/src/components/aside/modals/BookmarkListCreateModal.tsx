@@ -27,17 +27,15 @@ const BookmarkListCreateModal: React.FC<EditModalProps> = ({
   const [tempDescription, setTempDescription] = useState<string>("");
   const [tempTag, setTempTag] = useState("");
   const [tempTags, setTempTags] = useState<{ title: string }[]>([]);
-  const [tempCategories, setTempCategories] = useState<string[]>([]);
 
   // user 설정이랑 isPublic 해ㅇ줘야하나?
   const [isPublic, setIsPublic] = useState<any>(true);
-  const [imageToS3FileName, setImageToS3FileName] = useState("");
   const { userId, token } = authStore();
   // 이미지 업로드 상태 관리
   const [bookmarklistImage, setBookmarklistImage] = useState<File | null>(null);
   const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
 
-  const { isBookmarkListChange, setIsBookmarkListChange } = mainStore();
+  const { setIsBookmarkListChange } = mainStore();
   const [tagsLengthWarning, setTagsLengthWarning] = useState(false);
 
   const { setGlobalNotification } = toastStore();
@@ -73,11 +71,6 @@ const BookmarkListCreateModal: React.FC<EditModalProps> = ({
   }, [tempTags.length]);
 
   const endCreate = () => {
-    // if(isPublic){
-    //   setIsPublic(1)
-    // } else{
-    //   setIsPublic(0)
-    // }
     axios({
       method: "post",
       url: `${API_BASE_URL}/api/list/add/${userId}`,

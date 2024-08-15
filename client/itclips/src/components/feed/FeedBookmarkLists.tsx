@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { authStore } from "../../stores/authStore";
-
 import ListsItem from "./ListsItem(Feed)";
 import { API_BASE_URL } from "../../config";
 import axios from "axios";

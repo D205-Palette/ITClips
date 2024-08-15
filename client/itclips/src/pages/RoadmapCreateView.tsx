@@ -18,7 +18,6 @@ import { useNavigate } from "react-router-dom";
 import noImg from "../assets/images/noImg.gif";
 import { IoIosWarning } from "react-icons/io";
 import FileResizer from "react-image-file-resizer";
-import RoadMap from "../components/main/Roadmap";
 import RecommendModal from "../components/common/RecommendModal";
 import toastStore from "../stores/toastStore";
 // 타입 정의

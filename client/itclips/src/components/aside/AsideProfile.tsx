@@ -13,7 +13,6 @@ import { IoChatboxEllipsesOutline, IoSettingsOutline } from "react-icons/io5";
 import ImageContainer from "./layout/ImageContainer";
 import UserDetailInfo from "./layout/UserDetailInfo";
 import UserActivityInfo from "./layout/UserActivityInfo";
-import ProfileSettingsModal from "./modals/ProfileSettingsModal";
 
 // stores
 import darkModeStore from "../../stores/darkModeStore";
@@ -22,21 +21,6 @@ import { profileStore } from "../../stores/profileStore";
 import mainStore from "../../stores/mainStore";
 import { asideStore } from "../../stores/asideStore";
 import mainTabStore from "../../stores/mainTabStore";
-interface UserInfo {
-  id?: number;
-  email?: string;
-  nickname?: string;
-  birth?: string;
-  job?: string;
-  image: string;
-  gender?: boolean;
-  darkMode?: boolean;
-  bio?: string;
-  bookmarkListCount?: number;
-  roadmapCount?: number;
-  followerCount?: number;
-  followingCount?: number;
-}
 
 const AsideProfile = () => {
   // 내 정보 가져오기
@@ -49,7 +33,6 @@ const AsideProfile = () => {
   const urlUserId = params.userId ? parseInt(params.userId, 10) : undefined;
   const { urlUserInfo, setUrlUserInfo, updateFollowCount } = profileStore();
   const isDark = darkModeStore((state) => state.isDark);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [globalNotification, setGlobalNotification] = useState<{
     message: string;
     type: "success" | "error";
@@ -70,10 +53,6 @@ const AsideProfile = () => {
       return () => clearTimeout(timer);
     }
   }, [globalNotification]);
-
-  const updateAsideInfo = (updatedInfo: UserInfo) => {
-    setUrlUserInfo(updatedInfo);
-  };
 
   useEffect(() => {
     // url 유저 정보 조회
@@ -146,15 +125,6 @@ const AsideProfile = () => {
     }
   };
 
-  // 프로필 설정 모달 상태 관련
-  // const openModal = (): void => {
-  //   setIsModalOpen(true);
-  // };
-
-  // const closeModal = (): void => {
-  //   setIsModalOpen(false);
-  // };
-
   return (
     <div
       className={`${
@@ -214,13 +184,6 @@ const AsideProfile = () => {
         </div>
       </div>
 
-      {/* 프로필 설정 모달 */}
-      {/* <ProfileSettingsModal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        updateAsideInfo={updateAsideInfo}
-        setGlobalNotification={setGlobalNotification}
-      /> */}
       {/* 토스트 알람 */}
       {globalNotification && (
         <div

@@ -169,7 +169,7 @@ public class FollowServiceImpl implements FollowService {
     }
 
     private String getImageUrl(String imageUrl) {
-        if(!"default".equals(imageUrl)) {
+        if(imageUrl != null && !"default".equals(imageUrl)) {
             imageUrl = fileService.getPresignedUrl("images", imageUrl, false).get("url");
         }
         return imageUrl;

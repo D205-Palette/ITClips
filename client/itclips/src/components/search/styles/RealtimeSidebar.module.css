@@ -1,0 +1,13 @@
+.searchTerms {
+  position: relative;
+  height: 2rem;
+  overflow: hidden;
+}
+
+.term {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: top 0.5s ease;
+}

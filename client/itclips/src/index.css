@@ -1,0 +1,15 @@
+/* 테일윈드 적용 */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 프리텐다드 글씨체 적용 */
+body {
+  font-family: "Pretendard", sans-serif;
+}
+
+.alfa-slab-one-regular {
+  font-family: "Alfa Slab One", serif;
+  font-weight: 400;
+  font-style: normal;
+}

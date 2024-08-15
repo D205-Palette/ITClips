@@ -40,9 +40,9 @@ SSAFY 11기 공통 PJT / 구미 2반 5조 웹디자인<br/>
 # 🔖 프로젝트 산출물
 ✔ [요구사항 명세서](https://docs.google.com/spreadsheets/d/1MxifEoveWd3QkiqTpQH4cVVLBofKv4JaFPL32TllpMg/edit?gid=704927790#gid=704927790)
 
-✔ [기능 정의서](https://www.notion.so/c413377a4b284b05a9ebf4b97f61e534?v=f5ef68d65e42461ca80757e30cf1442d&pvs=4)
+✔ [기능 정의서](https://roomy-wing-ac0.notion.site/c413377a4b284b05a9ebf4b97f61e534?v=f5ef68d65e42461ca80757e30cf1442d&pvs=4)
 
-✔ [API 명세서](https://www.notion.so/API-777ba761ca934cc8a2d8fabed37df127?pvs=4)
+✔ [API 명세서](https://roomy-wing-ac0.notion.site/API-777ba761ca934cc8a2d8fabed37df127?pvs=4)
 
 ✔ [와이어 프레임](https://www.figma.com/design/WwBvVhZq92ZsOfiNsu42KN/ItClips?node-id=0-1&t=VLLGrth3l7kKRfJH-1)
 
@@ -50,7 +50,7 @@ SSAFY 11기 공통 PJT / 구미 2반 5조 웹디자인<br/>
 
 ✔ [시스템 아키텍처](resources/image/시스템 아키텍처.PNG)
 
-✔ [프로젝트 일정](https://www.notion.so/d9124008d225496c8a5ea84790a87b8a?pvs=4)
+✔ [프로젝트 일정](https://roomy-wing-ac0.notion.site/d9124008d225496c8a5ea84790a87b8a?pvs=4)
 
 ✔ [최종 발표 자료](https://www.canva.com/design/DAGNneDhqjU/qv03xiaX13R22l2mMHaPOA/edit?utm_content=DAGNneDhqjU&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 

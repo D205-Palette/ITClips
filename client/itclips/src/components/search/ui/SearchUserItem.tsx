@@ -91,7 +91,7 @@ const SearchUserItem: React.FC<SearchUserItemProps> = ({ item: initialItem }) =>
             <div className="flex items-center space-x-2 md:space-x-3">
               <div className="placeholder">
                 <div className="bg-neutral-focus text-neutral-content rounded-full w-8 md:w-10">
-                  <img src={item.image === "default" ? require(`../../../assets/images/noProfile${item.id % 6}.jpg`) : item.image} alt={item.nickname} className="w-full object-cover" />
+                  <img src={item.image === "default" ||item.image===null? require(`../../../assets/images/noProfile${item.id % 6}.jpg`) : item.image} alt={item.nickname} className="w-full object-cover rounded-xl" />
                 </div>
               </div>
               <div>

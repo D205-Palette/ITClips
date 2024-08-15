@@ -60,11 +60,11 @@ const RoadMap: FC<Props> = ({ roadmap, canEdit }) => {
         }
       >
         <>
-          <div className="w-28 z-10 rounded-s-2xl overflow-hidden">
+          <div className="w-28 z-10 rounded-s-xl overflow-hidden">
             <img
-              src={roadmap.image === "default" ? noImg : roadmap.image}
+              src={roadmap.image === "default" ? require(`../../assets/images/noContent${roadmap.id % 6}.png`) : roadmap.image}
               alt="Movie"
-              className="h-full w-full  rounded-s-2xl object-cover"
+              className="h-full w-full  rounded-xl object-cover"
             />
           </div>
 

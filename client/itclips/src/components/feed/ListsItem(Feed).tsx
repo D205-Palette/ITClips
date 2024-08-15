@@ -122,7 +122,7 @@ const ListItem: FC<Props> = ({ list }) => {
           >
             <div className="w-10 h-10 border rounded-full overflow-hidden">
               <img
-                src={user.userImage === "default" ? noImg : user.userImage}
+                src={user.userImage === "default" ? require(`../../assets/images/noProfile${list.userId! % 6}.jpg`) : user.userImage}
                 className="w-full h-full object-cover"
                 alt="리스트유저이미지"
               />
@@ -141,7 +141,7 @@ const ListItem: FC<Props> = ({ list }) => {
       <figure className="border rounded-xl mx-5 overflow-hidden h-64 bg-sky-100">
         <img
           className="w-full h-full object-contain"
-          src={list.image === "default" ? noImg : list.image}
+          src={list.image === "default" ? require(`../../assets/images/noContent${list.id! % 6}.png`) : list.image}
           alt="listImg"
         />
       </figure>

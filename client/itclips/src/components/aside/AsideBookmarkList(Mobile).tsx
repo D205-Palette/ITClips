@@ -45,7 +45,7 @@ const AsideMobileContent: React.FC<ItemProps> = ({ data }) => {
     >
       {/* 북마크리스트 썸네일 */}
       <div className="flex flex-col">
-        <ImageContainer src={data.image} whatContent="북마크리스트" />
+        <ImageContainer src={data.image} whatContent="북마크리스트" id={data.id}/>
         {data.users?.map((user: any) => (
           <div className="flex justify-start">
             <Link

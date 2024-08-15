@@ -63,7 +63,7 @@ const AsideRoadmap: React.FC<Props> = ({ roadmap }) => {
           <div className="flex flex-row md:flex-col md:items-center w-full md:mb-4">
             {/* 북마크리스트 썸네일 */}
             <div className="mr-4 md:mr-0 md:mb-4">
-              <ImageContainer src={roadmap.image} whatContent="로드맵" />
+              <ImageContainer src={roadmap.image} whatContent="로드맵" id={roadmap.id}/>
             </div>
           </div>
 

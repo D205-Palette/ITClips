@@ -17,7 +17,7 @@ const ListItem: FC<Props> = ({ list }) => {
         onClick={() => navigate(`/bookmarklist/${list.id}`)}
       >
         <figure>
-          <img src={list.image==='default'? noImg : list.image} alt="" className="w-full object-fill" />
+          <img src={list.image==='default'? require(`../../assets/images/noContent${list.id % 6}.png`) : list.image} alt="" className="w-full object-fill" />
         </figure>
 
         <div className="card-body flex flex-row justify-center items-center">

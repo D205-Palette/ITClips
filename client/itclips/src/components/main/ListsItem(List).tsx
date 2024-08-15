@@ -49,7 +49,7 @@ const ListItem: FC<Props> = ({ list, whatMenu }) => {
     <>
       <div
         className={
-          (isDark ? "hover:bg-slate-700" : "hover:bg-slate-100") +
+          (isDark ? "hover:bg-slate-700" :   "hover:bg-slate-100") +
           " card card-side bg-base-100 h-28 rounded-lg  "
         }
       >
@@ -59,7 +59,7 @@ const ListItem: FC<Props> = ({ list, whatMenu }) => {
             className="hover:cursor-pointer w-28 overflow-hidden rounded-e-lg"
           >
             <img
-              src={list.image === "default" ? noImg : list.image}
+              src={list.image === "default" ? require(`../../assets/images/noContent${list.id % 6}.png`) : list.image}
               alt="Movie"
               className=" object-cover w-28 h-full"
             />

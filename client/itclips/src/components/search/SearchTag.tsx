@@ -3,7 +3,6 @@ import axios from "axios";
 
 // components
 import SearchTagItemsContainer from "./layout/SearchTagItemsContainer";
-
 // icons
 import { FaList } from "react-icons/fa";
 import { CiBoxList } from "react-icons/ci";

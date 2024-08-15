@@ -85,7 +85,7 @@ const SearchBookmarkListItemGrid: React.FC<BookmarkListItemProps> = ({ item }) =
         className="block h-full"
       >
         <div className="relative">
-          <img src={item.image === "default" ? noImage : item.image} alt={item.title} className="w-full h-40 object-cover" />
+          <img src={item.image === "default" ? require(`../../../assets/images/noContent${item.id % 6}.png`) : item.image} alt={item.title} className="w-full h-40 object-cover" />
           <div className="absolute top-2 right-2 z-10" onClick={handleNavLink}>
             <SearchItemKebabDropdown id={item.id} whatContent="리스트"/>
           </div>

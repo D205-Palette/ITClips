@@ -73,7 +73,7 @@ const ListItem: FC<Props> = ({ list, whatMenu }) => {
             }
           >
             <img
-              src={list.image==='default' ? noImg : `${list.image}`}
+              src={list.image==='default' ? require(`../../assets/images/noContent${list.id % 6}.png`) : `${list.image}`}
               alt="Movie"
               className=" w-full h-full object-cover"
             />

@@ -45,7 +45,7 @@ const AsideRoadmap: React.FC<Props> = ({ data }) => {
       <div className="flex flex-col">
         {/* 북마크리스트 썸네일 */}
 
-        <ImageContainer src={data.image} whatContent="로드맵" />
+        <ImageContainer src={data.image} whatContent="로드맵" id={data.id}/>
 
         <Link
           to={`/user/${data.userId}`}

@@ -49,7 +49,7 @@ const AsideBookmarkList : React.FC<ItemProps> = ({ bookmarkList }) => {
       {<KebabDropdown whatMenu="리스트상세" id={bookmarkList.id} users={bookmarkList.users}/> }
       </div>
       {/* 북마크리스트 썸네일 */}
-      <ImageContainer src={bookmarkList.image} whatContent="북마크리스트"/>
+      <ImageContainer src={bookmarkList.image} whatContent="북마크리스트" id={bookmarkList.id}/>
       {/* 북마크리스트 정보 */}
       <ItemDetailInfo {...bookmarkList} />
       {/* 태그 창 */}

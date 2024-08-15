@@ -91,7 +91,13 @@ const FollowingItem: React.FC<Props> = ({ items }) => {
             className="flex items-center space-x-2 md:space-x-4 p-2 md:p-4 rounded-lg shadow"
           >
             <img
-              src={item.profileImage === "default" ? noImg : item.profileImage}
+              src={
+                item.profileImage === "default" ||
+                item.profileImage === null ||
+                item.profileImage === undefined
+                  ? require(`../../assets/images/noProfile${item.toUserId % 6}.jpg`)
+                  : item.profileImage
+              }
               alt={item.nickname}
               className="w-14 h-14 md:w-20 md:h-20 object-cover rounded"
             />

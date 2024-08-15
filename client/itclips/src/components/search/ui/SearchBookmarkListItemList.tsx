@@ -90,7 +90,7 @@ const SearchBookmarkListItemList: React.FC<BookmarkListItemProps> = ({ item }) =
         to={`/bookmarklist/${item.id}`}
         className="flex items-center space-x-2 md:space-x-4 flex-grow"
       >
-        <img src={item.image === "default" ? noImage : item.image} alt={item.title} className="w-14 h-14 md:w-20 md:h-20 object-cover rounded" />
+        <img src={item.image === "default" ? require(`../../../assets/images/noContent${item.id % 6}.png`) : item.image} alt={item.title} className="w-14 h-14 md:w-20 md:h-20 object-cover rounded" />
         <div className="flex-grow">
           <h3 className="text-sm md:text-lg font-semibold">{item.title}</h3>
           <div className="flex space-x-2 md:space-x-4 mt-1 md:mt-2">

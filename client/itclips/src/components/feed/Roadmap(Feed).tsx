@@ -108,7 +108,7 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
         >
           <div className="w-10 h-10 border rounded-full overflow-hidden">
             <img
-              src={roadmap.userImage === "default" ? noImg : roadmap.userImage}
+              src={roadmap.userImage === "default" ? require(`../../assets/images/noProfile${roadmap.userId! % 6}.jpg`) : roadmap.userImage}
               className="w-full h-full object-cover"
               alt="로드맵유저이미지"
             />
@@ -127,7 +127,7 @@ const RoadMap: FC<Props> = ({ roadmap }) => {
       <figure className="border rounded-xl mx-5 overflow-hidden h-64 bg-sky-100">
         <img
           className="w-full h-full object-contain "
-          src={roadmap.image === "default" ? noImg : roadmap.image}
+          src={roadmap.image === "default" ? require(`../../assets/images/noContent${roadmap.id! % 6}.png`) : roadmap.image}
           alt="RoadmapImg"
         />
       </figure>

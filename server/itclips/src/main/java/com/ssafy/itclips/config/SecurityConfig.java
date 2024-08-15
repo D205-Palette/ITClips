@@ -69,6 +69,7 @@ public class SecurityConfig {
         configuration.addAllowedOrigin("http://127.0.0.1:5500");
         configuration.addAllowedOrigin("https://i11d205.p.ssafy.io");  // 추가된 출처
         configuration.addAllowedOrigin("chrome-extension://fgpcpkcofdhgpjdecpbnamiebjnnkjij");
+        configuration.addAllowedOrigin("chrome-extension://fgcdcfhkkaccjjlfcphnbhdcgkfiofln");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

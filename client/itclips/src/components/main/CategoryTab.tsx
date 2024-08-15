@@ -82,7 +82,6 @@ const CategoryTab: FC<Props> = ({
 
     const createCategory = (): void => {
       // 카테고리 추가 api
-      console.log("ASdf");
       axios({
         method: "post",
         url: `${API_BASE_URL}/api/category/add/${listId}`,

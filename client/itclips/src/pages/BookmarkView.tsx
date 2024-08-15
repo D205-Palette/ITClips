@@ -101,6 +101,7 @@ const MyBookmark = () => {
         });
     }
     fetchData();
+    window.scrollTo(0,0)
   }, [isBookmarkListChange]);
 
   // 카테고리 삭제용 모달

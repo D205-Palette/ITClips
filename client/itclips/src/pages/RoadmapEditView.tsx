@@ -18,7 +18,6 @@ import { RoadmapDetailType } from "../types/RoadmapType";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
-import noImg from "../assets/images/noImg.gif";
 import FileResizer from "react-image-file-resizer";
 import toastStore from "../stores/toastStore";
 // 타입 정의
@@ -406,15 +405,13 @@ const RoadmapEditView: React.FC = () => {
                           }}
                         >
                           <div className="flex items-center">
-                            {item.image?.trim() !== "" ? (
+                            
                               <img
-                                src={item.image}
+                                src={item.image=== "default"? require(`../assets/images/noContent${item.id % 6}.png`): item.image}
                                 alt="img"
                                 className="w-16 h-16 border object-cover mr-4"
                               />
-                            ) : (
-                              <div className="w-16 h-16 border bg-base-100 mr-4"></div>
-                            )}
+                           
                             <div className="flex w-full items-center justify-between me-3">
                               <div className="w-full">
                                 <h4 className="text-lg font-bold line-clamp-1">
@@ -456,8 +453,8 @@ const RoadmapEditView: React.FC = () => {
                         <div className="border w-32 h-32 bg-gray-200 rounded-lg overflow-hidden">
                           {previewImageUrl === "default" ||
                           previewImageUrl === null ? (
-                            <img
-                              src={noImg}
+                            roadmapItem&&<img
+                              src={require(`../assets/images/noContent${roadmapItem.id % 6}.png`)}
                               alt="noImg"
                               className=" w-full h-full object-cover"
                             />
@@ -567,9 +564,9 @@ const RoadmapEditView: React.FC = () => {
                                   <div className="me-3 font-bold">
                                     {index + 1}
                                   </div>
-                                  {item.image ? (
+                                  {item.image?.trim() !== "" ? (
                                     <img
-                                      src={item.image}
+                                      src={item.image==='default' ? require(`../assets/images/noContent${Number(item.originalId) % 6}.png`):item.image}
                                       alt="img"
                                       className="w-16 h-16 border object-cover mr-4"
                                     />
@@ -578,6 +575,7 @@ const RoadmapEditView: React.FC = () => {
                                   )}
                                   <div className="flex w-full items-center justify-between me-3">
                                     <div>
+                                      
                                       <h4 className="text-lg font-bold line-clamp-1">
                                         {item.title}
                                       </h4>

@@ -396,7 +396,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
                   <div className="w-20 h-20 border bg-gray-200 rounded-full overflow-hidden">
                     {profileImage === "default" || profileImage === null ? (
                       <img
-                        src={noImg}
+                        src={require(`../../../assets/images/noProfile${userInfo.id! % 6}.jpg`)}
                         alt="noImg"
                         className="w-full h-full object-cover"
                       />
@@ -637,7 +637,7 @@ const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
                     <div className="w-24 h-24 border bg-gray-200 rounded-full overflow-hidden">
                       {profileImage === "default" || profileImage === null ? (
                         <img
-                          src={noImg}
+                          src={require(`../../../assets/images/noProfile${userInfo.id! % 6}.jpg`)}
                           alt="noImg"
                           className="w-full h-full object-cover"
                         />

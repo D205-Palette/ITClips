@@ -1,6 +1,3 @@
-import { authStore } from "../../../stores/authStore";
-import noImg from "../../../assets/images/noImg.gif";
-
 // ImageContainer.tsx는 유저, 북마크리스트, 로드맵의 프로필 이미지를 출력하는 컴포넌트
 
 interface ImageSrc {

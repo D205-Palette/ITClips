@@ -220,7 +220,7 @@ const MoveBookmarkModal: FC<Move> = ({
           onClick={() => clickEvent(list.id)}
         >
           <div className="h-20 w-20 overflow-hidden rounded-xl ">
-            <img src={list.image==="default" ? noImg : list.image }  className="object-cover h-full w-full rounded-xl " />
+            <img src={list.image==="default" ? require(`../../../assets/images/noContent${list.id % 6}.png`) : list.image }  className="object-cover h-full w-full rounded-xl " />
           </div>
           <h4 className="flex flex-row items-center w-4/5 ps-5">
             {list.title}

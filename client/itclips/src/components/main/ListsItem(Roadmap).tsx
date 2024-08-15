@@ -51,7 +51,7 @@ const ListItem: FC<Props> = ({ list,changeCount,count,canEdit }) => {
             className="hover:cursor-pointer  rounded-2xl w-24"
           >
             <img              
-              src={list.bookmarkListRoadmapDTO.image === "default" ? require(`../../assets/images/noContent${list.id % 6}.png`) : list.bookmarkListRoadmapDTO.image}
+              src={list.bookmarkListRoadmapDTO.image === "default" ? require(`../../assets/images/noContent${list.bookmarkListRoadmapDTO.id % 6}.png`) : list.bookmarkListRoadmapDTO.image}
               alt="noImage"
               className="size-24  "
             />

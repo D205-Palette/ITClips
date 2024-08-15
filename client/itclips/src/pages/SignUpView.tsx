@@ -93,6 +93,11 @@ const {isDark} = darkModeStore()
     "릴리즈 매니저",
     "기타",
   ];
+useEffect(()=>{
+  window.scrollTo(0,0)
+
+},[])
+
 
   // 이메일 형식 검증
   useEffect(() => {

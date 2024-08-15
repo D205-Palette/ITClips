@@ -376,7 +376,7 @@ const {globalNotification, setGlobalNotification} = toastStore()
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
-                          className="mx-1 mb-2 p-2 bg-base-100 border border-gray-300 rounded-lg shadow-sm w-full"
+                          className=" mb-2 p-2 bg-base-100 border border-gray-300 rounded-lg shadow-sm w-full"
                           style={{
                             ...provided.draggableProps.style,
                             ...(snapshot.isDragging
@@ -387,7 +387,7 @@ const {globalNotification, setGlobalNotification} = toastStore()
                           <div className="flex items-center w-11/12">
                             {item.image?.trim() !== "" ? (
                               <img
-                                src={item.image==='default'? noImg : item.image}
+                                src={item.image==='default'? require(`../assets/images/noContent${item.id % 6}.png`) : item.image}
                                 alt="img"
                                 className="w-16 h-16 border object-cover mr-4"
                               />
@@ -537,7 +537,7 @@ const {globalNotification, setGlobalNotification} = toastStore()
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
-                                  className="mx-1 mb-2 p-2 bg-base-100 border border-gray-300 rounded-lg shadow-sm w-full"
+                                  className=" mb-2 p-2 bg-base-100 border border-gray-300 rounded-lg shadow-sm w-full"
                                   style={{
                                     ...provided.draggableProps.style,
                                     ...(snapshot.isDragging
@@ -551,7 +551,7 @@ const {globalNotification, setGlobalNotification} = toastStore()
                                     </div>
                                     {item.image?.trim() !== "" ? (
                                       <img
-                                        src={item.image}
+                                        src={item.image==='default' || item.image===null? require(`../assets/images/noContent${Number(item.originalId) % 6}.png`):item.image}
                                         alt="img"
                                         className="w-16 h-16 border object-cover mr-4"
                                       />

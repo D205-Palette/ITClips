@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import KebabDropdown from "./KebabDropdown(Feed)";
 import darkModeStore from "../../stores/darkModeStore";
 import type { BookmarkListSumType } from "../../types/BookmarkListType";
-import noImg from "../../assets/images/noImg.gif";
 import axios from "axios";
 import { API_BASE_URL } from "../../config";
 import { authStore } from "../../stores/authStore";

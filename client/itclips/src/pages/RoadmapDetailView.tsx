@@ -47,6 +47,7 @@ const RoadmapView = () => {
         });
     }
     fetchData();
+    window.scrollTo(0,0)
   }, []);
 
   const params = useParams();
@@ -157,7 +158,7 @@ const RoadmapView = () => {
               <div className={" fixed top-0 right-0 "}>
                 {congratulation && (
                   <Lottie
-                    loop={true}
+                    loop={false}
                     animationData={CongratulationAnimation}
                     height={300}
                     width={300}

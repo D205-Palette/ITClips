@@ -6,7 +6,6 @@ import AsideMessageDetail from "./AsideMessageDetail";
 import AsideStartNewMessage from "./AsideStartNewMessage";
 
 // stores
-import darkModeStore from "../../stores/darkModeStore";
 import { asideStore } from "../../stores/asideStore";
 import { authStore } from "../../stores/authStore";
 import { chatStore } from "../../stores/chatStore";
@@ -16,7 +15,6 @@ const MessageLayout = () => {
   const userInfo = authStore(state => state.userInfo);
 
   const [showInvite, setShowInvite] = useState(null);
-  const isDark = darkModeStore(state => state.isDark);
   const selectedChat = asideStore(state => state.selectedChat);
   const isMessageOpen = asideStore(state => state.isMessageOpen);
   const toggleMessage = asideStore(state => state.toggleMessage);

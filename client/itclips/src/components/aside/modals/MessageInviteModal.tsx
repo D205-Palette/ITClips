@@ -195,7 +195,7 @@ const MessageInviteModal: React.FC<MessageInviteModalProps> = ({ roomId, setNoti
                     className="cursor-pointer hover:bg-gray-100 p-2"
                   >
                     <div className="flex items-center">
-                      <img src={user.image==='default'? noImg : user.image} alt={user.nickname} className="w-8 h-8 rounded-full mr-2 border-2" />
+                      <img src={user.image==='default'||user.image===null? require(`../../../assets/images/noProfile${user.id % 6}.jpg`) : user.image} alt={user.nickname} className="w-8 h-8 rounded-full mr-2 border-2" />
                       <div>
                         <span className="font-bold">{user.nickname}</span>
                         <span className="text-sm text-gray-600 ml-2">{user.email}</span>

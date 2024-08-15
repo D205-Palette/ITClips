@@ -164,7 +164,7 @@ const AsideStartNewMessage: React.FC<InviteProps> = ({ onStartChat, onBack }) =>
                 onClick={() => handleAddInviteUser(user)}
               >
                 <div className="flex items-center">
-                  <img src={user.image} alt={user.nickname} className="w-8 h-8 rounded-full mr-2 border-2 border-sky-300" />
+                  <img src={user.image==='default'||user.image==null?require(`../../assets/images/noProfile${user.id % 6}.jpg`):user.image} alt={user.nickname} className="w-8 h-8 rounded-full mr-2 border-2 border-sky-300" />
                   <div>
                     <span className="font-bold text-sky-800">{user.nickname}</span>
                     <span className="text-sm text-sky-600 ml-2">{user.email}</span>

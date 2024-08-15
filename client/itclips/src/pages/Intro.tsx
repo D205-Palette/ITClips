@@ -50,6 +50,7 @@ const Intro: React.FC = () => {
       if (refStartPrompt.current) observer.unobserve(refStartPrompt.current);
       if (refStartButton.current) observer.unobserve(refStartButton.current);
     };
+    window.scrollTo(0,0)
   }, []);
 
   return (

@@ -277,7 +277,6 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
     setImageState("delete"); // 등록할 이미지 상태 변경
   };
 
-  console.log(tempUser);
 
   if (!isOpen) return null;
 
@@ -309,7 +308,7 @@ const BookmarkListEditModal: React.FC<EditModalProps> = ({
                     {previewImageUrl === "default" ||
                       previewImageUrl === null ? (
                       <img
-                        src={noImg}
+                        src={require(`../../../assets/images/noContent${id % 6}.png`)}
                         alt="noImg"
                         className=" w-full h-full object-cover"
                       />

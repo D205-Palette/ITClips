@@ -87,7 +87,7 @@ const CategorySingleTab: FC<Props> = ({
           />
         </div>{" "}
         
-        <div onClick={() => {changeCategory(tempCategory); console.log(tempCategory.categoryName);}}>
+        <div onClick={() => changeCategory(tempCategory)}>
           {whatCategory.categoryName === tempCategory.categoryName ? (
             <FaCheck color="white" size={18} />
           ) : (

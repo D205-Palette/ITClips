@@ -97,9 +97,9 @@ const MyRoadmap = () => {
       {/* 로드맵 추가 버튼 */}
       {canEdit ? (
         <button
-          className="fixed bottom-24 right-16 z-20  justify-end w-full hidden md:flex"
+          className="fixed bottom-24 right-16 z-20  justify-end hidden md:flex"
           onClick={() => navigate("/roadmap/create")}
-        >
+        > 
           <FaPlus color="skyblue" size={56} />
         </button>
       ) : (

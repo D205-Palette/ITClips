@@ -52,6 +52,8 @@ SSAFY 11기 공통 PJT / 구미 2반 5조 웹디자인<br/>
 
 ✔ [시스템 아키텍처]()
 
+✔ [시퀀스 다이어그램](https://app.diagrams.net/?src=about#G1g41a_rPm7Up28uEKNgInYufhT956nfHS#%7B%22pageId%22%3A%22h0dIDVxn9Fxx7efEZCBf%22%7D)
+
 ✔ [프로젝트 일정]()
 
 ✔ [최종 발표 자료]()

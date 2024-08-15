@@ -48,6 +48,10 @@ SSAFY 11기 공통 PJT / 구미 2반 5조 웹디자인<br/>
 
 ✔ [E-R Diagram](https://www.erdcloud.com/d/N4w6FLmAhKAhsXC5e)
 
+✔ [시퀀스 다이어그램]()
+
+✔ [E2E테스트 케이스](resources/ITClips_테스트케이스.xlsx)
+
 ✔ [시스템 아키텍처](resources/image/시스템 아키텍처.PNG)
 
 ✔ [프로젝트 일정](https://roomy-wing-ac0.notion.site/d9124008d225496c8a5ea84790a87b8a?pvs=4)

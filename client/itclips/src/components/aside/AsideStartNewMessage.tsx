@@ -117,11 +117,8 @@ const AsideStartNewMessage: React.FC<InviteProps> = ({ onStartChat, onBack }) =>
       } else {
         const userIds = [myInfo.id, ...inviteUsers.map(user => user.id)];
 
-        // 그룹 채팅방 이름 생성
-        const roomName = userIds.join(',');
-
         const result = await createGroupChatRoom({
-          name: `그룹채팅방(${roomName})`,
+          name: `${myInfo.nickname}님의 그룹채팅방`,
           userIds: userIds
         });
         roomId = result.data.roomId;

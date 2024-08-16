@@ -154,7 +154,7 @@ const AsideProfile = () => {
           <ImageContainer 
             src={urlUserInfo?.image ? urlUserInfo.image : 'default'} 
             whatContent="프로필"
-            id={urlUserId!}
+            id={urlUserId? urlUserId :userId }
           />
         </div>
 

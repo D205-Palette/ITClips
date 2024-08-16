@@ -41,7 +41,6 @@ public class BookmarkListComment {
     @Column(name = "contents", nullable = false)
     private String contents;
 
-    @NotNull
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;

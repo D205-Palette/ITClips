@@ -21,4 +21,8 @@ public class BookmarkListDTO {
     private List<String> categories;
     private List<String> users;
     private List<TagDTO> tags;
+
+    public void changeImageToS3FileName(String fileName) {
+        this.image=fileName;
+    }
 }

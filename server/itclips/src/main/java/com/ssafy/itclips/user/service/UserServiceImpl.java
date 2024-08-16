@@ -1,7 +1,14 @@
 package com.ssafy.itclips.user.service;
 
+import com.ssafy.itclips.error.CustomException;
+import com.ssafy.itclips.error.ErrorCode;
+import com.ssafy.itclips.follow.repository.FollowRepository;
+import com.ssafy.itclips.global.file.DataResponseDto;
+import com.ssafy.itclips.global.file.FileService;
 import com.ssafy.itclips.global.jwt.JwtToken;
 import com.ssafy.itclips.global.jwt.JwtTokenProvider;
+import com.ssafy.itclips.user.dto.UserInfoDTO;
+import com.ssafy.itclips.user.dto.UserInfoDetailDTO;
 import com.ssafy.itclips.user.entity.*;
 import com.ssafy.itclips.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,14 +21,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Objects;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +43,8 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
+    private final FollowRepository followRepository;
+    private final FileService fileService;
 
     @Transactional
     @Override
@@ -83,16 +90,31 @@ public class UserServiceImpl implements UserService {
         return new LoginResponse(jwtToken.getAccessToken(), jwtToken.getRefreshToken(), user.getId());
     }
 
+//    @Transactional
+//    @Override
+//    public User oauthSignup(OauthSignupForm form) throws IOException {
+//        User user = userRepository.findByEmail(form.getEmail())
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."));
+//
+//        user.setGender(form.getGender());
+//        user.setBirth(form.getBirth());
+//
+//        setImageUrl(profileImage, user);
+//
+//        userRepository.save(user);
+//        return user;
+//    }
+
     @Transactional
     @Override
-    public User oauthSignup(OauthSignupForm form, MultipartFile profileImage) throws IOException {
-        User user = userRepository.findByEmail(form.getEmail())
+    public User oauthSignup(Long userId, OauthSignupForm form) throws IOException {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."));
 
-        user.setGender(form.getGender());
+        user.setNickname(form.getNickname());
         user.setBirth(form.getBirth());
-
-        setImageUrl(profileImage, user);
+        user.setGender(form.getGender());
+        user.setJob(form.getJob());
 
         userRepository.save(user);
         return user;
@@ -105,29 +127,23 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void updateProfileImage(String email, MultipartFile profileImage) throws IOException {
+    public DataResponseDto updateProfileImage(String email, String profileImage) throws IOException {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."));
+        // 이미지 S3 경로로 저장
+        boolean isDefaultImage = "default".equals(profileImage);
 
-        setImageUrl(profileImage, user);
+        DataResponseDto imageInfo = isDefaultImage ?
+                DataResponseDto.builder()
+                        .image(profileImage)
+                        .url(profileImage)
+                        .build() :
+                DataResponseDto.of(fileService.getPresignedUrl("images", profileImage, true));
+        user.setImageToS3FileName(imageInfo.getImage());
         userRepository.save(user);
+        return imageInfo;
     }
 
-    private void setImageUrl(MultipartFile profileImage, User user) throws IOException {
-        String baseUrl = "http://localhost:80/images/profile/";
-
-        if (profileImage != null && !profileImage.isEmpty()) {
-            String filename = generateUniqueFilename(Objects.requireNonNull(profileImage.getOriginalFilename()));
-            String filePath = Paths.get(uploadPath, filename).toString();
-            Files.copy(profileImage.getInputStream(), Paths.get(filePath));
-            user.setProfileImage(baseUrl + filename);
-        } else {
-            String defaultImageFilename = generateUniqueFilename("profile.png");
-            String filePath = Paths.get(uploadPath, defaultImageFilename).toString();
-            Files.copy(Paths.get(defaultProfileImage), Paths.get(filePath));
-            user.setProfileImage(baseUrl + defaultImageFilename);
-        }
-    }
 
     @Override
     public Long findIDByEmail(String email) {
@@ -155,6 +171,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Long getUserIdByNickname(String nickname) {
+        User user = getUserByNickname(nickname);
+        return user != null ? user.getId() : null;
+    }
+
+
+    @Override
     public User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."));
@@ -177,6 +200,30 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
+    public UserInfoDTO updateUserById(Long userId, UserInfoDTO updatedUser) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."));
+
+        user.setNickname(updatedUser.getNickname());
+        user.setBirth(updatedUser.getBirth());
+        user.setJob(updatedUser.getJob());
+        user.setGender(updatedUser.getGender());
+        user.setDarkMode(updatedUser.getDarkMode());
+        user.setBio(updatedUser.getBio());
+
+        User savedUser = userRepository.save(user);
+
+        return UserInfoDTO.builder()
+                .nickname(savedUser.getNickname())
+                .birth(savedUser.getBirth())
+                .job(savedUser.getJob())
+                .gender(savedUser.getGender())
+                .bio(savedUser.getBio())
+                .build();
+    }
+
+    @Transactional
+    @Override
     public boolean deleteUserByEmail(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."));
@@ -185,9 +232,54 @@ public class UserServiceImpl implements UserService {
         return !userRepository.existsByEmail(email);
     }
 
+    @Transactional
+    @Override
+    public boolean deleteUserById(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."));
+
+        userRepository.delete(user);
+        return !userRepository.existsById(userId);
+    }
+
     @Override
     public boolean nicknameCheck(String nickname) {
         return userRepository.existsByNickname(nickname);
+    }
+
+    @Override
+    public List<UserInfoDetailDTO> searchUsers(Integer page, String title, Long userId) throws RuntimeException {
+        User currentUser = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        List<User> users = userRepository.findUserWithNickName(title, page);
+        if (users.isEmpty()) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        return users.stream()
+                .filter(targetUser -> !targetUser.equals(currentUser))
+                .map(targetUser -> convertToUserInfoDetailDTO(targetUser, currentUser))
+                .collect(Collectors.toList());
+    }
+
+    private UserInfoDetailDTO convertToUserInfoDetailDTO(User targetUser, User currentUser) {
+        Long followerCount = followRepository.countByTo(targetUser);
+        Long followingCount = followRepository.countByFrom(targetUser);
+        String imageUrl = getImageUrl(targetUser);
+        UserInfoDetailDTO userInfo = targetUser.convertToUserInfoDetailDTO(followingCount, followerCount,imageUrl);
+        boolean isFollowing = followRepository.existsByFromUserAndToUser(currentUser, targetUser);
+        boolean isFollowers = followRepository.existsByFromUserAndToUser(targetUser, currentUser);
+        userInfo.setFollowStatus(isFollowing, isFollowers);
+        return userInfo;
+    }
+
+    private String getImageUrl(User targetUser) {
+        String imageUrl = targetUser.getProfileImage();
+        if(imageUrl != null && !"default".equals(imageUrl) ) {
+            imageUrl = fileService.getPresignedUrl("images", targetUser.getProfileImage(), false).get("url");
+        }
+        return imageUrl;
     }
 
     // 파일 이름이 중복되지 않도록 고유한 파일 이름 생성

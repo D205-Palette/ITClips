@@ -24,25 +24,19 @@ public class OAuthAttributes {
 
     public static OAuthAttributes of(String registrationId, String userNameAttributeName, Map<String, Object> attributes) {
         if ("google".equals(registrationId)) {
-            System.out.println("Google Login !!");
             return ofGoogle(userNameAttributeName, attributes);
         } else if ("naver".equals(registrationId)) {
-            System.out.println("Naver Login !!");
             return ofNaver(userNameAttributeName, attributes);
         } else if ("kakao".equals(registrationId)) {
-            System.out.println("Kakao Login !!");
             return ofKakao(userNameAttributeName, attributes);
         } else if ("github".equals(registrationId)) {
-            System.out.println("Github Login !!");
             return ofGithub(userNameAttributeName, attributes);
         }
         // other providers
-        System.out.println("Null... ㅠㅠ");
         return null;
     }
 
     private static OAuthAttributes ofGoogle(String userNameAttributeName, Map<String, Object> attributes) {
-        System.out.println(attributes.toString());
         return OAuthAttributes.builder()
                 .nameAttributeKey(userNameAttributeName)
                 .oauth2UserInfo(new GoogleOAuth2UserInfo(attributes))
@@ -51,7 +45,6 @@ public class OAuthAttributes {
     }
 
     private static OAuthAttributes ofNaver(String userNameAttributeName, Map<String, Object> attributes) {
-        System.out.println(attributes.toString());
         return OAuthAttributes.builder()
                 .nameAttributeKey(userNameAttributeName)
                 .oauth2UserInfo(new NaverOAuth2UserInfo(attributes))
@@ -60,7 +53,6 @@ public class OAuthAttributes {
     }
 
     private static OAuthAttributes ofKakao(String userNameAttributeName, Map<String, Object> attributes) {
-        System.out.println(attributes.toString());
         return OAuthAttributes.builder()
                 .nameAttributeKey(userNameAttributeName)
                 .oauth2UserInfo(new KakaoOAuth2UserInfo(attributes))
@@ -69,7 +61,6 @@ public class OAuthAttributes {
     }
 
     private static OAuthAttributes ofGithub(String userNameAttributeName, Map<String, Object> attributes) {
-        System.out.println(attributes.toString());
         return OAuthAttributes.builder()
                 .nameAttributeKey(userNameAttributeName)
                 .oauth2UserInfo(new GithubOAuth2UserInfo(attributes))
@@ -81,8 +72,8 @@ public class OAuthAttributes {
         return User.builder()
                 .provider(provider)
                 .email(oauth2UserInfo.getEmail())
-                .nickname(oauth2UserInfo.getNickname())
-                .profileImage(oauth2UserInfo.getImageUrl())
+//                .nickname(oauth2UserInfo.getNickname())
+//                .profileImage(oauth2UserInfo.getImageUrl())
                 .password(oauth2UserInfo.getPassword())
                 .role(Role.USER)
                 .build();

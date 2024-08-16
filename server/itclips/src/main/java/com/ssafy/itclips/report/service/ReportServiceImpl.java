@@ -59,7 +59,7 @@ public class ReportServiceImpl implements ReportService {
         User user = userRepository.findById(userId).
                 orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         BookmarkList bookmarkList = bookmarkListRepository.findById(listId)
-                .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_LIKE_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND));
         BookmarkListReport existBookmarkListReport = bookmarkListReportRepository.findByBookmarkListIdAndUserId(listId,userId);
         if(existBookmarkListReport != null) {
             throw new CustomException(ErrorCode.REPORT_ALREADY_EXIST);

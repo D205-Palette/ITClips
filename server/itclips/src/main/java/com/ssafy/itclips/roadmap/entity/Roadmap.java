@@ -1,5 +1,6 @@
 package com.ssafy.itclips.roadmap.entity;
 
+import com.ssafy.itclips.global.rank.RankDTO;
 import com.ssafy.itclips.roadmap.dto.RoadmapRequestDTO;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
@@ -41,20 +42,19 @@ public class Roadmap {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Lob
+    @Size(max = 511)
     @Column(name = "description")
     private String description;
 
-    @NotNull
     @CreationTimestamp
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @Size(max = 255)
+    @Size(max = 511)
     @Column(name = "image")
     private String image;
 
@@ -62,6 +62,10 @@ public class Roadmap {
     @ColumnDefault("0")
     @Column(name = "is_public", nullable = false)
     private Byte isPublic;
+
+    @Column(name = "hit")
+    private Long hit;
+
 
     //step
     @OneToMany(mappedBy = "roadmap")
@@ -76,7 +80,7 @@ public class Roadmap {
     private List<RoadmapLike> roadmapLikeList = new ArrayList<RoadmapLike>();
 
     @Builder
-    public Roadmap(Long id, User user, Long origin , String title, String description,String image, Byte isPublic) {
+    public Roadmap(Long id, User user, Long origin , String title, String description,String image, Byte isPublic,Long hit) {
         this.id = id;
         this.user = user;
         this.origin = origin;
@@ -86,13 +90,25 @@ public class Roadmap {
         this.image = image;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
+        this.hit = hit;
     }
 
     public void updateRoadmap(RoadmapRequestDTO roadmapRequestDTO) {
         this.title = roadmapRequestDTO.getTitle();
         this.description = roadmapRequestDTO.getDescription();
         this.isPublic = roadmapRequestDTO.getIsPublic();
-        this.image = roadmapRequestDTO.getImage();
+    }
+
+    public void updateRoadmapImage(String image) {
+        this.image = image;
+    }
+
+    public RankDTO toRankDTO(Roadmap roadmap){
+        return RankDTO.builder()
+                .id(roadmap.getId())
+                .title(roadmap.getTitle())
+                .count(roadmap.getHit())
+                .build();
     }
 
 }

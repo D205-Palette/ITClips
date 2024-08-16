@@ -67,16 +67,19 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         userRepository.save(findUser);
 
         // HTTP response 헤더에 Token 설정
-        response.setHeader("Authorization", jwtToken.getGrantType() + " " + jwtToken.getAccessToken());
-        response.setHeader("Authorization-Refresh", jwtToken.getRefreshToken());
-        response.setHeader("userId", String.valueOf(findUser.getId()));
-//        response.sendRedirect("oauth2/sign-up"); // 프론트의 회원가입 추가 정보 입력 폼으로 리다이렉트
-        response.sendRedirect("oauth/callback/kakao"); // 프론트의 회원가입 추가 정보 입력 폼으로 리다이렉트
+//        response.setHeader("Authorization", jwtToken.getGrantType() + " " + jwtToken.getAccessToken());
+//        response.setHeader("Authorization-Refresh", jwtToken.getRefreshToken());
+//        response.setHeader("userId", String.valueOf(findUser.getId()));
+        String targetUrl = String.format("https://i11d205.p.ssafy.io/oauth2/callback?accessToken=%s&refreshToken=%s&userId=%d",
+                jwtToken.getAccessToken(),
+                jwtToken.getRefreshToken(),
+                findUser.getId());
+        response.sendRedirect(targetUrl);   // 프론트의 회원가입 추가 정보 입력 폼으로 리다이렉트
 
         // target URl, redirect 설정
         clearAuthenticationAttributes(request, response);
-        String targetUrl = determineTargetUrl(request, response);
-        getRedirectStrategy().sendRedirect(request, response, targetUrl);
+//        String targetUrl = determineTargetUrl(request, response);
+//        getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response) {

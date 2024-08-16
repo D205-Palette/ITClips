@@ -1,6 +1,7 @@
 package com.ssafy.itclips.tag.controller;
 
 import com.ssafy.itclips.tag.dto.TagDTO;
+import com.ssafy.itclips.tag.dto.UserTagDTO;
 import com.ssafy.itclips.tag.entity.Tag;
 import com.ssafy.itclips.tag.service.TagService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -47,13 +48,8 @@ public class TagController {
             @ApiResponse(responseCode = "200", description = "태그를 성공적으로 조회했습니다."),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
     })
-    public ResponseEntity<List<Tag>> getOriginTags() {
-        List<Tag> tags = null;
-        try {
-            tags = tagService.getOriginTags();
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<?> getOriginTags() {
+        List<UserTagDTO> tags = tagService.getOriginTags();
         return new ResponseEntity<>(tags, HttpStatus.OK);
     }
 
@@ -63,13 +59,8 @@ public class TagController {
             @ApiResponse(responseCode = "200", description = "태그를 성공적으로 조회했습니다."),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
     })
-    public ResponseEntity<List<Tag>> getAllTags() {
-        List<Tag> tags = null;
-        try {
-            tags = tagService.getAllTags();
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<?> getAllTags() {
+        List<UserTagDTO> tags = tagService.getAllTags();
         return new ResponseEntity<>(tags, HttpStatus.OK);
     }
 

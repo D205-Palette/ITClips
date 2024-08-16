@@ -4,6 +4,7 @@ import com.ssafy.itclips.bookmark.dto.BookmarkDetailDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListDetailDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
 import com.ssafy.itclips.category.dto.CategoryParamDTO;
+import com.ssafy.itclips.global.rank.RankDTO;
 import com.ssafy.itclips.report.entity.BookmarkListReport;
 import com.ssafy.itclips.bookmark.entity.Bookmark;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListDTO;
@@ -49,7 +50,7 @@ public class BookmarkList {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Lob
+    @Size(max = 511)
     @Column(name = "description")
     private String description;
 
@@ -61,9 +62,12 @@ public class BookmarkList {
     @Column(name = "updated_at")
     private LocalDateTime  updatedAt;
 
-    @Size(max = 255)
+    @Size(max = 511)
     @Column(name = "image")
     private String image;
+
+    @Column(name = "hit")
+    private Long hit;
 
     @NotNull
     @ColumnDefault("0")
@@ -104,6 +108,7 @@ public class BookmarkList {
         this.description = description;
         this.image = image;
         this.isPublic = isPublic;
+        this.hit = 0L;
     }
 
     public void addCategory(Category category) {
@@ -114,41 +119,62 @@ public class BookmarkList {
     public void updateBookmarkList(BookmarkListDTO bookmarkListDto) {
         this.title = bookmarkListDto.getTitle();
         this.description = bookmarkListDto.getDescription();
-        this.image = bookmarkListDto.getImage();
         this.isPublic = bookmarkListDto.getIsPublic();
     }
 
+    public void updateBookmarkListImage(String image) {
+        this.image = image;
+    }
 
-    public BookmarkListResponseDTO makeBookmarkListResponseDTO(Integer bookmarkCount, Integer likeCount, Boolean isLiked,
+
+    public BookmarkListResponseDTO makeBookmarkListResponseDTO(Integer bookmarkCount, Integer likeCount, Boolean isLiked,String imageUrl,
                                                                Set<TagDTO> tags, List<UserTitleDTO> users) {
         return BookmarkListResponseDTO.builder()
                 .id(this.id)
+                .userId(this.user.getId())
                 .title(this.title)
-                .image(this.image)
+                .image(imageUrl)
                 .description(this.description)
                 .bookmarkCount(bookmarkCount)
                 .users(users)
                 .tags(tags)
                 .isLiked(isLiked)
                 .likeCount(likeCount)
+                .createdAt(this.createdAt)
+                .isPublic(this.isPublic)
                 .build();
     }
 
-    public BookmarkListDetailDTO makeBookmarkListDetailDTO(Integer likeCount, Integer scrapCount, Boolean isLiked, Boolean isScraped,
+    public BookmarkListDetailDTO makeBookmarkListDetailDTO(Integer likeCount, Integer scrapCount, Boolean isLiked, Boolean isScraped, String imageUrl,
                                                            List<CategoryParamDTO> categories, Set<TagDTO> tags, List<UserTitleDTO> users, List<BookmarkDetailDTO> bookmarks) {
         return BookmarkListDetailDTO.builder()
                 .id(this.id)
+                .userId(this.user.getId())
                 .title(this.title)
                 .description(this.description)
                 .likeCount(likeCount)
                 .scrapCount(scrapCount)
-                .image(this.image)
+                .image(imageUrl)
                 .isLiked(isLiked)
                 .isScraped(isScraped)
                 .categories(categories)
                 .tags(tags)
                 .users(users)
                 .bookmarks(bookmarks)
+                .hit(this.hit)
+                .isPublic(this.isPublic)
                 .build();
+    }
+
+    public RankDTO toRankDTO() {
+        return RankDTO.builder()
+                .id(this.id)
+                .title(this.title)
+                .count(this.hit)
+                .build();
+    }
+
+    public void upHit() {
+        this.hit++;
     }
 }

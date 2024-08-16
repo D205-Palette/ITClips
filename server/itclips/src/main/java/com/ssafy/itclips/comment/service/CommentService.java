@@ -15,4 +15,6 @@ public interface CommentService {
     void updateComment(Long userId, Long commentId, CommentDTO commentDTO) throws RuntimeException;
 
     List<CommentResponseDTO> getComments(Long listId) throws RuntimeException;
+
+    Integer getCommentCount(Long listId) throws RuntimeException;
 }

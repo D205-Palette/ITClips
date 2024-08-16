@@ -4,6 +4,9 @@ import com.ssafy.itclips.bookmarklist.dto.BookmarkListDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListDetailDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
 import com.ssafy.itclips.bookmarklist.service.BookmarkListService;
+import com.ssafy.itclips.global.file.DataResponseDto;
+import com.ssafy.itclips.global.rank.RankDTO;
+import com.ssafy.itclips.tag.dto.TagSearchDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -34,8 +37,9 @@ public class BookmarkListController {
             @ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없습니다."),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
     })
-    public ResponseEntity<?> getPersonalLists(@PathVariable @Parameter(description = "유저 정보", required = true) Long userId) {
-        List<BookmarkListResponseDTO> lists = bookmarkListService.getLists(userId,false);
+    public ResponseEntity<?> getPersonalLists(@PathVariable @Parameter(description = "유저 정보", required = true) Long userId,
+                                              @RequestParam @Parameter(description = "요청 유저 정보", required = true) Long viewerId) {
+        List<BookmarkListResponseDTO> lists = bookmarkListService.getLists(userId,viewerId,false);
         return new ResponseEntity<List<BookmarkListResponseDTO>>(lists,HttpStatus.OK);
     }
 
@@ -46,8 +50,9 @@ public class BookmarkListController {
             @ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없습니다."),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
     })
-    public ResponseEntity<?> getGroupLists(@PathVariable @Parameter(description = "유저 정보", required = true) Long userId) {
-        List<BookmarkListResponseDTO> lists = bookmarkListService.getLists(userId,true);
+    public ResponseEntity<?> getGroupLists(@PathVariable @Parameter(description = "유저 정보", required = true) Long userId,
+                                           @RequestParam @Parameter(description = "요청 유저 정보", required = true) Long viewerId) {
+        List<BookmarkListResponseDTO> lists = bookmarkListService.getLists(userId, viewerId, true);
         return new ResponseEntity<List<BookmarkListResponseDTO>>(lists,HttpStatus.OK);
     }
 
@@ -76,8 +81,8 @@ public class BookmarkListController {
     public ResponseEntity<?> createBookmarkList(@PathVariable @Parameter(description = "유저 정보", required = true) Long userId,
                                                 @RequestBody @Parameter(description = "추가 할 리스트 정보", required = true) BookmarkListDTO bookmarkListDTO) {
 
-        bookmarkListService.createBookmarkList(userId,bookmarkListDTO);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        DataResponseDto url = bookmarkListService.createBookmarkList(userId,bookmarkListDTO);
+        return new ResponseEntity<DataResponseDto>(url,HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{userId}/{listId}")
@@ -90,8 +95,8 @@ public class BookmarkListController {
     public ResponseEntity<?> updateBookmarkList(@PathVariable @Parameter(description = "유저 ID", required = true) Long userId,
                                                 @PathVariable @Parameter(description = "리스트 ID", required = true) Long listId,
                                                 @RequestBody @Parameter(description = "업데이트할 리스트 정보", required = true) BookmarkListDTO bookmarkListDTO) {
-        bookmarkListService.updateBookmarkList(userId, listId, bookmarkListDTO);
-        return new ResponseEntity<>(HttpStatus.OK);
+        DataResponseDto url = bookmarkListService.updateBookmarkList(userId, listId, bookmarkListDTO);
+        return new ResponseEntity<DataResponseDto>(url,HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{userId}/{listId}")
@@ -148,15 +153,16 @@ public class BookmarkListController {
         bookmarkListService.scrapBookmarkList(userId,listId);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-    @DeleteMapping("/scrap/{scrapId}")
+    @DeleteMapping("/scrap/{userId}/{listId}")
     @Operation(summary = "북마크 리스트 스크랩 취소", description = "스크랩을 취소합니다")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "리스트 스크랩이 성공적으로 취소되었습니다."),
             @ApiResponse(responseCode = "400", description = "스크랩하지 않은 글 입니다."),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
     })
-    public ResponseEntity<?> deleteBookmarkListScrap(@PathVariable @Parameter(description = "스크랩 ID", required = true) Long scrapId){
-        bookmarkListService.removeScrapBookmarkList(scrapId);
+    public ResponseEntity<?> deleteBookmarkListScrap(@PathVariable @Parameter(description = "유저 ID", required = true) Long userId,
+                                                     @PathVariable @Parameter(description = "리스트 ID", required = true) Long listId){
+        bookmarkListService.removeScrapBookmarkList(userId,listId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -167,8 +173,51 @@ public class BookmarkListController {
             @ApiResponse(responseCode = "404", description = "스크랩한 글이 없습니다."),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
     })
-    public ResponseEntity<?> getScrappedLists(@PathVariable @Parameter(description = "유저 ID", required = true) Long userId) {
-        List<BookmarkListResponseDTO> lists = bookmarkListService.getScrapedLists(userId);
+    public ResponseEntity<?> getScrappedLists(@PathVariable @Parameter(description = "유저 ID", required = true) Long userId,
+                                              @RequestParam @Parameter(description = "요청 유저 정보", required = true) Long viewerId) {
+        List<BookmarkListResponseDTO> lists = bookmarkListService.getScrapedLists(userId,viewerId);
         return new ResponseEntity<List<BookmarkListResponseDTO>>(lists,HttpStatus.OK);
+    }
+
+    @GetMapping("/rank/like")
+    @Operation(summary = "좋아요 순 랭킹", description = "좋아요 순 랭킹을 조회합니다.")
+    public ResponseEntity<?> getListsRankingByLike() {
+        List<RankDTO> lists = bookmarkListService.getListsRankingByLikes();
+        return new ResponseEntity<>(lists,HttpStatus.OK);
+    }
+
+    @GetMapping("/rank/hit")
+    @Operation(summary = "조회수 순 랭킹", description = "조회수 순 랭킹을 조회합니다.")
+    public ResponseEntity<?> getListsRankingByHit() {
+        List<RankDTO> lists = bookmarkListService.getListsRankingByHit();
+        return new ResponseEntity<>(lists,HttpStatus.OK);
+    }
+
+    @GetMapping("/rank/scrap")
+    @Operation(summary = "즐겨찾기 순 랭킹", description = "즐겨찾기 순 랭킹을 조회합니다.")
+    public ResponseEntity<?> getListsRankingByScrap() {
+        List<RankDTO> lists = bookmarkListService.getListsRankingByScrap();
+        return new ResponseEntity<>(lists,HttpStatus.OK);
+    }
+
+    @GetMapping("/search/{page}/{searchType}/{title}")
+    @Operation(summary = "리스트 검색", description = "리스트 검색 수행")
+    public ResponseEntity<?> searchList(@PathVariable Integer page,
+                                        @PathVariable String searchType,
+                                        @PathVariable String title,
+                                        @RequestParam Long userId) {
+        List<BookmarkListResponseDTO> lists = bookmarkListService.searchLists(page,searchType,userId,title);
+
+        return new ResponseEntity<>(lists,HttpStatus.OK);
+    }
+
+    @PostMapping("/search/tag/{page}")
+    @Operation(summary = "태그 검색", description = "태그 검색 수행")
+    public ResponseEntity<?> searchListByTags(@PathVariable Integer page,
+                                              @RequestParam Long userId,
+                                              @RequestBody TagSearchDTO tagSearchDTO) {
+        List<BookmarkListResponseDTO> lists = bookmarkListService.searchListsByTags(page,userId,tagSearchDTO);
+
+        return new ResponseEntity<>(lists,HttpStatus.OK);
     }
 }

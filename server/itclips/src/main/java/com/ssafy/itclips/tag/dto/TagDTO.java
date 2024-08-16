@@ -8,17 +8,10 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 public class TagDTO {
-    private Long id;
     private String title;
 
     @Builder
     public TagDTO(String title) {
-        this.title = title;
-    }
-
-    @Builder
-    public TagDTO(Long id, String title) {
-        this.id = id;
         this.title = title;
     }
 

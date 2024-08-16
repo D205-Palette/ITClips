@@ -39,9 +39,8 @@ public class RoadmapComment {
     @Column(name = "contents", nullable = false)
     private String contents;
 
-    @NotNull
     @CreationTimestamp
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
@@ -53,6 +52,10 @@ public class RoadmapComment {
         this.id = id;
         this.user = user;
         this.roadmap = roadmap;
+        this.contents = contents;
+    }
+
+    public void updateComment(String contents) {
         this.contents = contents;
     }
 

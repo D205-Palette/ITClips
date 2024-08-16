@@ -1,6 +1,7 @@
 package com.ssafy.itclips.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.itclips.global.jwt.JwtAuthenticationEntryPoint;
 import com.ssafy.itclips.global.jwt.JwtAuthenticationFilter;
 import com.ssafy.itclips.global.jwt.JwtTokenProvider;
 import com.ssafy.itclips.global.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
@@ -14,8 +15,10 @@ import com.ssafy.itclips.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.mapping.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -32,7 +35,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import com.ssafy.itclips.global.oauth2.handler.OAuth2AuthenticationSuccessHandler;
-
+import java.util.*;
 import java.io.IOException;
 
 @EnableWebSecurity
@@ -63,6 +66,10 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
         configuration.addAllowedOrigin("https://localhost:3000");
+        configuration.addAllowedOrigin("http://127.0.0.1:5500");
+        configuration.addAllowedOrigin("https://i11d205.p.ssafy.io");  // 추가된 출처
+        configuration.addAllowedOrigin("chrome-extension://fgpcpkcofdhgpjdecpbnamiebjnnkjij");
+        configuration.addAllowedOrigin("chrome-extension://fgcdcfhkkaccjjlfcphnbhdcgkfiofln");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -87,8 +94,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/swagger-ui.html", "/api/v3/api-docs/**", "/swagger-resources/**", "/api/swagger-ui/**").permitAll()
                         .requestMatchers("/api/user/signup", "/api/user/oauthSignup").permitAll()   // 회원가입 접근 가능
                         .requestMatchers("/api/user/login", "/api/user/refresh").permitAll()     // 로그인 접근 가능
-                        .requestMatchers("/api/user/**").permitAll()    // API 개발 중 접근 없이 swagger 테스트 하기 위함
-                        .requestMatchers("/api/roadmap/**").permitAll()    // API 개발 중 접근 없이 swagger 테스트 하기 위함
+                        .requestMatchers("/api/user/nicknameCheck", "/api/user/emailCheck", "/api/user/mail/sendVerification", "/api/user/mail/verifyCode",
+                                "/api/user/pw/sendVerification", "/api/user/pw/verifyCode").permitAll() // 회원가입, 로그인 관련 인증
+                        .requestMatchers("/api/tags/**").permitAll()
+                        .requestMatchers("/api/ws/**").permitAll()
                         .anyRequest().authenticated()
                 )
 
@@ -107,6 +116,8 @@ public class SecurityConfig {
                         .successHandler(oAuth2AuthenticationSuccessHandler)
                         .failureHandler(oAuth2AuthenticationFailureHandler)
                 )
+                .exceptionHandling(e-> e
+                        .authenticationEntryPoint(new JwtAuthenticationEntryPoint()))
                 // 원래 스프링 시큐리티 필터 순서가 LogoutFilter 이후에 로그인 필터 동작
                 // 따라서, LogoutFilter 이후에 우리가 만든 필터 동작하도록 설정
                 // 순서 : LogoutFilter -> JwtAuthenticationProcessingFilter -> CustomJsonUsernamePasswordAuthenticationFilter

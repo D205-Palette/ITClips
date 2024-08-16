@@ -1,10 +1,15 @@
 package com.ssafy.itclips.user.controller;
 
+import com.ssafy.itclips.follow.service.FollowService;
+import com.ssafy.itclips.global.file.DataResponseDto;
+import com.ssafy.itclips.global.file.FileService;
 import com.ssafy.itclips.global.jwt.JwtToken;
 import com.ssafy.itclips.global.jwt.JwtTokenProvider;
-import com.ssafy.itclips.tag.dto.TagDTO;
+import com.ssafy.itclips.tag.dto.UserTagDTO;
 import com.ssafy.itclips.tag.repository.TagRepository;
 import com.ssafy.itclips.tag.repository.UserTagRepository;
+import com.ssafy.itclips.user.dto.UserInfoDTO;
+import com.ssafy.itclips.user.dto.UserInfoDetailDTO;
 import com.ssafy.itclips.user.entity.*;
 import com.ssafy.itclips.user.repository.UserRepository;
 import com.ssafy.itclips.user.service.MailService;
@@ -17,13 +22,12 @@ import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.List;
@@ -40,19 +44,21 @@ import java.util.stream.Collectors;
 public class UserController {
 
     private final UserService userService;
+    private final FollowService followService;
+    private final MailService mailService;
+    private final FileService fileService;
+
     private final UserRepository userRepository;
     private final TagRepository tagRepository;
     private final UserTagRepository userTagRepository;
+
     private final JwtTokenProvider tokenProvider;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    private final MailService mailService;
     private final ConcurrentHashMap<String, String> verificationCodes = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, String> passwordResetCodes = new ConcurrentHashMap<>();
 
     private static final String UNAUTHORIZED_MESSAGE = "Unauthorized";
-    private static final String PROFILE_IMAGE_UPDATE_SUCCESS = "프로필 이미지가 성공적으로 업데이트 되었습니다.";
-    private static final String USER_NOT_FOUND_MESSAGE = "회원 정보를 찾을 수 없습니다.";
     private static final String USER_UPDATE_SUCCESS = "회원 정보가 성공적으로 수정되었습니다.";
     private static final String USER_DELETE_SUCCESS = "회원이 성공적으로 탈퇴되었습니다.";
     private static final String USER_UPDATE_FAIL = "회원 정보 수정에 실패했습니다.";
@@ -88,14 +94,14 @@ public class UserController {
         }
     }
 
-    @PostMapping("/oauthSignup")
-    @Operation(summary = "OAuth 회원 가입", description = "OAuth를 통해 가입한 회원을 등록합니다.")
+    @PutMapping("/{userId}/oauthSignup")
+    @Operation(summary = "OAuth 회원 가입 (추가 정보 등록)", description = "OAuth를 통해 가입한 회원의 추가 정보를 등록합니다.")
     @ApiResponses(value = @ApiResponse(responseCode = "200", description = "회원 가입 성공"))
-    public ResponseEntity<?> oauthSignUp(@RequestPart("user") OauthSignupForm oauthSignupForm,
-                                         @RequestPart(value = "profileImage", required = false) MultipartFile profileImage) throws IOException {
+    public ResponseEntity<?> oauthSignUp(@PathVariable("userId") Long userId,
+                                         @RequestBody OauthSignupForm oauthSignupForm) throws IOException {
         try {
-            User user = userService.oauthSignup(oauthSignupForm, profileImage);
-            return ResponseEntity.ok(user);
+            User user = userService.oauthSignup(userId, oauthSignupForm);
+            return ResponseEntity.ok(userId);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 업로드 중 오류가 발생했습니다.");
         }
@@ -125,7 +131,7 @@ public class UserController {
         return "jwtTest 요청 성공";
     }
 
-    @PostMapping(value = "/profile/img", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/profile/img")
     @Operation(summary = "프로필 이미지 업데이트", description = "사용자의 프로필 이미지를 업데이트합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "프로필 이미지 업데이트 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
@@ -133,72 +139,106 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "파일 업로드 중 오류 발생", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
     })
     public ResponseEntity<?> updateProfileImage(@RequestParam("email") String email,
-                                                @RequestPart("profileImage") MultipartFile profileImage) throws IOException {
+                                                @RequestParam("profileImage") String profileImage) throws IOException {
         if (!isAuthenticated()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(UNAUTHORIZED_MESSAGE);
         }
 
         try {
-            userService.updateProfileImage(email, profileImage);
-            return ResponseEntity.ok().body(PROFILE_IMAGE_UPDATE_SUCCESS);
+            DataResponseDto image = userService.updateProfileImage(email, profileImage);
+            return new ResponseEntity<>(image, HttpStatus.OK);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 업로드 중 오류가 발생했습니다.");
         }
     }
 
-    @GetMapping("/profile")
+    @GetMapping("/profile/{userId}/{viewerId}")
     @Operation(summary = "회원 정보 조회", description = "사용자의 프로필 정보를 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 정보 조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
-            @ApiResponse(responseCode = "404", description = "회원 정보 없음", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+            @ApiResponse(responseCode = "404", description = "회원 정보 없음", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
     })
-    public ResponseEntity<?> getProfile(@RequestParam("email") String email) {
-        if (!isAuthenticated()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(UNAUTHORIZED_MESSAGE);
+    public ResponseEntity<?> getProfile(@PathVariable("userId") Long userId, @PathVariable("viewerId") Long viewerId) {
+//        // 현재 인증된 사용자 정보 가져오기
+//        User currentUser = authenticatedUser.getCurrentAuthenticatedUser();
+//        if (currentUser == null) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: Please log in.");
+//        }
+
+        // 본인 불러오기
+        User currentUser = userService.getUserById(viewerId);
+        if (currentUser == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Current user not found.");
+        }
+        // 타깃 불러오기
+        User targetUser = userService.getUserById(userId);
+        if (targetUser == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Target user not found.");
         }
 
-        User user = userService.findUserByEmail(email);
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(USER_NOT_FOUND_MESSAGE);
+        long followerCount = followService.getFollowerCount(targetUser);
+        long followingCount = followService.getFollowingCount(targetUser);
+
+        String imageUrl = getImageUrl(targetUser);
+
+        UserInfoDetailDTO userInfo = targetUser.convertToUserInfoDetailDTO(followingCount, followerCount,imageUrl);
+
+        if (userId.equals(viewerId)) {   // 본인 정보일 경우
+            return ResponseEntity.ok(userInfo);
+        } else {    // 다른 사용자 정보일 경우
+            boolean isFollowing = followService.isFollowing(currentUser, targetUser);
+            boolean isFollowers = followService.isFollowedBy(targetUser, currentUser);
+
+            userInfo.setFollowStatus(isFollowing, isFollowers);
+
+            return ResponseEntity.ok(userInfo);
         }
-        return ResponseEntity.ok(user);
     }
 
-    @PutMapping("/profile")
+    private String getImageUrl(User targetUser) {
+        String imageUrl = targetUser.getProfileImage();
+        if(imageUrl != null && !"default".equals(imageUrl)) {
+            imageUrl = fileService.getPresignedUrl("images", targetUser.getProfileImage(), false).get("url");
+        }
+        return imageUrl;
+    }
+
+    @PutMapping("/{userId}/profile")
     @Operation(summary = "회원 정보 수정", description = "사용자의 프로필 정보를 수정합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 정보 수정 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "회원 정보 없음", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
     })
-    public ResponseEntity<?> updateProfile(@RequestParam("email") String email, @RequestBody User updatedUser) {
+    public ResponseEntity<?> updateProfile(@PathVariable("userId") Long userId, @RequestBody UserInfoDTO updatedUser) {
         if (!isAuthenticated()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(UNAUTHORIZED_MESSAGE);
         }
 
         try {
-            User user = userService.updateUserByEmail(email, updatedUser);
+            UserInfoDTO userInfo = userService.updateUserById(userId, updatedUser);
             return ResponseEntity.ok(USER_UPDATE_SUCCESS);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(USER_UPDATE_FAIL);
         }
     }
 
-    @DeleteMapping("/profile")
+    @DeleteMapping("/{userId}/profile")
     @Operation(summary = "회원 탈퇴", description = "사용자의 계정을 삭제합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 탈퇴 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "회원 정보 없음", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
     })
-    public ResponseEntity<?> deleteUser(@RequestParam("email") String email) {
+    public ResponseEntity<?> deleteUser(@PathVariable("userId") Long userId) {
         if (!isAuthenticated()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(UNAUTHORIZED_MESSAGE);
         }
 
         try {
-            boolean isDeleted = userService.deleteUserByEmail(email);
+            boolean isDeleted = userService.deleteUserById(userId);
             if (!isDeleted) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(USER_DELETE_FAIL);
             }
@@ -302,13 +342,13 @@ public class UserController {
     }
 
     @PostMapping("/pw/sendVerification")
-    @Operation(summary = "비밀번호 찾기 요청", description = "닉네임과 이메일을 통해 비밀번호 찾기 요청을 처리하고, 인증 코드를 이메일로 보냅니다.")
+    @Operation(summary = "비밀번호 찾기 요청", description = "이메일을 통해 비밀번호 찾기 요청을 처리하고, 인증 코드를 이메일로 보냅니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "인증 코드 발송 성공"),
             @ApiResponse(responseCode = "404", description = "사용자 정보를 찾을 수 없음")
     })
-    public ResponseEntity<?> sendPasswordResetCode(@RequestParam("nickname") String nickname, @RequestParam("email") String email) {
-        User user = userRepository.findByNicknameAndEmail(nickname, email).get();
+    public ResponseEntity<?> sendPasswordResetCode(@RequestParam("email") String email) {
+        User user = userRepository.findByEmail(email).get();
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보를 찾을 수 없습니다.");
         }
@@ -322,42 +362,42 @@ public class UserController {
     }
 
     @PostMapping("/pw/verifyCode")
-    @Operation(summary = "비밀번호 찾기 인증 코드 확인", description = "이메일로 받은 인증 코드를 확인합니다.")
+    @Operation(summary = "비밀번호 찾기 인증 코드 확인", description = "코드를 확인하고, 임시 비밀번호를 발송합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "인증 성공"),
+            @ApiResponse(responseCode = "200", description = "임시 비밀번호가 발송되었습니다."),
             @ApiResponse(responseCode = "400", description = "잘못된 인증 코드"),
             @ApiResponse(responseCode = "404", description = "이메일을 찾을 수 없음")
     })
-    public ResponseEntity<?> verifyPasswordResetCode(@RequestParam("email") String email, @RequestParam("code") String code) {
-        String storedCode = passwordResetCodes.get(email);
-        if (storedCode == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("이메일을 찾을 수 없습니다.");
-        }
-        if (storedCode.equals(code)) {
-            passwordResetCodes.remove(email);
-            return ResponseEntity.ok("인증 성공");
-        } else {
+    public ResponseEntity<String> verifyPasswordResetCode(@RequestParam("email") String email, @RequestParam("code") String code) {
+        // 유저 존재 확인
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."));
+
+        // 인증 코드 검증
+        if (!isCodeValid(email, code)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잘못된 인증 코드입니다.");
         }
+
+        // 임시 비밀번호 생성 및 업데이트
+        String temporaryPassword = generateTemporaryPassword();
+        userService.updatePassword(user, temporaryPassword);
+
+        // 임시 비밀번호 이메일 발송
+        try {
+            mailService.sendTemporaryPassword(email, temporaryPassword);
+        } catch (MessagingException e) {
+            // 예외 처리 로직 추가
+            throw new RuntimeException("임시 비밀번호 발송 중 오류가 발생했습니다.", e);
+        }
+
+        // 인증 성공 응답
+        return ResponseEntity.ok("임시 비밀번호가 발송되었습니다.");
     }
 
-    @PostMapping("/password/reset")
-    @Operation(summary = "비밀번호 초기화", description = "인증 코드 확인 후 임시 비밀번호를 이메일로 발송합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "임시 비밀번호 발송 성공"),
-            @ApiResponse(responseCode = "404", description = "사용자 정보를 찾을 수 없음"),
-            @ApiResponse(responseCode = "500", description = "임시 비밀번호 발송 중 오류 발생")
-    })
-    public ResponseEntity<?> resetPassword(@RequestParam("email") String email) {
-        User user = userRepository.findByEmail(email).get();
-        try {
-            String temporaryPassword = generateTemporaryPassword();
-            userService.updatePassword(user, temporaryPassword);
-            mailService.sendTemporaryPassword(email, temporaryPassword);
-            return ResponseEntity.ok("임시 비밀번호가 발송되었습니다.");
-        } catch (MessagingException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("임시 비밀번호 발송 중 오류가 발생했습니다.");
-        }
+    // 인증 코드 유효성 검사 메서드
+    private boolean isCodeValid(String email, String code) {
+        String storedCode = passwordResetCodes.get(email);
+        return storedCode != null && storedCode.equals(code);
     }
 
     @PutMapping("/pw/update")
@@ -403,13 +443,12 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("관심사 태그가 존재하지 않습니다.");
         }
 
-        List<TagDTO> tagDTOs = userTags.stream()
-                .map(userTag -> new TagDTO(userTag.getTag().getId(), userTag.getTag().getTitle()))
+        List<UserTagDTO> tagDTOs = userTags.stream()
+                .map(userTag -> new UserTagDTO(userTag.getTag().getId(), userTag.getTag().getTitle()))
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(tagDTOs);
     }
-
 
     @Operation(summary = "나의 관심사 태그 추가", description = "사용자의 관심사 태그를 추가합니다.")
     @ApiResponses({
@@ -476,6 +515,16 @@ public class UserController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 관심사가 존재하지 않습니다.");
         }
+    }
+
+    @GetMapping("/search/{page}/{title}")
+    @Operation(summary = "유저 검색", description = "유저를 검색합니다")
+    public ResponseEntity<?> searchUsers(@PathVariable Integer page,
+                                         @PathVariable String title,
+                                         @RequestParam Long userId)
+    {
+        List<UserInfoDetailDTO> users = userService.searchUsers(page,title,userId);
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     private String generateTemporaryPassword() {

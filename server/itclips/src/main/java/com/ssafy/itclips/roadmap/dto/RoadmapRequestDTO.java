@@ -40,6 +40,7 @@ public class RoadmapRequestDTO {
                 .description(description)
                 .image(image)
                 .isPublic(isPublic)
+                .hit(0L)
                 .build();
     }
     // TODO: toDto 만들기
@@ -51,5 +52,9 @@ public class RoadmapRequestDTO {
                 .image(roadmap.getImage())
                 .isPublic(roadmap.getIsPublic())
                 .build();
+    }
+
+    public void setImageToS3FileName(String image) {
+        this.image = image;
     }
 }

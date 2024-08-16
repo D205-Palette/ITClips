@@ -1,5 +1,7 @@
 package com.ssafy.itclips.global.jwt;
 
+import com.ssafy.itclips.error.CustomException;
+import com.ssafy.itclips.error.ErrorCode;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.xml.bind.DatatypeConverter;
@@ -57,7 +59,6 @@ public class JwtTokenProvider {
                 .collect(Collectors.joining(","));
 
         long now = System.currentTimeMillis();
-
         // Access Token 생성
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
@@ -131,7 +132,6 @@ public class JwtTokenProvider {
      */
     public boolean validateToken(String token) {
         if (blacklistedTokens.contains(token)) {
-            log.info("Token is blacklisted");
             return false;
         }
         try {
@@ -141,6 +141,7 @@ public class JwtTokenProvider {
             log.info("Invalid JWT Token", e);
         } catch (ExpiredJwtException e) {
             log.info("Expired JWT Token", e);
+            throw new CustomException(ErrorCode.UNAUTHORIZED_ACCESS_TOKEN_EXPIRED);
         } catch (UnsupportedJwtException e) {
             log.info("Unsupported JWT Token", e);
         } catch (IllegalArgumentException e) {
@@ -154,7 +155,6 @@ public class JwtTokenProvider {
      */
     public void blacklistToken(String token) {
         blacklistedTokens.add(token);
-        System.out.println("blacklistedTokens : " + blacklistedTokens.toString());
     }
 
     /**

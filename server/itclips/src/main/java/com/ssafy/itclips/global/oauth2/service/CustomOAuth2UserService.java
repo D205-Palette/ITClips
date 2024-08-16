@@ -1,6 +1,5 @@
 package com.ssafy.itclips.global.oauth2.service;
 
-import com.ssafy.itclips.global.jwt.JwtTokenProvider;
 import com.ssafy.itclips.global.oauth2.dto.OAuthAttributes;
 import com.ssafy.itclips.global.oauth2.userinfo.OAuth2UserInfo;
 import com.ssafy.itclips.user.entity.Role;
@@ -31,7 +30,6 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
-        System.out.println("oAuth2User : " + oAuth2User);
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
@@ -56,7 +54,8 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         private User saveOrUpdate(OAuth2UserInfo oAuth2UserInfo, String provider) {
             Optional<User> userOptional = userRepository.findByEmail(oAuth2UserInfo.getEmail());
             User user = userOptional
-                    .map(entity -> entity.update(oAuth2UserInfo.getNickname(), oAuth2UserInfo.getImageUrl()))
+//                    .map(entity -> entity.update(oAuth2UserInfo.getNickname(), oAuth2UserInfo.getImageUrl()))
+//                    .map(entity -> entity.update(oAuth2UserInfo.getImageUrl()))
                     .orElseGet(() -> createUser(oAuth2UserInfo, provider));
 
             return userRepository.save(user);
@@ -66,8 +65,8 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         return User.builder()
                 .email(oAuth2UserInfo.getEmail())
                 .password(oAuth2UserInfo.getPassword())
-                .nickname(oAuth2UserInfo.getNickname())
-                .profileImage(oAuth2UserInfo.getImageUrl())
+//                .nickname(oAuth2UserInfo.getNickname())
+//                .profileImage(oAuth2UserInfo.getImageUrl())
                 .provider(provider)
                 .role(Role.USER)
                 .darkMode(true)

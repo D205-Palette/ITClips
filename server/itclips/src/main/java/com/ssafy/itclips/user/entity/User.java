@@ -1,5 +1,6 @@
 package com.ssafy.itclips.user.entity;
 
+import com.ssafy.itclips.chat.entity.Chat;
 import com.ssafy.itclips.bookmark.entity.BookmarkLike;
 import com.ssafy.itclips.follow.entity.Follow;
 import com.ssafy.itclips.report.entity.BookmarkListReport;
@@ -11,6 +12,7 @@ import com.ssafy.itclips.comment.entity.BookmarkListComment;
 import com.ssafy.itclips.group.entity.UserGroup;
 import com.ssafy.itclips.roadmap.entity.Roadmap;
 import com.ssafy.itclips.roadmap.entity.RoadmapLike;
+import com.ssafy.itclips.user.dto.UserInfoDetailDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -49,11 +51,10 @@ public class User {
     private String password;
 
     @Size(max = 50)
-    @NotNull(message = "Nickname cannot be null")
     @Column(name = "nickname", nullable = false, length = 50)
     private String nickname;
 
-    @Size(max = 255)
+    @Size(max = 511)
     @Column(name = "profile_image")
     private String profileImage;
 
@@ -86,8 +87,17 @@ public class User {
     @Column(name = "dark_mode", nullable = false)
     private Boolean darkMode;
 
+
+    //chat
+    //역방향 user가 속한 chatroom을 알기 위함
+    @OneToMany(mappedBy = "user")
+    private List<Chat> chatList = new ArrayList<Chat>();
+
     @Column(name = "provider")
     private String provider;
+
+    @Column(name = "bio")
+    private String bio;
 
     @OneToMany(mappedBy = "user")
     private List<BookmarkList> bookmarkLists = new ArrayList<>();
@@ -98,8 +108,14 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<UserTag> userTags = new LinkedHashSet<>();
 
-    public User update(String nickname, String profileImage) {
-        this.nickname = nickname;
+//    public User update(String nickname, String profileImage) {
+//        this.nickname = nickname;
+//        this.profileImage = profileImage;
+//        this.updatedAt = LocalDateTime.now();
+//        return this;
+//    }
+
+    public User update(String profileImage) {
         this.profileImage = profileImage;
         this.updatedAt = LocalDateTime.now();
         return this;
@@ -169,5 +185,26 @@ public class User {
         this.role = role;
         this.darkMode = darkMode;
         this.provider = provider;
+    }
+
+    public UserInfoDetailDTO convertToUserInfoDetailDTO(Long followingCount, Long followerCount, String imageUrl) {
+        return UserInfoDetailDTO.builder()
+                .id(this.id)
+                .email(this.email)
+                .nickname(this.nickname)
+                .image(imageUrl)
+                .birth(this.birth)
+                .job(this.job)
+                .gender(this.gender)
+                .bio(this.bio)
+                .bookmarkListCount(this.bookmarkLists.size())
+                .roadmapCount(this.roadmapList.size())
+                .followerCount(followerCount)
+                .followingCount(followingCount)
+                .build();
+    }
+
+    public void setImageToS3FileName(String fileName) {
+        this.profileImage=fileName;
     }
 }

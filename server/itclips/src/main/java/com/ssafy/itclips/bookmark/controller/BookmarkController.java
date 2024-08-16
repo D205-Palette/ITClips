@@ -1,6 +1,7 @@
 package com.ssafy.itclips.bookmark.controller;
 
 import com.ssafy.itclips.bookmark.dto.BookmarkRequestDTO;
+import com.ssafy.itclips.global.gpt.GPTResponseDTO;
 import com.ssafy.itclips.bookmark.service.BookmarkService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -23,7 +24,7 @@ public class BookmarkController {
 
     private final BookmarkService bookmarkService;
 
-    @PostMapping("/add/{listId}/{categoryId}")
+    @PostMapping(value={"/add/{listId}","/add/{listId}/{categoryId}"})
     @Operation(summary = "북마크 추가", description = "북마크를 추가합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "북마크가 성공적으로 추가되었습니다."),
@@ -31,9 +32,10 @@ public class BookmarkController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
     })
     public ResponseEntity<?> createBookmark(@PathVariable @Parameter(description = "리스트 정보", required = true) Long listId,
-                                            @PathVariable @Parameter(description = "카테고리 정보", required = true) Long categoryId,
+                                            @PathVariable(required = false) @Parameter(description = "카테고리 정보") Long categoryId,
+                                            @RequestParam Long userId,
                                             @RequestBody @Parameter(description = "북마크 생성 정보", required = true) BookmarkRequestDTO bookmarkRequestDTO) {
-        bookmarkService.createBookmark(listId,categoryId,bookmarkRequestDTO);
+        bookmarkService.createBookmark(userId,listId,categoryId,bookmarkRequestDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -45,9 +47,9 @@ public class BookmarkController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
     })
     public ResponseEntity<?> updateBookmark(@PathVariable @Parameter(description = "북마크 ID", required = true) Long bookmarkId,
+                                            @RequestParam Long userId,
                                             @RequestBody @Parameter(description = "북마크 수정 정보", required = true) BookmarkRequestDTO bookmarkRequestDTO) {
-
-        bookmarkService.updateBookmark(bookmarkId,bookmarkRequestDTO);
+        bookmarkService.updateBookmark(userId,bookmarkId,bookmarkRequestDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -58,8 +60,9 @@ public class BookmarkController {
             @ApiResponse(responseCode = "404", description = "북마크를 찾을 수 없습니다."),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류가 발생했습니다.")
     })
-    public ResponseEntity<?> deleteBookmark(@PathVariable @Parameter(description = "북마크 ID", required = true) Long bookmarkId) {
-        bookmarkService.deleteBookmark(bookmarkId);
+    public ResponseEntity<?> deleteBookmark( @RequestParam Long userId,
+                                             @PathVariable @Parameter(description = "북마크 ID", required = true) Long bookmarkId) {
+        bookmarkService.deleteBookmark(userId, bookmarkId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -88,6 +91,14 @@ public class BookmarkController {
                                           @PathVariable @Parameter(description = "북마크 ID", required = true) Long bookmarkId) {
         bookmarkService.removeLikeBookmark(userId,bookmarkId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/summary/{bookmarkId}")
+    @Operation(summary = "북마크 url 요약", description = "url 요약을 요청합니다.")
+    public ResponseEntity<?> getUrlSummary(@PathVariable Long bookmarkId) {
+
+        GPTResponseDTO summary = bookmarkService.getUrlSummary(bookmarkId);
+        return new ResponseEntity<>(summary, HttpStatus.OK);
     }
 
 }

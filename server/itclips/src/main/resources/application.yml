@@ -24,6 +24,7 @@ spring:
   data:
     redis:
       host: ${DB_HOST}
+      password: ${DB_PASSWORD}
       port: 6379
 
   cache:

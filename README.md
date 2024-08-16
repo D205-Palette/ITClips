@@ -239,7 +239,6 @@ SSAFY 11기 공통 PJT / 구미 2반 5조 웹디자인<br/>
 
 ### 크롬 확장 프로그램 
 <img src="resources/image/gif/익스텐션.gif" alt="크롬 확장 프로그램" width="800"><br/>
-![alt text](resources/image/gif/익스텐션.gif)
 * 크롬 확장 프로그램을 통해 간편하게 북마크를 추가할 수 있습니다. 
 <br/>
 <br/>
@@ -273,6 +272,12 @@ SSAFY 11기 공통 PJT / 구미 2반 5조 웹디자인<br/>
 * 북마크 리스트를 조합하여 로드맵을 생성할 수 있습니다. 
 <br/>
 <br/>
+
+<!-- ### 로드맵 AI 추천 생성 
+<img src="resources/image/gif/로드맵 생성.gif" alt="로드맵 생성" width="800"><br/>
+* 자신의 북마크 리스트를 기반으로 AI에게 로드맵을 추천받을 수 있습니다. 
+<br/>
+<br/> -->
 
 ### 로드맵 스크랩 
 <img src="resources/image/gif/로드맵 스크랩.gif" alt="로드맵 스크랩" width="800"><br/>

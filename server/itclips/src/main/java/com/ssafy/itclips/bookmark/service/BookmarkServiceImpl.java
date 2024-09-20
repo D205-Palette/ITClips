@@ -32,6 +32,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -58,9 +59,11 @@ public class BookmarkServiceImpl implements BookmarkService {
     @Transactional
     public void createBookmark(Long userId, Long listId, Long categoryId, BookmarkRequestDTO bookmarkRequestDTO) {
         BookmarkList existingBookmarkList = getExistingBookmarkList(listId);
-        if(existingBookmarkList.getUser().getId() != userId) {
+
+        if(!checkAuthority(userId,listId)) {
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
+
         Integer count = getBookmarkCount(categoryId);
 
         Bookmark bookmark = buildBookmark(bookmarkRequestDTO, count);
@@ -73,6 +76,11 @@ public class BookmarkServiceImpl implements BookmarkService {
         }
 
         saveBookmarkTags(bookmarkRequestDTO, bookmark);
+    }
+
+    private Boolean checkAuthority(Long userId, Long listId) {
+        Set<Long> groupUser = bookmarkListRepository.findGroupUserByListId(listId);
+        return groupUser.contains(userId);
     }
 
     private BookmarkList getExistingBookmarkList(Long listId) {
@@ -103,12 +111,11 @@ public class BookmarkServiceImpl implements BookmarkService {
     public void updateBookmark(Long userId, Long bookmarkId, BookmarkRequestDTO bookmarkRequestDTO) throws RuntimeException {
         Bookmark bookmark = bookmarkRepository.findById(bookmarkId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_NOT_FOUND));
-        if(bookmark.getBookmarklist().getUser().getId() != userId) {
+
+        if(!checkAuthority(userId,bookmark.getBookmarklist().getId())) {
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
         bookmark.updateBookmark(bookmarkRequestDTO);
-        log.info(bookmarkRequestDTO.getTitle());
-        log.info(bookmark.getTitle());
         bookmarkRepository.save(bookmark);
         bookmarkTagRepository.deleteAllByBookmark(bookmark);
 
@@ -127,7 +134,7 @@ public class BookmarkServiceImpl implements BookmarkService {
     public void deleteBookmark(Long userId, Long bookmarkId) throws RuntimeException {
         Bookmark bookmark = bookmarkRepository.findById(bookmarkId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_NOT_FOUND));
-        if(bookmark.getBookmarklist().getUser().getId() != userId) {
+        if(!checkAuthority(userId,bookmark.getBookmarklist().getId())) {
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
         bookmarkRepository.deleteById(bookmarkId);
@@ -167,7 +174,7 @@ public class BookmarkServiceImpl implements BookmarkService {
         Bookmark bookmark = bookmarkRepository.findById(bookmarkId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_NOT_FOUND));
         String prompt = bookmark.getUrl() + "을 유효한 url이라면 다른 말과 번호 없이 개조식으로 첫 글자에 '-'를 추가해서 3줄로 요약 해 줘. " +
-                "유호하지 않은 url이거나 동영상 사이트라면 '요약할 수 없는 url입니다.' 이 내용만 출력해줘. ";
+                "유효하지 않은 url이거나 동영상 사이트라면 '요약할 수 없는 url입니다.' 이 내용만 출력해줘. ";
         ChatGPTRequest request = new ChatGPTRequest(model,prompt);
         ChatGPTResponse response = template.postForObject(apiURL, request, ChatGPTResponse.class);
         if(response == null) {

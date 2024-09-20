@@ -2,31 +2,62 @@ import { useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
-import useStore from "../../stores/mainStore";
 import KebabDropdown from "./KebabDropdown(Feed)";
 import darkModeStore from "../../stores/darkModeStore";
-import profile_img from "../../assets/images/profile_image.png";
+import type { BookmarkListSumType } from "../../types/BookmarkListType";
+import axios from "axios";
+import { API_BASE_URL } from "../../config";
+import { authStore } from "../../stores/authStore";
+
+interface BookmarkListSumFeedType extends BookmarkListSumType {
+  createdAt: string;
+}
 
 interface Props {
-  list: {
-    id: number;
-    user: string;
-    title: string;
-    description: string;
-    createdAt: string;
-    image: string;
-    bookmarks: object[];
-    bookmark_list_tags: string[];
-    bookmark_list_like: number;
-  };
+  list: BookmarkListSumFeedType;
 }
 
 const ListItem: FC<Props> = ({ list }) => {
-  const [isLike, setIsLike] = useState(false);
-  const clickHeart = (event: React.MouseEvent<HTMLButtonElement>): void => {
+  const user = list.users.find((user) => user.id === list.userId);
+  const { token, userId } = authStore();
+  const [isLike, setIsLike] = useState(list.isLiked);
+  const [likeCount, changeLikeCount] = useState(list.likeCount);
+
+  // 좋아요
+  const clickHeart = (
+    event: React.MouseEvent<HTMLButtonElement | HTMLDivElement>
+  ): void => {
     event.stopPropagation();
+
+    if (isLike) {
+      axios
+        .delete(`${API_BASE_URL}/api/list/like/${userId}/${list.id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(() => {
+          changeLikeCount(likeCount - 1);
+        })
+        .catch((error) => {
+          console.error("Error unliking the list:", error);
+        });
+    } else {
+      axios
+        .post(`${API_BASE_URL}/api/list/like/${userId}/${list.id}`, null, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(() => {
+          changeLikeCount(likeCount + 1);
+        })
+        .catch((error) => {
+          console.error("Error liking the list:", error);
+        });
+    }
+
     setIsLike(!isLike);
-    // 여기에 좋아요 api 호출
   };
 
   const isDark = darkModeStore((state) => state.isDark);
@@ -42,9 +73,18 @@ const ListItem: FC<Props> = ({ list }) => {
     event.stopPropagation();
   };
 
+  // 닉네임 클릭 시 유저 페이지로 이동
+  const handleNicknameClick = (userId: number) => {
+    return (event: React.MouseEvent<HTMLDivElement>) => {
+      event.stopPropagation();
+      navigate(`/user/${userId}`);
+    };
+  };
+
   const getRelativeTime = (createdAt: string) => {
     const now = new Date();
     const createdDate = new Date(createdAt);
+    createdDate.setHours(createdDate.getHours() + 9);
     const diffInMs = now.getTime() - createdDate.getTime();
     const diffInMinutes = diffInMs / (1000 * 60);
     const diffInHours = diffInMs / (1000 * 60 * 60);
@@ -63,7 +103,7 @@ const ListItem: FC<Props> = ({ list }) => {
 
   return (
     <div
-      className={`border card bg-base-100 w-full shadow-xl hover:cursor-pointer ${
+      className={`border card bg-base-100 w-full hover:cursor-pointer ${
         isDark ? "hover:bg-slate-700" : "hover:bg-slate-100"
       }`}
       onClick={handleCardClick}
@@ -73,45 +113,49 @@ const ListItem: FC<Props> = ({ list }) => {
         className="flex justify-between items-center mx-3"
         onClick={handleDropdownClick}
       >
-        <div
-          id="userInfo"
-          className="m-3 flex items-center gap-2"
-          // onClick={handleUserInfoClick}
-        >
-          <div className="w-10 h-10 border rounded-full overflow-hidden">
-            <img
-              src={profile_img}
-              className="w-full h-full object-cover"
-              alt=""
-            />
+        {user && (
+          <div
+            id="userInfo"
+            className="m-3 flex items-center gap-2 hover:bg-base-100 rounded-xl p-2"
+            onClick={handleNicknameClick(user.id)}
+          >
+            <div className="w-10 h-10 border rounded-full overflow-hidden">
+              <img
+                src={user.userImage === "default" ? require(`../../assets/images/noProfile${list.userId! % 6}.jpg`) : user.userImage}
+                className="w-full h-full object-cover"
+                alt="리스트유저이미지"
+              />
+            </div>
+            <h2>{user.nickName}</h2>
+            <div className="badge badge-info text-slate-100">
+              {getRelativeTime(list.createdAt)}
+            </div>
           </div>
-          <h2>{list.user}</h2>
-          <div className="badge badge-secondary">
-            {getRelativeTime(list.createdAt)}
-          </div>
-        </div>
-        <button className="hidden md:inline z-20" onClick={handleDropdownClick}>
+        )}
+        <button className="hidden md:inline" onClick={handleDropdownClick}>
           <KebabDropdown whatMenu="리스트" id={list.id} />
         </button>
       </div>
 
-      <figure className="border rounded-xl mx-5 overflow-hidden">
+      <figure className="border rounded-xl mx-5 overflow-hidden h-64 bg-sky-100">
         <img
-          src={list.image}
+          className="w-full h-full object-contain"
+          src={list.image === "default" ? require(`../../assets/images/noContent${list.id! % 6}.png`) : list.image}
           alt="listImg"
-          className="w-full"
-          style={{ maxHeight: '300px', objectFit: 'cover' }} // 최대 높이와 비율 유지
         />
       </figure>
 
-      <div className="card-body p-4">
-        <h2 className="card-title text-lg md:text-xl">{list.title}</h2>
-        <p className="text-sm md:text-base">{list.description}</p>
+      <div className="card-body">
+        <h2 className="card-title ">{list.title}</h2>
+        <p className="text-sm md:text-base line-clamp-3">{list.description}</p>
 
         <div className="card-actions justify-end flex items-center relative mt-2">
-          <button onClick={clickHeart} className="btn btn-ghost z-0">
-            {isLike ? <FaHeart /> : <FaRegHeart />}
-            {list.bookmark_list_like}
+          <button
+            onClick={clickHeart}
+            className="btn btn-ghost hidden sm:inline-flex"
+          >
+            {isLike ? <FaHeart color="red" /> : <FaRegHeart />}
+            {likeCount}
           </button>
         </div>
       </div>

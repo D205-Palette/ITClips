@@ -1,78 +1,76 @@
 // AsideBookmarkList.tsx 는 북마크리스트 정보를 출력하는 컴포넌트
+import React, { useState, useEffect } from "react";
 
 // components
-import AsideKebabDropdown from "./ui/AsideKebabDropdown";
 import ImageContainer from "./layout/ImageContainer";
 import ItemDetailInfo from "./layout/ItemDetailInfo";
-import LikesFavoritesCount from "./layout/LikesFavoritesCount";
+import LikesFavoritesCount from "./layout/LikesFavoritesCount(List)";
 import Tags from "./layout/Tags";
-import CommentsContainer from "./layout/CommentsContainer";
+import BookmarkListCommentsModal from "./layout/BookmarkListCommentsModal";
 
+import KebabDropdown from "../common/KebabDropdown";
 // stores
 import darkModeStore from "../../stores/darkModeStore";
-import { asideStore } from "../../stores/asideStore";
 
-interface Comment {
-  id: number;
-  username: string;
-  content: string;
-}
+// apis
+import { getBookmarkListComments } from "../../api/bookmarkListApi";
 
-interface Tag {
-  id: number;
-  content: string;
-}
+// types
+import type { BookmarkListDetailType } from "../../types/BookmarkListType";
 
 interface ItemProps {
-  id:number;
-  title: string;
-  email: string;
-  description: string;
-  like: number;
-  fav: number;
-  tags: Tag[];
-  comments: Comment[];
+  bookmarkList:BookmarkListDetailType;
 }
 
-const AsideBookmarkList = () => {
-
-  // 더미 데이터
-  const bookmarkInfo: ItemProps = {
-    id:1,
-    title: "북마크리스트",
-    email: "abc@gmail.com",
-    description: "인기 북마크 리스트",
-    like: 200,
-    fav: 300,
-    tags: [
-      { id: 1, content: "#태그" },
-      { id: 2, content: "#태그2" },
-    ],
-    comments: [
-      { id: 1, username: "고양양", content: "좋아요~1" },
-      { id: 2, username: "고양양", content: "좋아요~2" },
-      { id: 2, username: "고양양", content: "좋아요~3" },
-      { id: 2, username: "고양양", content: "좋아요~4" },
-    ]
-  }
+const AsideBookmarkList : React.FC<ItemProps> = ({ bookmarkList }) => {
 
   const isDark = darkModeStore(state => state.isDark);
-  const isMessageOpen = asideStore(state => state.isMessageOpen);
+  const [ isCommentsOpen, setIsCommentsOpen ] = useState(false);
+  const [ commentCount, setCommentCount ] = useState(0);
 
+  useEffect(() => {
+    const fetchCommentCount = async () => {
+      try {
+        const response = await getBookmarkListComments(bookmarkList.id);
+        setCommentCount(response.data.length);
+      } catch (error) {
+        console.error("댓글 수를 가져오는 중 오류가 발생했습니다:", error);
+      }
+    };
+
+    fetchCommentCount();
+  }, [bookmarkList.id]);
+
+  
   return (
-    <div className={`${ isDark ? "bg-aside-dark" : "bg-aside-light" } rounded-3xl w-80 p-8 flex flex-col items-center`}>
+    <div className={`${ isDark ? "bg-base-300" : "bg-sky-50" } rounded-3xl  p-8 flex flex-col items-center ` }>
       {/* 더보기 버튼 */}
-      { !isMessageOpen && <AsideKebabDropdown isRoadmap={false} id={bookmarkInfo.id}/> }
+      <div className="w-full md:flex flex-row justify-end hidden ">
+      {<KebabDropdown whatMenu="리스트상세" id={bookmarkList.id} users={bookmarkList.users}/> }
+      </div>
       {/* 북마크리스트 썸네일 */}
-      <ImageContainer />
+      <ImageContainer src={bookmarkList.image} whatContent="북마크리스트" id={bookmarkList.id}/>
       {/* 북마크리스트 정보 */}
-      <ItemDetailInfo {...bookmarkInfo} />
-      {/* 좋아요, 즐겨찾기 칸 */}
-      <LikesFavoritesCount {...bookmarkInfo} />
+      <ItemDetailInfo {...bookmarkList} />
       {/* 태그 창 */}
-      <Tags {...bookmarkInfo} />
+      <Tags {...bookmarkList} />
+      {/* 좋아요, 즐겨찾기 칸 */}
+      <LikesFavoritesCount {...bookmarkList} />
+      <button 
+          onClick={() => setIsCommentsOpen(true)} 
+          className="btn btn-info text-base-100 w-full mt-4"
+        >
+          전체 댓글 보기 ({commentCount})
+        </button>
       {/* 댓글 창 */}
-      <CommentsContainer {...bookmarkInfo} />
+
+      <BookmarkListCommentsModal 
+        id={bookmarkList.id} 
+        isOpen={isCommentsOpen} 
+        onClose={() => setIsCommentsOpen(false)} 
+        setCommentCount={setCommentCount}
+        commentCount={commentCount}
+      />
     </div>
   );
 };

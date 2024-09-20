@@ -14,6 +14,7 @@ import java.util.Set;
 @ToString
 public class BookmarkListResponseDTO {
     private Long id;
+    private Long userId;
     private String title;
     private String description;
     private Integer bookmarkCount;
@@ -26,9 +27,10 @@ public class BookmarkListResponseDTO {
     List<UserTitleDTO> users;
 
     @Builder
-    public BookmarkListResponseDTO(Long id, String title, String description, Integer bookmarkCount,
+    public BookmarkListResponseDTO(Long id, Long userId, String title, String description, Integer bookmarkCount,
                                    Integer likeCount, String image, Boolean isLiked, Boolean isPublic, Set<TagDTO> tags, List<UserTitleDTO> users, LocalDateTime createdAt) {
         this.id = id;
+        this.userId = userId;
         this.title = title;
         this.description = description;
         this.bookmarkCount = bookmarkCount;

@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Intro1 from "../assets/images/Intro1.svg";
-import Intro2 from "../assets/images/Intro2.svg";
-import Intro3 from "../assets/images/Intro3.svg";
+
+import intro1 from "../assets/images/intro1.gif"
+import intro2 from "../assets/images/intro2.gif"
+import intro3 from "../assets/images/intro3.gif"
 
 const Intro: React.FC = () => {
   const navigate = useNavigate();
@@ -49,32 +50,33 @@ const Intro: React.FC = () => {
       if (refStartPrompt.current) observer.unobserve(refStartPrompt.current);
       if (refStartButton.current) observer.unobserve(refStartButton.current);
     };
+    window.scrollTo(0,0)
   }, []);
 
   return (
-    <div className="flex flex-col items-center w-full min-h-screen">
+    <div className="flex flex-col items-center w-full">
       {/* 첫 번째 섹션 */}
       <div
         id="intro1"
-        className={`w-full h-[1005px] bg-base-100 flex items-center justify-between px-28 py-16 transition-transform ${
+        className={`w-full md:min-h-screen bg-base-100 flex flex-col md:flex-row items-center px-6 md:px-16 lg:px-28 py-16 transition-transform ${
           inView.intro1 ? "animate-fadeInRight" : "opacity-0"
         }`}
         ref={refIntro1}
       >
-        <div className="flex flex-col justify-center gap-8">
-          <h2 className="text-left text-base-content text-4xl font-bold">
+        <div className="flex flex-col justify-center gap-4 md:gap-8 w-full md:w-1/3">
+          <h2 className="text-left text-base-content text-xl sm:text-2xl lg:text-4xl font-bold">
             나만의 북마크 클라우드
           </h2>
-          <div className="flex flex-col gap-y-3 text-left text-base-content text-3xl font-normal">
+          <div className="flex flex-col gap-y-2 md:gap-y-3 text-left text-base-content text-xl sm:text-2xl lg:text-3xl font-normal">
             <p>나의 북마크를</p>
             <p>분류하고</p>
-            <p>관리해보세요</p>
+            <p>관리해보세요.</p>
           </div>
         </div>
-        <div className="w-[750px] h-[746px] rounded-tl-[48px] rounded-bl-[48px] overflow-hidden">
+        <div className="border w-full md:w-2/3 mt-8 rounded-xl overflow-hidden">
           <img
-            className="w-full h-full object-cover"
-            src={Intro1}
+            className="w-full border object-cover"
+            src={intro1}
             alt="Intro"
           />
         </div>
@@ -83,65 +85,64 @@ const Intro: React.FC = () => {
       {/* 두 번째 섹션 */}
       <div
         id="intro2"
-        className={`w-full h-[1005px] bg-base-100 flex items-center justify-between px-28 py-16 transition-transform ${
+        className={`w-full md:min-h-screen bg-base-100 flex flex-col md:flex-row items-center px-6 md:px-16 lg:px-28 py-16 transition-transform md:gap-x-8 ${
           inView.intro2 ? "animate-fadeInLeft" : "opacity-0"
         }`}
         ref={refIntro2}
       >
-        <div className="w-[750px] h-[746px] rounded-tr-[48px] rounded-br-[48px] overflow-hidden">
-          <img
-            className="w-full h-full object-cover"
-            src={Intro2}
-            alt="Intro"
-          />
-        </div>
-        <div className="flex flex-col justify-center gap-8">
-          <div className="text-left text-base-content text-4xl font-bold">
+        <div className="flex flex-col justify-center gap-4 md:gap-8 w-full md:w-1/3">
+          <div className="text-left text-base-content text-xl sm:text-2xl lg:text-4xl font-bold">
             북마크 리스트 공유
           </div>
-          <div className="flex flex-col gap-y-3 text-left text-base-content text-3xl font-normal">
+          <div className="flex flex-col gap-y-2 md:gap-y-3 text-left text-base-content text-xl sm:text-2xl lg:text-3xl font-normal">
             <p>나만의 북마크 리스트를</p>
             <p>다른 사람과 공유하여</p>
             <p>지식 및 관심사도</p>
             <p>나눠볼까요?</p>
           </div>
         </div>
+        <div className="border w-full md:w-2/3 mt-8 rounded-xl overflow-hidden">
+          <img
+            className="w-full h-full object-cover"
+            src={intro2}
+            alt="Intro"
+          />
+        </div>
       </div>
 
       {/* 세 번째 섹션 */}
       <div
         id="intro3"
-        className={`w-full h-[1024px] bg-base-100 flex items-center justify-between px-28 py-16 transition-transform ${
+        className={`w-full md:min-h-screen bg-base-100 flex flex-col md:flex-row items-center  px-6 md:px-16 lg:px-28 py-16 transition-transform ${
           inView.intro3 ? "animate-fadeInRight" : "opacity-0"
         }`}
         ref={refIntro3}
       >
-        <div className="flex flex-col justify-center gap-8">
-          <div className="text-left text-base-content text-4xl font-bold">
-            관심 북마크, 로드맵 큐레이션
+        <div className="flex flex-col justify-center gap-4 md:gap-8 w-full md:w-1/3">
+          <div className="text-left text-base-content text-xl sm:text-2xl lg:text-4xl font-bold">
+            북마크리스트 큐레이션
           </div>
-          <div className="flex flex-col gap-y-3 text-left text-base-content text-3xl font-normal">
-            <p>관심사에 맞는 북마크와</p>
-            <p>저장한 북마크 기반의</p>
-            <p>학습 로드맵을</p>
+          <div className="flex flex-col gap-y-2 md:gap-y-3 text-left text-base-content text-xl sm:text-2xl lg:text-3xl font-normal">
+            <p>관심사에 맞는</p>
+            <p>북마크리스트를</p>            
             <p>추천 받을 수 있습니다.</p>
           </div>
         </div>
-        <div className="w-[593px] h-[593px] rounded-tl-[48px] rounded-bl-[48px] overflow-hidden">
+        <div className="border w-full md:w-2/3 mt-8 rounded-xl overflow-hidden">
           <img
             className="w-full h-full object-cover"
-            src={Intro3}
+            src={intro3}
             alt="Intro"
           />
         </div>
       </div>
 
       {/* 네 번째 섹션 */}
-      <div className="w-full min-h-[700px] bg-gradient-to-b from-base-100 via-blue-300 to-blue-500 flex flex-col items-center justify-center px-16 py-24">
+      <div className="w-full min-h-screen bg-gradient-to-b from-base-100 via-blue-300 to-blue-500 flex flex-col items-center justify-center px-6 md:px-16 lg:px-28 py-16 md:py-24">
         <div
           id="startPrompt"
           ref={refStartPrompt}
-          className={`text-center text-white text-5xl font-bold transition-opacity ${
+          className={`text-center text-white text-xl sm:text-3xl md:text-4xl lg:text-5xl font-bold transition-opacity ${
             inView.startPrompt ? "animate-fadeInUp" : "opacity-0"
           }`}
         >
@@ -152,7 +153,7 @@ const Intro: React.FC = () => {
             id="startButton"
             ref={refStartButton}
             onClick={() => navigate("/login")}
-            className={`px-8 py-4 text-xl rounded-md bg-gray-800 text-white hover:bg-gray-700 transition-colors duration-300 ${
+            className={`px-6 md:px-8 py-3 md:py-4 text-lg sm:text-xl md:text-2xl rounded-md bg-gray-800 text-white hover:bg-gray-700 transition-colors duration-300 ${
               inView.startButton ? "animate-fadeInUp" : "opacity-0"
             }`}
           >

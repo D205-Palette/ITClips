@@ -1,43 +1,52 @@
+// React Router
 import { createBrowserRouter } from "react-router-dom";
+
+// Views
+import Intro from "./pages/Intro";
+import SignupView from "./pages/SignUpView";
+import LoginView from "./pages/LoginView";
+import SocialSignUpView from "./pages/SocialSignUpView";
+import HomeView from "./pages/HomeView";
+import FeedView from "./pages/FeedView";
+import SearchView from "./pages/SearchView";
+import ProfileView from "./pages/ProfileView";
 import MyBookmarkList from "./pages/ProfileView/MyBookmarkList";
 import MyGroupBookmarkList from "./pages/ProfileView/MyGroupBookmarkList";
 import MyFavorites from "./pages/ProfileView/MyFavorites";
 import MyRoadmap from "./pages/ProfileView/MyRoadmap";
-import FeedView from "./pages/FeedView";
-import SearchView from "./pages/SearchView";
-import Intro from "./pages/Intro";
-import SignupView from "./pages/SignUpView";
-import App from "./App";
-import ProfileView from "./pages/ProfileView";
+import FollowView from "./pages/ProfileView/FollowView";
+import Follower from "./components/follow/FollowerList";
+import Following from "./components/follow/FollowingList";
 import MyBookmark from "./pages/BookmarkView";
 import RoadmapView from "./pages/RoadmapDetailView";
-import FollowView from "./pages/ProfileView/FollowView";
+import RoadmapCreateView from "./pages/RoadmapCreateView";
+import RoadmapEditView from "./pages/RoadmapEditView";
 
-// const changeIsFollow = mainTabStore((state) => state.changeIsFollow)
-import RoadMapView from "./pages/RoadmapDetailView";
-import Follower from "./pages/ProfileView/FollowFollower";
-import Following from "./pages/ProfileView/FollowFollowing";
+// Components
+import App from "./App";
+import Oauth2 from "./components/login/oauth/Oauth2";
+import FeedBookmarkLists from "./components/feed/FeedBookmarkLists";
+import FeedRoadmaps from "./components/feed/FeedRoadmaps";
 
-import SocialSignUpView from "./pages/SocialSignUpView";
-
-import LoginView from "./pages/LoginView";
-import { Children } from "react";
-import OAuthNaver from "./components/login/oauth/OauthNaver";
-import OauthGoogle from "./components/login/oauth/OauthGoogle";
-import OauthKakao from "./components/login/oauth/OauthKakao";
-import OauthGithub from "./components/login/oauth/OauthGithub";
-
-import NewBookmarkLists from "./components/feed/NewBookmarkLists";
-import NewRoadmaps from "./components/feed/NewRoadmaps";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
+      // 홈페이지
+      {
+        path: "",
+        element: <HomeView />,
+      },
       // 서비스 소개 페이지
       {
-        path: "user/:user_id",
+        path: "/intro",
+        element: <Intro />,
+      },
+      // 로그인 후 홈페이지(MY)
+      {
+        path: "user/:userId",
         element: <ProfileView />,
         children: [
           {
@@ -73,74 +82,69 @@ const router = createBrowserRouter([
           },
         ],
       },
+      // 로드맵 생성 페이지
       {
-        path: "roadmap/:roadmap_id",
+        path: "roadmap/create",
+        element: <RoadmapCreateView/>
+      },
+      // 로드맵 상세 페이지
+      {
+        path: "roadmap/:roadmapId",
         element: <RoadmapView />,
       },
+      // 로드맵 수정 페이지
       {
-        path: "bookmarklist/:bookmarklist_id",
+        path: "roadmap/:roadmapId/edit",
+        element: <RoadmapEditView />,
+      },
+      // 북마크리스트 상세 페이지
+      {
+        path: "bookmarklist/:bookmarklistId",
         element: <MyBookmark />,
       },
-      // {
-      //   path: 'bookmark/:bookmark_id',
-      //   element: <SearchView />
-      // },
-
-      {
-        path: "search",
-        element: <SearchView />,
-      },
+      // 피드 페이지
       {
         path: "feed",
         element: <FeedView />,
         children: [
           {
-            path: "newBookmarkLists",
-            element: <NewBookmarkLists />,
+            path: "",
+            element: <FeedBookmarkLists />,
           },
           {
-            path: "newRoadmaps",
-            element: <NewRoadmaps />,
+            path: "BookmarkLists",
+            element: <FeedBookmarkLists />,
           },
-        ]
+          {
+            path: "Roadmaps",
+            element: <FeedRoadmaps />,
+          },
+        ],
       },
+      // 검색 페이지
       {
-        path: "intro",
-        element: <Intro />,
+        path: "search",
+        element: <SearchView />,
       },
+      // 일반 회원가입 페이지
       {
         path: "signup",
         element: <SignupView />,
       },
+      // 소셜 회원가입 페이지
       {
         path: "socialsignup",
         element: <SocialSignUpView />,
       },
+      // 로그인 페이지
       {
         path: "login",
         element: <LoginView />,
-        // Email 로그인 페이지
       },
+      // 소셜 로그인 리다이렉트 페이지
       {
-        path: "oauth/callback",
-        children:[
-          {
-            path: "naver",
-            element: <OAuthNaver/>            
-          },
-          {
-            path: "google",
-            element: <OauthGoogle/>
-          },
-          {
-            path: "kakao",
-            element: <OauthKakao/>
-          },
-          {
-            path: "github",
-            element: <OauthGithub/>
-          },
-        ] 
+        path: "oauth2/callback",
+        element: <Oauth2 />,
       },
     ],
   },

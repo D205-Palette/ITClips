@@ -87,7 +87,7 @@ class CategoryServiceImplTest {
         categoryRequestDTO.setCategoryName("Test Category");
 
         // 카테고리 추가
-        CategoryParamDTO savedCategory = categoryService.addCategory(userId, savedBookmarkList.get().getId(), categoryRequestDTO);
+        CategoryParamDTO savedCategory = categoryService.addCategory(savedBookmarkList.get().getId(), categoryRequestDTO);
 
         // 저장된 카테고리 확인
         assertThat(savedCategory.getCategoryName()).isEqualTo("Test Category");
@@ -104,7 +104,7 @@ class CategoryServiceImplTest {
         Long nonExistentListId = 999L;
 
         assertThatThrownBy(() -> {
-            categoryService.addCategory(userId, nonExistentListId, categoryRequestDTO);
+            categoryService.addCategory(nonExistentListId, categoryRequestDTO);
         }).isInstanceOf(CustomException.class)
                 .hasMessageContaining(ErrorCode.BOOKMARK_LIST_NOT_FOUND.getMessage());
     }
@@ -123,10 +123,10 @@ class CategoryServiceImplTest {
         categoryRequestDTO.setCategoryName("Test Category");
 
         // 카테고리 추가
-        CategoryParamDTO savedCategory = categoryService.addCategory(userId, bookmarkListRepository.findByTitle("Test Bookmark List").get().getId(), categoryRequestDTO);
+        CategoryParamDTO savedCategory = categoryService.addCategory(bookmarkListRepository.findByTitle("Test Bookmark List").get().getId(), categoryRequestDTO);
 
         // When: 카테고리 삭제
-        categoryService.deleteCategory(userId, savedCategory.getCategoryId());
+        categoryService.deleteCategory(savedCategory.getCategoryId());
 
         // Then: 카테고리가 삭제되었는지 확인
         Optional<Category> deletedCategory = categoryRepository.findById(savedCategory.getCategoryId());
@@ -147,14 +147,14 @@ class CategoryServiceImplTest {
         categoryDTO.setCategoryName("Test Category");
 
         // 카테고리 추가
-        CategoryParamDTO savedCategory = categoryService.addCategory(userId, bookmarkListRepository.findByTitle("Test Bookmark List").get().getId(), categoryDTO);
+        CategoryParamDTO savedCategory = categoryService.addCategory(bookmarkListRepository.findByTitle("Test Bookmark List").get().getId(), categoryDTO);
 
         // 카테고리 업데이트 요청 DTO 생성
         CategoryRequestDTO categoryRequestDTO = new CategoryRequestDTO();
         categoryRequestDTO.setCategoryName("Updated Category Name");
 
         // When: 카테고리 업데이트
-        CategoryParamDTO updatedCategory = categoryService.updateCategory(userId, savedCategory.getCategoryId(), categoryRequestDTO);
+        CategoryParamDTO updatedCategory = categoryService.updateCategory(savedCategory.getCategoryId(), categoryRequestDTO);
 
         // Then: 카테고리 정보가 업데이트되었는지 확인
         assertThat(updatedCategory).isNotNull();

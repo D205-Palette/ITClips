@@ -64,7 +64,6 @@ public class ChatRoomRepository {
             topic = new ChannelTopic(roomId.toString());
         redisMessageListener.addMessageListener(redisSubscriber, topic);
         topics.put(roomId, topic);
-        log.info(getTopic(roomId).toString());
         return topic;
     }
 

@@ -1,68 +1,110 @@
-
 import SearchBar from "../../components/main/MainSearchBar";
-import { FC,useState } from "react";
+import { useState, useEffect } from "react";
 import Roadmap from "../../components/main/Roadmap";
 import MainTab from "../../components/main/MainTab";
+import type { RoadmapSumType } from "../../types/RoadmapType";
+import NoContent from "./NoContent";
+import { FaPlus } from "react-icons/fa6";
+import axios from "axios";
+import { API_BASE_URL } from "../../config";
+import { authStore } from "../../stores/authStore";
+import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import mainStore from "../../stores/mainStore";
 
-const MyRoadmap: FC = () => {
-  const roadmaps = mainStore((state) => state.roadmaps);
-  const [filterText, changeFilterText] = useState("")
+const MyRoadmap = () => {
+  const navigate = useNavigate();
+  const { userId, token } = authStore();
+  const [roadmaps, setRoadmaps] = useState<RoadmapSumType[]>([]);
+  const params = useParams();
+  const { isRoadmapChange, setIsRoadmapChange } = mainStore();
+  const [filterdRoadmaps, setFilterdRoadmaps] = useState<RoadmapSumType[]>([]);
+  const [filterText, changeFilterText] = useState("");
+  const [canEdit, setCanEdit] = useState(false);
+  const [noContent, setNoContent] = useState(
+    <div className="w-full flex flex-row justify-center mt-6">
+      <span className="loading loading-spinner loading-lg text-sky-500"></span>
+    </div>
+  );
 
-  const userRoadmaps =
-    // axios 해서 유저가 가진 모든 로드맵 정보들 가져온것
-    [
-      {
-        id: 1,
-        userName: "UserOne",
-        title: "First Roadmap",
-        description: "This is the description for the first roadmap",
-        image: "https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp",
-        isPublic: 1,
-        createdAt: "2024-07-24T05:41:26",
-        stepCnt: 3, // 단계수 
-        checkCnt: 1, // 체크된 단계수 
-        likeCnt: 4 // 좋아요 수 
-      },
-      {
-        id: 2,
-        userName: "UserOne",
-        title: "First Roadmap",
-        description: "This is the description for the first roadmap",
-        image: 'https://cdn.pixabay.com/photo/2017/07/31/17/12/water-2559064_1280.jpg',
-        isPublic: 1,
-        createdAt: "2024-07-24T05:41:26",
-        stepCnt: 4, // 단계수 
-        checkCnt: 4, // 체크된 단계수 
-        likeCnt: 2 // 좋아요 수 
-      },
-      {
-        id: 2,
-        userName: "UserOne",
-        title: "First Roadmap",
-        description: "This is the description for the first roadmap",
-        image: 'https://cdn.pixabay.com/photo/2017/08/27/15/38/surfing-2686450_1280.jpg',
-        isPublic: 1,
-        createdAt: "2024-07-24T05:41:26",
-        stepCnt: 2, // 단계수 
-        checkCnt: 1, // 체크된 단계수 
-        likeCnt: 17 // 좋아요 수 
-      },
-    ];
+  // 로드맵 변경사항 있을떄 마다 불러오기
+  useEffect(() => {
+    async function fetchData() {
+      axios({
+        method: "get",
+        url: `${API_BASE_URL}/api/roadmap/list/${params.userId}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          viewId: userId,
+        },
+      })
+        .then((res) => {
+          setRoadmaps(res.data);
+          setFilterdRoadmaps(
+            res.data.filter((roadmap: any) =>
+              roadmap.title.includes(filterText)
+            )
+          );
+          setIsRoadmapChange(false);
+          if (String(userId) === params.userId) {
+            setCanEdit(true);
+          }
+          setNoContent(<NoContent content={"로드맵"} />);
+          window.scrollTo(0, 0);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+    fetchData();
+  }, [isRoadmapChange]);
 
-  
-  // 유저가 가진 모든 로드맵 
+  // 검색어 변경시마다 필터링 된 로드맵 변경
+  useEffect(() => {
+    setFilterdRoadmaps(
+      roadmaps.filter((roadmap) =>
+        roadmap.title.toLowerCase().includes(filterText.toLowerCase())
+      )
+    );
+  }, [filterText]);
 
   return (
     <>
-      <MainTab />
-      <SearchBar whatSearch={"로드맵"} filterText={filterText} changeFilterText={changeFilterText}/>
-      <div className="mb-2">
-        <br />
+      <div className="sticky top-16 z-20 w-full bg-base-100">
+        <MainTab userId={Number(params.userId)} />
+        <SearchBar
+          whatSearch={"로드맵"}
+          filterText={filterText}
+          changeFilterText={changeFilterText}
+        />
       </div>
-      {userRoadmaps.map((roadmap) => (
-        <Roadmap roadmap={roadmap} />
-      ))}
+
+      {/* 로드맵들 */}
+      <div className="">
+        {filterdRoadmaps.length === 0 ? (
+          noContent
+        ) : (
+          <>
+            {filterdRoadmaps.map((roadmap) => (
+              <Roadmap roadmap={roadmap} canEdit={canEdit} />
+            ))}
+          </>
+        )}
+      </div>
+
+      {/* 로드맵 추가 버튼 */}
+      {canEdit ? (
+        <button
+          className="fixed bottom-24 right-16 z-20  justify-end hidden md:flex"
+          onClick={() => navigate("/roadmap/create")}
+        > 
+          <FaPlus color="skyblue" size={56} />
+        </button>
+      ) : (
+        <></>
+      )}
     </>
   );
 };

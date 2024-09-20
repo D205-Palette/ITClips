@@ -1,6 +1,5 @@
 package com.ssafy.itclips.chat.dto;
 
-import com.ssafy.itclips.chat.entity.Chat;
 import com.ssafy.itclips.chat.entity.ChatRoom;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +8,6 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter

@@ -120,7 +120,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         // 기존 북마크 리스트 목록을 조회
         BookmarkList existingBookmarkList = bookmarkListRepository.findById(listId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_LIST_NOT_FOUND));
-        if(existingBookmarkList.getUser().getId() != userId) {
+        if(!checkAuthority(userId,listId)) {
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
         // 업데이트할 내용 설정
@@ -441,6 +441,11 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         return bookmarkList.makeBookmarkListResponseDTO(bookmarkList.getBookmarks().size(), likeCount, isLiked, imageUrl, tags, users);
     }
 
+    private Boolean checkAuthority(Long userId, Long listId) {
+        Set<Long> groupUser = bookmarkListRepository.findGroupUserByListId(listId);
+        return groupUser.contains(userId);
+    }
+
     private List<UserTitleDTO> getUserTitleDTOs(BookmarkList bookmarkList) {
         return bookmarkList.getGroups().stream()
                 .map(this::convertToUserTitleDTO)
@@ -462,6 +467,7 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         User user = userGroup.getUser();
         UserTitleDTO userTitleDTO = UserTitleDTO.builder()
                 .id(user.getId())
+                .email(user.getEmail())
                 .nickName(user.getNickname())
                 .build();
         userTitleDTO.addUserImage(getImageUrl(user.getProfileImage()));
@@ -483,7 +489,6 @@ public class BookmarkListServiceImpl implements BookmarkListService {
         tags.forEach(tag -> {
             BookmarkListTag listTag = new BookmarkListTag();
             listTag.setBookmarkListTag(bookmarkList,tag);
-            log.info(listTag.getTag().getTitle());
             bookmarkListTags.add(listTag);
         });
         categories.forEach(bookmarkList::addCategory);

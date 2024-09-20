@@ -1,19 +1,30 @@
 import React, { useState, useRef, useEffect } from "react";
 
+// icons
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+
 // stores
 import darkModeStore from "../../../stores/darkModeStore";
 
 interface JobProps {
   selectCategory: (category: string) => void;
+  initialValue?: string;
 }
 
-const JobCategoryDropdown: React.FC<JobProps> = ({ selectCategory }) => {
+const JobCategoryDropdown: React.FC<JobProps> = ({ selectCategory, initialValue }) => {
+
   const [ searchCategory, setSearchCategory ] = useState<string>("프론트엔드 개발자");
   const [ isOpen, setIsOpen ] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const isDark = darkModeStore(state => state.isDark);
 
   const toggleDropdown = (): void => setIsOpen(!isOpen);
+
+  useEffect(() => {
+    if (initialValue) {
+      setSearchCategory(initialValue);
+    }
+  }, [initialValue]);
 
   const categories: string[] = [
     "프론트엔드 개발자",
@@ -57,22 +68,25 @@ const JobCategoryDropdown: React.FC<JobProps> = ({ selectCategory }) => {
   }, []);
 
   return (
-    <div className="inline-block relative" ref={dropdownRef}>
+    <div className="relative w-full">
       <button
         id="dropdownDefaultButton"
         onClick={toggleDropdown}
-        className="bg-base-100 border w-full hover:bg-black-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        className="w-full bg-base-100 border hover:bg-black-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2 text-left inline-flex items-center justify-between"
         type="button"
       >
-        {searchCategory}
+        <span className="truncate">{searchCategory}</span>
+        <div className="w-4 h-4 ml-2 flex-shrink-0">
+          {isOpen ? <IoIosArrowDown /> : <IoIosArrowUp />}
+        </div>
       </button>
 
       {isOpen && (
-        <div className="absolute left-full bottom-0 ml-1 bg-base-100 divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 max-h-60 overflow-y-auto">
-          <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
+        <div className="absolute z-10 w-full bottom-full mb-1 bg-base-100 divide-y divide-gray-100 rounded-lg shadow max-h-60 overflow-y-auto">
+          <ul className="py-2 text-sm text-gray-700">
             {categories.map((category) => (
               <li key={category} onClick={() => handleCategory(category)}>
-                <div className={`${isDark && "text-gray-200"} text-center block px-4 py-2 hover:bg-gray-100`}>
+                <div className={`${isDark && "text-gray-200"} block px-4 py-2 hover:bg-gray-100 cursor-pointer`}>
                   {category}
                 </div>
               </li>

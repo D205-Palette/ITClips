@@ -32,24 +32,27 @@ type BookmarkListDetailType = {
 };
 
 // 나의&그룹&즐겨찾기 페이지에 보이는 리스트들 요약
-type BookmarkListsSumType = {
+type BookmarkListSumType = {
   id: number;
+  userId?: number;
   title: string;
   description: string;
   bookmarkCount: number;
   likeCount: number;
+  isPublic:boolean;
   image: string;
-  tags: [
+  isLiked: boolean;
+  tags: 
     {
+      id:number;
       title: string;
-    }
-  ];
-  users: [
+    }[]
+  users: 
     {
       id: number;
       nickName: string;
-    }
-  ];
-}[];
+      userImage: string;
+    }[]
+};
 
-export type { CategoryType, BookmarkListDetailType, BookmarkListsSumType };
+export type { CategoryType, BookmarkListDetailType, BookmarkListSumType };

@@ -18,24 +18,53 @@ const FollowTab = () => {
 
   const BackButton = (): any => {
     return (
-      <button className="me-5  " onClick={()=>navigate(-1)}>
-        <IoIosArrowBack size="40px"/>{" "}
+      <button className="me-5 md:me-5 sm:me-2" onClick={() => navigate(-1)}>
+        <IoIosArrowBack className="md:text-[40px] sm:text-[30px]" />{" "}
       </button>
     );
   };
 
   return (
     <>
-     <div className="flex justify-evenly">
+      <div className="flex justify-evenly items-center md:justify-evenly sm:justify-between sm:px-2">
 
-      <BackButton />
+        <BackButton />
 
-      <div className="grow flex flex-row justify-around items-center">
-        <NavLink to="follower" className={(({isActive}) => isActive? "text-sky-500 font-bold " : textColor + " font-bold")}><div className="flex flex-row"><div className="flex items-center  mx-2"><FaRegBookmark /></div>팔로워</div></NavLink>
-        <NavLink to="following"  className={(({isActive}) => isActive? "text-sky-500 font-bold " : textColor + " font-bold ")}><div  className="flex flex-row"><div className="flex items-center  mx-2"><MdOutlineBookmarks /></div>팔로잉</div></NavLink>
+        <div className="grow flex flex-row justify-around items-center">
+          <NavLink 
+            to="follower" 
+            className={({ isActive }) =>
+              isActive
+                ? "text-sky-500 font-bold"
+                : `${textColor} font-bold`
+            }
+          >
+            <div className="flex flex-row">
+              <div className="flex items-center mx-2">
+                <FaRegBookmark className="md:text-base sm:text-sm" />
+              </div>
+              <span className="md:text-lg sm:text-sm">팔로워</span>
+            </div>
+          </NavLink>
+          
+          <NavLink 
+            to="following" 
+            className={({ isActive }) =>
+              isActive
+                ? "text-sky-500 font-bold"
+                : `${textColor} font-bold`
+            }
+          >
+            <div className="flex flex-row">
+              <div className="flex items-center mx-2">
+                <MdOutlineBookmarks className="md:text-base sm:text-sm" />
+              </div>
+              <span className="md:text-lg sm:text-sm">팔로잉</span>
+            </div>
+          </NavLink>
+        </div>
+
       </div>
-
-    </div>
     </>
   );
 }

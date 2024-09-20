@@ -1,6 +1,5 @@
 package com.ssafy.itclips.follow.controller;
 
-import com.ssafy.itclips.follow.dto.FollowDTO;
 import com.ssafy.itclips.follow.dto.FollowDetailDTO;
 import com.ssafy.itclips.follow.entity.Follow;
 import com.ssafy.itclips.follow.service.FollowService;
@@ -14,12 +13,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor

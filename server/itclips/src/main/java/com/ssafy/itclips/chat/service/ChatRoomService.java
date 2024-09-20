@@ -1,9 +1,9 @@
 package com.ssafy.itclips.chat.service;
 
+import com.ssafy.itclips.chat.dto.ChatRoomDTO;
 import com.ssafy.itclips.chat.dto.ChatRoomInfoDTO;
 import com.ssafy.itclips.chat.dto.GroupRoomDTO;
 import com.ssafy.itclips.chat.dto.MessageDTO;
-import com.ssafy.itclips.chat.dto.ChatRoomDTO;
 import com.ssafy.itclips.chat.entity.Chat;
 import com.ssafy.itclips.chat.entity.ChatRoom;
 import com.ssafy.itclips.chat.entity.Message;
@@ -13,7 +13,6 @@ import com.ssafy.itclips.chat.repository.ChatRoomRepository;
 import com.ssafy.itclips.chat.repository.MessageJPARepository;
 import com.ssafy.itclips.error.CustomException;
 import com.ssafy.itclips.error.ErrorCode;
-import com.ssafy.itclips.user.dto.UserInfoDTO;
 import com.ssafy.itclips.user.dto.UserTitleDTO;
 import com.ssafy.itclips.user.entity.User;
 import com.ssafy.itclips.user.repository.UserRepository;
@@ -24,8 +23,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Service;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -102,7 +101,6 @@ public class ChatRoomService {
 
         List<UserTitleDTO> userTitleDTOS = new ArrayList<>();
         for(Chat chat : chats){
-            log.info(chat.getUser().getId().toString());
             UserTitleDTO userInfoDTO = UserTitleDTO.toDTO(chat.getUser());
             userTitleDTOS.add(userInfoDTO);
         }
@@ -136,7 +134,6 @@ public class ChatRoomService {
     public void publish(MessageDTO message) throws RuntimeException{
         //topic생성
         chatRoomRepository.enterChatRoom(message.getRoomId());
-        log.info(message.getSenderId()+" "+message.getRoomId());
         //보낸사람 ,방 찾기
         Chat chat = chatJPARepository.findByUserIdAndRoomId(message.getSenderId(), message.getRoomId())
                 .orElseThrow(()-> new CustomException(ErrorCode.CHAT_NOT_FOUND));

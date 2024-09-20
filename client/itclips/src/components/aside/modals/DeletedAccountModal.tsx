@@ -1,6 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-
+import { useEffect } from "react";
 interface AccountDeletedModalProps {
   isOpen: boolean;
   onDeleteModalClose: () => void;
@@ -8,18 +7,17 @@ interface AccountDeletedModalProps {
 }
 
 const DeletedAccountModal: React.FC<AccountDeletedModalProps> = ({ isOpen, onDeleteModalClose, onDeletedModalClose }) => {
-  
-    const navigete = useNavigate();
 
     // 회원탈퇴 후 모든 모달창을 닫고 첫 페이지로 리다이렉트
-    const allClose = () => {
-        onDeleteModalClose();
-        onDeletedModalClose();
-        navigete("/intro");
-    }
-
+    const handleConfirm = () => {
+      onDeleteModalClose();
+      onDeletedModalClose();
+      // 직접 리다이렉트를 수행합니다.
+      window.location.href = "/intro";
+    };
+    
     if (!isOpen) return null;
-
+  
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full text-center">
@@ -36,7 +34,7 @@ const DeletedAccountModal: React.FC<AccountDeletedModalProps> = ({ isOpen, onDel
           </p>
         </div>
         <button
-          onClick={allClose}
+          onClick={handleConfirm}
           className="px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-200"
         >
           확인

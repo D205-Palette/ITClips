@@ -17,6 +17,7 @@ import java.util.Set;
 @ToString
 public class BookmarkListDetailDTO {
     private Long id;
+    private Long userId;
     private String title;
     private String description;
     private Integer likeCount;
@@ -32,10 +33,11 @@ public class BookmarkListDetailDTO {
     private Boolean isPublic;
 
     @Builder
-    public BookmarkListDetailDTO(Long id, String title, String description, Integer likeCount, Integer scrapCount,
+    public BookmarkListDetailDTO(Long id, Long userId, String title, String description, Integer likeCount, Integer scrapCount,
                                  String image, Boolean isLiked, Boolean isScraped, List<CategoryParamDTO> categories,
                                  Set<TagDTO> tags, List<UserTitleDTO> users,List<BookmarkDetailDTO> bookmarks,Long hit,Boolean isPublic) {
         this.id = id;
+        this.userId = userId;
         this.title = title;
         this.description = description;
         this.likeCount = likeCount;

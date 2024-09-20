@@ -3,9 +3,9 @@
 SSAFY 11기 공통 PJT / 구미 2반 5조 웹디자인<br/>
 2024.07.08 ~ 2024.08.16 (6주)
 
-🔗 **서비스 페이지 : https://i11d205.p.ssafy.io/<br/>**
-🔗 **서비스 소개 영상 : [임시 URL]<br/>**
-🔗 **Chrome extension : [임시 URL]**
+🔗 **서비스 페이지 : [ITClips](https://i11d205.p.ssafy.io/)<br/>**
+🔗 **서비스 소개 영상 : [[SSAFY 11기]공통 PJT "ITClips" UCC](https://www.youtube.com/watch?v=Yu8Oso7qV_k)<br/>**
+🔗 **Chrome extension : 검수중...**
 
 
 # 💡 프로젝트 소개
@@ -38,27 +38,35 @@ SSAFY 11기 공통 PJT / 구미 2반 5조 웹디자인<br/>
 <br/>
 
 # 🔖 프로젝트 산출물
-✔ [요구사항 명세서]()
+✔ [요구사항 명세서](https://docs.google.com/spreadsheets/d/1MxifEoveWd3QkiqTpQH4cVVLBofKv4JaFPL32TllpMg/edit?gid=704927790#gid=704927790)
 
-✔ [기능 정의서]()
+✔ [기능 정의서](https://roomy-wing-ac0.notion.site/c413377a4b284b05a9ebf4b97f61e534?v=f5ef68d65e42461ca80757e30cf1442d&pvs=4)
 
-✔ [API 명세서]()
+✔ [API 명세서](https://roomy-wing-ac0.notion.site/API-777ba761ca934cc8a2d8fabed37df127?pvs=4)
 
-✔ [와이어 프레임]()
+✔ [와이어 프레임](https://www.figma.com/design/WwBvVhZq92ZsOfiNsu42KN/ItClips?node-id=0-1&t=VLLGrth3l7kKRfJH-1)
 
-✔ [E-R Diagram]()
+✔ [E-R Diagram](https://www.erdcloud.com/d/N4w6FLmAhKAhsXC5e)
 
-✔ [시스템 아키텍처]()
+✔ [시퀀스 다이어그램](./docs/시퀀스다이어그램.md)
 
-✔ [프로젝트 일정]()
 
-✔ [최종 발표 자료]()
+✔ [E2E테스트 케이스](./docs/ITClips_테스트케이스.xlsx)
 
-✔ [포팅 매뉴얼 - 시연 시나리오]()
 
-✔ [Swagger 문서]()
+✔ [시스템 아키텍처](resources/image/시스템 아키텍처.PNG)
 
-✔ [회의록]()
+✔ [프로젝트 일정](https://roomy-wing-ac0.notion.site/d9124008d225496c8a5ea84790a87b8a?pvs=4)
+
+✔ [최종 발표 자료](https://www.canva.com/design/DAGNneDhqjU/qv03xiaX13R22l2mMHaPOA/edit?utm_content=DAGNneDhqjU&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+
+✔ [포팅 매뉴얼](./exec/porting_manual.md)
+
+✔ [시연 시나리오](./exec/scenario.md)
+
+✔ [Swagger 문서](https://i11d205.p.ssafy.io/api/swagger-ui/index.html)
+
+✔ [회의록](https://roomy-wing-ac0.notion.site/c26765682d60418c97b15fa0d8c71262?pvs=4)
 
 
 <br/>
@@ -231,7 +239,6 @@ SSAFY 11기 공통 PJT / 구미 2반 5조 웹디자인<br/>
 
 ### 크롬 확장 프로그램 
 <img src="resources/image/gif/익스텐션.gif" alt="크롬 확장 프로그램" width="800"><br/>
-![alt text](resources/image/gif/익스텐션.gif)
 * 크롬 확장 프로그램을 통해 간편하게 북마크를 추가할 수 있습니다. 
 <br/>
 <br/>
@@ -265,6 +272,13 @@ SSAFY 11기 공통 PJT / 구미 2반 5조 웹디자인<br/>
 * 북마크 리스트를 조합하여 로드맵을 생성할 수 있습니다. 
 <br/>
 <br/>
+
+### 로드맵 AI 추천 생성 
+<img src="resources/image/gif/로드맵 추천.gif" alt="로드맵 생성" width="800"><br/>
+* 자신의 북마크 리스트를 기반으로 AI에게 로드맵을 추천받을 수 있습니다. 
+<br/>
+<br/>
+
 
 ### 로드맵 스크랩 
 <img src="resources/image/gif/로드맵 스크랩.gif" alt="로드맵 스크랩" width="800"><br/>
@@ -331,5 +345,5 @@ SSAFY 11기 공통 PJT / 구미 2반 5조 웹디자인<br/>
 [!BREAKING CHANGE] 커다란 API 변경의 경우
 [!HOTFIX] 급하게 치명적인 버그를 고쳐야 하는 경우
 ```
-[Convention 바로가기](https://www.notion.so/b2849f2050824dd6bcb86410f2f444a4?pvs=4)
+[Convention 바로가기](https://roomy-wing-ac0.notion.site/b2849f2050824dd6bcb86410f2f444a4?pvs=4)
 

@@ -7,7 +7,7 @@ module.exports = {
       colors: {
         "aside-light": "#ebf2fa",
         "aside-dark": "#282c34",
-        "message-content": "a8a8a8",
+        "message-content": "#a8a8a8",
       },
     },
     extend: {
@@ -32,7 +32,10 @@ module.exports = {
       },
     },
   },
-  plugins: [require("daisyui")],
+  plugins: [
+    require("daisyui"),
+    require('tailwind-scrollbar-hide'),
+  ],
   daisyui: {
     themes: ["light", "dark"],
   },

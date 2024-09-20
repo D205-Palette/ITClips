@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 // icons
 import { FaRegBookmark } from "react-icons/fa";
@@ -13,10 +13,10 @@ const FollowTab = () => {
 
   return (
     <>
-      <div className="flex justify-around">
+      <div className="flex justify-around mb-3">
         <div className="grow flex flex-row justify-around items-center">
           <NavLink
-            to="newbookmarklists"
+            to="bookmarklists"
             className={({ isActive }) =>
               isActive ? "text-sky-500 font-bold " : textColor + " font-bold"
             }
@@ -29,7 +29,7 @@ const FollowTab = () => {
             </div>
           </NavLink>
           <NavLink
-            to="newRoadmaps"
+            to="Roadmaps"
             className={({ isActive }) =>
               isActive ? "text-sky-500 font-bold " : textColor + " font-bold "
             }

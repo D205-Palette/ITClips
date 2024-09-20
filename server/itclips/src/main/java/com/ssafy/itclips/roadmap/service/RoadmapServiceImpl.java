@@ -2,18 +2,16 @@ package com.ssafy.itclips.roadmap.service;
 
 import com.ssafy.itclips.alarm.entity.NotificationType;
 import com.ssafy.itclips.alarm.service.NotificationService;
-import com.ssafy.itclips.bookmark.repository.BookmarkRepository;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListAndTagsDTO;
-import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListRoadmapDTO;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
 import com.ssafy.itclips.bookmarklist.repository.BookmarkListRepository;
 import com.ssafy.itclips.bookmarklist.service.BookmarkListService;
 import com.ssafy.itclips.error.CustomException;
 import com.ssafy.itclips.error.ErrorCode;
+import com.ssafy.itclips.feed.service.FeedService;
 import com.ssafy.itclips.global.file.DataResponseDto;
 import com.ssafy.itclips.global.file.FileService;
-import com.ssafy.itclips.feed.service.FeedService;
 import com.ssafy.itclips.global.gpt.ChatGPTRequest;
 import com.ssafy.itclips.global.gpt.ChatGPTResponse;
 import com.ssafy.itclips.global.gpt.GPTResponseDTO;
@@ -28,8 +26,6 @@ import com.ssafy.itclips.roadmap.repository.RoadmapLikeRepository;
 import com.ssafy.itclips.roadmap.repository.RoadmapRepository;
 import com.ssafy.itclips.roadmap.repository.RoadmapStepRepository;
 import com.ssafy.itclips.tag.dto.TagDTO;
-import com.ssafy.itclips.tag.entity.Tag;
-import com.ssafy.itclips.tag.repository.TagRepository;
 import com.ssafy.itclips.tag.repository.UserTagRepository;
 import com.ssafy.itclips.user.dto.UserListDTO;
 import com.ssafy.itclips.user.entity.User;
@@ -44,8 +40,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -581,10 +575,8 @@ public class RoadmapServiceImpl implements RoadmapService {
     private static void makePrompt(String keyWord, List<BookmarkListAndTagsDTO> scrapedList, StringBuilder prompt, List<BookmarkListAndTagsDTO> ownList) {
         for (BookmarkListAndTagsDTO list : scrapedList) {
             prompt.append(list.getTitle()).append("[tag : ");
-            log.info(list.getTitle());
             for(TagDTO tag : list.getTags()){
                 prompt.append(tag.getTitle()).append(", ");
-                log.info(tag.getTitle());
 
             }
             prompt.append("], ");
@@ -592,7 +584,6 @@ public class RoadmapServiceImpl implements RoadmapService {
 
         for(BookmarkListAndTagsDTO list : ownList){
             prompt.append("title : ").append(list.getTitle()).append("[tag : ");
-            log.info(list.getTitle());
             for(TagDTO tag : list.getTags()){
                 prompt.append(tag.getTitle()).append(", ");
                 log.info(tag.getTitle());

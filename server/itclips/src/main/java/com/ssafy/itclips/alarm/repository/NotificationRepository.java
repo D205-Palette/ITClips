@@ -2,7 +2,6 @@ package com.ssafy.itclips.alarm.repository;
 
 import com.ssafy.itclips.alarm.entity.Notification;
 import com.ssafy.itclips.alarm.entity.NotificationType;
-import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

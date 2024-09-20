@@ -1,20 +1,13 @@
-import { useEffect } from "react";
 import { FaGithub } from "react-icons/fa";
-import { GITHUB_API_KEY } from '../../config';
+import { API_BASE_URL } from "../../config";
+import github_logo from "../../assets/images/github_logo.svg";
 
 const GithubLoginButton = () => {
-  const githubLoginUrl = `https://github.com/login/oauth/authorize?client_id=${GITHUB_API_KEY}`;
-  
-  const loginWithGithub = () => {    
-    window.open(githubLoginUrl, "_blank", "width=500,height=600");
-  };
+  const GITHUB_AUTH_URL = `${API_BASE_URL}:8084/oauth2/authorize/github`;
 
-  useEffect(() => {
-    const queryString = window.location.search;
-    const urlparams = new URLSearchParams(queryString);
-    const codeParam = urlparams.get("code");
-    console.log(codeParam);
-  }, []);
+  const loginWithGithub = () => {
+    window.location.href = GITHUB_AUTH_URL;
+  };
 
   return (
     <button
@@ -22,8 +15,14 @@ const GithubLoginButton = () => {
       type="button"
       className="btn btn-outline bg-base-100 w-3/4"
     >
-      <FaGithub className="w-8 h-8" />
-      <p>깃허브 로그인</p>
+      
+        <img
+          className="w-8 h-8 bg-gray-100 border border-white rounded-full"
+          src={github_logo}
+          alt=""
+        />
+      
+      <p>GitHub 로그인</p>
     </button>
   );
 };

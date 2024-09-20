@@ -1,12 +1,11 @@
 package com.ssafy.itclips.bookmarklist.dto;
 
-import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
 import com.ssafy.itclips.tag.dto.TagDTO;
 import com.ssafy.itclips.user.dto.UserTitleDTO;
 import lombok.*;
 
-import java.util.Set;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter

@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.ssafy.itclips.bookmark.dto.BookmarkRequestDTO;
 import com.ssafy.itclips.bookmark.entity.Bookmark;
 import com.ssafy.itclips.bookmark.repository.BookmarkRepository;
+import com.ssafy.itclips.bookmark.service.BookmarkService;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListDTO;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
 import com.ssafy.itclips.bookmarklist.repository.BookmarkListRepository;
@@ -15,10 +16,12 @@ import com.ssafy.itclips.error.CustomException;
 import com.ssafy.itclips.error.ErrorCode;
 import com.ssafy.itclips.tag.dto.TagDTO;
 import com.ssafy.itclips.tag.entity.BookmarkTag;
+import com.ssafy.itclips.tag.entity.Tag;
 import com.ssafy.itclips.tag.repository.BookmarkTagRepository;
 import com.ssafy.itclips.user.entity.Role;
 import com.ssafy.itclips.user.entity.User;
 import com.ssafy.itclips.user.repository.UserRepository;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -94,7 +97,7 @@ class BookmarkServiceImplTest {
         assertThat(savedBookmarkList).isPresent(); // 북마크 목록이 존재하는지 확인
 
         // 북마크 생성
-        bookmarkService.createBookmark(userId, savedBookmarkList.get().getId(), savedBookmarkList.get().getCategories().get(0).getId(), bookmarkRequestDTO);
+        bookmarkService.createBookmark(savedBookmarkList.get().getId(), savedBookmarkList.get().getCategories().get(0).getId(), bookmarkRequestDTO);
         Bookmark bookmark = bookmarkRepository.findByTitle("Test Bookmark");
         // Then
         // 북마크가 잘 생성되었는지 확인
@@ -118,14 +121,14 @@ class BookmarkServiceImplTest {
         bookmarkListService.createBookmarkList(user.getId(), bookmarkListDTO);
         Optional<BookmarkList> savedBookmarkList = bookmarkListRepository.findByTitle("Test Bookmark List");
         // 북마크 생성
-        bookmarkService.createBookmark(userId, savedBookmarkList.get().getId(), savedBookmarkList.get().getCategories().get(0).getId(), bookmarkRequestDTO);
+        bookmarkService.createBookmark(savedBookmarkList.get().getId(), savedBookmarkList.get().getCategories().get(0).getId(), bookmarkRequestDTO);
         Bookmark existingBookmark = bookmarkRepository.findByTitle("Test Bookmark");
         bookmarkRequestDTO.setTitle("updated");
         bookmarkRequestDTO.setContent("updated");
         bookmarkRequestDTO.setTags(List.of(new TagDTO("tag3"), new TagDTO("tag4")));
 
         // When
-        bookmarkService.updateBookmark(userId, existingBookmark.getId(), bookmarkRequestDTO);
+        bookmarkService.updateBookmark(existingBookmark.getId(), bookmarkRequestDTO);
         // Then
         Optional<Bookmark> updatedBookmark = bookmarkRepository.findById(existingBookmark.getId());
         assertThat(updatedBookmark).isPresent(); // 북마크가 존재하는지 확인
@@ -143,7 +146,7 @@ class BookmarkServiceImplTest {
     void createBookmark_BookmarkListNotFound() {
         // When & Then
         CustomException exception = assertThrows(CustomException.class, () -> {
-            bookmarkService.createBookmark(userId, 999L, 1L, bookmarkRequestDTO); // 존재하지 않는 리스트 ID 사용
+            bookmarkService.createBookmark(999L, 1L, bookmarkRequestDTO); // 존재하지 않는 리스트 ID 사용
         });
         assertThat(exception.getErrorCode()).isEqualTo(ErrorCode.BOOKMARK_LIST_NOT_FOUND);
     }
@@ -168,7 +171,7 @@ class BookmarkServiceImplTest {
 
         // When & Then
         CustomException exception = assertThrows(CustomException.class, () -> {
-            bookmarkService.createBookmark(userId, savedBookmarkList.get().getId(), 999L, bookmarkRequestDTO); // 존재하지 않는 카테고리 ID 사용
+            bookmarkService.createBookmark(savedBookmarkList.get().getId(), 999L, bookmarkRequestDTO); // 존재하지 않는 카테고리 ID 사용
         });
         assertThat(exception.getErrorCode()).isEqualTo(ErrorCode.CATEGORY_NOT_FOUND);
     }
@@ -194,13 +197,13 @@ class BookmarkServiceImplTest {
         assertThat(savedBookmarkList).isPresent(); // 북마크 목록이 존재하는지 확인
 
         // 북마크 생성
-        bookmarkService.createBookmark(userId, savedBookmarkList.get().getId(), savedBookmarkList.get().getCategories().get(0).getId(), bookmarkRequestDTO);
+        bookmarkService.createBookmark(savedBookmarkList.get().getId(), savedBookmarkList.get().getCategories().get(0).getId(), bookmarkRequestDTO);
         Bookmark bookmark = bookmarkRepository.findByTitle("Test Bookmark");
         // Then
         // 북마크가 잘 생성되었는지 확인
         assertThat(bookmark).isNotNull();
 
-        bookmarkService.deleteBookmark(userId, bookmark.getId());
+        bookmarkService.deleteBookmark(bookmark.getId());
         // Then
         Optional<Bookmark> deletedBookmark = bookmarkRepository.findById(bookmark.getId());
         assertThat(deletedBookmark).isNotPresent(); // 북마크가 존재하지 않는지 확인

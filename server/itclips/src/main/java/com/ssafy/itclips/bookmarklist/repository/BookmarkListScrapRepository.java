@@ -1,6 +1,5 @@
 package com.ssafy.itclips.bookmarklist.repository;
 
-import com.ssafy.itclips.bookmarklist.entity.BookmarkList;
 import com.ssafy.itclips.bookmarklist.entity.BookmarkListScrap;
 import org.springframework.data.jpa.repository.JpaRepository;
 

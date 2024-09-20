@@ -5,17 +5,28 @@ import SearchTagItemList from "../ui/SearchTagItemList";
 import SearchTagItemGrid from "../ui/SearchTagItemGrid";
 
 interface Tag {
+  title: string;
+}
+
+interface User {
+  id: number;
+  nickName: string;
+}
+
+interface BookmarkListItem {
   id: number;
   title: string;
-  username: string;
-  bookmarks: number;
-  likes: number;
-  createdAt: string;
-  thumbnailUrl: string;
+  description: string;
+  bookmarkCount: number;
+  likeCount: number;
+  image: string;
+  isLiked: boolean;
+  tags: Tag[];
+  users: User[];
 }
 
 interface TagViewProps {
-  items: Tag[];
+  items: BookmarkListItem[];
   viewMode: 'grid' | 'list';
 }
 

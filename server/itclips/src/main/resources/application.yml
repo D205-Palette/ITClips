@@ -24,8 +24,8 @@ spring:
   data:
     redis:
       host: ${DB_HOST}
-      port: 6379
       password: ${DB_PASSWORD}
+      port: 6379
 
   cache:
     type: redis
@@ -36,13 +36,13 @@ spring:
   datasource:
     hikari:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: jdbc:mysql://${DB_HOST}/${DB_NAME}?serverTimezone=Asia/Seoul&useUnicode=yes&characterEncoding=UTF-8
+      jdbc-url: jdbc:mysql://${DB_HOST}/${DB_NAME}?serverTimezone=UTC&useUnicode=yes&characterEncoding=UTF-8
       username: ${DB_USER}
       password: ${DB_PASSWORD}
-#      jdbc-url: jdbc:mysql://localhost:3306/itclips?serverTimezone=UTC&useUnicode=yes&characterEncoding=UTF-8
-#      username: root
-#      password: 1234
-#      pool-name: Hikari Connection Pool
+      #      jdbc-url: jdbc:mysql://localhost:3306/itclips?serverTimezone=UTC&useUnicode=yes&characterEncoding=UTF-8
+      #      username: root
+      #      password: 1234
+      pool-name: Hikari Connection Pool
 
       maximum-pool-size: 50
       minimum-idle: 50

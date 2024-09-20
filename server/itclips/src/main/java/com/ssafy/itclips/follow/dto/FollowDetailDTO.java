@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,4 +16,5 @@ public class FollowDetailDTO {
     private String nickname;
     private String profileImage;
     private String email;
+    private List<String> tagNames;
 }

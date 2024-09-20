@@ -1,8 +1,6 @@
 package com.ssafy.itclips.roadmap.dto;
 
-import com.ssafy.itclips.bookmarklist.dto.BookmarkListResponseDTO;
 import com.ssafy.itclips.bookmarklist.dto.BookmarkListRoadmapDTO;
-import com.ssafy.itclips.roadmap.entity.Roadmap;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

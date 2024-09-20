@@ -5,11 +5,8 @@ import GithubLoginButton from "../GithubLoginButton";
 import NaverLoginButton from "../NaverLoginButton";
 import KakaoLoginButton from "../KakaoLoginButton";
 import EmailLoginButton from "../EmailLoginButton";
-import EmailLoginModal from "./EmailLoginModal";
-import PasswordResetModal from "./PasswordResetModal";
 
-const LoginPage: React.FC = () => {
-  const { isEmailLoginOpen, isPasswordResetOpen } = navStore();
+const LoginListModal: React.FC = () => {
 
   return (
     <>
@@ -19,16 +16,14 @@ const LoginPage: React.FC = () => {
           <div className="flex flex-col gap-2 items-center justify-center">
             <GoogleLoginButton />
             <GithubLoginButton />
-            <NaverLoginButton />
+            {/* <NaverLoginButton />  */}
             <KakaoLoginButton />
             <EmailLoginButton />
           </div>
         </div>
-        {isEmailLoginOpen && <EmailLoginModal />}
-        {isPasswordResetOpen && <PasswordResetModal />}
       </div>
     </>
   );
 };
 
-export default LoginPage;
+export default LoginListModal;

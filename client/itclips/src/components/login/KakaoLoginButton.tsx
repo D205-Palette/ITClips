@@ -1,15 +1,13 @@
 import React from "react";
 import { SiKakaotalk } from "react-icons/si";
-import { KAKAO_API_KEY, KAKAO_REDIRECT_URI } from "../../config"
-import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../../config";
+import kakao_logo from "../../assets/images/kakao_logo.svg"
 
-export default function NaverLoginButton() {  
-  const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_API_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
-  const navigate = useNavigate()
+const KakaoLoginButton = () => {
+  const KAKAO_AUTH_URL = `${API_BASE_URL}:8084/oauth2/authorize/kakao`;
 
   const loginWithKakao = () => {
-    // navigate('https://i11d205.p.ssafy.io/oauth2/authorize/kakao')
-    window.open(KAKAO_AUTH_URL, "_blank", "width=500,height=600");
+    window.location.href = KAKAO_AUTH_URL;
   };
 
   return (
@@ -18,8 +16,10 @@ export default function NaverLoginButton() {
       type="button"
       className="btn btn-outline bg-base-100 w-3/4"
     >      
-      <SiKakaotalk className="w-5 h-5 text-yellow-400 bg-black rounded-sm"/>
-      <p>카카오 로그인</p>
+      <img className="w-8 h-8" src={kakao_logo} alt="" />
+      <p>Kakao 로그인</p>
     </button>
   );
-}
+};
+
+export default KakaoLoginButton;

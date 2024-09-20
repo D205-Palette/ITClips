@@ -12,6 +12,7 @@ interface ImportMetaEnv {
     readonly REACT_APP_GITHUB_REDIRECT_URI: string;
     readonly REACT_APP_NAVER_REDIRECT_URI: string;
     readonly REACT_APP_KAKAO_REDIRECT_URI: string;
+    readonly REACT_APP_LINKPREVIEW_API_KEY: string;
   }
   
   interface ImportMeta {

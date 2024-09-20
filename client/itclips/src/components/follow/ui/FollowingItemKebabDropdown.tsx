@@ -6,26 +6,34 @@ import { VscKebabVertical } from "react-icons/vsc";
 // stores
 import { asideStore } from "../../../stores/asideStore";
 
-const FollowerItemKebabDropdown = () => {
+import { useParams } from "react-router-dom";
+import { authStore } from "../../../stores/authStore";
+interface Props {
+  targetId: number;
+  onDeleteFollowing: () => void;
+}
+
+const FollowingItemKebabDropdown: React.FC<Props> = ({ targetId, onDeleteFollowing }) => {
+const {userId} = authStore()
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
+const params = useParams()
   const toggleDropdown = (): void => setIsDropdownOpen(!isDropdownOpen);
   const toggleMessage = asideStore(state => state.toggleMessage);
 
-  const categories: string[] = ["메세지 보내기", "삭제"];
+  const categories: string[] = params.userId === String(userId) ? ["메세지 보내기", "삭제"] : ["메세지 보내기"]
 
   // 채팅 시작하는 함수
   const startSendMessage = () => {
     const startNewChat = asideStore.getState().startNewChat;
-    startNewChat(1);
+    startNewChat(userId, targetId);
   }
 
   const handleMenu = (menu: string) => {
     if (menu === "메세지 보내기") {
       startSendMessage();
     } else if (menu === "삭제") {
-      // 팔로워 삭제 로직
+      onDeleteFollowing();
     }
     setIsDropdownOpen(false);
   };
@@ -47,11 +55,11 @@ const FollowerItemKebabDropdown = () => {
     <div className="self-end flex justify-end relative">
       <div className="relative" ref={dropdownRef}>
         {isDropdownOpen && (
-          <div className="absolute right-full top-0 mr-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 z-10">
-            <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
+          <div className="absolute right-full top-0 mr-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 z-10">
+            <ul className="py-2 text-sm text-gray-700">
               {categories.map((category) => (
                 <li key={category} onClick={() => handleMenu(category)}>
-                  <div className="text-center block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                  <div className="text-center block px-4 py-2 hover:bg-gray-100">
                     {category}
                   </div>
                 </li>
@@ -72,4 +80,4 @@ const FollowerItemKebabDropdown = () => {
   );
 };
 
-export default FollowerItemKebabDropdown;
+export default FollowingItemKebabDropdown;

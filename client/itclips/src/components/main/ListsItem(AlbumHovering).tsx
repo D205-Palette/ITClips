@@ -1,35 +1,33 @@
-import { useState } from "react";
-import useStore from "../../stores/mainStore";
-import KebabDropdown from "../common/KebabDropdown";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { useState, FC } from "react";
 import { useNavigate } from "react-router-dom";
-// 이미지 , 리스트명, 북마크 개수, 태그,(설명), 좋아요 버튼&좋아요 수, 리스트 세부 조작 버튼
-// 아님 호버링 기능을 여기에다 포함이 나을듯?
+import type { BookmarkListSumType } from "../../types/BookmarkListType";
+import noImg from "../../assets/images/noImg.gif"
 
+interface Props {
+  list: BookmarkListSumType;
+}
 
-export default function ListItem() {
+const ListItem: FC<Props> = ({ list }) => {
   const navigate = useNavigate();
-  const list = useStore((state) => state);
-  const [isHover, setIsHovering] = useState(false);
 
   return (
     <>
-    
-      <div className="card bg-base-100 image-full size-64 shadow-xl">
-        <figure >
-          <img
-            src="https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp"
-            alt="Shoes" 
-            className="w-56"/>
+      <div
+        className="card bg-base-100 image-full size-64 shadow-xl hover:cursor-pointer w-full"
+        onClick={() => navigate(`/bookmarklist/${list.id}`)}
+      >
+        <figure>
+          <img src={list.image==='default'? require(`../../assets/images/noContent${list.id % 6}.png`) : list.image} alt="" className="w-full object-fill" />
         </figure>
-        
-        <div  className="card-body flex justify-center content-center">
-          <div>
-          
-          <p>리스트에 관한 설명~ 각종 설명들  </p>
+
+        <div className="card-body flex flex-row justify-center items-center">
+          <div className="flex flex-row justify-center">
+            <p>{list.description}</p>
           </div>
         </div>
       </div>
     </>
   );
-}
+};
+
+export default ListItem;

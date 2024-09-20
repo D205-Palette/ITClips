@@ -1,6 +1,5 @@
 package com.ssafy.itclips.alarm.controller;
 
-import com.ssafy.itclips.alarm.dto.NotifyReadDTO;
 import com.ssafy.itclips.alarm.entity.Notification;
 import com.ssafy.itclips.alarm.service.NotificationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,11 +7,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-
 
 import java.io.IOException;
 import java.util.List;
@@ -37,7 +34,6 @@ public class NotificationController {
         try {
             // NotificationService에서 SseEmitter를 구독하고, 알림을 전송하도록 설정
             sseEmitter = notificationService.subscribe(userId, lastEventId);
-            log.info("SseEmitter 구독 성공: " + sseEmitter.toString());
 
         } catch (IOException e) {
             log.error("SSE 연결 중 오류 발생", e);

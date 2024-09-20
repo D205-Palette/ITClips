@@ -59,11 +59,6 @@ public class JwtTokenProvider {
                 .collect(Collectors.joining(","));
 
         long now = System.currentTimeMillis();
-        System.out.println(authentication.toString());
-        System.out.println(authentication.getPrincipal());
-        System.out.println(authentication.getCredentials());
-        System.out.println(authentication.getDetails());
-        System.out.println(authentication.getName());
         // Access Token 생성
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
@@ -137,7 +132,6 @@ public class JwtTokenProvider {
      */
     public boolean validateToken(String token) {
         if (blacklistedTokens.contains(token)) {
-            log.info("Token is blacklisted");
             return false;
         }
         try {
@@ -161,7 +155,6 @@ public class JwtTokenProvider {
      */
     public void blacklistToken(String token) {
         blacklistedTokens.add(token);
-        System.out.println("blacklistedTokens : " + blacklistedTokens.toString());
     }
 
     /**

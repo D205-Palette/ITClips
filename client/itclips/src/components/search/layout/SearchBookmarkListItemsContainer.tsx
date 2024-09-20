@@ -4,15 +4,26 @@ import React from "react";
 import SearchBookmarkListItemList from "../ui/SearchBookmarkListItemList";
 import SearchBookmarkListItemGrid from "../ui/SearchBookmarkListItemGrid";
 
+interface Tag {
+  title: string;
+}
+
+interface User {
+  id: number;
+  nickName: string;
+}
+
 interface BookmarkListItem {
-    id: number;
-    title: string;
-    username: string;
-    bookmarks: number;
-    likes: number;
-    createdAt: string;
-    thumbnailUrl: string;
-  }
+  id: number;
+  title: string;
+  description: string;
+  bookmarkCount: number;
+  likeCount: number;
+  image: string;
+  isLiked: boolean;
+  tags: Tag[];
+  users: User[];
+}
 
 interface BookmarkListViewProps {
   items: BookmarkListItem[];

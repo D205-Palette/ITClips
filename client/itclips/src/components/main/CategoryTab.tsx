@@ -1,47 +1,63 @@
-// 버전 1 : 리스트, 공유 리스트, 즐겨찾기, 로드맵
-// 버전 2 : 팔로워, 팔로잉
-import { NavLink } from "react-router-dom";
-import { FaRegStar, FaStar } from "react-icons/fa";
-import { FaRegBookmark } from "react-icons/fa";
-import { FaRegMap } from "react-icons/fa6";
-import { MdOutlineBookmarks } from "react-icons/md";
-// import mainTabStore from "../../stores/mainTabStore";
 import darkModeStore from "../../stores/darkModeStore";
 import CategorySingleTab from "./CategorySingleTab";
-import { useState, useRef, FC,useEffect } from "react";
+import CategorySingleEditTab from "./CategorySingleTab(Edit)";
+import { useState, useRef, FC, useEffect } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import { FaPlus } from "react-icons/fa6";
-import categoriesStore from "../../stores/categoriesStore";
-// 조건 맞는애들만 카테고리 필터 해주는 거 ㅇㅋㅇㅋ
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { authStore } from "../../stores/authStore";
+import { API_BASE_URL } from "../../config";
+import { CategoryType } from "../../types/BookmarkListType";
+import mainStore from "../../stores/mainStore";
+import { useDraggable } from "react-use-draggable-scroll";
 
 interface Props {
-  categories: { categoryId: number; categoryName: string }[];
+  listId: number;
+  categories: CategoryType[];
+  canEdit: boolean; // 본인 여부
+  editMode: boolean; // 에딧 모드 여부
+  setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const CategoryTab: FC<Props> = ({ categories }) => {
-
+const CategoryTab: FC<Props> = ({
+  listId,
+  categories,
+  canEdit,
+  editMode,
+  setEditMode,
+}) => {
+  const { userId, token } = authStore();
   const isDark = darkModeStore((state) => state.isDark);
-  // const categories = categoriesStore((state) => state.categories);
 
-  const addCategory = categoriesStore((state) => state.addCategory);
-
-  
   const [createMode, modeChange] = useState(false);
   const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement>(null);
+  const { setIsBookmarkListChange } = mainStore();
+
+  const [categoryLengthWarning, setCategoryLengthWarning] = useState(
+    categories.length >= 3
+  );
 
   useEffect(() => {
     if (createMode && inputRef.current) {
       inputRef.current.focus();
     }
   }, [createMode]);
-  
+
+  useEffect(() => {
+    if (categories.length >= 3) {
+      setCategoryLengthWarning(true);
+    } else {
+      setCategoryLengthWarning(false);
+    }
+  }, [categories.length]);
+
   // 뒤로가기 버튼
   const BackButton = (): any => {
     return (
-      <button className="me-5  " onClick={() => navigate(-1)}>
-        <IoIosArrowBack size="40px" />{" "}
+      <button className="me-2  " onClick={() => navigate(-1)}>
+        <IoIosArrowBack size="36px" />{" "}
       </button>
     );
   };
@@ -52,8 +68,9 @@ const CategoryTab: FC<Props> = ({ categories }) => {
       <button
         onClick={() => {
           modeChange(true);
-          // clickCreateBtn();
-        }}>
+        }}
+        className={categoryLengthWarning ? "hidden" : "hidden md:block"}
+      >
         <FaPlus className="ms-2 " />
       </button>
     );
@@ -63,59 +80,96 @@ const CategoryTab: FC<Props> = ({ categories }) => {
   const CreateCategorySection = () => {
     const [inputValue, changeInputValue] = useState<string>("");
 
-    const createCategory = (event: React.FormEvent): void => {
-      event.preventDefault();
+    const createCategory = (): void => {
       // 카테고리 추가 api
-      //   /category/add/{listId}경로로 {categoryName:inputValue}와 함께 POST
-
-      addCategory(inputValue);
+      axios({
+        method: "post",
+        url: `${API_BASE_URL}/api/category/add/${listId}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          userId: userId,
+        },
+        data: {
+          categoryName: inputValue,
+        },
+      })
+        .then((res) => {
+          setIsBookmarkListChange(true);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
       modeChange(false); // 추가하면 추가 모드 off
     };
 
     return (
-      <form onSubmit={createCategory}>
-        <input
-          ref={inputRef}
-          type="text"
-          id=""
-          name=""
-          onChange={(e) => changeInputValue(e.target.value)}
-          value={inputValue}
-          className={
-            (isDark ? "border-slate-100" : "border-slate-900 ") +
-            " border-2 border-solid  rounded-2xl h-9 px-4 w-min"
-          }
-        />
-      </form>
+      <div className="relative flex items-center">
+        <form
+          onSubmit={() => createCategory()}
+          className=""
+        >
+          <input
+            ref={inputRef}
+            type="text"
+            id=""
+            name=""
+            onChange={(e) => changeInputValue(e.target.value)}
+            value={inputValue}
+            className={(inputValue.length>=19? "text-red-500 ":"")+
+              (isDark ? "border-slate-100" : "border-slate-300 ") +
+              " border border-solid  rounded-2xl h-9 px-4 w-2/3 ms-3"
+            }
+            maxLength={19}
+          />
+        </form>
+        <button className="absolute right-1/3" onClick={() => modeChange(false)}>
+          X
+        </button>
+      </div>
     );
   };
 
-  // 상하 스크롤로 좌우 스크롤 가능하게
-  function handleScroll(event: any) {
-    const container = event.target;
-    const scrollAmount = event.deltaY;
-    container.scrollTo({
-      top: 0,
-      left: container.scrollLeft + scrollAmount,
-      behavior: "smooth",
-    });
-  }
-
+  // 드래그로 좌우 스크롤 할 수 있게
+  const ref =
+    useRef<HTMLDivElement>() as React.MutableRefObject<HTMLInputElement>;
+  const { events } = useDraggable(ref); 
   return (
     <>
-      <div className="flex flex-row m-3 items-centerpy-5 ">
-        <BackButton />
-        <div
-          className=" flex flex-row  whitespace-nowrap  container overflow-x-scroll "
-          onWheel={handleScroll}
-        >
-          {categories.map((category, index) => (
-            <CategorySingleTab whatCategory={category} index={index} />
-          ))}
-          {createMode ? (
-            <CreateCategorySection />
+      <div className="flex flex-row m-3 items-center py-5 static z-20 w-full md:w-full">
+        <div className={editMode ? "hidden" : "h-9 "}>
+          <BackButton />
+        </div>
+        <div className=" flex flex-row  whitespace-nowrap  overflow-scroll scrollbar-hide ">
+          <div
+            className="flex max-w-xl space-x-3 overflow-x-scroll scrollbar-hide"
+            {...events}
+            ref={ref}
+          >
+            {categories.map((category) =>
+              editMode ? (
+                <CategorySingleEditTab
+                  tempCategory={category}
+                  canEdit={canEdit}
+                  setEditMode={setEditMode}
+                />
+              ) : (
+                <CategorySingleTab 
+                tempCategory={category}
+                canEdit={canEdit} />
+              )
+            )}
+          </div>
+
+          {canEdit && !editMode ? (
+            createMode ? (
+              <CreateCategorySection />
+            ) : (
+              <PlusButton />
+            )
           ) : (
-            <PlusButton />
+            <></>
           )}
         </div>
       </div>

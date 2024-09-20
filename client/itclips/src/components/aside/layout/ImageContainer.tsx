@@ -2,18 +2,30 @@
 
 interface ImageSrc {
   src: string;
+  whatContent: string;
+  id: number;
 }
 
-const ImageContainer = () => {
+const ImageContainer: React.FC<ImageSrc> = ({ src, whatContent, id }) => {
+  const imageSrc =
+    whatContent === "프로필"
+      ? src === "default" || src === null || src === undefined
+        ? require(`../../../assets/images/noProfile${id % 6}.jpg`)
+        : src
+      : src === "default" || src === null || src === undefined
+      ? require(`../../../assets/images/noContent${id % 6}.png`)
+      : src;
 
-  // 더미 데이터
-  const image: ImageSrc = {
-    src: "profile_image.png"
-  }
+  const containerClass =
+    whatContent === "프로필"
+      ? "w-24 h-24 md:w-32 md:h-32 rounded-full"
+      : "w-24 h-24 md:w-32 md:h-32 rounded-xl";
 
   return (
-    <div className="mb-4">
-      <img src={require(`../../../assets/images/${image.src}`)} className="w-16 h-16 bg-gray-200 rounded-full mb-4"></img>
+    <div
+      className={`${containerClass} border overflow-hidden bg-gray-200 mb-4`}
+    >
+      <img src={imageSrc} className="w-full h-full object-cover"></img>
     </div>
   );
 };

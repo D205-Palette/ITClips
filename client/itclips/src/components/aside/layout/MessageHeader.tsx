@@ -3,13 +3,14 @@
 import React from "react";
 
 // icons
-import { FaPlus } from "react-icons/fa6";
+import { GoPlus } from "react-icons/go";
 
 // components
-import MessageBackButton from "../ui/MessageBackButton";
+import MessageCloseButton from "../ui/MessageCloseButton";
 
 // stores
 import { asideStore } from "../../../stores/asideStore";
+import darkModeStore from "../../../stores/darkModeStore";
 
 interface MessageHeaderProps {
   onClickInvite: (state: number) => void;
@@ -18,17 +19,17 @@ interface MessageHeaderProps {
 const MessageHeader: React.FC<MessageHeaderProps> = ({ onClickInvite }) => {
 
   const toggleMessage = asideStore(state => state.toggleMessage)
-
-  const handleBackToList = () => {
-    toggleMessage();
-  };
+  const isDark = darkModeStore(state => state.isDark);
 
   return (
-    <div className="flex justify-between items-center mb-4">
-      <MessageBackButton onBack={ handleBackToList }/>
+    <div className={`${ isDark ? "bg-base-200" : "bg-sky-200" } flex justify-between items-center p-4 border-b border-gray-200`}>
+      <MessageCloseButton onBack={toggleMessage} />
       <h2 className="text-xl font-bold">메세지</h2>
-      <button className="self-end btn btn-ghost btn-circle" onClick={ () => onClickInvite(1) }>
-        <FaPlus className="h-6 w-6" />
+      <button 
+        className="btn btn-ghost btn-circle hover:bg-sky-100 transition-colors duration-200" 
+        onClick={() => onClickInvite(1)}
+      >
+        <GoPlus className="h-6 w-6 text-sky-500" />
       </button>
     </div>
   );
